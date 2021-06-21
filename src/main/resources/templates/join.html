@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html :: head"></head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+    <div id="main-title" class="py-5 text-center">
+      <h2>회원 가입</h2>
+    </div>
+    <div class="row justify-content-center">
+       <div class="col-md-6 col-sm-12">
+             <form method="post" action="/join" th:object="${formModel}">
+                <div class="form-group">
+                   <label>이메일<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" th:errorclass="err"></div></label>
+                   <input type="text" name="email" id ="userEmail" th:field="*{email}" class="form-control" aria-describedby="emailHelp" placeholder="Email" onchange="emailChange()">
+                   <small id="emailHelp" class="form-text text-muted">
+                     이메일 중복확인 해주세요.
+                   </small>
+                   <button type="button" id="idVerification"class="btn btn-black" onclick="emailCheck()">이메일 중복확인</button>
+                </div>
+                <div class="form-group">
+                   <label>비밀 번호<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" th:errorclass="err"></label>
+                   <input type="password" name="password" th:field="*{password}" class="form-control" aria-describedby="passwordHelp" placeholder="Password">
+                   <small id="passwordHelp" class="form-text text-muted">
+                     비밀번호를 입력해주세요.
+                   </small>
+                </div>
+                <div class="form-group">
+                  <label>이름<div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" th:errorclass="err"></label>
+                  <input type="text" name="firstName" th:field="*{firstName}" class="form-control" aria-describedby="firstNameHelp" placeholder="First Name">
+                  <small id="firstNameHelp" class="form-text text-muted">
+                    이름을 입력해주세요.
+                  </small>
+                </div>
+                <div class="form-group">
+                  <label>성<div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" th:errorclass="err"></label>
+                  <input type="text" name="lastName" th:field="*{lastName}" class="form-control" aria-describedby="lastNameHelp" placeholder="Last Name">
+                  <small id="lastNameHelp" class="form-text text-muted">
+                    성을 입력해주세요.
+                  </small>
+                </div>
+                <button type="submit" id="submitButton"class="btn btn-black">회원가입</button>
+             </form>
+       </div>
+    </div>
+    <footer>
+      <div th:replace="fragments.html :: footer"></div>
+    </footer>
+  </body>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#submitButton').attr("disabled",true);
+      emailVeriPleaseMessage();
+    });
+
+    function emailChange() {
+      $('#submitButton').attr("disabled",true);
+      emailVeriPleaseMessage();
+    }
+
+    function emailCheck() {
+      email = $("#userEmail").val();
+      if(email == "") {
+        alert("이메일을 입력해주세요.");
+        return;
+      }
+      $.ajax({
+        url: 'join/emailverification?email='+email,
+        dataType: 'text',
+        contentType: 'text/plain; charset=utf-8;',
+
+        success:function(data){
+          if(data == 'true') {
+            alert("이미 등록된 이메일입니다.");
+          } else {
+            alert("사용 가능한 이메일입니다.");
+            emailVeriCompleteMessage();
+            $('#submitButton').attr("disabled",false);
+          }
+        },
+        error:function() {
+          console.log("error");
+        }
+      });
+    }
+
+    function emailVeriPleaseMessage() {
+      $('#emailHelp').text("이메일 중복확인 해주세요.");
+    }
+
+    function emailVeriCompleteMessage() {
+      $('#emailHelp').text("이메일 중복확인 완료.");
+    }
+  </script>
+</html>

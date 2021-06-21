@@ -66,6 +66,19 @@
 
 5. Entity 클래스 관련 서비스 테스트 코드 작성 -> 서비스 클래스들 코드 작성
 
+### 2021.6.22
+
+- Spring Security 관련 클래스 구현
+
+    1. Security Configuration 구현
+
+    2. UserDetailsVO 구현
+
+    3. UserDetailsServiceImpl 테스트 코드 작성 -> UserDetailsServiceImpl 구현
+
+    4. UserAuthenticationProvider 구현
+
+
 --- 
 
 ## To do List
