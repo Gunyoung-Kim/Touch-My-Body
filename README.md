@@ -34,7 +34,7 @@
 
 ## DB 테이블 설계 
 
-![tmb_table](https://user-images.githubusercontent.com/60494603/122729166-d33e8180-d2b3-11eb-8af7-e7ebb8b9ccb5.png)
+![touchmb](https://user-images.githubusercontent.com/60494603/122730217-f289de80-d2b4-11eb-8a08-91e95cf9b497.png)
 
 ---
 
