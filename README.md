@@ -78,7 +78,15 @@
 
     4. UserAuthenticationProvider 구현
 
+- UserController
+
+    1. UserController 로그인, 회원가입 테스트 코드 작성 -> UserController 해당 부분 구현
+
+    2. 위 구현 파트 관련 Exception, ExceptionHandler 구현
 
 --- 
 
 ## To do List
+
+- 비즈니스 예외 구조도 만들기 
+

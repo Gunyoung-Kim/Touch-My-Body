@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head th:include="fragments.html :: head"></head>
+  <head>
+    <link th:href="@{/css/login_style.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/join.js}"></script>
+  </head>
   <body>
     <header>
       <div th:replace="fragments.html :: main-nav"></div>
@@ -18,6 +22,14 @@
                      이메일 중복확인 해주세요.
                    </small>
                    <button type="button" id="idVerification"class="btn btn-black" onclick="emailCheck()">이메일 중복확인</button>
+                </div>
+                <div class="form-group">
+                  <label>닉네임<div th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}" th:errorclass="err"></label>
+                  <input type="text" name="nickName" th:field="*{nickName}" class="form-control" aria-describedby="nickNameHelp" placeholder="NickName">
+                  <small id="nickNameHelp" class="form-text text-muted">
+                    닉네임 중복확인 해주세요.
+                  </small>
+                  <button type="button" id="nickNameVerification"class="btn btn-black" onclick="nickNameCheck()">닉네임 중복확인</button>
                 </div>
                 <div class="form-group">
                    <label>비밀 번호<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" th:errorclass="err"></label>
@@ -48,49 +60,4 @@
       <div th:replace="fragments.html :: footer"></div>
     </footer>
   </body>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('#submitButton').attr("disabled",true);
-      emailVeriPleaseMessage();
-    });
-
-    function emailChange() {
-      $('#submitButton').attr("disabled",true);
-      emailVeriPleaseMessage();
-    }
-
-    function emailCheck() {
-      email = $("#userEmail").val();
-      if(email == "") {
-        alert("이메일을 입력해주세요.");
-        return;
-      }
-      $.ajax({
-        url: 'join/emailverification?email='+email,
-        dataType: 'text',
-        contentType: 'text/plain; charset=utf-8;',
-
-        success:function(data){
-          if(data == 'true') {
-            alert("이미 등록된 이메일입니다.");
-          } else {
-            alert("사용 가능한 이메일입니다.");
-            emailVeriCompleteMessage();
-            $('#submitButton').attr("disabled",false);
-          }
-        },
-        error:function() {
-          console.log("error");
-        }
-      });
-    }
-
-    function emailVeriPleaseMessage() {
-      $('#emailHelp').text("이메일 중복확인 해주세요.");
-    }
-
-    function emailVeriCompleteMessage() {
-      $('#emailHelp').text("이메일 중복확인 완료.");
-    }
-  </script>
 </html>

@@ -17,6 +17,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.dto.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.user.UserService;
@@ -130,6 +131,7 @@ public class UserServiceTest {
 		assertEquals(result.getNickName(),"User1");
 	}
 	
+	
 	/*
 	 *   public User save(User user)
 	 */
@@ -176,6 +178,30 @@ public class UserServiceTest {
 	}
 	
 	/*
+	 *  public User saveByJoinDTO(UserJoinDTO dto,RoleType role)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("새로운 유저 저장 by UserJoinDTO -> 정상")
+	public void saveByJoinDTOTest() {
+		//Given
+		UserJoinDTO dto = UserJoinDTO.builder()
+				.email("new@test.com")
+				.password("abcd1234!")
+				.firstName("new")
+				.lastName("new")
+				.nickName("new man")
+				.build();
+		
+		//When
+		userService.saveByJoinDTO(dto, RoleType.USER);
+		
+		//Then
+		User newUser = userRepository.findByEmail("new@test.com").get();
+		assertEquals(newUser != null,true);
+	}
+	
+	/*
 	 *   public void deleteUser(User user)
 	 */
 	@Test
@@ -207,6 +233,25 @@ public class UserServiceTest {
 		//When
 		boolean resultNonExist = userService.existsByEmail(nonExistEmail);
 		boolean resultExist = userService.existsByEmail(existEmail);
+		
+		//Then
+		assertEquals(resultNonExist,false);
+		assertEquals(resultExist,true);
+	}
+	
+	/*
+	 *   public boolean existsByNickName(String nickName)
+	 */
+	@Test
+	@DisplayName("NickName으로 유저 존재확인하기 ->정상")
+	public void existsByNickNameTest() {
+		//Given
+		String nonExistNickName = "None";
+		String existNickName = "User1";
+		
+		//When
+		boolean resultNonExist = userService.existsByNickName(nonExistNickName);
+		boolean resultExist = userService.existsByNickName(existNickName);
 		
 		//Then
 		assertEquals(resultNonExist,false);
