@@ -86,6 +86,81 @@
 
     3. 로그인, 회원가입 화면 구현
 
+### 2021.6.23
+
+- Spring Security
+
+    1. 커스텀 Login,Logout Success Handler 구현
+
+- MangerUserController
+
+    1. 매니저들의 유저 검색을 위한 페이지 구현
+
+    2. 
+
+- UserExerciseController
+
+    1. 유저의 운동 기록 추가 By Post 처리하는 메소드 구현 
+
+- UserExerciseRestController 
+
+    1. 유저의 특정 날짜에 한 운동 기록들 반환하는 메소드 구현 
+
+- User Domain
+	
+    1. date 자료형 Date -> Calendar (Date의 대부분의 메소드가 Deprecated, 시간은 필요 없다는 비즈니스 요구에 의해 Calendar 가 더 적합하다 판단)
+
+- DTO
+
+    1. AddUserExerciseDTO 구현 - 유저의 운동 기록 추가사항을 전달받기 위한 DTO
+
+    2. DateDTO 구현 - 유저가 운동기록을 열람하고자하는 날짜를 전달받기 위한 DTO
+
+    3. UserManageListDTO 구현 - 매니저의 유저 검색 페이지에 보여지는 정보 전달을 위한 DTO
+
+- Enum 
+
+    1. RoleType에 koreanName, EnglishName 필드 추가 -> 클라이언트에게 보일 role 명칭
+
+- ErrorController
+
+    1. userNotFounded 메소드 추가 - 특정 조건으로 유저 찾은 결과 없을때 던져진 예외 처리하는 메소드 
+
+- ErrorCode, Exceptions
+
+    1. ExerciseErrorCode, UserErrorCode 추가 
+
+- Repository
+
+    1. ExerciseRepository에 이름으로 Exercise 찾는 메소드 추가 
+
+    2. UserExerciseRepository에 유저의 특정 날짜 운동 기록들 가져오는 메소드 추가 
+
+    3. UserRepository에 닉네임이나 이름 검색으로 만족하는 유저들 가져오는 메소드, 총 개수 가져오는 메소드 추가 
+
+- DomainService (하부 항목에 대한 테스트 코드 우선적 구현)
+
+    1. ExerciseService에 이름으로 Exercise 가져오는 메소드 추가 -> Impl에 구현
+
+    2. UserExerciseService에 유저의 특정 날짜 운동 기록들 가져오는 메소드 추가 -> Impl에 구현
+
+    3. UserService 에 닉네임이나 이름 검색으로 만족하는 유저들 가져오는 메소드, 총 개수 가져오는 메소드 추가 -> Impl 구현 
+
+    4. UserService에 유저 운동 기록 추가, 삭제하는 메소드 추가 -> Impl에 구현
+
+- Util
+
+    1. PageUtil 추가 - Page size 모아놓는 클래스
+
+    2. SessionUtil 추가 - 세션에 접속자의 user_id 추가, 삭제,반환 하는 메소드, 모든 세션 삭제하는 메소드 구현 
+
+- Templates
+
+    1. ExerciseCalendar (html,css,js파일 추가) - 유저의 운동 기록들 볼수 있는 화면
+
+    2. UserManage (html 추가) - 매니저 이상의 권한자가 유저들 검색할 수 있는 화면
+
+ 
 --- 
 
 ## To do List
