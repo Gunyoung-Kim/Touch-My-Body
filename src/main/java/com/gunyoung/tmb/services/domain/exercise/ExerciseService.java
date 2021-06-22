@@ -4,6 +4,7 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 
 public interface ExerciseService {
 	public Exercise findById(Long id);
+	public Exercise findByName(String name);
 	
 	public Exercise save(Exercise exercise);
 	

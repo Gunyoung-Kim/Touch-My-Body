@@ -1,6 +1,9 @@
 package com.gunyoung.tmb.services.domain.user;
 
+import org.springframework.data.domain.Page;
+
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
 
@@ -12,6 +15,7 @@ import com.gunyoung.tmb.enums.RoleType;
 public interface UserService {
 	public User findById(Long id);
 	public User findByEmail(String email);
+	public Page<User> findAllByNickNameOrName(String keyword,Integer pageNumber);
 	
 	public User save(User user);
 	public User saveByJoinDTO(UserJoinDTO dto,RoleType role);
@@ -24,4 +28,8 @@ public interface UserService {
 	public boolean checkDuplicationForEmail(String email);
 	
 	public long countAll();
+	public long countAllByNickNameOrName(String keyword);
+	
+	public User addUserExercise(User user,UserExercise userExercise);
+	public void deleteUserExercise(User user, UserExercise userExercise);
 }

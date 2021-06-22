@@ -3,14 +3,18 @@ package com.gunyoung.tmb.services.domain.user;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.utils.PageUtil;
 
 /**
  * UserService Interface 구현 클래스 
@@ -56,6 +60,18 @@ public class UserServiceImpl implements UserService{
 		if(result.isEmpty())
 			return null;
 		return result.get();
+	}
+	
+	/**
+	 * @param keyword 검색하려는 키워드	
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Page<User> findAllByNickNameOrName(String keyword,Integer pageNumber) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageUtil.BY_NICKNAME_NAME_PAGE_SIZE);
+		return userRepository.findAllByNickNameOrName(keyword, pageRequest);
 	}
 
 	/**
@@ -112,6 +128,7 @@ public class UserServiceImpl implements UserService{
 	 * @author kimgun-yeong
 	 */
 	@Override
+	@Transactional(readOnly=true)
 	public boolean existsByNickName(String nickName) {
 		return userRepository.existsByNickName(nickName);
 	}
@@ -135,6 +152,43 @@ public class UserServiceImpl implements UserService{
 	@Transactional(readOnly=true)
 	public long countAll() {
 		return userRepository.count();
+	}
+
+	/**
+	 * @param keyword 검색하려는 닉네임이나 이름 키워드 
+	 * @return 조건을 만족하는 User의 모든 수 
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public long countAllByNickNameOrName(String keyword) {
+		return userRepository.countAllByNickNameOrName(keyword);
+	}
+
+	/**
+	 * User 객체에 UserExercise 객체 추가하는 메소드
+	 * @param user UserExercise를 추가하려는 User
+	 * @param userExercise 추가하려는 UserExercise
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public User addUserExercise(User user, UserExercise userExercise) {
+		user.getUserExercises().add(userExercise);
+		userExercise.setUser(user);
+		userExerciseService.save(userExercise);
+		return user;
+	}
+
+	/**
+	 * User 객체에서 UserExercise 삭제하는 메소드
+	 * @param user UserExercise를 삭제하려는 User
+	 * @param userExercise 삭제하려는 userExercise
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public void deleteUserExercise(User user, UserExercise userExercise) {
+		user.getUserExercises().remove(userExercise);
+		userExerciseService.delete(userExercise);
 	}
 
 }

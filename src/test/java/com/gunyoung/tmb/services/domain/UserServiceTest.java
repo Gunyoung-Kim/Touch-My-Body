@@ -2,6 +2,7 @@ package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,10 +18,13 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
+import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.user.UserService;
+import com.gunyoung.tmb.utils.PageUtil;
 
 /**
  * UserService 클래스에 대한 테스트 클래스<br>
@@ -39,6 +43,9 @@ public class UserServiceTest {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	UserExerciseRepository userExerciseRepository;
 	
 	@Autowired
 	EntityManager em;
@@ -131,6 +138,28 @@ public class UserServiceTest {
 		assertEquals(result.getNickName(),"User1");
 	}
 	
+	/*
+	 *  public Page<User> findAllByNickNameOrName(String keyword)
+	 */
+	
+	@Test
+	@DisplayName("키워드로 유저 페이지 찾기 -> 정상")
+	public void findAllByNickNameOrName() {
+		//Given
+		String nickNameKeyword = "User"+INIT_USER_NUM;
+		String firstNameKeyword = INIT_USER_NUM+"번";
+		String lastNameKeyword = "사람";
+				
+		//When
+		int nickResult = userService.findAllByNickNameOrName(nickNameKeyword, 1).getContent().size();
+		int firstResult = userService.findAllByNickNameOrName(firstNameKeyword, 1).getContent().size();
+		int lastResult = userService.findAllByNickNameOrName(lastNameKeyword, 1).getContent().size();
+		
+		//Then
+		assertEquals(nickResult,1);
+		assertEquals(firstResult,1);
+		assertEquals(lastResult,PageUtil.BY_NICKNAME_NAME_PAGE_SIZE);
+	}
 	
 	/*
 	 *   public User save(User user)
@@ -291,4 +320,76 @@ public class UserServiceTest {
 		//Then
 		assertEquals(result,INIT_USER_NUM);
 	}
+	
+	/*
+	 *  public long countAllByNickNameOrName(String keyword)
+	 */
+	@Test
+	@DisplayName("닉네임이나 네임이 키워드를 만족하는 모든 User 수 구하기-> 정상")
+	public void countAllByNickNameOrNameTest() {
+		//Given
+		String nickNameKeyword = "User"+INIT_USER_NUM;
+		String firstNameKeyword = INIT_USER_NUM+"번";
+		String lastNameKeyword = "사람";
+		
+		//When
+		long nickResult = userService.countAllByNickNameOrName(nickNameKeyword);
+		long firstResult = userService.countAllByNickNameOrName(firstNameKeyword);
+		long lastResult = userService.countAllByNickNameOrName(lastNameKeyword);
+		
+		//Then
+		assertEquals(nickResult,1);
+		assertEquals(firstResult,1);
+		assertEquals(lastResult,INIT_USER_NUM);
+	}
+	
+	/**
+	 * public User addUserExercise(User user, UserExercise userExercise)
+	 * public void deleteUserExercise(User user, UserExercise userExercise) 
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("유저의 운동 기록 추가, 기록 삭제 -> 정상")
+	public void addUserExerciseTest() {
+		//Given
+		User user = userRepository.findAll().get(0);
+		Long userId = user.getId();
+		int userExerciseListNum = user.getUserExercises().size();
+		
+		long userExerciseNum = userExerciseRepository.count();
+		
+		UserExercise userExercise = UserExercise.builder()
+												.laps(1)
+												.sets(1)
+												.weight(1)
+												.date(Calendar.getInstance())
+												.description("test")
+												.build();
+		
+		//When
+		User result = userService.addUserExercise(user, userExercise);
+		
+		//Then
+		assertEquals(result.getUserExercises().size(),userExerciseListNum+1);
+		assertEquals(userExerciseRepository.count(),userExerciseNum+1);
+		assertEquals(userExercise.getUser().getId(),userId);
+		assertEquals(userRepository.getById(userId).getUserExercises().size(),userExerciseListNum+1);
+		
+		/*
+		 * delete
+		 */
+		
+		//Given 
+		Long targetUserExerciseId = userExercise.getId();
+		
+		//When
+		userService.deleteUserExercise(user, userExercise);
+		
+		//Then
+		assertEquals(userRepository.findById(targetUserExerciseId).isEmpty(), true);
+		assertEquals(user.getUserExercises().size(),userExerciseListNum);
+	}
+	
+	
 }

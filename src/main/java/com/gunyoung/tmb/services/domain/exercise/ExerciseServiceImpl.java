@@ -34,6 +34,20 @@ public class ExerciseServiceImpl implements ExerciseService {
 			return null;
 		return result.get();
 	}
+	
+	/**
+	 * @param name 찾으려는 Exercise의 이름
+	 * @return Exercise, Null(해당 name의 Exercise가 없을때)
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Exercise findByName(String name) {
+		Optional<Exercise> result = exerciseRepository.findByName(name);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
 
 	/**
 	 * @param exercise 저장하려는 Exercise

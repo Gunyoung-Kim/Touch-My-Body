@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.services.domain.user;
 
+import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,17 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 		if(result.isEmpty())
 			return null;
 		return result.get();
+	}
+	
+	/**
+	 * @param userId 운동기록의 주인 Id
+	 * @param date 찾으려는 날짜
+	 * @return 조건을 만족하는 운동 기록
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public List<UserExercise> findByUserIdAndDate(Long userId, Calendar date) {
+		return userExerciseRepository.findUserExercisesByUserIdAndDate(userId, date);
 	}
 	
 	/**

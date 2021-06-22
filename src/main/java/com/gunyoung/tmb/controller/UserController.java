@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,6 +15,7 @@ import com.gunyoung.tmb.error.codes.JoinErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.EmailDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.duplication.NickNameDuplicationFoundedException;
 import com.gunyoung.tmb.services.domain.user.UserService;
+import com.gunyoung.tmb.utils.SessionUtil;
 
 /**
  * User 관련 처리 컨트롤러
@@ -24,6 +27,9 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	HttpSession session;
 	
 	/**
 	 * 메인 화면을 반환하는 메소드

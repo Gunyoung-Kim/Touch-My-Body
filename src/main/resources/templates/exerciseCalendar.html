@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html :: head"></head>
+  <head>
+    <link rel="stylesheet" th:href="@{/css/exerciseCalendar.css}">
+  </head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+    <div class="container">
+      <div class="calendar">
+        <div class="header">
+          <div class="year-month"></div>
+          <div class="nav">
+            <button type="nav-btn go-prev" onclick="prevMonth()">&lt;</button>
+            <button type="nav-btn go-today" onclick="goToday()">오늘</button>
+            <button type="nav-btn go-next" onclick="nextMonth()">&gt;</button>
+          </div>
+        </div>
+        <div class="main">
+          <div class="days">
+            <div class="day">일</div>
+            <div class="day">월</div>
+            <div class="day">화</div>
+            <div class="day">수</div>
+            <div class="day">목</div>
+            <div class="day">금</div>
+            <div class="day">토</div>
+          </div>
+          <div class="dates"></div>
+        </div>
+      </div>
+
+      <div class="container-side">
+        <div class="mb-3 recordBtn">
+          <button type="button" class="btn" onclick="goToAddRecords()">오늘 운동 기록하기</button>
+        </div>
+
+        <div class="mt-1 mb-1 recordTitle">
+          <h5>운동 기록</h5>
+        </div>
+
+        <div class="record">
+          <pre>
+            Record
+          </pre>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+    	<div th:replace="fragments.html :: footer"></div>
+    </footer>
+    <script type="text/javascript" th:src="@{/js/exerciseCalendar.js}"></script>
+  </body>
+</html>

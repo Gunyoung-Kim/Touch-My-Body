@@ -87,6 +87,36 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
+	 *  public Exercise findByName(String name)
+	 */
+	
+	@Test
+	@DisplayName("name으로 Exercise 찾기 -> 해당 name의 Exercise 없음")
+	public void findByNameNonExist() {
+		//Given
+		String nonExistName = "None";
+		
+		//When
+		Exercise result = exerciseService.findByName(nonExistName);
+		
+		//Then
+		assertEquals(result,null);
+	}
+	
+	@Test
+	@DisplayName("name으로 Exercise 찾기 -> 정상")
+	public void findByNameTest() {
+		//Given
+		String existName = "Exercies1";
+		
+		//When
+		Exercise result = exerciseService.findByName(existName);
+		
+		//Then
+		assertEquals(result != null, true);
+	}
+	
+	/*
 	 *  public Exercise save(Exercise Exercise)
 	 */
 	

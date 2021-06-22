@@ -11,7 +11,7 @@ import com.gunyoung.tmb.domain.user.User;
 
 @SuppressWarnings("serial")
 public class UserDetailsVO implements UserDetails{
-
+	
 	// Spring Security에서 사용하는 username
 	private String email;
 	
@@ -36,7 +36,7 @@ public class UserDetailsVO implements UserDetails{
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return this.authorities;
 	}
-
+	
 	@Override
 	public String getPassword() {
 		return this.password;

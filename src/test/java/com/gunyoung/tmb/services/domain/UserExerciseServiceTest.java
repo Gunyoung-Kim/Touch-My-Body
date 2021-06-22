@@ -2,7 +2,7 @@ package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
+import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 
 /**
@@ -35,6 +37,9 @@ public class UserExerciseServiceTest {
 	UserExerciseRepository userExerciseRepository;
 	
 	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
 	UserExerciseService userExerciseService;
 	
 	
@@ -46,7 +51,7 @@ public class UserExerciseServiceTest {
 													.sets(i)
 													.weight(i)
 													.description(i+"번째 description")
-													.date(new Date())
+													.date(Calendar.getInstance())
 													.build();
 			
 			userExerciseRepository.save(userExercise);
@@ -93,6 +98,43 @@ public class UserExerciseServiceTest {
 	}
 	
 	/*
+	 * public List<UserExercise> findByUserIdAndDate(Long userId, Calendar date)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("유저Id와 날짜로 운동 기록 찾기 ->정상")
+	public void findByUserIdAndDateTest() {
+		//Given
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("test")
+				.lastName("test")
+				.nickName("test")
+				.build();
+	
+		user = userRepository.save(user);
+		Long userId = user.getId();
+		
+		List<UserExercise> list = userExerciseRepository.findAll();
+		
+		for(int i=0;i<INIT_USER_EXERCISE_NUM/3;i++) {
+			UserExercise ue = list.get(i);
+			
+			ue.setUser(user);
+			
+			userExerciseRepository.save(ue);
+		}
+		
+		//When
+		List<UserExercise> resultList = userExerciseService.findByUserIdAndDate(userId, Calendar.getInstance());
+		
+		//Then
+		assertEquals(resultList.size(),INIT_USER_EXERCISE_NUM/3);
+	}
+	
+	/*
 	 *   public UserExercise save(UserExercise userExercise)
 	 */
 	@Test
@@ -121,7 +163,7 @@ public class UserExerciseServiceTest {
 												.laps(1)
 												.sets(1)
 												.weight(1)
-												.date(new Date())
+												.date(Calendar.getInstance())
 												.description("new")
 												.build();
 		Long countBefore = userExerciseRepository.count();

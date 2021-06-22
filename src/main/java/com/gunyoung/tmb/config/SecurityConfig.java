@@ -20,6 +20,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 import com.gunyoung.tmb.security.UserAuthenticationProvider;
@@ -30,6 +32,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	private UserAuthenticationProvider authenticationProvider;
+	
+	@Autowired
+	AuthenticationSuccessHandler authenticationSuccessHandler;
+	
+	@Autowired
+	LogoutSuccessHandler logoutSuccessHandler;
 	
 	/**
 	 * @return RoleHierarchy 객체 - 유저 권환 계급 체계 반환 
@@ -67,13 +75,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.anyRequest().permitAll();
 		
 		http.formLogin()
-			.loginPage("/login")
-			.defaultSuccessUrl("/")
-			.permitAll();
+			.loginPage("/login").permitAll()
+			.successHandler(authenticationSuccessHandler);
 		
 		http.logout()
-			.logoutSuccessUrl("/")
-			.permitAll();
+			.logoutSuccessHandler(logoutSuccessHandler);
 	}
 	
 	/**

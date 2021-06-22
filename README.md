@@ -84,6 +84,8 @@
 
     2. 위 구현 파트 관련 Exception, ExceptionHandler 구현
 
+    3. 로그인, 회원가입 화면 구현
+
 --- 
 
 ## To do List
