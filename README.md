@@ -96,8 +96,6 @@
 
     1. 매니저들의 유저 검색을 위한 페이지 구현
 
-    2. 
-
 - UserExerciseController
 
     1. 유저의 운동 기록 추가 By Post 처리하는 메소드 구현 
@@ -105,6 +103,8 @@
 - UserExerciseRestController 
 
     1. 유저의 특정 날짜에 한 운동 기록들 반환하는 메소드 구현 
+
+    2. 신체 부위별 데이터 베이스의 모든 운동 종류 반환하는 메소드 구현
 
 - User Domain
 	
@@ -118,9 +118,13 @@
 
     3. UserManageListDTO 구현 - 매니저의 유저 검색 페이지에 보여지는 정보 전달을 위한 DTO
 
+    4. ExerciseSortDTO 구현 - DB에서 Exercise의 name, target 만 가져올때 사용
+
 - Enum 
 
     1. RoleType에 koreanName, EnglishName 필드 추가 -> 클라이언트에게 보일 role 명칭
+	
+    2. TargetType에 koreanName, EnglishName 필드 추가 -> 클라이언트에게 보일 target 명칭
 
 - ErrorController
 
@@ -138,6 +142,8 @@
 
     3. UserRepository에 닉네임이나 이름 검색으로 만족하는 유저들 가져오는 메소드, 총 개수 가져오는 메소드 추가 
 
+    4. ExerciseRepository에 Exercise의 Name Target만 가져오는 메소드 추가
+
 - DomainService (하부 항목에 대한 테스트 코드 우선적 구현)
 
     1. ExerciseService에 이름으로 Exercise 가져오는 메소드 추가 -> Impl에 구현
@@ -147,6 +153,8 @@
     3. UserService 에 닉네임이나 이름 검색으로 만족하는 유저들 가져오는 메소드, 총 개수 가져오는 메소드 추가 -> Impl 구현 
 
     4. UserService에 유저 운동 기록 추가, 삭제하는 메소드 추가 -> Impl에 구현
+
+    5. ExerciseService에 신체부위별 운동 종류들 모두 반환하는 메소드 추가 -> Impl에 구현
 
 - Util
 
