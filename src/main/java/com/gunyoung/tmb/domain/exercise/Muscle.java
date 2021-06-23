@@ -2,6 +2,8 @@ package com.gunyoung.tmb.domain.exercise;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -9,6 +11,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.gunyoung.tmb.domain.BaseEntity;
+import com.gunyoung.tmb.enums.TargetType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,4 +46,11 @@ public class Muscle extends BaseEntity{
 	@NotNull
 	@NotEmpty
 	private String name;
+	
+	/**
+	 * 근육의 대분류에서의 종류
+	 */
+	@Enumerated(EnumType.STRING)
+	@NotNull
+	private TargetType category;
 }

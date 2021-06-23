@@ -15,6 +15,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
+import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
 
@@ -36,6 +37,7 @@ public class MuscleServiceTest {
 		for(int i=1;i<=INIT_MUSCLE_NUM;i++) {
 			Muscle muscle = Muscle.builder()
 									 .name("name" +i)
+									 .category(TargetType.ARM)
 									 .build();
 									 
 			list.add(muscle);
@@ -115,6 +117,7 @@ public class MuscleServiceTest {
 		//Given
 		Muscle newMuscle = Muscle.builder()
 									.name("new Name")
+									.category(TargetType.BACK)
 									.build();
 		Long beforeNum = muscleRepository.count();
 		

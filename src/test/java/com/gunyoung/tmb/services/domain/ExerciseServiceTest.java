@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -115,6 +116,35 @@ public class ExerciseServiceTest {
 		//Then
 		assertEquals(result != null, true);
 	}
+	
+	/*
+	 *  public Map<String, List<String>> getAllExercisesNamewithSorting()
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("모든 운동 이름과 주 타겟으로 분류해서 가져오기 -> 정상")
+	public void getAllExercisesNamewithSortingTest() {
+		//Given
+		Exercise exercise = Exercise.builder()
+			    .name("ArmExercies")
+			    .description("Description")
+			    .caution("Caution")
+			    .movement("Movement")
+			    .target(TargetType.ARM)
+			    .build();
+		exerciseRepository.save(exercise);
+		
+		//When
+		Map<String,List<String>> result = exerciseService.getAllExercisesNamewithSorting();
+		
+		//Then
+		assertEquals(result.size(),2);
+		assertEquals(result.get(TargetType.ARM.getKoreanName()).size(),1);
+		assertEquals(result.get(TargetType.CHEST.getKoreanName()).size(),INIT_EXERCISE_NUM);
+	}
+	
+	
 	
 	/*
 	 *  public Exercise save(Exercise Exercise)

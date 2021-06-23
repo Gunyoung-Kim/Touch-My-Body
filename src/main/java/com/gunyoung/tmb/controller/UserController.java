@@ -14,8 +14,8 @@ import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.error.codes.JoinErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.EmailDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.duplication.NickNameDuplicationFoundedException;
+import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserService;
-import com.gunyoung.tmb.utils.SessionUtil;
 
 /**
  * User 관련 처리 컨트롤러
@@ -27,6 +27,9 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	ExerciseService exerciseService;
 	
 	@Autowired
 	HttpSession session;

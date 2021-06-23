@@ -1,5 +1,9 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
+import com.gunyoung.tmb.dto.ExerciseSortDTO;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 
 /**
@@ -47,6 +52,32 @@ public class ExerciseServiceImpl implements ExerciseService {
 		if(result.isEmpty())
 			return null;
 		return result.get();
+	}
+	
+	/**
+	 * 모든 운동들을 주 운동 부위들로 분류해 반환하는 메소드
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Map<String, List<String>> getAllExercisesNamewithSorting() {
+		Map<String, List<String>> result = new HashMap<>();
+		List<ExerciseSortDTO> list = exerciseRepository.findAllWithNameAndTarget();
+		
+		for(ExerciseSortDTO dto: list) {
+			String target = dto.getTarget().getKoreanName();
+			String name = dto.getName();
+			
+			if(result.containsKey(target)) {
+				result.get(target).add(name);
+			} else {
+				List<String> newList = new ArrayList<>();
+				newList.add(name);
+				result.put(target, newList);
+			}
+		}
+		
+		return result;
 	}
 
 	/**
