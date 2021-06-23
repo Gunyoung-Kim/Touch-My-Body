@@ -1,9 +1,11 @@
 package com.gunyoung.tmb.dto;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.gunyoung.tmb.domain.user.UserExercise;
 
@@ -17,6 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddUserExerciseDTO {
+	
 	@Max(300)
 	@Min(1)
 	private Integer laps;
@@ -31,7 +34,8 @@ public class AddUserExerciseDTO {
 	
 	private String description;
 	
-	private Calendar date;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date date;
 	
 	private String exerciseName;
 	

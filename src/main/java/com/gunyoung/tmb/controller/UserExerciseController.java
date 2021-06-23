@@ -9,11 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.AddUserExerciseDTO;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
+import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.SessionUtil;
 
@@ -25,6 +29,9 @@ public class UserExerciseController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	ExerciseService exerciseService;
 	
 	/**
 	 * User의 그간의 운동 기록을 보여주는 캘린더 
@@ -46,7 +53,7 @@ public class UserExerciseController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.GET)
-	public ModelAndView addUserExerciseView(@ModelAttribute("formModel")AddUserExerciseDTO formModel,ModelAndView mav) {
+	public ModelAndView addUserExerciseView(ModelAndView mav) {
 		mav.setViewName("addRecord");
 		
 		return mav;
@@ -60,8 +67,9 @@ public class UserExerciseController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.POST)
-	public ModelAndView addUserExercise(@ModelAttribute("formModel")AddUserExerciseDTO formModel) {
+	public ModelAndView addUserExercise(@ModelAttribute("formModel") AddUserExerciseDTO formModel) {
 		Long userId = SessionUtil.getLoginUserId(session);
+		
 		User user = userService.findById(userId);
 		
 		if(user == null) 
@@ -69,9 +77,16 @@ public class UserExerciseController {
 		
 		UserExercise userExercise = AddUserExerciseDTO.toUserExercise(formModel);
 		
+		Exercise exercise = exerciseService.findByName(formModel.getExerciseName());
+		
+		if(exercise == null)
+			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByNameNotFoundedError.getDescription());
+		
+		userExercise.setExercise(exercise);
+		
 		userService.addUserExercise(user, userExercise);
 		
-		return new ModelAndView("/user/exercise/calendar/addrecord");
+		return new ModelAndView("redirect:/user/exercise/calendar/addrecord");
 	}
 	
 }

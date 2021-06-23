@@ -3,6 +3,7 @@ package com.gunyoung.tmb.services.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +52,7 @@ public class UserExerciseServiceTest {
 													.sets(i)
 													.weight(i)
 													.description(i+"번째 description")
-													.date(Calendar.getInstance())
+													.date(new Date())
 													.build();
 			
 			userExerciseRepository.save(userExercise);
@@ -163,7 +164,7 @@ public class UserExerciseServiceTest {
 												.laps(1)
 												.sets(1)
 												.weight(1)
-												.date(Calendar.getInstance())
+												.date(new Date())
 												.description("new")
 												.build();
 		Long countBefore = userExerciseRepository.count();

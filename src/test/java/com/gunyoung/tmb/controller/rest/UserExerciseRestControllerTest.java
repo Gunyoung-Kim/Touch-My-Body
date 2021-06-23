@@ -15,7 +15,6 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
-import com.gunyoung.tmb.utils.DateUtil;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
@@ -44,7 +43,7 @@ public class UserExerciseRestControllerTest {
 									.sets(1)
 									.weight(100)
 									.description("ad")
-									.date(Calendar.getInstance())
+									.date(new Date())
 									.user(user)
 									.build();
 		

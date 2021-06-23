@@ -1,6 +1,6 @@
 package com.gunyoung.tmb.domain.user;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +15,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.gunyoung.tmb.domain.BaseEntity;
 import com.gunyoung.tmb.domain.exercise.Exercise;
@@ -79,7 +81,8 @@ public class UserExercise extends BaseEntity {
 	 */
 	@NotNull
 	@Temporal(value=TemporalType.DATE)
-	private Calendar date;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date date;
 	
 	/**
 	 * 해당 운동 기록을 작성한 User
