@@ -168,7 +168,34 @@
 
     2. UserManage (html 추가) - 매니저 이상의 권한자가 유저들 검색할 수 있는 화면
 
- 
+### 2021.6.24
+
+- AOP
+
+    1. LogAspect - 유저가 요청을 보냈을때 로깅 구현
+
+- UserExerciseRestController
+
+    1. 반환형 List<UserExercise> -> List<UserExerciseWithDateDTO> 로 교체 (UserExercise 그대로 하면 User와의 양방향 매핑때문에 순환 참조)
+
+- Domain
+
+    1. UserExercise date 자료형 : Date -> Calendar (Date는 Deprecated)
+
+
+- DTO
+
+    1. UserExerciseWithDateDTO 클래스 추가 -> 유저의 특정 날짜 운동 기록 검색 응답용 DTO
+
+- SessionUtil
+
+    1. 로그인 하기 전에 있던 주소로 리다이렉트 하기위해 전에 있던 주소 세션에 저장용 메소드 추가 
+
+- Template 
+
+    1. exerciseCalendar.js - 특정 날짜 운동 기록 가져오고 반영하는 Ajax 추가  
+
+
 --- 
 
 ## To do List
