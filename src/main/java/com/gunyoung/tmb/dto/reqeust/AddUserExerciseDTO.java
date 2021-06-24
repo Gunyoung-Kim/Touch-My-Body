@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.dto;
+package com.gunyoung.tmb.dto.reqeust;
 
 import java.util.Calendar;
 
@@ -14,6 +14,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 클라이언트에서 유저의 운동기록 추가를 위해 데이터 보낼때 사용
+ * @author kimgun-yeong
+ *
+ */
 @Data
 @Builder
 @NoArgsConstructor

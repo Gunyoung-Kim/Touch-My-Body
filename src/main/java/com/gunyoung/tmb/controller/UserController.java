@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.gunyoung.tmb.dto.UserJoinDTO;
+import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.error.codes.JoinErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.EmailDuplicationFoundedException;

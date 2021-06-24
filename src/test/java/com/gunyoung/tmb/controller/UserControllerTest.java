@@ -22,7 +22,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.user.User;
-import com.gunyoung.tmb.dto.UserJoinDTO;
+import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.UserRepository;
 

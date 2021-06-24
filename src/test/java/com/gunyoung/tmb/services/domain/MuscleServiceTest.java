@@ -90,6 +90,37 @@ public class MuscleServiceTest {
 	}
 	
 	/*
+	 *   public Muscle findByName(String name)
+	 */
+	
+	@Test
+	@DisplayName("이름으로 Muscle 찾기 -> 해당 이름의 Muscle 없음")
+	public void findByNameNonExist() {
+		//Given
+		String nonExistName= "none";
+		
+		//When
+		Muscle result = muscleService.findByName(nonExistName);
+		
+		//Then
+		assertEquals(result,null);
+	}
+	
+	@Test
+	@DisplayName("이름으로 Muscle 찾기 -> 정상")
+	public void findNyNameTest() {
+		//Given
+		String existName = "name1";
+		
+		//When
+		Muscle result = muscleService.findByName(existName);
+		
+		//Then
+		assertEquals(result != null, true);
+	}
+	
+	
+	/*
 	 *  public Muscle save(Muscle muscle)
 	 */
 	

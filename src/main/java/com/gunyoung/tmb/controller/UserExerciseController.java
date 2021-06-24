@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
-import com.gunyoung.tmb.dto.AddUserExerciseDTO;
+import com.gunyoung.tmb.dto.reqeust.AddUserExerciseDTO;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;

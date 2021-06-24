@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.dto;
+package com.gunyoung.tmb.dto.response;
 
 import com.gunyoung.tmb.domain.user.User;
 
@@ -7,6 +7,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 클라이언트에게 매니저가 열람할 유저 정보 전달할때 사용
+ * @author kimgun-yeong
+ *
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

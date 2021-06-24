@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.dto;
+package com.gunyoung.tmb.dto.reqeust;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

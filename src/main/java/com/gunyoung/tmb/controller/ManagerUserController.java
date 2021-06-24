@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.domain.user.User;
-import com.gunyoung.tmb.dto.UserManageListDTO;
+import com.gunyoung.tmb.dto.response.UserManageListDTO;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.PageUtil;
 

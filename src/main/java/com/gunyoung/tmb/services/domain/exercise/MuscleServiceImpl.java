@@ -29,6 +29,21 @@ public class MuscleServiceImpl implements MuscleService {
 			return null;
 		return result.get();
 	}
+	
+	/**
+	 * @param name 찾으려는 Muscle 이름
+	 * @return Muscle, Null (해당 이름의 Muscle이 없을때)
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Muscle findByName(String name) {
+		Optional<Muscle> result = muscleRepository.findByName(name);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+			
+	}
 
 	/**
 	 * @param muscle 저장하려는 Muscle

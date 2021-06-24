@@ -35,6 +35,7 @@ public class ExerciseMuscleServiceTest {
 		List<ExerciseMuscle> list = new ArrayList<>();
 		for(int i=1;i<=INIT_EXERCISE_MUSCLE_NUM;i++) {
 			ExerciseMuscle exerciseMuscle = ExerciseMuscle.builder()
+									 .muscleName("muscleName")
 									 .isMain(true)
 									 .build();
 			list.add(exerciseMuscle);
@@ -113,6 +114,7 @@ public class ExerciseMuscleServiceTest {
 	public void saveTest() {
 		//Given
 		ExerciseMuscle newExerciseMuscle = ExerciseMuscle.builder()
+									.muscleName("muscleName")
 									.isMain(true)
 									.build();
 		Long beforeNum = exerciseMuscleRepository.count();

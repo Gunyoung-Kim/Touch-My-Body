@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.tmb.domain.user.UserExercise;
-import com.gunyoung.tmb.dto.ExerciseInfoBySortDTO;
 import com.gunyoung.tmb.dto.reqeust.DateDTO;
+import com.gunyoung.tmb.dto.response.ExerciseInfoBySortDTO;
 import com.gunyoung.tmb.dto.response.UserExerciseWithDateDTO;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
@@ -41,7 +41,7 @@ public class UserExcerciseRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/exercise/calendar/records",method=RequestMethod.GET)
-	public List<UserExerciseWithDateDTO> getExerciseRecords(@ModelAttribute("date")DateDTO date) {
+	public List<UserExerciseWithDateDTO> getExerciseRecords(@ModelAttribute DateDTO date) {
 		//Long userId = SessionUtil.getLoginUserId(session);
 		Long userId = Long.valueOf(1);
 		

@@ -46,9 +46,12 @@ public class ExerciseMuscle extends BaseEntity{
 	@NotNull
 	private boolean isMain;
 	
+	@NotNull
+	private String muscleName;
+	
 	/**
 	 * 관련 운동을 나타내는 Exercise 객체
-	 * fetch: 지로딩
+	 * fetch: 지연로딩
 	 */
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="exercise_id")

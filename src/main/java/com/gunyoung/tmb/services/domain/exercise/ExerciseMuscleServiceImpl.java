@@ -1,5 +1,6 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,17 @@ public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 	public ExerciseMuscle save(ExerciseMuscle exerciseMuscle) {
 		return exerciseMuscleRepository.save(exerciseMuscle);
 	}
-
+	
+	/**
+	 * @param exerciseMuscles 저장하려는 ExerciseMuscles
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public List<ExerciseMuscle> saveAll(Iterable<ExerciseMuscle> exerciseMuscles) {
+		return exerciseMuscleRepository.saveAll(exerciseMuscles);
+	}
+	
+	
 	/**
 	 * @param exerciseMuscle 삭제하려는 ExerciseMuscle
 	 * @author kimgun-yeong

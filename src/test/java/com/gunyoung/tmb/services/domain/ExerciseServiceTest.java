@@ -1,6 +1,7 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,14 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
+import com.gunyoung.tmb.domain.exercise.Muscle;
+import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
+import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
+import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 
 @SpringBootTest
@@ -28,6 +35,12 @@ public class ExerciseServiceTest {
 	
 	@Autowired
 	ExerciseRepository exerciseRepository;
+	
+	@Autowired
+	MuscleRepository muscleRepository;
+	
+	@Autowired
+	ExerciseMuscleRepository exerciseMuscleRepository;
 	
 	@Autowired
 	ExerciseService exerciseService;
@@ -186,6 +199,107 @@ public class ExerciseServiceTest {
 		
 		//Then
 		assertEquals(beforeNum+1,exerciseRepository.count());
+	}
+	
+	/*
+	 *  public Exercise saveWithAddExerciseDTO(AddExerciseDTO dto)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("AddExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음")
+	public void saveWithAddExerciseDTOMuscleNotFounded() {
+		//Given
+		String nonExistMuscleName =  "none";
+		
+		AddExerciseDTO dto = AddExerciseDTO.builder()
+				.name("newName")
+				.descriptoin("newDes")
+				.caution("newCau")
+				.movement("newMove")
+				.target(TargetType.BACK.getKoreanName())
+				.build();
+		
+		dto.getMainMuscles().add(nonExistMuscleName);
+		long exerciseNum =  exerciseRepository.count();
+		long exerciseMuscleNum = exerciseMuscleRepository.count();
+		
+		//When,Then
+		assertThrows(MuscleNotFoundedException.class, () -> {
+			exerciseService.saveWithAddExerciseDTO(dto);
+		});
+		
+		
+		assertEquals(exerciseNum, exerciseRepository.count());
+		assertEquals(exerciseMuscleNum,exerciseMuscleRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("AddExerciseDTO로 Exercise 추가하기 -> 해당 TargetType 없음")
+	public void saveWithAddExerciseDTOTargetTypeNotFounded() {
+		//Given
+		String existMuscleName = "new Muscle";
+		Muscle muscle = Muscle.builder()
+				.name(existMuscleName)
+				.category(TargetType.ARM)
+				.build();
+		muscleRepository.save(muscle);
+		
+		
+		AddExerciseDTO dto = AddExerciseDTO.builder()
+				.name("newName")
+				.descriptoin("newDes")
+				.caution("newCau")
+				.movement("newMove")
+				.target("none")
+				.build();
+		dto.getMainMuscles().add(existMuscleName);
+		
+		long exerciseNum =  exerciseRepository.count();
+		long exerciseMuscleNum = exerciseMuscleRepository.count();
+		
+		//When
+		assertThrows(TargetTypeNotFoundedException.class, () -> {
+			exerciseService.saveWithAddExerciseDTO(dto);
+		});
+		
+		//Then
+		
+		assertEquals(exerciseNum, exerciseRepository.count());
+		assertEquals(exerciseMuscleNum,exerciseMuscleRepository.count());
+	}
+	@Test
+	@Transactional
+	@DisplayName("AddExerciseDTO로 Exercise 추가하기 -> 정상")
+	public void saveWithAddExerciseDTOTest() {
+		//Given
+		String existMuscleName = "new Muscle";
+		Muscle muscle = Muscle.builder()
+				.name(existMuscleName)
+				.category(TargetType.ARM)
+				.build();
+		muscleRepository.save(muscle);
+		
+		AddExerciseDTO dto = AddExerciseDTO.builder()
+				.name("newName")
+				.descriptoin("newDes")
+				.caution("newCau")
+				.movement("newMove")
+				.target(TargetType.BACK.getKoreanName())
+				.build();
+		dto.getMainMuscles().add(existMuscleName);
+		
+		long exerciseNum =  exerciseRepository.count();
+		long exerciseMuscleNum = exerciseMuscleRepository.count();
+		
+		//When
+		Exercise result = exerciseService.saveWithAddExerciseDTO(dto);
+		
+		//Then
+		assertEquals(exerciseNum+1, exerciseRepository.count());
+		assertEquals(result.getExerciseMuscles().size(),1);
+		assertEquals(exerciseMuscleNum+1,exerciseMuscleRepository.count());
 	}
 	
 	/*

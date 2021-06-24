@@ -10,6 +10,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 클라이언트에게 해당 날짜의 운동 기록 반환할때 사용
+ * @author kimgun-yeong
+ *
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +30,11 @@ public class UserExerciseWithDateDTO {
 	
 	private String exerciseName;
 	
+	/**
+	 * UserExercise List 객체를 UserExerciseWithDateDTO 로 변환하는 메소드
+	 * @param list
+	 * @return
+	 */
 	public static List<UserExerciseWithDateDTO> of(List<UserExercise> list) {
 		List<UserExerciseWithDateDTO> result = new ArrayList<>();
 		for(UserExercise ue: list) {
@@ -42,6 +52,11 @@ public class UserExerciseWithDateDTO {
 		return result;
 	}
 	
+	/**
+	 * UserExercise 객체를 UserExerciseWithDateDTO로 변환하는 메소드
+	 * @param userExercise
+	 * @return
+	 */
 	public static UserExerciseWithDateDTO of(UserExercise userExercise) {
 		UserExerciseWithDateDTO dto = UserExerciseWithDateDTO.builder()
 				.laps(userExercise.getLaps())

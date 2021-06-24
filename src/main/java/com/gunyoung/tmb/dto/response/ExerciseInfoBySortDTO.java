@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.dto;
+package com.gunyoung.tmb.dto.response;
 
 import java.util.List;
 

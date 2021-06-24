@@ -2,34 +2,7 @@
 <html lang="en" dir="ltr">
   <head th:include="fragments.html :: head"></head>
   <head>
-    <style media="screen">
-      .container {
-
-      }
-
-      .circle {
-        width:150px;
-        height:150px;
-        border-radius:75px;
-        text-align:center;
-        margin:0 auto;
-        font-size:12px;
-        vertical-align:middle;
-        line-height:150px;
-      }
-
-      .my {
-        border:1px solid black;
-      }
-
-      .info {
-        border:1px solid black;
-      }
-
-      .community {
-        border:1px solid black;
-      }
-    </style>
+    <link rel="stylesheet" href="/css/index.css">
   </head>
   <body>
     <header>
@@ -39,23 +12,25 @@
       <h2>Touch My Body</h2>
     </div>
     <div class="container">
-      <div class="circle my mb-3">
+      <div class="circle my mb-3" onclick="goToMyRecords()">
         <div class="">
           내 운동 기록 보러가기
         </div>
       </div>
 
-      <div class="circle info mb-3">
+      <div class="circle info mb-3" onclick="goToExerciseInfo()">
         <div class="">
           운동 정보 보러가기
         </div>
       </div>
 
-      <div class="circle community mb-3">
+      <div class="circle community mb-3" onclick="goToCommunity()">
         <div class="">
           우리 소통해요
         </div>
       </div>
     </div>
+
+    <script type="text/javascript" th:src="@{/js/index.js}"></script>
   </body>
 </html>
