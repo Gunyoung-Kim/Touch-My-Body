@@ -1,6 +1,8 @@
 //이번달 날짜
 let date = new Date();
 
+let current;
+
 const renderCalendar = () => {
 
   const viewYear = date.getFullYear();
@@ -35,10 +37,10 @@ const renderCalendar = () => {
 
   const firstDateIndex = dates.indexOf(1);
   const lastDateIndex = dates.lastIndexOf(TLDate);
-  dates.forEach((date,i) => {
+  dates.forEach((dateNum,i) => {
     const condition = i >= firstDateIndex && i <= lastDateIndex +1 ? 'this' : 'other';
 
-    dates[i] = `<div class="date"><span class="${condition}">${date}</span></div>`;
+    dates[i] = `<div class="date" onclick="getRecords(${dateNum})"><span class="${condition}">${dateNum}</span></div>`;
   })
 
   document.querySelector('.dates').innerHTML = dates.join('');
@@ -72,14 +74,38 @@ const goToday = () => {
 }
 
 const goToAddRecords = () => {
-  location.href = 'user/exercise/calendar/addrecord';
+  location.href = '/user/exercise/calendar/addrecord';
 }
-/*
-const getRecords = () => {
-  $.getJSON("user/exercise/calendar/records",{year:"",month:"",date:""},
-    function(data) {
 
+
+
+const getRecords = (dateNum) => {
+
+  $('#recordsList').empty();
+
+  $.ajax({
+    url: '/user/exercise/calendar/records',
+    method: 'GET',
+    data: {"year" : date.getFullYear(), "month" : date.getMonth(), "date" : dateNum},
+
+    success:function(data) {
+      console.log(data);
+      if(data.length==0) {
+        console.log("결과가 없습니다.");
+      } else {
+        $.each(data, function() {
+          $('#recordsList').append(
+            `
+            <tr>
+            <td colspan="2">${this.exerciseName}</td>
+            <td>${this.weight}</td>
+            <td>${this.sets}</td>
+            <td>${this.laps}</td>
+            <td colspan="2">${this.description}</td>
+            </tr>
+            `);
+        })
+      }
     }
-  )
+  })
 }
-*/

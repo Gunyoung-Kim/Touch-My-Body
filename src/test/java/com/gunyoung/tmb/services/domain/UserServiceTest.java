@@ -2,6 +2,8 @@ package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -363,7 +365,7 @@ public class UserServiceTest {
 												.laps(1)
 												.sets(1)
 												.weight(1)
-												.date(new Date())
+												.date(Calendar.getInstance())
 												.description("test")
 												.build();
 		

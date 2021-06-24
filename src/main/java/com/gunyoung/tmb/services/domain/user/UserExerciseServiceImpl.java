@@ -44,6 +44,7 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 	 * @author kimgun-yeong
 	 */
 	@Override
+	@Transactional(readOnly=true)
 	public List<UserExercise> findByUserIdAndDate(Long userId, Calendar date) {
 		return userExerciseRepository.findUserExercisesByUserIdAndDate(userId, date);
 	}

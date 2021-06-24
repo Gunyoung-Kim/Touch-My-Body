@@ -7,8 +7,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class SessionUtil {
 	
 	private static final String LOGIN_USER_ID = "LOGIN_USER_ID";
+	private static final String AFTER_LOGIN_REDIRECTED_URL = "AFTER_LOGIN_REDIRECTED_URL";
 	
 	private SessionUtil() {}
+	
+	// ------------------- LOGIN_USER_ID ---------------------------------------
 	
 	/**
 	 * 현재 접속자의 username을 SecurityContext에서 가져오는 메소드
@@ -44,6 +47,35 @@ public class SessionUtil {
 	public static void removeLoginUserId(HttpSession session) {
 		session.removeAttribute(LOGIN_USER_ID);
 	}
+	
+	// ------------------- AFTER_LOGIN_REDIRECTED_URL  ---------------------------------------
+	
+	/**
+	 * 로그인 후 리다이렉트 될 주소 세션에 저장
+	 * @author kimgun-yeong
+	 */
+	public static void setAfterLoginRedirectedUrl(HttpSession session) {
+		session.setAttribute(AFTER_LOGIN_REDIRECTED_URL, session);
+	}
+	
+	/**
+	 * 로그인 후 리다이렉트 될 주소 반환 
+	 * @author kimgun-yeong
+	 */
+	public static String getAfterLoginRedirectedUrl(HttpSession session) {
+		return (String) session.getAttribute(AFTER_LOGIN_REDIRECTED_URL);
+	}
+	
+	/**
+	 * 세션에서 로그인 후 리다이렉트 될 주소 삭제 
+	 * @author kimgun-yeong
+	 */
+	public static void removeAfterLoginRedirectedUrl(HttpSession session) {
+		session.removeAttribute(AFTER_LOGIN_REDIRECTED_URL);
+	}
+	
+	
+	// -------------------- FOR ALL ------------------------------------------------
 	
 	/**
 	 * 현재 세션에 있는 모든 정보들 삭제

@@ -11,6 +11,7 @@
 
 .container-side {
   display: block;
+  align-content: center;
   width: 400px;
   margin: 50px;
 }
@@ -26,8 +27,17 @@
   align-items: center;
 }
 
+.recordBtnDiv {
+
+}
+
 .recordBtn {
-  margin: 50px;
+  width: 50%;
+  margin: 0px auto;
+  display: block;
+  background-color: #000 !important;
+  color: white;
+  text-align: center;
 
 }
 

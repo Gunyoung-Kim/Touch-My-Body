@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.controller;
 
+import java.util.Calendar;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +77,7 @@ public class UserExerciseController {
 		if(user == null) 
 			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
 		
+		System.out.println(formModel.getDate().get(Calendar.YEAR)+"-" + formModel.getDate().get(Calendar.MONTH) +"- " + formModel.getDate().get(Calendar.DATE));
 		UserExercise userExercise = AddUserExerciseDTO.toUserExercise(formModel);
 		
 		Exercise exercise = exerciseService.findByName(formModel.getExerciseName());

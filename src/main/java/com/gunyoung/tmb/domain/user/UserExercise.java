@@ -1,6 +1,6 @@
 package com.gunyoung.tmb.domain.user;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -82,7 +82,7 @@ public class UserExercise extends BaseEntity {
 	@NotNull
 	@Temporal(value=TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date date;
+	private Calendar date;
 	
 	/**
 	 * 해당 운동 기록을 작성한 User

@@ -1,6 +1,6 @@
 package com.gunyoung.tmb.dto;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -35,7 +35,7 @@ public class AddUserExerciseDTO {
 	private String description;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date date;
+	private Calendar date;
 	
 	private String exerciseName;
 	
