@@ -196,6 +196,35 @@
     1. exerciseCalendar.js - 특정 날짜 운동 기록 가져오고 반영하는 Ajax 추가  
 
 
+### 2021.6.25
+
+- ExerciseManagerController
+
+    1. 매니저가 운동 종류 추가 처리하는 메소드 구현
+
+- ExerciseRestController
+
+    1. 운동 정보 반환하는 메소드 구현
+
+- DTO
+
+    1. DTO 들 사용 목적별 패키지 분기 (Request Param 바인딩용, Reponse 객체용, DB 쿼리 결과 바인딩용)
+
+    2. AddExerciseDTO 추가 - 매니저가 운동 종류 추가할떄 요청 파라미터 바인딩용
+
+    3. ExerciseInfoDTO 추가 - 운동 정보 클라이언트에 보낼때 사용
+
+- Error
+
+    1. MuscleErrorCode, TargetTypeErrorCode 추가 
+
+    2. MuscleNotFoundedException, TargetTypeNotFoundedException 추가
+
+- ExerciseService (하위 항목들은 Test 코드 선 작성 후 구현)
+
+    1. saveWithAddExerciseDTO 매소드 추가 - DTO를 통해 운동 정보 추가하는 메소드, Impl에 구현
+
+
 --- 
 
 ## To do List
