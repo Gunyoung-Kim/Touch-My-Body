@@ -244,6 +244,31 @@
 
 - ExerciseSpace Entity 및 관련 서비스 클래스들 삭제 (별다른 의미 없는 테이블이라 판단)
 
+### 2021.6.26
+
+- ExercisePostRestController -> 하위 항목에 대한 테스트 코드 작성
+
+    1. 유저가 게시글에 댓글 추가할때 처리하는 메소드 추가
+
+    2. 유저가 게시글에 댓글 삭제할떄 처리하는 메소드 추가
+
+- DTO
+
+    1. AddCommentDTO - 클라이언트에서 유저의 게시글에 댓글 작성 요청 파라미터 보낼때 바인딩에 사용 
+
+- Error
+
+    1. CommentErrorCode 추가
+
+    2. CommentNotFoundedException,UserNotMatchException 추가 
+
+- CommentService -> Impl에 구현, 하위 항목에 대한 테스트 코드 작성
+
+    1. Comment, User, ExercisePost 받아서 Comment 저장하는 메소드 추가 
+
+    2. Delete 메소드에 관계된 테이블과 관계 끊는 로직 추가 
+
+
 --- 
 
 ## To do List
