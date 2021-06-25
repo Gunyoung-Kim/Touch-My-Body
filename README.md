@@ -256,6 +256,10 @@
 
     1. AddCommentDTO - 클라이언트에서 유저의 게시글에 댓글 작성 요청 파라미터 보낼때 바인딩에 사용 
 
+    2. MuscleNameAndCategoryDTO - 근육의 이름과 카테고리만 데이터베이스에서 가져오기 위한 바인딩용 객체
+
+    3. MuscleInfoBySortDTO - 근육을 카테고리별로 분류해서 클라이언트에게 전송하기위해 사용되는 객체
+
 - Error
 
     1. CommentErrorCode 추가
@@ -267,6 +271,18 @@
     1. Comment, User, ExercisePost 받아서 Comment 저장하는 메소드 추가 
 
     2. Delete 메소드에 관계된 테이블과 관계 끊는 로직 추가 
+
+- ExerciseManagerRestController -> 하위 항목에 대해 테스트 코드 구현
+
+    1. 근육 종류 별로 반환하는 메소드 구현 
+
+- MuscleRepository
+
+    1. 근육의 이름과 카테고리만 가져오는 쿼리 구현 
+
+- MuscleService -> Impl에 구현, 하위 항목에 대해 테스트 코드 구현 
+
+    1. 근육을 이름과 카테고리로 분류한 맵 반환하는 메소드 추가 
 
 
 --- 
