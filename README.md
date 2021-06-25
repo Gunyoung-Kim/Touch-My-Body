@@ -242,6 +242,8 @@
 
     3. delete(PostLike postLike)에 User,ExercisePost의 postLikes.remove 로직 추가 
 
+- ExerciseSpace Entity 및 관련 서비스 클래스들 삭제 (별다른 의미 없는 테이블이라 판단)
+
 --- 
 
 ## To do List

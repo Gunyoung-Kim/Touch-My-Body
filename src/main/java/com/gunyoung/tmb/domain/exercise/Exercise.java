@@ -8,12 +8,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -96,11 +94,11 @@ public class Exercise extends BaseEntity{
 	private List<ExercisePost> exercisePosts = new ArrayList<>();
 	
 	/**
-	 * 해당 운동에 대한 심화 정보들을 담고 있는 객체
+	 * 관련 운동의 정보에 대해 유저가 운영자에게 보낸 정보수정 요청 피드백들
 	 * fetch: 지연로딩
-	 * cascade: All
 	 */
-	@OneToOne(mappedBy="exercise",fetch=FetchType.LAZY,cascade = {CascadeType.ALL})
-	private ExerciseSpace exerciseSpace;
+	@OneToMany(mappedBy="exercise")
+	@Builder.Default
+	private List<Feedback> feedbacks = new ArrayList<>();
 	
 }

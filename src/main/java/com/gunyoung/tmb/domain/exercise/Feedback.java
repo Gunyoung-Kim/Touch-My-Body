@@ -68,6 +68,6 @@ public class Feedback extends BaseEntity {
 	 * fetch: 지로딩
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="exercise_space_id")
-	private ExerciseSpace exerciseSpace;
+	@JoinColumn(name="exercise_id")
+	private Exercise exercise;
 }
