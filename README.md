@@ -216,14 +216,31 @@
 
 - Error
 
-    1. MuscleErrorCode, TargetTypeErrorCode 추가 
+    1. MuscleErrorCode, TargetTypeErrorCode, ExercisePostErrorCode,LikeErrorCode, 추가 
 
-    2. MuscleNotFoundedException, TargetTypeNotFoundedException 추가
+    2. MuscleNotFoundedException, TargetTypeNotFoundedException, ExercisePostNotFoundedException,LikeNotFoundedException 추가
 
 - ExerciseService (하위 항목들은 Test 코드 선 작성 후 구현)
 
     1. saveWithAddExerciseDTO 매소드 추가 - DTO를 통해 운동 정보 추가하는 메소드, Impl에 구현
 
+- ExercisePostRestController -> 하위 항목에 대한 테스트 코드 작성
+
+    1. 운동 게시글에 좋아요 누르는 요청 처리하는 메소드 추가 
+
+    2. 운동 게시글에 좋아요 취소하는 요청 처리하는 메소드 추가 
+
+- PostLikeRepository
+
+    1. User Id, ExercisePost Id로 PostLike 찾는 메소드 추가 
+
+- PostLikeService -> Impl에 구현, 하위 항목에 대한 테스트 코드 작성
+
+    1. User Id, ExercisePost Id로 PostLike 찾는 메소드 추가 
+ 
+    2. User, ExercisePost로 PostLike 추가하는 메소드 추가 
+
+    3. delete(PostLike postLike)에 User,ExercisePost의 postLikes.remove 로직 추가 
 
 --- 
 
