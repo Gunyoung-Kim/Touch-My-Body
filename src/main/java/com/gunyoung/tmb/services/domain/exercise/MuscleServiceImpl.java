@@ -1,5 +1,9 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
+import com.gunyoung.tmb.dto.jpa.MuscleNameAndCategoryDTO;
 import com.gunyoung.tmb.repos.MuscleRepository;
 
 @Service("muscleService")
@@ -44,6 +49,30 @@ public class MuscleServiceImpl implements MuscleService {
 		return result.get();
 			
 	}
+	
+	/**
+	 * Muscle을 category로 분류해서 반환할때 사용
+	 * @return key: TargetType.koreanName
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly =true)
+	public Map<String, List<String>> getAllMusclesWithSortingByCategory() {
+		Map<String,List<String>> result = new HashMap<>();
+		List<MuscleNameAndCategoryDTO> muscles = muscleRepository.findAllWithNamaAndCategory();
+		
+		for(MuscleNameAndCategoryDTO muscle: muscles) {
+			if(result.containsKey(muscle.getCategory().getKoreanName())) {
+				result.get(muscle.getCategory().getKoreanName()).add(muscle.getName());
+			} else {
+				List<String> newList = new ArrayList<>();
+				newList.add(muscle.getName());
+				result.put(muscle.getCategory().getKoreanName(), newList);
+			}
+		}
+		
+		return result;
+	}
 
 	/**
 	 * @param muscle 저장하려는 Muscle
@@ -63,4 +92,6 @@ public class MuscleServiceImpl implements MuscleService {
 	public void delete(Muscle muscle) {
 		muscleRepository.delete(muscle);
 	}
+
+	
 }

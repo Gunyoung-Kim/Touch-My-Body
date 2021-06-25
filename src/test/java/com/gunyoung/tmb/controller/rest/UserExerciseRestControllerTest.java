@@ -26,7 +26,6 @@ import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
-import com.gunyoung.tmb.utils.SessionUtil;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")

@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 import com.gunyoung.tmb.domain.exercise.Muscle;
-import com.gunyoung.tmb.dto.jpa.ExerciseSortDTO;
+import com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO;
 import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
@@ -77,9 +77,9 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Transactional(readOnly=true)
 	public Map<String, List<String>> getAllExercisesNamewithSorting() {
 		Map<String, List<String>> result = new HashMap<>();
-		List<ExerciseSortDTO> list = exerciseRepository.findAllWithNameAndTarget();
+		List<ExerciseNameAndTargetDTO> list = exerciseRepository.findAllWithNameAndTarget();
 		
-		for(ExerciseSortDTO dto: list) {
+		for(ExerciseNameAndTargetDTO dto: list) {
 			String target = dto.getTarget().getKoreanName();
 			String name = dto.getName();
 			

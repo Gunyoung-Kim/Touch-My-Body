@@ -22,6 +22,7 @@ import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.PostLikeRepository;
@@ -67,6 +68,7 @@ public class ExercisePostRestControllerTest {
 				.firstName("test")
 				.lastName("test")
 				.nickName("test")
+				.role(RoleType.USER)
 				.build();
 	
 		userRepository.save(user);
@@ -88,6 +90,7 @@ public class ExercisePostRestControllerTest {
 	@AfterEach
 	void tearDown() {
 		userRepository.deleteAll();
+		exercisePostRepository.deleteAll();
 		session.clearAttributes();
 	}
 	

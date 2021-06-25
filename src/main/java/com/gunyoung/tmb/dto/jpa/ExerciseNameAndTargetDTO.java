@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 운동을 target으로 분류해서 반환하기 위해 데이터베이스에서 관련 데이터 가져올때 사용
+ * 운동을 name과 target만 데이터베이스에서 가져올때 바인딩에 사용
  * @author kimgun-yeong
  *
  */
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ExerciseSortDTO {
+public class ExerciseNameAndTargetDTO {
 	private String name;
 	private TargetType target;
 }

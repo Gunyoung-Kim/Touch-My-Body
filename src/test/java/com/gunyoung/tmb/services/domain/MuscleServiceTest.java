@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -119,6 +120,29 @@ public class MuscleServiceTest {
 		assertEquals(result != null, true);
 	}
 	
+	/*
+	 *  public Map<String, List<String>> getAllMusclesWithSortingByCategory()
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("카테고리로 분류해서 Muscle들 반환 -> 정상")
+	public void getAllMusclesWithSortingByCategoryTest() {
+		//Given
+		Muscle muscle = Muscle.builder()
+				 .name("new")
+				 .category(TargetType.BACK)
+				 .build();
+		muscleRepository.save(muscle);
+		
+		//When
+		Map<String, List<String>> result = muscleService.getAllMusclesWithSortingByCategory();
+		
+		//Then
+		assertEquals(result.size(),2);
+		assertEquals(result.get(TargetType.ARM.getKoreanName()).size(),INIT_MUSCLE_NUM);
+		assertEquals(result.get(TargetType.BACK.getKoreanName()).size(),1);
+	}
 	
 	/*
 	 *  public Muscle save(Muscle muscle)
