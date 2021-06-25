@@ -18,7 +18,7 @@ public class ExerciseRestController {
 	@Autowired
 	ExerciseService exerciseService;
 	
-	@RequestMapping(value="/exericse/info",method = RequestMethod.GET)
+	@RequestMapping(value="/exericse/about/info",method = RequestMethod.GET)
 	public ExerciseInfoDTO getExerciseInfo(@RequestParam("name") String name) {
 		Exercise exercise = exerciseService.findByName(name);
 		

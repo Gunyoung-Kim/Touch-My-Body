@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.services.domain.like;
+package com.gunyoung.tmb.services.domain.exercise;
 
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 

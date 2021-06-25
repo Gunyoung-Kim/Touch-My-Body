@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.services.domain.like;
+package com.gunyoung.tmb.services.domain.exercise;
 
 import java.util.Optional;
 

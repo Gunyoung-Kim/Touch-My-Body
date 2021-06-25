@@ -21,6 +21,7 @@ import com.gunyoung.tmb.dto.response.ExerciseInfoBySortDTO;
 import com.gunyoung.tmb.dto.response.UserExerciseWithDateDTO;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
+import com.gunyoung.tmb.utils.SessionUtil;
 
 @RestController
 public class UserExcerciseRestController {
@@ -42,8 +43,7 @@ public class UserExcerciseRestController {
 	 */
 	@RequestMapping(value="/user/exercise/calendar/records",method=RequestMethod.GET)
 	public List<UserExerciseWithDateDTO> getExerciseRecords(@ModelAttribute DateDTO date) {
-		//Long userId = SessionUtil.getLoginUserId(session);
-		Long userId = Long.valueOf(1);
+		Long userId = SessionUtil.getLoginUserId(session);
 		
 		Calendar paramDate = new GregorianCalendar(date.getYear(),date.getMonth(),date.getDate());
 		

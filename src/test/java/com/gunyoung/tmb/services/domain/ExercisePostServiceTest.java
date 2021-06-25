@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
-import com.gunyoung.tmb.services.domain.like.ExercisePostService;
+import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
