@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum UserErrorCode {
 	
-	UserNotFoundedError("U001","Can't find user")
+	UserNotFoundedError("U001","Can't find user"),
+	UserNotMatchError("U002", "Request user is not match to owner of source")
 	;
 	private String code;
 	private String description;

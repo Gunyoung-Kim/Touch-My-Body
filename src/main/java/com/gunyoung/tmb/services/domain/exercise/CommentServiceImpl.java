@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Comment;
+import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.repos.CommentRepository;
+import com.gunyoung.tmb.services.domain.user.UserService;
 
 /**
  * CommentService 구현 클래스
@@ -20,6 +23,12 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Autowired
 	CommentRepository commentRepository;
+	
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	ExercisePostService exercisePostService;
 
 	/**
 	 * @param id 찾으려는 Comment의 id
@@ -44,6 +53,21 @@ public class CommentServiceImpl implements CommentService {
 	public Comment save(Comment comment) {
 		return commentRepository.save(comment);
 	}
+	
+	/**
+	 * @param user 댓글을 추가한 User
+	 * @param exercisePost 댓글이 추가된 ExercisePost
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public Comment saveWithUserAndExercisePost(Comment comment, User user, ExercisePost exercisePost) {
+		comment.setUser(user);
+		comment.setExercisePost(exercisePost);
+		user.getComments().add(comment);
+		exercisePost.getComments().add(comment);
+		
+		return save(comment);
+	}
 
 	/**
 	 * @param comment 삭제하려는 Comment
@@ -51,8 +75,21 @@ public class CommentServiceImpl implements CommentService {
 	 */
 	@Override
 	public void delete(Comment comment) {
+		User user = comment.getUser();
+		
+		if(user != null) {
+			user.getComments().remove(comment);
+		}
+		
+		ExercisePost exercisePost = comment.getExercisePost();
+		
+		if(exercisePost != null) {
+			exercisePost.getComments().remove(comment);
+		}
+		
 		commentRepository.delete(comment);
 	}
+
 	
 
 }

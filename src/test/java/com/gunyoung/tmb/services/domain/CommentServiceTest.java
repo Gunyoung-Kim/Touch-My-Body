@@ -15,7 +15,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Comment;
+import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentRepository;
+import com.gunyoung.tmb.repos.ExercisePostRepository;
+import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 
 @SpringBootTest
@@ -29,6 +34,12 @@ public class CommentServiceTest {
 	
 	@Autowired
 	CommentService commentService;
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
+	ExercisePostRepository exercisePostRepository;
 	
 	@BeforeEach
 	void setup() {
@@ -122,6 +133,55 @@ public class CommentServiceTest {
 	}
 	
 	/*
+	 * public Comment saveWithUserAndExercisePost(User user, ExercisePost exercisePost)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("User, ExercisePost의 Comment 추가 -> 정상")
+	public void saveWithUserAndExercisePostTest() {
+		//Given
+		Comment comment = Comment.builder()
+				 .writerIp("171.0.0.1")
+				 .contents("contents")
+				 .isAnonymous(true)
+				 .build();
+		
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("first")
+				.lastName("last")
+				.role(RoleType.USER)
+				.nickName("nickName")
+				.build();
+		
+		userRepository.save(user);
+		
+		ExercisePost exercisePost = ExercisePost.builder()
+				.title("title")
+				.contents("contents")
+				.build();
+		
+		exercisePostRepository.save(exercisePost);
+		
+		int userCommentNum = user.getComments().size();
+		Long userId = user.getId();
+		int exercisePostCommentNum = exercisePost.getComments().size();
+		Long exercisePostId = exercisePost.getId();
+		
+		long commentNum = commentRepository.count();
+		
+		//When
+		commentService.saveWithUserAndExercisePost(comment,user, exercisePost);
+		
+		//Then
+		assertEquals(userCommentNum +1,userRepository.findById(userId).get().getComments().size());
+		assertEquals(exercisePostCommentNum +1,exercisePostRepository.findById(exercisePostId).get().getComments().size());
+		assertEquals(commentNum +1 , commentRepository.count());
+	}
+	
+	/*
 	 *  public void delete(Comment comment)
 	 */
 	
@@ -138,5 +198,54 @@ public class CommentServiceTest {
 		
 		//Then
 		assertEquals(beforeNum-1,commentRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Comment 삭제하기, 다른 entity와의 연관성 삭제 -> 정상")
+	public void deleteWithRelationWithOtherEntityTest() {
+		//Given
+		Comment comment = commentRepository.findAll().get(0);
+		
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("first")
+				.lastName("last")
+				.role(RoleType.USER)
+				.nickName("nickName")
+				.build();
+		
+		userRepository.save(user);
+		
+		ExercisePost exercisePost = ExercisePost.builder()
+				.title("title")
+				.contents("contents")
+				.build();
+		
+		exercisePostRepository.save(exercisePost);
+		
+		comment.setUser(user);
+		comment.setExercisePost(exercisePost);
+		user.getComments().add(comment);
+		exercisePost.getComments().add(comment);
+		
+		commentRepository.save(comment);
+		
+		int userCommentNum = user.getComments().size();
+		Long userId = user.getId();
+		int exercisePostCommentNum = exercisePost.getComments().size();
+		Long exercisePostId = exercisePost.getId();
+		
+		long commentNum = commentRepository.count();
+		
+		//When
+		commentService.delete(comment);
+		
+		//Then
+		assertEquals(userCommentNum -1,userRepository.findById(userId).get().getComments().size());
+		assertEquals(exercisePostCommentNum -1,exercisePostRepository.findById(exercisePostId).get().getComments().size());
+		assertEquals(commentNum-1, commentRepository.count());
+		
 	}
 }
