@@ -250,9 +250,11 @@
 
     1. 유저가 게시글에 댓글 추가할때 처리하는 메소드 추가
 
-    2. 유저가 게시글에 댓글 삭제할떄 처리하는 메소드 추가
+    2. 유저가 게시글에 댓글 삭제할때 처리하는 메소드 추가
 
     3. 유저가 댓글에 좋아요 추가할때 처리하는 메소드 추가
+
+    4. 유저가 댓글에 좋아요 취소할때 처리하는 메소드 추가
 
 - DTO
 
@@ -288,7 +290,16 @@
 
 - CommentLikeService -> Impl에 구현, 하위 항목에 대한 테스트 코드 작성
 
-    1. User와 Comment로 CommentLike 생성해 저장하는 메소드 
+    1. User와 Comment로 CommentLike 생성해 저장하는 메소드 추가
+
+    2. UserId와 CommentId로 CommentLike 가져오는 메소드 추가
+
+    3. Delete 메소드에 관계된 테이블과 관계 끊는 로직 추가
+
+
+- CommentLikeRepository
+
+    1. UserId와 CommentId로 CommentLike 가져오는 쿼리 구현 - INNER JOIN 사용하도록
 
 
 
