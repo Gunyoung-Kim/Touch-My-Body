@@ -100,6 +100,81 @@ public class CommentLikeServiceTest {
 	}
 	
 	/*
+	 *  public CommentLike findByUserIdAndCommentId(Long userId, Long commentId)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("유저 id와 댓글 id로 찾기 -> 해당 조건 만족의 CommentLike 없음")
+	public void findByUserIdAndCommentIdNonExist() {
+		//Given
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("test")
+				.lastName("test")
+				.nickName("test")
+				.role(RoleType.USER)
+				.build();
+	
+		userRepository.save(user);
+		
+		Comment comment = Comment.builder()
+				.contents("new")
+				.isAnonymous(false)
+				.writerIp("172.0.0.1")
+				.build();
+		
+		commentRepository.save(comment);
+		
+		//When
+		CommentLike result = commentLikeService.findByUserIdAndCommentId(user.getId(), comment.getId());
+		
+		//Then
+		assertEquals(result, null);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저 id와 댓글 id로 찾기 -> 정상")
+	public void findByUserIdAndCommentIdTest() {
+		//Given
+		CommentLike existCommentLike = commentLikeRepository.findAll().get(0);
+		
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("test")
+				.lastName("test")
+				.nickName("test")
+				.role(RoleType.USER)
+				.build();
+	
+		userRepository.save(user);
+		
+		Comment comment = Comment.builder()
+				.contents("new")
+				.isAnonymous(false)
+				.writerIp("172.0.0.1")
+				.build();
+		
+		commentRepository.save(comment);
+		
+		// commentLike쪽에서만 객체적 연결해도 해당 테스트에는 무관
+		existCommentLike.setUser(user);
+		existCommentLike.setComment(comment);
+		
+		commentLikeRepository.save(existCommentLike);
+		
+		//When
+		
+		CommentLike result = commentLikeService.findByUserIdAndCommentId(user.getId(), comment.getId());
+		
+		//Then
+		assertEquals(result != null,true);
+		assertEquals(result.getId(),existCommentLike.getId());
+	}
+	
+	/*
 	 *   public Comment save(Comment comment)
 	 *   
 	 *   아직 변경할 필드 없어서 패스
@@ -197,5 +272,52 @@ public class CommentLikeServiceTest {
 		
 		//Then
 		assertEquals(beforeNum-1, commentLikeRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("CommentLike 삭제, 다른 Entity와의 연관성 삭제 -> 정상")
+	public void deleteWithRelationWithOtherEntityTest() {
+		//Given
+		CommentLike commentLike = commentLikeRepository.findAll().get(0);
+		
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("first")
+				.lastName("last")
+				.role(RoleType.USER)
+				.nickName("nickName")
+				.build();
+		
+		userRepository.save(user);
+		
+		Comment comment = Comment.builder()
+				.contents("new comment")
+				.writerIp("172.0.0.1")
+				.build();
+		
+		commentRepository.save(comment);
+		
+		comment.getCommentLikes().add(commentLike);
+		user.getCommentLikes().add(commentLike);
+		commentLike.setUser(user);
+		commentLike.setComment(comment);
+		
+		commentLikeRepository.save(commentLike);
+		
+		int userCommentLikeNum = user.getCommentLikes().size();
+		Long userId = user.getId();
+		int commentCommentLikeNum = comment.getCommentLikes().size();
+		Long commentId = comment.getId();
+		long commentLikeNum = commentLikeRepository.count();
+		
+		//When
+		commentLikeService.delete(commentLike);
+		
+		//Then
+		assertEquals(userCommentLikeNum-1,userRepository.findById(userId).get().getCommentLikes().size());
+		assertEquals(commentCommentLikeNum-1, commentRepository.findById(commentId).get().getCommentLikes().size());
+		assertEquals(commentLikeNum-1 , commentLikeRepository.count());
 	}
 }

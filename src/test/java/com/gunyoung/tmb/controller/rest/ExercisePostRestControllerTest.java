@@ -20,6 +20,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.enums.RoleType;
@@ -514,6 +515,79 @@ public class ExercisePostRestControllerTest {
 		assertEquals(userCommentLikeNum+1, userRepository.findById(userId).get().getCommentLikes().size());
 		assertEquals(commentCommentLikeNum+1,commentRepository.findById(commentId).get().getCommentLikes().size());
 		assertEquals(commentLikeNum+1, commentLikeRepository.count());
+	}
+	
+	/*
+	 *  public void removeLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("유저가 댓글에 좋아요 취소 요청 처리 -> 해당하는 좋아요 없음")
+	public void removeLikeToCommentCommentLikeNonExist() throws Exception {
+		//Given
+		Long nonExistCommentId = Long.valueOf(1);
+		
+		for(Comment c: commentRepository.findAll()) {
+			nonExistCommentId = Math.max(nonExistCommentId, c.getId());
+		}
+		
+		nonExistCommentId ++;
+		
+		long commentLikeNum = commentLikeRepository.count();
+		
+		//When
+		
+		mockMvc.perform(post("/community/post/" + exercisePostId+ "/comment/removelike")
+				.session(session)
+				.param("commentId", nonExistCommentId.toString()))
+		
+		//Then
+				.andExpect(status().isNoContent());
+		
+		assertEquals(commentLikeNum, commentLikeRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저가 댓글에 좋아요 취소 요청 처리  -> 정상")
+	public void removeLikeToCommentCommentLikeTest() throws Exception {
+		//Given
+		Comment comment = Comment.builder()
+				.contents("contents")
+				.writerIp("172.0.0.1")
+				.build();
+		
+		commentRepository.save(comment);
+		
+		CommentLike commentLike = CommentLike.builder()
+				.comment(comment)
+				.user(user)
+				.build();
+		
+		user.getCommentLikes().add(commentLike);
+		comment.getCommentLikes().add(commentLike);
+		
+		commentLikeRepository.save(commentLike);
+		
+		long commentLikeNum = commentLikeRepository.count();
+		
+		int userCommentLikeNum = user.getCommentLikes().size();
+		int commentCommentLikeNum = comment.getCommentLikes().size();
+		
+		//When
+		
+		mockMvc.perform(post("/community/post/" + exercisePostId +"/comment/removelike")
+				.session(session)
+				.param("commentId", comment.getId().toString()))
+		
+		//Then
+				.andExpect(status().isOk());
+		
+		assertEquals(commentLikeNum-1, commentLikeRepository.count());
+		assertEquals(userCommentLikeNum -1, userRepository.findById(userId).get().getCommentLikes().size());
+		assertEquals(commentCommentLikeNum -1, commentRepository.findById(comment.getId()).get().getCommentLikes().size());
+		
 	}
 }
 

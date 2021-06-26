@@ -15,8 +15,8 @@ public interface PostLikeRepository extends JpaRepository<PostLike,Long>{
 	 * @param exercisePostId
 	 * @return
 	 */
-	@Query("select pl from PostLike pl "
-			+ "inner join pl.user u on u.id = :userId "
-			+ "inner join pl.exercisePost ep on ep.id = :exercisePostId")
+	@Query("SELECT pl FROM PostLike pl "
+			+ "INNER JOIN pl.user u ON u.id = :userId "
+			+ "INNER JOIN pl.exercisePost ep ON ep.id = :exercisePostId")
 	public Optional<PostLike> findByUserIdAndExercisePostIdCustom(@Param("userId") Long userId,@Param("exercisePostId") Long exercisePostId);
 }

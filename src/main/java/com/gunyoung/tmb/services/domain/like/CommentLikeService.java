@@ -6,6 +6,7 @@ import com.gunyoung.tmb.domain.user.User;
 
 public interface CommentLikeService {
 	public CommentLike findById(Long id);
+	public CommentLike findByUserIdAndCommentId(Long userId, Long commentId);
 	
 	public CommentLike save(CommentLike commentLike);
 	public CommentLike saveWithUserAndComment(User user, Comment comment);

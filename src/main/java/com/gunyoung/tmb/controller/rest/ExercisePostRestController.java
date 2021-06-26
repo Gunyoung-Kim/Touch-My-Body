@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.reqeust.AddCommentDTO;
@@ -160,8 +161,6 @@ public class ExercisePostRestController {
 	 */
 	@RequestMapping(value="/community/post/{post_id}/comment/addlike",method = RequestMethod.POST)
 	public void addLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId) {
-		// 세션에서 유저 id 가져와서 User 객체 가져오고 commentId로 comment 가져와서 이 두개로 commentLike 만들어
-		
 		// 세션에 저장된 현재 접속자의 id 가져와서 이를 통해 User 객체 가져옴
 		Long userId = SessionUtil.getLoginUserId(session);
 		
@@ -186,10 +185,15 @@ public class ExercisePostRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/comment/removelike",method = RequestMethod.POST)
-	public void removeLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId) {
-		// 유저 Id 세션에서 받아서 유저 Id랑 코멘트 Id로 CommentLike 찾기  
-		
+	public void removeLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId) { 
 		Long userId = SessionUtil.getLoginUserId(session);	
+		
+		CommentLike commentLike = commentLikeService.findByUserIdAndCommentId(userId, commentId);
+		
+		if(commentLike == null) 
+			throw new LikeNotFoundedException(LikeErrorCode.LikeNotFoundedError.getDescription());
+		
+		commentLikeService.delete(commentLike);
 	}
 	
 }

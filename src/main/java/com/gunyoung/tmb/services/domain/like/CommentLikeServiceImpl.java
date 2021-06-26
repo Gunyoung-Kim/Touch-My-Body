@@ -36,6 +36,21 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 			return null;
 		return result.get();
 	}
+	
+	/**
+	 * @param userId 찾으려는 CommenLike의 User ID
+	 * @param commentId 찾으려는 CommentLike의 Comment ID
+	 * @return CommentLike, Null (해당 조건을 만족하는 CommentLike 없을때)
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public CommentLike findByUserIdAndCommentId(Long userId, Long commentId) {
+		Optional<CommentLike> result = commentLikeRepository.findByUserIdAndCommentIdCustom(userId, commentId);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
 
 	/**
 	 * @param commentLike save할 CommentLike 객체
@@ -66,7 +81,6 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 		return save(commentLike);		
 	}
 	
-	
 	/**
 	 * @param commentLike delete할 commentLike 객체
 	 * @return delete 된 CommentLike 객체
@@ -74,6 +88,16 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	 */
 	@Override
 	public void delete(CommentLike commentLike) {
+		User user = commentLike.getUser();
+	
+		if(user != null)
+			user.getCommentLikes().remove(commentLike);
+		
+		Comment comment = commentLike.getComment();
+		
+		if(comment != null)
+			comment.getCommentLikes().remove(commentLike);
+		
 		commentLikeRepository.delete(commentLike);
 	}
 
