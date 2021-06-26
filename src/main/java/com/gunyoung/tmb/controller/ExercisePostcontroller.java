@@ -19,7 +19,7 @@ import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.utils.PageUtil;
 
 @Controller
-public class ExercisePostcontroller {
+public class ExercisePostController {
 	
 	@Autowired
 	ExercisePostService exercisePostService;
