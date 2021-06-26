@@ -212,6 +212,107 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
+	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetByPage(TargetType target,
+			Pageable pageable)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 특정 target만 가져오기 -> 정상")
+	public void  findAllForPostForCommunityViewDTOWithTargetByPage() {
+		//Given
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("test")
+				.lastName("test")
+				.nickName("test")
+				.role(RoleType.USER)
+				.build();
+	
+		userRepository.save(user);
+		
+		Exercise exercise = Exercise.builder()
+			    .name("Exercies")
+			    .description("Description")
+			    .caution("Caution")
+			    .movement("Movement")
+			    .target(TargetType.CHEST)
+			    .build();
+		
+		exerciseRepository.save(exercise);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		
+		for(ExercisePost ep: exercisePostList) {
+			ep.setExercise(exercise);
+			ep.setUser(user);
+		}
+		
+		// User, Exercise 의 setExercisePost는 해당 테스트에 필요없는 작업이라 배제
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		//When
+		
+		Page<PostForCommunityViewDTO> result1 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(TargetType.ARM, 1);
+		Page<PostForCommunityViewDTO> result2 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(TargetType.CHEST, 1);
+		
+		//Then
+		assertEquals(result1.getContent().size(),0);
+		assertEquals(result2.getContent().size(),Math.min(PageUtil.COMMUNITY_PAGE_SIZE,INIT_EXERCISE_POST_NUM));
+	}
+	
+	/*
+	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType target,
+			String keyword, Integer pageNumber)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 키워드로 객체들 특정 target만 가져오기 -> 정상")
+	public void findAllForPostForCommunityViewDTOWithTargetAndKeywordByPageTest() {
+		//Given
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("test")
+				.lastName("test")
+				.nickName("test")
+				.role(RoleType.USER)
+				.build();
+	
+		userRepository.save(user);
+		
+		Exercise exercise = Exercise.builder()
+			    .name("Exercies")
+			    .description("Description")
+			    .caution("Caution")
+			    .movement("Movement")
+			    .target(TargetType.CHEST)
+			    .build();
+		
+		exerciseRepository.save(exercise);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		
+		for(ExercisePost ep: exercisePostList) {
+			ep.setExercise(exercise);
+			ep.setUser(user);
+		}
+		
+		// User, Exercise 의 setExercisePost는 해당 테스트에 필요없는 작업이라 배제
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		//When
+		
+		Page<PostForCommunityViewDTO> result1 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType.CHEST, "none!!!", 1);
+		Page<PostForCommunityViewDTO> result2 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType.CHEST, "title",1);
+		
+		//Then
+		assertEquals(result1.getContent().size(),0);
+		assertEquals(result2.getContent().size(),Math.min(PageUtil.COMMUNITY_PAGE_SIZE,INIT_EXERCISE_POST_NUM));
+	}
+	
+	
+	/*
 	 *  public ExercisePost save(ExercisePost exercisePost)
 	 */
 	
@@ -291,5 +392,87 @@ public class ExercisePostServiceTest {
 		assertEquals(resultEvery,INIT_EXERCISE_POST_NUM);
 		assertEquals(resultOnlyOne,1);
 		assertEquals(resultNoOne,0);
+	}
+	
+	/*
+	 *  public long countWithTarget(TargetType target)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("해당 부위에 해당하는 Post만 개수 반환 -> 정상")
+	public void countWithTargetTest() {
+		//Given
+		Exercise exercise = Exercise.builder()
+			    .name("Exercies")
+			    .description("Description")
+			    .caution("Caution")
+			    .movement("Movement")
+			    .target(TargetType.CHEST)
+			    .build();
+		
+		exerciseRepository.save(exercise);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		
+		for(ExercisePost ep: exercisePostList) {
+			ep.setExercise(exercise);
+		}
+		
+		// Exercise 의 setExercisePost는 해당 테스트에 필요없는 작업이라 배제
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		TargetType allType = TargetType.CHEST;
+		TargetType nonType = TargetType.CORE;
+		
+		//When
+		long resultEvery = exercisePostService.countWithTarget(allType);
+		long resultNone = exercisePostService.countWithTarget(nonType);
+		
+		//Then
+		assertEquals(resultEvery,INIT_EXERCISE_POST_NUM);
+		assertEquals(resultNone,0);
+	}
+	
+	/*
+	 *  public long countWithTargetAndKeyword(TargetType target, String keyword)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("해당 부위에 해당하고 이름과 제목에 키워드 포함하는 게시글 개수 반환 ->정상")
+	public void countWithTargetAndKeywordTest() {
+		//Given
+		
+		Exercise exercise = Exercise.builder()
+			    .name("Exercies")
+			    .description("Description")
+			    .caution("Caution")
+			    .movement("Movement")
+			    .target(TargetType.CHEST)
+			    .build();
+		
+		exerciseRepository.save(exercise);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		
+		for(ExercisePost ep: exercisePostList) {
+			ep.setExercise(exercise);
+		}
+		
+		// Exercise 의 setExercisePost는 해당 테스트에 필요없는 작업이라 배제
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		TargetType type = TargetType.CHEST;
+		String everyKeyword = "title";
+		String noneKeyword = "none!!!";
+		
+		//When
+		long resultEvery = exercisePostService.countWithTargetAndKeyword(type, everyKeyword);
+		long resultNone = exercisePostService.countWithTargetAndKeyword(type, noneKeyword);
+		
+		//Then
+		assertEquals(resultEvery,INIT_EXERCISE_POST_NUM);
+		assertEquals(resultNone,0);
+		
 	}
 }

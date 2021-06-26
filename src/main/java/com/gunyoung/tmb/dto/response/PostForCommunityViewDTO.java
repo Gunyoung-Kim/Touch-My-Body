@@ -23,6 +23,7 @@ public class PostForCommunityViewDTO {
 	private TargetType category;
 	private String title;
 	private String writer;
+	private String exerciseName;
 	private LocalDateTime createdAt;
 	private Integer viewNum;
 }

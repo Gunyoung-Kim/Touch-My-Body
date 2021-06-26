@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
+import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.utils.PageUtil;
 
@@ -62,6 +63,29 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageUtil.COMMUNITY_PAGE_SIZE);
 		return exercisePostRepository.findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, pageRequest);
 	}
+	
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetByPage(TargetType target,
+			Integer pageNumber) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageUtil.COMMUNITY_PAGE_SIZE);
+		return exercisePostRepository.findAllForPostForCommunityViewDTOWithTargetByPage(target, pageRequest);
+	}
+
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType target,
+			String keyword, Integer pageNumber) {
+		PageRequest pageRuquest = PageRequest.of(pageNumber-1, PageUtil.COMMUNITY_PAGE_SIZE);
+		return exercisePostRepository.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(target, keyword, pageRuquest);
+	}
+
 
 	/**
 	 * @param exercisePost 저장하려는 ExercisePost
@@ -98,6 +122,24 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public long countWithTitleAndContentsKeyword(String keyword) {
 		return exercisePostRepository.countWithTitleAndContentsKeyword(keyword);
+	}
+
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public long countWithTarget(TargetType target) {
+		return exercisePostRepository.countWithTarget(target);
+	}
+
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public long countWithTargetAndKeyword(TargetType target, String keyword) {
+		return exercisePostRepository.countWithTargetAndKeyword(target, keyword);
 	}
 	
 }
