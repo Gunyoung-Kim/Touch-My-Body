@@ -27,10 +27,16 @@ import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.notmatch.UserNotMatchException;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
+import com.gunyoung.tmb.services.domain.like.CommentLikeService;
 import com.gunyoung.tmb.services.domain.like.PostLikeService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.SessionUtil;
 
+/**
+ * 
+ * @author kimgun-yeong
+ *
+ */
 @RestController
 public class ExercisePostRestController {
 	
@@ -48,6 +54,9 @@ public class ExercisePostRestController {
 	
 	@Autowired
 	CommentService commentService;
+	
+	@Autowired
+	CommentLikeService commentLikeService;
 	
 	/**
 	 * 유저가 게시글에 좋아요 추가했을때 처리하는 메소드
@@ -92,6 +101,7 @@ public class ExercisePostRestController {
 	 * @param postId
 	 * @param dto
 	 * @param request
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/addComment",method = RequestMethod.POST)
 	public void addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute AddCommentDTO dto,HttpServletRequest request) {
@@ -121,6 +131,7 @@ public class ExercisePostRestController {
 	 * 유저가 게시글에 댓글 삭제할때 처리하는 메소드
 	 * @param postId
 	 * @param commentId
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/removeComment",method = RequestMethod.POST)
 	public void removeCommentToExercisePost(@PathVariable("post_id") Long postId,@RequestParam("commentId") Long commentId) {
@@ -139,6 +150,46 @@ public class ExercisePostRestController {
 		}
 		
 		commentService.delete(comment);
+	}
+	
+	/**
+	 * 유저가 댓글에 좋아요 추가 요청 처리하는 메소드 
+	 * @param postId
+	 * @param commentId
+	 * @author kimgun-yeong
+	 */
+	@RequestMapping(value="/community/post/{post_id}/comment/addlike",method = RequestMethod.POST)
+	public void addLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId) {
+		// 세션에서 유저 id 가져와서 User 객체 가져오고 commentId로 comment 가져와서 이 두개로 commentLike 만들어
+		
+		// 세션에 저장된 현재 접속자의 id 가져와서 이를 통해 User 객체 가져옴
+		Long userId = SessionUtil.getLoginUserId(session);
+		
+		User user = userService.findById(userId);
+		
+		if(user == null) 
+			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+		
+		// commentId로 comment 가져옴
+		Comment comment = commentService.findById(commentId);
+		
+		if(comment == null) 
+			throw new CommentNotFoundedException(CommentErrorCode.CommentNotFoundedError.getDescription());
+		
+		commentLikeService.saveWithUserAndComment(user, comment);
+	}
+	
+	/**
+	 * 유저가 댓글에 좋아요 취소 요청 처리하는 메소드
+	 * @param postId 댓글이 소속된 게시글 id
+	 * @param commentId 좋아요를 취소하고자 하는 댓글
+	 * @author kimgun-yeong
+	 */
+	@RequestMapping(value="/community/post/{post_id}/comment/removelike",method = RequestMethod.POST)
+	public void removeLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId) {
+		// 유저 Id 세션에서 받아서 유저 Id랑 코멘트 Id로 CommentLike 찾기  
+		
+		Long userId = SessionUtil.getLoginUserId(session);	
 	}
 	
 }

@@ -135,7 +135,7 @@ public class User extends BaseEntity {
 	 * fetch: 지연로딩
 	 * cascade: Remove - 유저가 삭제되면 관련 댓글들도 모두 삭제
 	 */
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user",cascade= {CascadeType.REMOVE})
 	@Builder.Default
 	List<Comment> comments = new ArrayList<>();
 	
@@ -144,7 +144,7 @@ public class User extends BaseEntity {
 	 * fetch: 지연로딩
 	 * cascade: Remove - 유저가 삭제되면 관련 댓글 좋아요들도 모두 삭제
 	 */
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user",cascade= {CascadeType.REMOVE})
 	@Builder.Default
 	List<CommentLike> commentLikes = new ArrayList<>();
 	

@@ -16,6 +16,6 @@ public interface ExerciseRepository extends JpaRepository<Exercise,Long>{
 	 * 모든 운동 정보들을 ExerciesSortDTO로 매핑해서 가져오는 메소드 
 	 * @return
 	 */
-	@Query("SELECT new com.gunyoung.tmb.dto.jpa. ExerciseNameAndTargetDTO(e.name, e.target) from Exercise e")
+	@Query("SELECT new com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO(e.name, e.target) from Exercise e")
 	public List<ExerciseNameAndTargetDTO> findAllWithNameAndTarget();
 }

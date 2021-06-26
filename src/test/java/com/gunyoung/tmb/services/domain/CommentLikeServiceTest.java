@@ -13,8 +13,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.like.CommentLike;
+import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
+import com.gunyoung.tmb.repos.CommentRepository;
+import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.like.CommentLikeService;
 
 /**
@@ -33,7 +38,14 @@ public class CommentLikeServiceTest {
 	CommentLikeRepository commentLikeRepository;
 	
 	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
+	CommentRepository commentRepository;
+	
+	@Autowired
 	CommentLikeService commentLikeService;
+	
 	
 	@BeforeEach
 	void setup() {
@@ -121,6 +133,51 @@ public class CommentLikeServiceTest {
 		
 		//Then
 		assertEquals(beforeNum+1, commentLikeRepository.count());
+	}
+	
+	/* 
+	 *  public CommentLike saveWithUserAndComment(User user, Comment comment)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("User와 Comment로 CommentLike 생성 후 저장 -> 정상")
+	public void  saveWithUserAndCommentTest() {
+		//Given
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("first")
+				.lastName("last")
+				.role(RoleType.USER)
+				.nickName("nickName")
+				.build();
+		
+		userRepository.save(user);
+		
+		Comment comment = Comment.builder()
+				.writerIp("172.0.0.1")
+				.contents("Good Comment")
+				.isAnonymous(false)
+				.build();
+		
+		commentRepository.save(comment);
+		
+		long commentLikeNum = commentLikeRepository.count();
+		
+		int userCommentLikeNum = user.getCommentLikes().size();
+		long userId = user.getId();
+		int commentCommentLikeNum = comment.getCommentLikes().size();
+		long commentId = comment.getId();
+		
+		//When
+		commentLikeService.saveWithUserAndComment(user, comment);
+		
+		//Then
+		assertEquals(commentLikeNum+1, commentLikeRepository.count());
+		assertEquals(userCommentLikeNum +1 , userRepository.findById(userId).get().getCommentLikes().size());
+		assertEquals(commentCommentLikeNum +1 , commentRepository.findById(commentId).get().getCommentLikes().size());
+		
 	}
 	
 	/*

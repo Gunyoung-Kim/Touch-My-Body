@@ -23,6 +23,7 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.enums.RoleType;
+import com.gunyoung.tmb.repos.CommentLikeRepository;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.PostLikeRepository;
@@ -47,6 +48,9 @@ public class ExercisePostRestControllerTest {
 	
 	@Autowired
 	CommentRepository commentRepository;
+	
+	@Autowired
+	CommentLikeRepository commentLikeRepository;
 	
 	protected MockHttpSession session;
 	
@@ -89,8 +93,8 @@ public class ExercisePostRestControllerTest {
 	
 	@AfterEach
 	void tearDown() {
-		userRepository.deleteAll();
 		exercisePostRepository.deleteAll();
+		userRepository.deleteAll();
 		session.clearAttributes();
 	}
 	
@@ -404,6 +408,112 @@ public class ExercisePostRestControllerTest {
 		assertEquals(commentNum-1,commentRepository.count());
 		assertEquals(userCommentNum-1, userRepository.findById(userId).get().getComments().size());
 		assertEquals(exercisePostCommentNum-1,exercisePostRepository.findById(exercisePostId).get().getComments().size());
+	}
+	
+	/*
+	 *  public void addLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("유저가 댓글에 좋아요 추가 요청 처리 -> 해당 id의 유저 없음")
+	public void addLikeToCommentUserNonExist() throws Exception {
+		//Given
+		Long nonExistUserId = Long.valueOf(1);
+		
+		for(User u : userRepository.findAll()) {
+			nonExistUserId = Math.max(nonExistUserId, u.getId());
+		}
+		nonExistUserId++;
+		
+		session.setAttribute("LOGIN_USER_ID", nonExistUserId);
+		
+		Comment comment = Comment.builder()
+				.contents("contents")
+				.writerIp("172.0.0.1")
+				.build();
+		
+		commentRepository.save(comment);
+		
+		Long commentId = comment.getId();
+		
+		int commentCommentLikeNum = comment.getCommentLikes().size();
+		
+		long commentLikeNum = commentLikeRepository.count();
+		
+		//When
+		mockMvc.perform(post("/community/post/"+ exercisePostId +"/comment/addlike")
+				.session(session)
+				.param("commentId", commentId.toString()))
+		
+		//Then
+				.andExpect(status().isNoContent());
+		
+		assertEquals(commentCommentLikeNum,commentRepository.findById(commentId).get().getCommentLikes().size());
+		
+		assertEquals(commentLikeNum, commentLikeRepository.count());
+		
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저가 댓글에 좋아요 추가 요청 처리 -> 해당 id의 comment 없음")
+	public void addLikeToCommentCommentNonExist() throws Exception {
+		//Given
+		Long nonExistCommentId = Long.valueOf(1);
+		
+		for(Comment c: commentRepository.findAll()) {
+			nonExistCommentId = Math.max(nonExistCommentId, c.getId());
+		}
+		
+		nonExistCommentId++;
+		
+		int userCommentLikeNum = user.getCommentLikes().size();
+		
+		long commentLikeNum = commentLikeRepository.count();
+		
+		//When
+		mockMvc.perform(post("/community/post/"+ exercisePostId +"/comment/addlike")
+				.session(session)
+				.param("commentId", nonExistCommentId.toString()))
+		
+		//Then
+				.andExpect(status().isNoContent());
+		
+		assertEquals(userCommentLikeNum, userRepository.findById(userId).get().getCommentLikes().size());
+		assertEquals(commentLikeNum, commentLikeRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저가 댓글에 좋아요 추가 요청 처리  -> 정상")
+	public void addLikeToCommentTest() throws Exception {
+		//Given
+		Comment comment = Comment.builder()
+				.contents("contents")
+				.writerIp("172.0.0.1")
+				.build();
+		
+		commentRepository.save(comment);
+		
+		Long commentId = comment.getId();
+		
+		int userCommentLikeNum = user.getCommentLikes().size();
+		int commentCommentLikeNum = comment.getCommentLikes().size();
+		long commentLikeNum = commentLikeRepository.count();
+		
+		//When
+		
+		mockMvc.perform(post("/community/post/"+ exercisePostId +"/comment/addlike")
+				.session(session)
+				.param("commentId", commentId.toString()))
+		
+		//Then
+				.andExpect(status().isOk());
+		
+		assertEquals(userCommentLikeNum+1, userRepository.findById(userId).get().getCommentLikes().size());
+		assertEquals(commentCommentLikeNum+1,commentRepository.findById(commentId).get().getCommentLikes().size());
+		assertEquals(commentLikeNum+1, commentLikeRepository.count());
 	}
 }
 

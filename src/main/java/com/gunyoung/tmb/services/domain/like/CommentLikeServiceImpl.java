@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.like.CommentLike;
+import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
 
 /**
@@ -46,6 +48,26 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	}
 
 	/**
+	 * @param user CommentLike 추가하려는 User
+	 * @param comment CommentLike가 추가되는 Comment
+	 * @return 새로 저장된 CommentLike
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public CommentLike saveWithUserAndComment(User user, Comment comment) {
+		CommentLike commentLike = CommentLike.builder()
+				.user(user)
+				.comment(comment)
+				.build();
+		
+		user.getCommentLikes().add(commentLike);
+		comment.getCommentLikes().add(commentLike);
+		
+		return save(commentLike);		
+	}
+	
+	
+	/**
 	 * @param commentLike delete할 commentLike 객체
 	 * @return delete 된 CommentLike 객체
 	 * @author kimgun-yeong
@@ -54,5 +76,5 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	public void delete(CommentLike commentLike) {
 		commentLikeRepository.delete(commentLike);
 	}
-	
+
 }
