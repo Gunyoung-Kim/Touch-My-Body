@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html :: head"></head>
+  <head>
+    <link rel="stylesheet" th:href="@{/css/community.css}">
+  </head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+
+    <div id="main-title" class="py-5 text-center">
+      <h2>커뮤니티</h2>
+    </div>
+
+    <div class="main_container">
+
+      <div class="search">
+
+      </div>
+
+      <table class="table table-striped text-center">
+        <thead>
+
+        </thead>
+        <tbody>
+          <tr th:each="object:${listObject}">
+            
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script type="text/javascript" th:src="@{/js/community.js}"></script>
+  </body>
+</html>

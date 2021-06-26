@@ -59,6 +59,7 @@ public class ExercisePostRestController {
 	@Autowired
 	CommentLikeService commentLikeService;
 	
+	
 	/**
 	 * 유저가 게시글에 좋아요 추가했을때 처리하는 메소드
 	 * @param postId

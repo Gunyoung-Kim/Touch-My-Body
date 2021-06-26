@@ -60,6 +60,12 @@ public class ExercisePost extends BaseEntity {
 	@NotEmpty
 	private String contents;
 	
+	/*
+	 * 해당 게시글의 조회수
+	 */
+	@Builder.Default
+	private Integer viewNum = 0;
+	
 	/**
 	 * 해당 게시글에 추가된 댓글들
 	 * fetch: 지연로딩

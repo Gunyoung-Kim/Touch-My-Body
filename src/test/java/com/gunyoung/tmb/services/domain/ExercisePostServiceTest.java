@@ -11,12 +11,21 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
+import com.gunyoung.tmb.enums.RoleType;
+import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
+import com.gunyoung.tmb.repos.ExerciseRepository;
+import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
+import com.gunyoung.tmb.utils.PageUtil;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
@@ -26,6 +35,12 @@ public class ExercisePostServiceTest {
 	
 	@Autowired
 	ExercisePostRepository exercisePostRepository;
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
+	ExerciseRepository exerciseRepository;
 	
 	@Autowired
 	ExercisePostService exercisePostService;
@@ -89,6 +104,114 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
+	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Integer pageNumber)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 가져오기 -> 정상")
+	public void findAllForPostForCommunityViewDTOByPageTest() {
+		//Given
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("test")
+				.lastName("test")
+				.nickName("test")
+				.role(RoleType.USER)
+				.build();
+	
+		userRepository.save(user);
+		
+		Exercise exercise = Exercise.builder()
+			    .name("Exercies")
+			    .description("Description")
+			    .caution("Caution")
+			    .movement("Movement")
+			    .target(TargetType.CHEST)
+			    .build();
+		
+		exerciseRepository.save(exercise);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		
+		for(ExercisePost ep: exercisePostList) {
+			ep.setExercise(exercise);
+			ep.setUser(user);
+		}
+		
+		// User, Exercise 의 setExercisePost는 해당 테스트에 필요없는 작업이라 배제
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		//When
+		
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOByPage(1);
+		
+		//Then
+		
+		//Math.Min은 인자에 있는 값들이 추후에 변경될수 있는점 고려
+		assertEquals(result.getContent().size(),Math.min(PageUtil.COMMUNITY_PAGE_SIZE,INIT_EXERCISE_POST_NUM));
+	}
+	
+	/*
+	 * public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithKeywordByPage(String keyword,
+			Integer pageNumber)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 키워드로 가져오기 -> 정상")
+	public void findAllForPostForCommunityViewDTOWithKeywordByPageTest() {
+		//Given
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("test")
+				.lastName("test")
+				.nickName("test")
+				.role(RoleType.USER)
+				.build();
+	
+		userRepository.save(user);
+		
+		Exercise exercise = Exercise.builder()
+			    .name("Exercies")
+			    .description("Description")
+			    .caution("Caution")
+			    .movement("Movement")
+			    .target(TargetType.CHEST)
+			    .build();
+		
+		exerciseRepository.save(exercise);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		
+		for(ExercisePost ep: exercisePostList) {
+			ep.setExercise(exercise);
+			ep.setUser(user);
+		}
+		
+		// User, Exercise 의 setExercisePost는 해당 테스트에 필요없는 작업이라 배제
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		//When
+		
+		// 내용 검색
+		Page<PostForCommunityViewDTO> result1 = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage("ontent",1);
+		
+		//제목 검색
+		Page<PostForCommunityViewDTO> result2 = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage("itle", 1);
+		
+		Page<PostForCommunityViewDTO> result3 = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage("none!!!", 1);
+		
+		//Then
+		
+		//Math.Min은 인자에 있는 값들이 추후에 변경될수 있는점 고려
+		assertEquals(result1.getContent().size(),Math.min(PageUtil.COMMUNITY_PAGE_SIZE,INIT_EXERCISE_POST_NUM));
+		assertEquals(result2.getContent().size(),Math.min(PageUtil.COMMUNITY_PAGE_SIZE,INIT_EXERCISE_POST_NUM));
+		assertEquals(result3.getContent().size(),0);
+	}
+	
+	/*
 	 *  public ExercisePost save(ExercisePost exercisePost)
 	 */
 	
@@ -144,5 +267,29 @@ public class ExercisePostServiceTest {
 		
 		//Then
 		assertEquals(beforeNum-1,exercisePostRepository.count());
+	}
+	
+	/*
+	 *  public long countWithTitleAndContentsKeyword(String keyword)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("키워드(제목, 내용)를 만족하는 게시글 개수 반환 -> 정상")
+	public void countWithTitleAndContentsKeywordTest() {
+		//Given
+		String keywordEveryHas = "title";
+		String keywordOnlyOneHas = String.valueOf(INIT_EXERCISE_POST_NUM);
+		String keywordNoOneHas = "none!!!!";
+		
+		//When
+		long resultEvery = exercisePostService.countWithTitleAndContentsKeyword(keywordEveryHas);
+		long resultOnlyOne = exercisePostService.countWithTitleAndContentsKeyword(keywordOnlyOneHas);
+		long resultNoOne = exercisePostService.countWithTitleAndContentsKeyword(keywordNoOneHas);
+		
+		//Then 
+		assertEquals(resultEvery,INIT_EXERCISE_POST_NUM);
+		assertEquals(resultOnlyOne,1);
+		assertEquals(resultNoOne,0);
 	}
 }

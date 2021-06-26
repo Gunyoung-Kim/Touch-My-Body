@@ -13,20 +13,20 @@ import com.gunyoung.tmb.domain.user.User;
 public interface UserRepository extends JpaRepository<User,Long>{
 	public Optional<User> findByEmail(String email);
 	
-	@Query("select u from User u where "
-			+ "(u.firstName like %:keyword%) or "
-			+ "(u.lastName like %:keyword%) or "
-			+ "(u.nickName like %:keyword%) "
-			+ "order by u.role")
+	@Query("SELECT u FROM User u WHERE "
+			+ "(u.firstName LIKE %:keyword%) OR "
+			+ "(u.lastName LIKE %:keyword%) OR "
+			+ "(u.nickName LIKE %:keyword%) "
+			+ "ORDER BY u.role")
 	public Page<User> findAllByNickNameOrName(@Param("keyword")String keyword,Pageable pageable);
 	
 	public boolean existsByEmail(String email);
 	public boolean existsByNickName(String nickName);
 	
-	@Query("select count(u) from User u where "
-			+ "(u.firstName like %:keyword%) or "
-			+ "(u.lastName like %:keyword%) or "
-			+ "(u.nickName like %:keyword%) "
-			+ "order by u.role")
+	@Query("SELECT COUNT(u) FROM User u WHERE "
+			+ "(u.firstName LIKE %:keyword%) OR "
+			+ "(u.lastName LIKE %:keyword%) OR "
+			+ "(u.nickName LIKE %:keyword%) "
+			+ "ORDER BY u.role")
 	public long countAllByNickNameOrName(@Param("keyword") String keyword);
 }
