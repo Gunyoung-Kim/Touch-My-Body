@@ -264,6 +264,8 @@
 
     3. MuscleInfoBySortDTO - 근육을 카테고리별로 분류해서 클라이언트에게 전송하기위해 사용되는 객체
 
+    4. PostForCommunityViewDTO - 커뮤니티에서 게시글 리스트 보여주기 위해 클라이언트에게 응답보낼때 사용하는 객체
+
 - Error
 
     1. CommentErrorCode 추가
@@ -301,6 +303,29 @@
 
     1. UserId와 CommentId로 CommentLike 가져오는 쿼리 구현 - INNER JOIN 사용하도록
 
+- ExercisePostController
+
+    1. 커뮤니티 메인뷰 반환하는 메소드 추가 
+
+- Domain
+
+    1. ExercisPost에 조회수를 나타내는 필드 viewNum 추가
+
+- ExercisePostRepository
+
+    1. ExercisePost의 필드들로 PostForCommunityViewDTO들로 바인딩하여 가져오는 메소드 추가
+
+    2. 1번 항목에 키워드 검색을 곁들인 메소드 추가 
+
+    3. 게시글 내용이나 제목에서 키워드를 포함하는 게시글들의 개수 반환하는 메소드 추가 
+
+- ExercisePostService -> Impl에 구현, 하위 항목에 대한 테스트 코드 작성
+
+    1. ExercisePost의 필드들로 PostForCommunityViewDTO들로 바인딩하여 가져오는 메소드 추가
+
+    2. 1번 항목에 키워드 검색을 곁들인 메소드 추가 
+
+    3. 게시글 내용이나 제목에서 키워드를 포함하는 게시글들의 개수 반환하는 메소드 추가 
 
 
 --- 
