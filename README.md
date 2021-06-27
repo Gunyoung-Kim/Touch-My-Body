@@ -353,6 +353,57 @@
 
     4. 3번에 키워드 검색 조건을 곁들인 메소드 추가 
 
+### 2021.6.28
+
+- ExerciseController
+
+    1. 운동들 리스트 보여주는 화면 반환하는 메소드 추가 
+
+    2. 운동 정보 화면 반환하는 메소드 추가
+
+- ExercisePostController
+
+    1. 게시글을 화면 반환하는 메소드 추가 
+
+- DTO
+
+    1. CommentForPostViewDTO 추가 - 게시글 화면에 보여질 댓글들을 위해 사용되는 객체
+
+    2. ExerciseForInfoViewDTO 추가 - 클라이언트에게 운동 정보 페이지에서 사용할 운동 정보 전달 할때 사용
+
+    3. ExerciseForTableDTO 추가 - 운동 정보 화면의 테이블에 보여질 정보들을 담은 객체
+
+    4. ExercisePostViewDTO 추가 - 운동 게시글 화면을 구성하기 위해 클라이언트에게 응답할때 사용하는 객체
+
+- CommentRepository 
+
+    1. ExercisePost ID로 만족하는 Comment들 가져오는 쿼리(Inner join 사용) 추가
+
+- ExerciseRepository 
+
+    1. 이름에 키워드를 포함하는 Exercise들 Page로 가져오는 쿼리 추가 
+
+    2. 이름에 키워드를 포함하는 Exercise들 개수 가져오는 쿼리 추가 
+
+- CommentService -> Impl에 구현, 하위 항목에 대한 테스트 코드 작성
+
+    1. 해당 exercisePost id 를 만족하는 Comment 객체들을 CommentForPostViewDTO로 변환해서 반환하는 메소드 추가 
+
+- ExercisePostService -> Impl에 구현, 하위 항목에 대한 테스트 코드 작성
+
+    1. ExercisePost id로 ExercisePost 가져와서 이를 통해 ExercisePostViewDTO 생성 및 반환하는 메소드 추가 
+
+- ExerciseService -> Impl에 구현, 하위 항목에 대한 테스트 코드 작성
+
+    1. 모든 운동 페이지로 가져오는 메소드 추가 
+
+    2. 이름에 키워드를 포함하는 모든 운동 페이지로 가져오는 메소드 추가 
+
+    3. 모든 운동들 개수 반환하는 메소드 ,이름 키워드를 만족하는 Exercise 개수 반환하는 메소드 추가 
+
+    4. Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환하는 메소드 추가 
+
+
 --- 
 
 ## To do List
