@@ -1,5 +1,6 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
@@ -140,6 +142,46 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public long countWithTargetAndKeyword(TargetType target, String keyword) {
 		return exercisePostRepository.countWithTargetAndKeyword(target, keyword);
+	}
+
+	/**
+	 * ExercisePost id로 ExercisePost 가져와서 이를 통해 ExercisePostViewDTO 생성 및 반환
+	 * @param id ExercisePost ID
+	 * @return ExercisePostViewDTO, null(해당 id의 ExercisePost 없을때)
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id) {
+		ExercisePost exercisePost = findById(id);
+		if(exercisePost == null)
+			return null;
+		
+		ExercisePostViewDTO dto = ExercisePostViewDTO.builder()
+				.postId(exercisePost.getId())
+				.title(exercisePost.getTitle())
+				.exerciseName(exercisePost.getExercise().getName())
+				.writerName(exercisePost.getUser().getNickName())
+				.contents(exercisePost.getContents())
+				.viewNum(exercisePost.getViewNum())
+				.likeNum(exercisePost.getPostLikes().size())
+				.commentNum(exercisePost.getComments().size())
+				.createdAt(localDateToStringForExercisePost(exercisePost.getCreatedAt()))
+				.build();
+		
+		return dto;
+	}
+	
+	private String localDateToStringForExercisePost(LocalDateTime localDateTime) {
+		int year = localDateTime.getYear();
+		int month = localDateTime.getMonthValue();
+		int date = localDateTime.getDayOfMonth();
+		int hour = localDateTime.getHour();
+		int min = localDateTime.getMinute();
+		
+		
+		//yyyy.MM.dd HH:mm
+		return year +"." + month +"." + date + " " +hour +":" + min;
 	}
 	
 }

@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum ExerciseErrorCode {
 	
-	ExerciseByNameNotFoundedError("E001","Can't find exercise with such name")
+	ExerciseByNameNotFoundedError("E001","Can't find exercise with such name"),
+	ExerciseByIdNotFoundedError("E002","Can't find exercise with such Id")
 	;
 	private String code;
 	private String description;

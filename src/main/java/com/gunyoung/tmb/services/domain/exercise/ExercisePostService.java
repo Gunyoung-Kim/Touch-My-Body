@@ -3,6 +3,7 @@ package com.gunyoung.tmb.services.domain.exercise;
 import org.springframework.data.domain.Page;
 
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 
@@ -21,4 +22,6 @@ public interface ExercisePostService {
 	public long countWithTitleAndContentsKeyword(String keyword);
 	public long countWithTarget(TargetType target);
 	public long countWithTargetAndKeyword(TargetType target, String keyword);
+	
+	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id);
 }

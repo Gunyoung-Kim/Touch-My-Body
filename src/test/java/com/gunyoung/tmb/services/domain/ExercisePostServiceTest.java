@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.enums.TargetType;
@@ -111,24 +112,11 @@ public class ExercisePostServiceTest {
 	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 가져오기 -> 정상")
 	public void findAllForPostForCommunityViewDTOByPageTest() {
 		//Given
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("test")
-				.lastName("test")
-				.nickName("test")
-				.role(RoleType.USER)
-				.build();
+		User user = getUserInstance();
 	
 		userRepository.save(user);
 		
-		Exercise exercise = Exercise.builder()
-			    .name("Exercies")
-			    .description("Description")
-			    .caution("Caution")
-			    .movement("Movement")
-			    .target(TargetType.CHEST)
-			    .build();
+		Exercise exercise = getExerciseInstance();
 		
 		exerciseRepository.save(exercise);
 		
@@ -162,24 +150,11 @@ public class ExercisePostServiceTest {
 	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 키워드로 가져오기 -> 정상")
 	public void findAllForPostForCommunityViewDTOWithKeywordByPageTest() {
 		//Given
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("test")
-				.lastName("test")
-				.nickName("test")
-				.role(RoleType.USER)
-				.build();
+		User user = getUserInstance();
 	
 		userRepository.save(user);
 		
-		Exercise exercise = Exercise.builder()
-			    .name("Exercies")
-			    .description("Description")
-			    .caution("Caution")
-			    .movement("Movement")
-			    .target(TargetType.CHEST)
-			    .build();
+		Exercise exercise = getExerciseInstance();
 		
 		exerciseRepository.save(exercise);
 		
@@ -220,24 +195,11 @@ public class ExercisePostServiceTest {
 	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 특정 target만 가져오기 -> 정상")
 	public void  findAllForPostForCommunityViewDTOWithTargetByPage() {
 		//Given
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("test")
-				.lastName("test")
-				.nickName("test")
-				.role(RoleType.USER)
-				.build();
+		User user = getUserInstance();
 	
 		userRepository.save(user);
 		
-		Exercise exercise = Exercise.builder()
-			    .name("Exercies")
-			    .description("Description")
-			    .caution("Caution")
-			    .movement("Movement")
-			    .target(TargetType.CHEST)
-			    .build();
+		Exercise exercise = getExerciseInstance();
 		
 		exerciseRepository.save(exercise);
 		
@@ -270,24 +232,11 @@ public class ExercisePostServiceTest {
 	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 키워드로 객체들 특정 target만 가져오기 -> 정상")
 	public void findAllForPostForCommunityViewDTOWithTargetAndKeywordByPageTest() {
 		//Given
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("test")
-				.lastName("test")
-				.nickName("test")
-				.role(RoleType.USER)
-				.build();
+		User user = getUserInstance();
 	
 		userRepository.save(user);
 		
-		Exercise exercise = Exercise.builder()
-			    .name("Exercies")
-			    .description("Description")
-			    .caution("Caution")
-			    .movement("Movement")
-			    .target(TargetType.CHEST)
-			    .build();
+		Exercise exercise = getExerciseInstance();
 		
 		exerciseRepository.save(exercise);
 		
@@ -403,13 +352,7 @@ public class ExercisePostServiceTest {
 	@DisplayName("해당 부위에 해당하는 Post만 개수 반환 -> 정상")
 	public void countWithTargetTest() {
 		//Given
-		Exercise exercise = Exercise.builder()
-			    .name("Exercies")
-			    .description("Description")
-			    .caution("Caution")
-			    .movement("Movement")
-			    .target(TargetType.CHEST)
-			    .build();
+		Exercise exercise = getExerciseInstance();
 		
 		exerciseRepository.save(exercise);
 		
@@ -443,13 +386,7 @@ public class ExercisePostServiceTest {
 	public void countWithTargetAndKeywordTest() {
 		//Given
 		
-		Exercise exercise = Exercise.builder()
-			    .name("Exercies")
-			    .description("Description")
-			    .caution("Caution")
-			    .movement("Movement")
-			    .target(TargetType.CHEST)
-			    .build();
+		Exercise exercise = getExerciseInstance();
 		
 		exerciseRepository.save(exercise);
 		
@@ -474,5 +411,81 @@ public class ExercisePostServiceTest {
 		assertEquals(resultEvery,INIT_EXERCISE_POST_NUM);
 		assertEquals(resultNone,0);
 		
+	}
+	
+	/*
+	 *  public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("ExercisePost id로 ExercisePost 가져와서 이를 통해 ExercisePostViewDTO 생성 및 반환 -> 해당 id의 ExercisePost 없음")
+	public void getExercisePostViewDTOWithExercisePostIdNonExist() {
+		//Given
+		Long nonExistId = Long.valueOf(1);
+		
+		for(ExercisePost ep: exercisePostRepository.findAll()) {
+			nonExistId = Math.max(nonExistId, ep.getId());
+		}
+		nonExistId++;
+		
+		//When
+		
+		ExercisePostViewDTO result = exercisePostService.getExercisePostViewDTOWithExercisePostId(nonExistId);
+		
+		//Then
+		assertEquals(result,null);
+		
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("ExercisePost id로 ExercisePost 가져와서 이를 통해 ExercisePostViewDTO 생성 및 반환 ->  정상")
+	public void getExercisePostViewDTOWithExercisePostIdTest() {
+		//Given
+		ExercisePost exercisePost = exercisePostRepository.findAll().get(0);
+		Long existId = exercisePost.getId();
+		
+		User user = getUserInstance();
+	
+		userRepository.save(user);
+		
+		Exercise exercise = getExerciseInstance();
+		
+		exerciseRepository.save(exercise);
+		
+		exercisePost.setUser(user);
+		exercisePost.setExercise(exercise);
+		
+		exercisePostRepository.save(exercisePost);
+		//When
+		ExercisePostViewDTO result = exercisePostService.getExercisePostViewDTOWithExercisePostId(existId);
+		
+		//Then
+		assertEquals(result != null, true);
+		
+	}
+	
+	private User getUserInstance() {
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("test")
+				.lastName("test")
+				.nickName("test")
+				.role(RoleType.USER)
+				.build();
+		return user;
+	}
+	
+	private Exercise getExerciseInstance() {
+		Exercise exercise = Exercise.builder()
+			    .name("Exercies")
+			    .description("Description")
+			    .caution("Caution")
+			    .movement("Movement")
+			    .target(TargetType.CHEST)
+			    .build();
+		return exercise;
 	}
 }

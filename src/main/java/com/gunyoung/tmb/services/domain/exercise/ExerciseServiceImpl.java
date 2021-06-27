@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,7 @@ import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO;
 import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
+import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
@@ -68,6 +71,29 @@ public class ExerciseServiceImpl implements ExerciseService {
 			return null;
 		return result.get();
 	}
+	
+	/**
+	 * 모든 운동 페이지로 가져오기 
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Page<Exercise> findAllInPage(Integer pageNumber,int page_size) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, page_size);
+		return exerciseRepository.findAll(pageRequest);
+	}
+	
+	/**
+	 * 이름에 키워드를 포함하는 모든 운동 페이지로 가져오는 메소드
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int page_size) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, page_size);
+		return exerciseRepository.findAllWithNameKeyword(keyword, pageRequest);
+	}
+	
 	
 	/**
 	 * 모든 운동들을 주 운동 부위들로 분류해 반환하는 메소드
@@ -203,5 +229,66 @@ public class ExerciseServiceImpl implements ExerciseService {
 	public void delete(Exercise exercise) {
 		exerciseRepository.delete(exercise);
 	}
-	
+
+	/**
+	 * 모든 운동들 개수 반환
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public long countAll() {
+		return exerciseRepository.count();
+	}
+
+	/**
+	 * 이름 키워드를 만족하는 Exercise 개수 반환
+	 * @param nameKeyword 이름 키워드
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public long countAllWithNameKeyword(String nameKeyword) {
+		return exerciseRepository.countAllWithNameKeyword(nameKeyword);
+	}
+
+	/**
+	 * Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 
+	 * @return ExerciseForInfoViewDTO, null(해당 id의 Exercise 없을때)
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public ExerciseForInfoViewDTO getExerciseForInfoViewDTOByExerciseId(Long exerciseId) {
+		Exercise exercise = findById(exerciseId);
+		
+		if(exercise == null)
+			return null;
+		
+		ExerciseForInfoViewDTO dto = ExerciseForInfoViewDTO.builder()
+				.id(exercise.getId())
+				.name(exercise.getName())
+				.description(exercise.getDescription())
+				.caution(exercise.getCaution())
+				.movement(exercise.getMovement())
+				.target(exercise.getTarget().getKoreanName())
+				.build();
+		
+		List<ExerciseMuscle> muscles = exercise.getExerciseMuscles();
+		StringBuilder mainMuscleBuilder = new StringBuilder();
+		StringBuilder subMuscleBuilder = new StringBuilder();
+		
+		for(ExerciseMuscle muscle: muscles) {
+			if(muscle.isMain()) {
+				mainMuscleBuilder.append(muscle.getMuscleName());
+			} else {
+				subMuscleBuilder.append(muscle.getMuscleName());
+			}
+		}
+		
+		dto.setMainMuscle(mainMuscleBuilder.toString());
+		dto.setSubMuscle(subMuscleBuilder.toString());
+		
+		return dto;
+	}
+
 }

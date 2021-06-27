@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
@@ -94,6 +95,34 @@ public class CommentServiceTest {
 	}
 	
 	/*
+	 *  public List<Comment> findByExercisePostId(Long postId)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("ExercisePost id로 Comment들 찾기 ->정상")
+	public void findByExercisePostIdTest() {
+		//Given
+		ExercisePost exercisePost = getExercisePostInstance();
+		
+		exercisePostRepository.save(exercisePost);
+		
+		Long exercisePostId = exercisePost.getId();
+		
+		List<Comment> comments = commentRepository.findAll();
+		for(Comment c: comments) {
+			c.setExercisePost(exercisePost);
+		}
+		
+		commentRepository.saveAll(comments);
+		
+		//When
+		List<Comment> result = commentService.findAllByExercisePostId(exercisePostId);
+		
+		//Then
+		assertEquals(result.size(),INIT_COMMENT_NUM);
+	}
+	
+	/*
 	 *  public Comment save(Comment comment)
 	 */
 	
@@ -147,14 +176,7 @@ public class CommentServiceTest {
 				 .isAnonymous(true)
 				 .build();
 		
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("first")
-				.lastName("last")
-				.role(RoleType.USER)
-				.nickName("nickName")
-				.build();
+		User user = getUserInstance();
 		
 		userRepository.save(user);
 		
@@ -207,21 +229,11 @@ public class CommentServiceTest {
 		//Given
 		Comment comment = commentRepository.findAll().get(0);
 		
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("first")
-				.lastName("last")
-				.role(RoleType.USER)
-				.nickName("nickName")
-				.build();
+		User user = getUserInstance();
 		
 		userRepository.save(user);
 		
-		ExercisePost exercisePost = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
+		ExercisePost exercisePost = getExercisePostInstance();
 		
 		exercisePostRepository.save(exercisePost);
 		
@@ -247,5 +259,60 @@ public class CommentServiceTest {
 		assertEquals(exercisePostCommentNum -1,exercisePostRepository.findById(exercisePostId).get().getComments().size());
 		assertEquals(commentNum-1, commentRepository.count());
 		
+	}
+	
+	/*
+	 *  public List<CommentForPostViewDTO> getCommentForCommentForPostViewDTOsByExercisePostId(Long postId)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("해당 exercisePost id 를 만족하는 Comment 객체들을 CommentForPostViewDTO로 변환해서 반환 -> 정상")
+	public void getCommentForCommentForPostViewDTOsByExercisePostIdTest() {
+		//Given
+		User user = getUserInstance();
+		
+		userRepository.save(user);
+		
+		ExercisePost exercisePost = getExercisePostInstance();
+		
+		exercisePostRepository.save(exercisePost);
+		
+		Long exercisePostId = exercisePost.getId();
+		
+		List<Comment> comments = commentRepository.findAll();
+		for(Comment c: comments) {
+			c.setExercisePost(exercisePost);
+			c.setUser(user);
+		}
+		
+		commentRepository.saveAll(comments);
+		
+		//When
+		List<CommentForPostViewDTO> result = commentService.getCommentForPostViewDTOsByExercisePostId(exercisePostId);
+		
+		//Then
+		assertEquals(result.size(),INIT_COMMENT_NUM);
+	}
+	
+	private User getUserInstance() {
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("first")
+				.lastName("last")
+				.role(RoleType.USER)
+				.nickName("nickName")
+				.build();
+		return user;
+	}
+	
+	private ExercisePost getExercisePostInstance() {
+		ExercisePost exercisePost = ExercisePost.builder()
+				.title("title")
+				.contents("contents")
+				.build();
+		
+		return exercisePost;
 	}
 }
