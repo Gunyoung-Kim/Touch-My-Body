@@ -415,6 +415,30 @@
 
     5. addExercise (html) 추가
 
+### 2021.6.29
+
+- FeedbackController
+
+    1. 운동 정보에 대한 피드백 추가 하기 위한 화면 반환 메소드 추가
+
+    2. 운동 정보에 대한 피드백 추가 처리 메소드 추가 
+
+- Domain
+
+    1. Feedback - isReflected(boolean) : 피드백이 반영됐는지  추가
+
+- ExercisePostService -> Impl에 구현 , 하위 항목에 대한 테스트 코드 작성
+
+    1. getExercisePostViewDTOWithExercisePostId 로직에 ExercisePost viweNum 1 증가 시키는 메소드 추가 
+
+- FeedbackService -> Impl에 구현, 하위 항목에 대한 테스트 코드 작성 
+
+    1. User와 Exercise객체를 인자로 받아 Feedback 객체 생성 및 객체적 관계 연결 후 저장하는 메소드 추가 
+
+- Template
+
+    1. addFeedback (html, css) 추가
+
 --- 
 
 ## To do List
