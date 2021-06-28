@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html::head"></head>
+  <head>
+    <link rel="stylesheet" href="/css/exerciseInfo.css">
+  </head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+
+    <div class="main_container" th:object="${exerciseInfo}">
+      <input type="hidden" id="exerciseId" th:value="*{id}">
+      <div id="main-title" class="py-5 text-center">
+        <h2 th:text="*{name}"></h2>
+        <h5 th:text="*{target}"></h5>
+      </div>
+
+      <div class="description">
+        <div class="infoLabel">
+          <h5>설명</h5>
+        </div>
+        <pre class="infoText" th:text="*{description}"></pre>
+      </div>
+
+      <div class="movement">
+        <div class="infoLabel">
+          <h5>운동법</h5>
+        </div>
+        <pre class="infoText" th:text="*{movement}"></pre>
+      </div>
+
+      <div class="caution">
+        <div class="infoLabel">
+          <h5>주의점</h5>
+        </div>
+        <pre class="infoText" th:text="*{caution}"></pre>
+      </div>
+
+      <div class="muscle">
+        <div class="infoLabel">
+          <h5>자극 근육</h5>
+        </div>
+        <div class="infoText" th:text="|주: *{mainMuscle}|"></div>
+        <div class="infoText" th:text="|부: *{subMuscle}|"></div>
+      </div>
+
+      <div class="">
+        <button type="button" class="feedbackBtn" onclick="goToFeedback()">피드백 작성하기</button>
+      </div>
+    </div>
+
+    <footer>
+    	<div th:replace="fragments.html :: footer"></div>
+    </footer>
+
+    <script type="text/javascript" th:src="@{/js/exerciseInfo.js}"></script>
+  </body>
+</html>

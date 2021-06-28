@@ -13,7 +13,7 @@ import com.gunyoung.tmb.dto.response.MuscleInfoBySortDTO;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
 
 @RestController
-public class ExerciseMangerRestController {
+public class ManagerExerciseRestController {
 	
 	@Autowired
 	MuscleService muscleService;

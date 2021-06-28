@@ -71,7 +71,7 @@ public class UserExerciseController {
 	@RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.POST)
 	public ModelAndView addUserExercise(@ModelAttribute("formModel") AddUserExerciseDTO formModel) {
 		Long userId = SessionUtil.getLoginUserId(session);
-		
+		System.out.println(userId);
 		User user = userService.findById(userId);
 		
 		if(user == null) 

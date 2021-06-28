@@ -3,9 +3,9 @@ const goToMyRecords = () => {
 }
 
 const goToExerciseInfo = () => {
-
+  location.href = '/exercise'
 }
 
 const goToCommunity = () => {
-  
+  location.href = '/community'
 }

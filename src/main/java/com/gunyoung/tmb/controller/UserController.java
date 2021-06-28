@@ -14,7 +14,10 @@ import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.error.codes.JoinErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.EmailDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.duplication.NickNameDuplicationFoundedException;
+import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
+import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
+import com.gunyoung.tmb.services.domain.exercise.MuscleService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 
 /**
@@ -30,6 +33,15 @@ public class UserController {
 	
 	@Autowired
 	ExerciseService exerciseService;
+	
+	@Autowired
+	MuscleService muscleService;
+	
+	@Autowired
+	ExerciseMuscleService exerciseMuscleService;
+	
+	@Autowired
+	ExercisePostService exercisePostService;
 	
 	@Autowired
 	HttpSession session;

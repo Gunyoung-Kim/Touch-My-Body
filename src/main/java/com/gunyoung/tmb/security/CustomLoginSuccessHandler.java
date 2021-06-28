@@ -32,6 +32,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		Long userId = userService.findByEmail(username).getId();
 		
 		SessionUtil.setLoginUserId(session, userId);
+		System.out.println("Welcome" + userId);
 		response.sendRedirect("/");
 	}
 

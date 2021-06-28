@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html::head"></head>
+  <head>
+    <link rel="stylesheet" href="/css/postView.css">
+  </head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+
+    <div class="content" th:object="${exercisePost}">
+      <input type="hidden" id="forPostId" th:value="*{postId}">
+
+      <div class="title">
+          <h3 th:text="|[*{exerciseName}]*{title}|"></h3>
+      </div>
+
+      <hr/>
+
+      <div class="writerAndTime">
+        <span class="postWriter" th:text="*{writerName}"></span>
+        <small class="postCreatedAt" th:text="*{createdAt}"></small>
+      </div>
+
+      <hr/>
+
+      <div class="PostNumbers">
+          <span class="numbers">
+            <small th:text="|조회수: *{viewNum}|"></small>
+            <small th:text="|댓글수: *{commentNum}|"></small>
+          </span>
+      </div>
+
+      <div class="mainText">
+        <pre class="postContent" th:text="*{contents}"></pre>
+      </div>
+
+      <hr/>
+
+      <div class="like">
+        <button sec:authorize="isAuthenticated()" type="button" name="button" th:text="|좋아요 : *{likeNum}|" onclick="addPostLike()"></button>
+        <button sec:authorize="!isAuthenticated()" type="button" th:text="|좋아요 : *{likeNum}|" onclick="needLogin()"></button>
+      </div>
+
+    </div>
+
+
+    <div class="comments">
+      <hr/>
+      <div class="">
+        <h5 th:text="|댓글 ${comments.size()}|"></h5>
+      </div>
+      <hr>
+      <table>
+        <tbody>
+          <tr th:each="object:${comments}">
+            <div class="commentWriterInfo">
+              <span th:if="${object.isAnonymous}">익명</span>
+              <span th:if="!${object.isAnonymous}" th:text="${object.writerName}" style="font-weight: bold;"></span>
+              <small th:text="${object.createdAt}"></small>
+              <span style="float: right;">
+                <span sec:authorize="isAuthenticated()" ><a th:onclick="|addCommentLike(${object.commentId})|">👍</a></span>
+                <span sec:authorize="!isAuthenticated()" ><a onclick="needLogin()">👍</a></span>
+                <span th:text="${object.commentLikesNum}"></span>
+              </span>
+            </div>
+
+            <div class="wirterIp">
+              <small th:text="${object.writerIp}"></small>
+            </div>
+
+            <div class="commentContent">
+              <pre th:text="${object.contents}"></pre>
+            </div>
+            <hr>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <div class="writeComment" th:object="${exercisePost}">
+      <hr/>
+      <div class="">
+        댓글쓰기
+      </div>
+      <form class="" th:action="@{'./' + *{postId} +'/addComment'}" method="post">
+        <input type="checkbox" name="isAnonymous"> 익명 <br>
+        <textarea name="contents" rows="3" cols="80"></textarea>
+        <input type="submit" name="" value="등록하기">
+      </form>
+    </div>
+
+    <footer>
+      <div th:replace="fragments.html :: footer"></div>
+    </footer>
+    <script type="text/javascript" th:src="@{/js/postView.js}"></script>
+  </body>
+</html>

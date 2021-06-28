@@ -279,9 +279,9 @@ public class ExerciseServiceImpl implements ExerciseService {
 		
 		for(ExerciseMuscle muscle: muscles) {
 			if(muscle.isMain()) {
-				mainMuscleBuilder.append(muscle.getMuscleName());
+				mainMuscleBuilder.append(muscle.getMuscleName()+".");
 			} else {
-				subMuscleBuilder.append(muscle.getMuscleName());
+				subMuscleBuilder.append(muscle.getMuscleName()+".");
 			}
 		}
 		

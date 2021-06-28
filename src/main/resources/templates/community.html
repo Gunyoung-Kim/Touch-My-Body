@@ -9,28 +9,85 @@
       <div th:replace="fragments.html :: main-nav"></div>
     </header>
 
+    <nav id="topMenu">
+      <ul>
+        <li>
+          <a class="menuLink" href="/community">전체</a>
+        </li>
+        <li th:each="category:${targetNames}">
+          <a class= "menuLink" th:href="@{'/community/'+ ${category.toString()} }" th:text="${category.getKoreanName()}"></a>
+        </li>
+      </ul>
+    </nav>
+
     <div id="main-title" class="py-5 text-center">
       <h2>커뮤니티</h2>
+    </div>
+
+    <div class="text-center">
+      <h4 th:text="|< ${category} >|"></h4>
     </div>
 
     <div class="main_container">
 
       <div class="search">
-
+        <form class="mb-3" method="get">
+          <input type="text" name="keyword" placeholder="이름 검색">
+          <input type="submit" value="검색">
+        </form>
       </div>
 
       <table class="table table-striped text-center">
         <thead>
-
+          <tr>
+            <th scope="col">종류</th>
+            <th scope="col" colspan="2">제목</th>
+            <th scope="col">작성자</th>
+            <th scope="col">작성일</th>
+            <th scope="col">조회수</th>
+          </tr>
         </thead>
         <tbody>
-          <tr th:each="object:${listObject}">
-            
+          <tr th:each="object:${listObject}" th:onclick="'postDetail(' + ${object.postId}+')'">
+            <td th:text="${object.category.getKoreanName()}"></td>
+            <td th:text="|[${object.exerciseName}] ${object.title} |" colspan="2"></td>
+            <td th:text="${object.writer}"></td>
+            <td th:text="|${object.createdAt.toLocalDate()} ${object.createdAt.getHour()} : ${object.createdAt.getMinute()}|"></td>
+            <td th:text="${object.viewNum}"></td>
           </tr>
         </tbody>
       </table>
+
+      <div class="row justify-content-center">
+        <nav>
+          <ul class="pagination justify-content-center pageUl"
+              th:with="start=${startIndex},
+                        last=${lastIndex}">
+
+             <li th:unless="${currentPage} == 1" class="pageList" >
+               <a th:href="@{/(page=${currentPage}-1)}">
+                 <span aria-hidden="true">&lt;</span>
+               </a>
+             </li>
+
+             <li th:each="page: ${#numbers.sequence(start, last)}" class="pageList" >
+              <a th:text="${page}" th:href="@{/(page=${page})}"></a>
+             </li>
+
+            <li th:unless="${currentPage} == ${lastIndex}" class="pageList">
+              <a th:href="@{/(page=${currentPage}+1)}">
+                <span aria-hidden="true">&gt;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
 
+
+    <footer>
+    	<div th:replace="fragments.html :: footer"></div>
+    </footer>
     <script type="text/javascript" th:src="@{/js/community.js}"></script>
   </body>
 </html>

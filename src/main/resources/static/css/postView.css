@@ -1,0 +1,38 @@
+.content {
+  width:80%;
+  margin: 30px auto;
+}
+
+.comments {
+  width:80%;
+  margin: 30px auto;
+}
+
+.writeComment {
+  width:80%;
+  margin: 30px auto;
+}
+
+.postWriter {
+  font-size: 1em;
+}
+
+.postCreatedAt {
+  float: right;
+}
+
+ .numbers {
+   float: right;
+ }
+
+.postContent {
+  font-size: 1.17em;
+}
+
+.mainText {
+  height: 400px;
+}
+
+.anonymousBox {
+  float: right;
+}

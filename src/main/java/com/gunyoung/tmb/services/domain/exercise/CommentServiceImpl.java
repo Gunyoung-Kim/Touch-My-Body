@@ -119,7 +119,7 @@ public class CommentServiceImpl implements CommentService {
 		for(Comment c: comments) {
 			CommentForPostViewDTO dto = CommentForPostViewDTO.builder()
 					.commentId(c.getId())
-					.wirterIp(c.getWriterIp())
+					.writerIp(c.getWriterIp())
 					.contents(c.getContents())
 					.isAnonymous(c.isAnonymous())
 					.writerName(c.getUser().getNickName())

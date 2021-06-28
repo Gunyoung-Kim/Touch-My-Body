@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentForPostViewDTO {
 	private Long commentId;
-	private String wirterIp;
+	private String writerIp;
 	private String contents;
 	private boolean isAnonymous;
 	private String writerName;

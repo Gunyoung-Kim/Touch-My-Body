@@ -38,14 +38,15 @@ public class ExercisePostController {
 	 * @return
 	 */
 	@RequestMapping(value="/community",method=RequestMethod.GET)
-	public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") int page,@RequestParam(value="keyword",required=false)String keyword,ModelAndView mav) {
+	public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") int page,
+			@RequestParam(value="keyword",required=false)String keyword,ModelAndView mav) {
 		mav.setViewName("community");
 		int page_size = PageUtil.COMMUNITY_PAGE_SIZE;
 		
 		Page<PostForCommunityViewDTO> pageResult;
 		long totalPageNum;
 		
-		if(keyword != null) {
+		if(keyword == null) {
 			pageResult = exercisePostService.findAllForPostForCommunityViewDTOByPage(page);
 			totalPageNum = exercisePostService.count()/page_size +1;
 		} else {
@@ -55,8 +56,12 @@ public class ExercisePostController {
 		
 		List<PostForCommunityViewDTO> resultList = pageResult.getContent();
 		
+		TargetType[] targetTypes = TargetType.values();
+		
 		mav.addObject("listObject",resultList);
+		mav.addObject("category", "전체");
 		mav.addObject("currentPage",page);
+		mav.addObject("targetNames", targetTypes);
 		mav.addObject("startIndex",(page/page_size)*page_size+1);
 		mav.addObject("lastIndex",(page/page_size)*page_size+page_size-1 > totalPageNum ? totalPageNum : (page/page_size)*page_size+page_size-1);
 		
@@ -87,7 +92,7 @@ public class ExercisePostController {
 		Page<PostForCommunityViewDTO> pageResult;
 		long totalPageNum;
 		
-		if(keyword != null) {
+		if(keyword == null) {
 			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(type, page);
 			totalPageNum = exercisePostService.countWithTarget(type)/page_size +1;
 		} else {
@@ -97,7 +102,11 @@ public class ExercisePostController {
 		
 		List<PostForCommunityViewDTO> resultList = pageResult.getContent();
 		
+		TargetType[] targetTypes = TargetType.values();
+		
 		mav.addObject("listObject",resultList);
+		mav.addObject("targetNames", targetTypes);
+		mav.addObject("category", type.getKoreanName());
 		mav.addObject("currentPage",page);
 		mav.addObject("startIndex",(page/page_size)*page_size+1);
 		mav.addObject("lastIndex",(page/page_size)*page_size+page_size-1 > totalPageNum ? totalPageNum : (page/page_size)*page_size+page_size-1);
@@ -112,7 +121,7 @@ public class ExercisePostController {
 	 * @param mav
 	 * @return
 	 */
-	@RequestMapping(value="/commuity/post/{post_id}" ,method = RequestMethod.GET)
+	@RequestMapping(value="/community/post/{post_id}" ,method = RequestMethod.GET)
 	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId,ModelAndView mav) {
 		ExercisePostViewDTO postDTO = exercisePostService.getExercisePostViewDTOWithExercisePostId(postId);
 		

@@ -1,0 +1,13 @@
+.main_container {
+  width:80%;
+  margin: 30px auto;
+}
+
+.infoText {
+  border: 1px solid black;
+}
+
+.feedbackBtn {
+  background-color: #000 !important;
+  color: #fff;
+}
