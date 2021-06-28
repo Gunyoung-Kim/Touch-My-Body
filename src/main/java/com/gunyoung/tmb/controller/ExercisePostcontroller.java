@@ -123,7 +123,7 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community/post/{post_id}" ,method = RequestMethod.GET)
 	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId,ModelAndView mav) {
-		ExercisePostViewDTO postDTO = exercisePostService.getExercisePostViewDTOWithExercisePostId(postId);
+		ExercisePostViewDTO postDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreasViewNum(postId);
 		
 		if(postDTO == null) {
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.ExercisePostNotFoundedError.getDescription());

@@ -15,39 +15,42 @@
         <div class="col-md-6 col-sm-12">
           <form method="post">
             <div class="form-group">
-              <label>운동 이름</label>
+              <label class="form-label">운동 이름</label>
               <input type="text" name="name">
             </div>
 
             <div class="form-group">
-              <label>운동에 대한 설명</label>
+              <label class="form-label">운동에 대한 설명</label>
               <textarea name="description" rows="8" cols="80"></textarea>
             </div>
 
             <div class="form-group">
-              <label>운동하는 방법</label>
+              <label class="form-label">운동하는 방법</label>
               <textarea name="movement" rows="8" cols="80"></textarea>
             </div>
 
             <div class="form-group">
-              <label>운동 시 주의 사항</label>
+              <label class="form-label">운동 시 주의 사항</label>
               <textarea name="caution" rows="8" cols="80"></textarea>
             </div>
 
             <div class="form-group">
-              <label>운동 부위</label>
+              <label class="form-label">운동 부위</label>
               <select class="" name="target">
                 <option th:each="target:${targetTypes}" th:value="${target}" th:text="${target}">
                 </option>
               </select>
             </div>
 
-            
+
 
           </form>
         </div>
       </div>
     </div>
 
+    <footer>
+      <div th:replace="fragments.html :: footer"></div>
+    </footer>
   </body>
 </html>

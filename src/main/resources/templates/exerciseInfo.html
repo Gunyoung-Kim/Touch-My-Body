@@ -46,7 +46,7 @@
       </div>
 
       <div class="">
-        <button type="button" class="feedbackBtn" onclick="goToFeedback()">피드백 작성하기</button>
+        <button type="button" class="feedbackBtn" th:onclick="|goToFeedback(*{id})|">피드백 작성하기</button>
       </div>
     </div>
 

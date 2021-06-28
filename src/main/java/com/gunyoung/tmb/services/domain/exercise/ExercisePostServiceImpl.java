@@ -171,7 +171,39 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 		
 		return dto;
 	}
-	
+
+	/**
+	 * ExercisePost id로 ExercisePost 가져와서 이를 통해 ExercisePostViewDTO 생성 및 반환 <br>
+	 * ExercisePost viewNum(조회수) 증가
+	 * @param id ExercisePost ID
+	 * @return ExercisePostViewDTO, null(해당 id의 ExercisePost 없을때)
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostIdAndIncreasViewNum(Long id) {
+		ExercisePost exercisePost = findById(id);
+		if(exercisePost == null)
+			return null;
+		
+		exercisePost.setViewNum(exercisePost.getViewNum()+1);
+		
+		ExercisePostViewDTO dto = ExercisePostViewDTO.builder()
+				.postId(exercisePost.getId())
+				.title(exercisePost.getTitle())
+				.exerciseName(exercisePost.getExercise().getName())
+				.writerName(exercisePost.getUser().getNickName())
+				.contents(exercisePost.getContents())
+				.viewNum(exercisePost.getViewNum())
+				.likeNum(exercisePost.getPostLikes().size())
+				.commentNum(exercisePost.getComments().size())
+				.createdAt(localDateToStringForExercisePost(exercisePost.getCreatedAt()))
+				.build();
+		
+		save(exercisePost);
+		
+		return dto;
+	}
+
 	private String localDateToStringForExercisePost(LocalDateTime localDateTime) {
 		int year = localDateTime.getYear();
 		int month = localDateTime.getMonthValue();
@@ -183,5 +215,4 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 		//yyyy.MM.dd HH:mm
 		return year +"." + month +"." + date + " " +hour +":" + min;
 	}
-	
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html::head"></head>
+  <head>
+    <link rel="stylesheet" href="/css/addFeedback.css">
+  </head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+
+    <div id="main-title" class="py-5 text-center">
+      <h2>운동 정보 수정 요청</h2>
+    </div>
+
+    <div class="text-center">
+      <h5 th:text="${exerciseName}"></h5>
+    </div>
+
+    <hr>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8">
+          <form method="post">
+            <div class="form-group mb-3">
+              <div><label for="title" class="form-label">제목</label></div>
+              <input type="text" name="title" style="width: 300px;">
+            </div>
+
+            <div class="form-group mb-3">
+              <div><label for="content" class="form-label">내용</label></div>
+              <textarea id="content-area" name="content" rows="8" cols="80"></textarea>
+              <br />
+              <span style="color:#aaa;" id="counter">(0 / 최대 2500자)</span>
+            </div>
+
+            <button type="submit" class="btn">제출하기</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div th:replace="fragments.html :: footer"></div>
+    </footer>
+    <script type="text/javascript" th:src="@{/js/addFeedback.js}"></script>
+  </body>
+</html>

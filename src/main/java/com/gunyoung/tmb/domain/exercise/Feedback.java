@@ -56,6 +56,12 @@ public class Feedback extends BaseEntity {
 	private String content;
 	
 	/**
+	 * 피드백이 반영됐는지 여부
+	 */
+	@Builder.Default
+	private boolean isReflected = false;
+	
+	/**
 	 * 피드백을 작성한 User 
 	 * fetch: 지연로딩
 	 */

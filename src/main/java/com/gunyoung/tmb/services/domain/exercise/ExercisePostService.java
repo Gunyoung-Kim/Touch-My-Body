@@ -24,4 +24,5 @@ public interface ExercisePostService {
 	public long countWithTargetAndKeyword(TargetType target, String keyword);
 	
 	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id);
+	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostIdAndIncreasViewNum(Long id);
 }
