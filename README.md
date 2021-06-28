@@ -403,6 +403,17 @@
 
     4. Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환하는 메소드 추가 
 
+- Templates 
+
+    1. community (css,js,html) 추가
+
+    2. exerciseInfo (css,js,html) 추가
+
+    3. exerciseListView (css,html) 추가
+
+    4. postView (css,js,html) 추가
+
+    5. addExercise (html) 추가
 
 --- 
 
