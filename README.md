@@ -439,6 +439,73 @@
 
     1. addFeedback (html, css) 추가
 
+### 2021.6.30
+
+- MangerController 
+
+    1. 매니저 메인 화면 반환하는 메소드 추가 
+
+- ManagerUserController
+
+    1. 매니저가 열람하는 유저 정보 뷰 반환하는 메소드 및 유저 정보 변경 처리 메소드 추가
+
+    2. 특정 유저가 작성한 댓글 목록 보여주는 뷰 반환하는 메소드 추가 
+
+    3. 특정 유저가 작성한 게시글 목록 보여주는 뷰 반환하는 메소드 추가 
+
+- DTO
+
+    1. UserProfileForManagerDTO 추가 - 매니저 화면에서 유저 정보 보여줄때 사용하는 객체 
+
+    2. CommentForManageViewDTO 추가 - 매니저 화면에서 특정 유저가 작성한 댓글 리스트 보여줄때 사용하는 객체
+
+    3. ExercisePostForManageViewDTO 추가 - 매니저 화면에 노출되는 유저의 게시글 목록 구성하기 위해 사용되는 객체
+
+- Error
+
+    1. SearchCriteriaErrorCode 추가 
+   
+    2. RoleNotFoundedException, RequestException, SearchCriteriaInvalidException 추가 
+
+- CommentRepository
+
+    1. User ID로 만족하는 Comment들 가져오는 쿼리, 최신순, 오래된순 추가 
+
+    2. User ID로 만족하는 Comment들 개수 가져오는 쿼리 추가 
+
+- ExercisePostRepository 
+
+    1. User ID로 만족하는 ExercisePost들 가져오는 쿼리, 최신순, 오래된순 추가
+
+    2. 해당 User ID를 만족하는 ExercisePost 개수 가져오는 쿼리 추가 
+
+- CommentService -> Impl에 구현, 하위항목에 대한 테스트 코드 작성
+
+    1. User ID로 만족하는 Comment들 가져오는 메소드, 최신순, 오래된순 추가 
+
+    2. User ID로 만족하는 Comment들 개수 가져오는 메소드 추가 
+
+- ExercisePostService -> Impl에 구현, 하위항목에 대한 테스트 코드 작성
+
+    1. User ID로 만족하는 ExercisePost들 가져오는 메소드, 최신순, 오래된순 추가
+
+    2. 해당 User ID를 만족하는 ExercisePost 개수 가져오는 메소드 추가 
+
+- Template 
+
+    1. manager (css,js,html)
+
+    2. userManage (css, html)
+
+    3. userPostList (css,js,html)
+
+    4. userProfileForManage (css,js,html)
+
+    5. userCommentList (html)
+
+
+
+
 --- 
 
 ## To do List
