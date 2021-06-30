@@ -29,12 +29,18 @@
           우리 소통해요
         </div>
       </div>
+
+      <div sec:authorize="hasRole('ROLE_MANAGER')" class="circle manage mb-3" onclick="goToManage()">
+        <div class="">
+          매니저 화면
+        </div>
+      </div>
     </div>
 
     <footer>
     	<div th:replace="fragments.html :: footer"></div>
     </footer>
-    
+
     <script type="text/javascript" th:src="@{/js/index.js}"></script>
   </body>
 </html>

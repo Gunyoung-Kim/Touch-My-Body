@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html :: head"></head>
+  <head>
+    <link rel="stylesheet" href="/css/userProfileForManage.css">
+  </head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+
+    <div id="main-title" class="py-5 text-center">
+      <h2>유저 정보 수정 </h2>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="">
+          <div th:object="${userInfo}">
+            <div class="mb-3">
+              <label>이메일</label> <br>
+              <input type="text" th:value="*{email}" readonly> <br>
+              <small>이메일은 변경할수 없습니다.</small>
+            </div>
+
+            <div class="mb-3">
+              <label>닉네임</label> <br>
+              <input type="text" th:value="*{nickName}" readonly> <br>
+              <small>닉네임은 변경할 수 없습니다.</small>
+            </div>
+
+            <div class="mb-3">
+              <label>이름</label> <br>
+              <input type="text" th:value="*{firstName}" readonly> <br>
+              <small>이름은 변경할 수 없습니다.</small>
+            </div>
+
+            <div class="mb-3">
+              <label>성</label> <br>
+              <input type="text" th:value="*{lastName}" readonly> <br>
+              <small>성은 변경할 수 없습니다.</small>
+            </div>
+
+            <div class="mb-3">
+              <button type="button" class="btn mb-3" th:onclick="|goToUserComments(*{id})|">작성한 댓글 보러가기</button> <br>
+              <button type="button" class="btn" th:onclick="|goToUserPosts(*{id})|">작성한 게시글 보러가기</button>
+            </div>
+          </div>
+
+
+          <form method="post">
+            <div class="form-group mb-3">
+              <label>권한</label>
+              <select name="role">
+                <option th:each="role:${roleList}" th:value="${role}" th:text="${role}"></option>
+              </select>
+            </div>
+            <button type="submit" class="btn">변경하기</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+    	<div th:replace="fragments.html :: footer"></div>
+    </footer>
+    <script type="text/javascript" th:src="@{/js/userProfileForManage.js}"></script>
+  </body>
+</html>

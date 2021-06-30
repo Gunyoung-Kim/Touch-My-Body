@@ -47,10 +47,10 @@ public class ExercisePostController {
 		long totalPageNum;
 		
 		if(keyword == null) {
-			pageResult = exercisePostService.findAllForPostForCommunityViewDTOByPage(page);
+			pageResult = exercisePostService.findAllForPostForCommunityViewDTOByPage(page,PageUtil.COMMUNITY_PAGE_SIZE);
 			totalPageNum = exercisePostService.count()/page_size +1;
 		} else {
-			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, page);
+			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, page,PageUtil.COMMUNITY_PAGE_SIZE);
 			totalPageNum = exercisePostService.countWithTitleAndContentsKeyword(keyword)/page_size +1;
 		}
 		
@@ -93,10 +93,10 @@ public class ExercisePostController {
 		long totalPageNum;
 		
 		if(keyword == null) {
-			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(type, page);
+			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(type, page,PageUtil.COMMUNITY_PAGE_SIZE);
 			totalPageNum = exercisePostService.countWithTarget(type)/page_size +1;
 		} else {
-			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(type, keyword, page);
+			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(type, keyword, page,PageUtil.COMMUNITY_PAGE_SIZE);
 			totalPageNum = exercisePostService.countWithTargetAndKeyword(type, keyword)/page_size +1;
 		}
 		

@@ -14,7 +14,6 @@ import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
-import com.gunyoung.tmb.utils.PageUtil;
 
 /**
  * ExercisePostService 구현 클래스
@@ -43,13 +42,33 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	}
 	
 	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtAsc(Long userId,Integer pageNumber, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
+		return exercisePostRepository.findAllByUserIdOrderByCreatedAtASCCustom(userId,pageRequest);
+	}
+	
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtDesc(Long userId,Integer pageNumber, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
+		return exercisePostRepository.findAllByUserIdOrderByCreatedAtDescCustom(userId,pageRequest);
+	}
+	
+	/**
 	 * @param pageNumber
 	 * @author kimgun-yeong
 	 */
 	@Override
 	@Transactional(readOnly=true)
-	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Integer pageNumber) {
-		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageUtil.COMMUNITY_PAGE_SIZE);
+	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Integer pageNumber,int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exercisePostRepository.findAllForPostForCommunityViewDTOByPage(pageRequest);
 	}
 	
@@ -61,8 +80,8 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Override
 	@Transactional(readOnly=true)
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithKeywordByPage(String keyword,
-			Integer pageNumber) {
-		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageUtil.COMMUNITY_PAGE_SIZE);
+			Integer pageNumber, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exercisePostRepository.findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, pageRequest);
 	}
 	
@@ -72,8 +91,8 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Override
 	@Transactional(readOnly=true)
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetByPage(TargetType target,
-			Integer pageNumber) {
-		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageUtil.COMMUNITY_PAGE_SIZE);
+			Integer pageNumber, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exercisePostRepository.findAllForPostForCommunityViewDTOWithTargetByPage(target, pageRequest);
 	}
 
@@ -83,8 +102,8 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Override
 	@Transactional(readOnly=true)
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType target,
-			String keyword, Integer pageNumber) {
-		PageRequest pageRuquest = PageRequest.of(pageNumber-1, PageUtil.COMMUNITY_PAGE_SIZE);
+			String keyword, Integer pageNumber, int pageSize) {
+		PageRequest pageRuquest = PageRequest.of(pageNumber-1, pageSize);
 		return exercisePostRepository.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(target, keyword, pageRuquest);
 	}
 
@@ -115,6 +134,16 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public long count() {
 		return exercisePostRepository.count();
+	}
+	
+	/**
+	 * 해당 User ID 만족하는 ExercisePost 개수 반환
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public long countWithUserId(Long userId) {
+		return exercisePostRepository.countWithUserId(userId);
 	}
 
 	/**

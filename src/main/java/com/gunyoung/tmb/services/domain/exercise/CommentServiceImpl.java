@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +59,26 @@ public class CommentServiceImpl implements CommentService {
 	public List<Comment> findAllByExercisePostId(Long postId) {
 		return commentRepository.findAllByExercisePostIdCustom(postId);
 	}
+	
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly= true)
+	public Page<Comment> findAllByUserIdOrderByCreatedAtASC(Long userId,Integer pageNum, int page_size) {
+		PageRequest pageRequest = PageRequest.of(pageNum-1, page_size);
+		return commentRepository.findAllByUserIdOrderByCreatedAtASCCustom(userId,pageRequest);
+	}
+	
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Page<Comment> findAllByUserIdOrderByCreatedAtDESC(Long userId,Integer pageNum, int page_size) {
+		PageRequest pageRequest = PageRequest.of(pageNum-1, page_size);
+		return commentRepository.findAllByUserIdOrderByCreatedAtDescCustom(userId,pageRequest);
+	}
 
 	/**
 	 * @param comment 저장하려는 Comment
@@ -103,6 +125,15 @@ public class CommentServiceImpl implements CommentService {
 		
 		commentRepository.delete(comment);
 	}
+	
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public long countByUserId(Long userId) {
+		return commentRepository.countByUserId(userId);
+	}
 
 	/**
 	 * 해당 exercisePost id 를 만족하는 Comment 객체들을 CommentForPostViewDTO로 변환해서 반환하는 메소드 
@@ -144,4 +175,5 @@ public class CommentServiceImpl implements CommentService {
 		//yyyy.MM.dd HH:mm
 		return year +"." + month +"." + date + " " +hour +":" + min;
 	}
+
 }

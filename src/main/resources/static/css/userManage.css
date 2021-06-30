@@ -1,0 +1,27 @@
+.pageUl {
+  list-style:none;
+}
+
+.pageList {
+  float: left;
+}
+
+.pagination {
+  display: inline-block;
+}
+
+.pagination a {
+color: black;
+float: left;
+padding: 8px 16px;
+text-decoration: none;
+}
+
+  .main_container {
+    width:90%;
+    margin: 30px auto;
+  }
+
+.search {
+  float: right;
+}

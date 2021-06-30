@@ -13,6 +13,34 @@ import com.gunyoung.tmb.enums.TargetType;
 public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>{
 	
 	/**
+	 * User ID로 만족하는 ExercisePost들 가져오는 쿼리 <br>
+	 * INNER JOIN을 통한 성능 향상 <br>
+	 * ExercisePost 제일 먼저 생성된 순으로 가져옴
+	 * @param userId
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT ep FROM ExercisePost ep "
+			+ "INNER JOIN ep.user u "
+			+ "ON u.id = :userId "
+			+ "ORDER BY ep.createdAt ASC")
+	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtASCCustom(@Param("userId") Long userId,Pageable pageable);
+	
+	/**
+	 * User ID로 만족하는 ExercisePost들 가져오는 쿼리 <br>
+	 * INNER JOIN을 통한 성능 향상 <br>
+	 * ExercisePost 제일 최근에 생성된 순으로 가져옴
+	 * @param userId
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT ep FROM ExercisePost ep "
+			+ "INNER JOIN ep.user u "
+			+ "ON u.id = :userId "
+			+ "ORDER BY ep.createdAt DESC")
+	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtDescCustom(@Param("userId") Long userId,Pageable pageable);
+	
+	/**
 	 * ExercisePost의 필드들로 PostForCommunityViewDTO들로 바인딩하여 가져오는 메소드, 페이징 처리 <br>
 	 * INNER JOIN 활용 
 	 * @param pageable
@@ -74,6 +102,15 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "ORDER BY ep.createdAt DESC")
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(@Param("target") TargetType target,@Param("keyword")String keyword ,Pageable pageable);
 	
+	/**
+	 * 해당 User ID를 만족하는 ExercisePost 개수 반환
+	 * @param userId
+	 * @return
+	 */
+	@Query("SELECT COUNT(ep) FROM ExercisePost ep "
+			+ "INNER JOIN ep.user u "
+			+ "ON u.id = :userId")
+	public long countWithUserId(@Param("userId") Long userId);
 	
 	/**
 	 * 게시글 내용이나 제목에서 키워드를 포함하는 게시글들의 개수 반환

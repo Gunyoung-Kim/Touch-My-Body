@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UserManageListDTO {
+	private Long userId;
 	private String name;
 	private String email;
 	private String nickName;
@@ -29,11 +30,12 @@ public class UserManageListDTO {
 	 */
 	public static UserManageListDTO of(User user) {
 		UserManageListDTO dto = UserManageListDTO.builder()
-												.email(user.getEmail())
-												.name(user.getFullName())
-												.nickName(user.getNickName())
-												.role(user.getRole().getKoreanName())
-												.build();
+				.userId(user.getId())
+				.email(user.getEmail())
+				.name(user.getFullName())
+				.nickName(user.getNickName())
+				.role(user.getRole().getKoreanName())
+				.build();
 		return dto;
 	}
 }

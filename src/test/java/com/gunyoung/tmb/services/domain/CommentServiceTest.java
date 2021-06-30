@@ -23,6 +23,7 @@ import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
+import com.gunyoung.tmb.utils.PageUtil;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
@@ -120,6 +121,63 @@ public class CommentServiceTest {
 		
 		//Then
 		assertEquals(result.size(),INIT_COMMENT_NUM);
+	}
+	
+	/*
+	 * public List<Comment> findAllByUserIdOrderByCreatedAtASC(Long userId)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("User ID로 Comment 찾기 오래된순서대로 ->정상")
+	public void findAllByUserIdOrderByCreatedAtASCTest() {
+		//Given
+		User user = getUserInstance();
+		
+		userRepository.save(user);
+		
+		List<Comment> comments = commentRepository.findAll();
+		
+		for(Comment c: comments) {
+			c.setUser(user);
+		}
+		
+		commentRepository.saveAll(comments);
+		
+		//When
+		
+		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtASC(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
+		
+		//Then
+		assertEquals(result.size(),Math.min(INIT_COMMENT_NUM, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE));
+		assertEquals(result.get(0).getCreatedAt().isBefore(result.get(1).getCreatedAt()),true);
+	}
+	
+	/*
+	 *  public List<Comment> findAllByUserIdOrderByCreatedAtDESC(Long userId)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("User ID로 Comment 찾기 최신순서대로 ->정상")
+	public void findAllByUserIdOrderByCreatedAtDESCTest() {
+		//Given
+		User user = getUserInstance();
+		
+		userRepository.save(user);
+		
+		List<Comment> comments = commentRepository.findAll();
+		
+		for(Comment c: comments) {
+			c.setUser(user);
+		}
+		
+		commentRepository.saveAll(comments);
+		
+		//When
+		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtDESC(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
+		
+		//Then
+		assertEquals(result.size(),Math.min(INIT_COMMENT_NUM, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE));
+		assertEquals(result.get(0).getCreatedAt().isAfter(result.get(1).getCreatedAt()),true);
 	}
 	
 	/*
@@ -259,6 +317,37 @@ public class CommentServiceTest {
 		assertEquals(exercisePostCommentNum -1,exercisePostRepository.findById(exercisePostId).get().getComments().size());
 		assertEquals(commentNum-1, commentRepository.count());
 		
+	}
+	
+	/*
+	 * public long countByUserId(Long userId)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("User ID를 만족하는 Comment 들 개수 가져오기 -> 정상")
+	public void countByUserIdTest() {
+		//Given
+		User user = getUserInstance();
+		
+		userRepository.save(user);
+		
+		List<Comment> comments = commentRepository.findAll();
+		
+		for(Comment c: comments) {
+			c.setUser(user);
+		}
+		
+		commentRepository.saveAll(comments);
+		
+		Long allUserId = user.getId();
+		
+		//When
+		
+		long result = commentService.countByUserId(allUserId);
+		
+		//Then
+		
+		assertEquals(result,INIT_COMMENT_NUM);
 	}
 	
 	/*

@@ -11,6 +11,7 @@ import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
 import com.gunyoung.tmb.error.codes.JoinErrorCode;
 import com.gunyoung.tmb.error.codes.LikeErrorCode;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
+import com.gunyoung.tmb.error.codes.SearchCriteriaErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.EmailDuplicationFoundedException;
@@ -23,6 +24,7 @@ import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.notmatch.UserNotMatchException;
+import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
 
 /**
  * 컨트롤러에서 Exeption 발생했을때 이를 처리하는 컨트롤러
@@ -102,5 +104,15 @@ public class ErrorController {
 	@ExceptionHandler(UserNotMatchException.class)
 	public ErrorMsg userNotMatch(UserNotMatchException e) {
 		return new ErrorMsg(UserErrorCode.UserNotMatchError.getCode(), e.getMessage());
+	}
+	
+	/*
+	 * --------------------- BAD_REQUEST ------------------------------------------------
+	 */
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(SearchCriteriaInvalidException.class)
+	public ErrorMsg searchCriteriaInvalid(SearchCriteriaInvalidException e) {
+		return new ErrorMsg(SearchCriteriaErrorCode.OrderByCriteriaError.getCode(),e.getMessage());
 	}
 }

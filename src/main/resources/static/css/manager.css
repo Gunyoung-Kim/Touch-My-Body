@@ -13,18 +13,18 @@
   line-height:150px;
 }
 
-.my {
-  border:1px solid black;
+.userManage {
+  border: 1px solid black;
 }
 
-.info {
-  border:1px solid black;
+.exerciseManage {
+  border: 1px solid black;
 }
 
-.community {
-  border:1px solid black;
+.muscleManage {
+  border: 1px solid black;
 }
 
-.manage {
-  border:1px solid blue;
+.communityManage {
+  border: 1px solid black;
 }

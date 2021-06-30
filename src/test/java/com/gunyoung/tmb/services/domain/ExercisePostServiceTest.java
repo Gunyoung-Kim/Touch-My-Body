@@ -105,6 +105,62 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
+	 *  public List<ExercisePost> findAllByUserIdOrderByCreatedAtASCCustom(Long userId)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("User ID로 ExercisePost들 오래된 순으로 찾기 ->정상")
+	public void findAllByUserIdOrderByCreatedAtASCCustomTest() {
+		//Given
+		User user = getUserInstance();
+		
+		userRepository.save(user);
+		
+		List<ExercisePost> exercisePosts = exercisePostRepository.findAll();
+		
+		for(ExercisePost ep: exercisePosts) {
+			ep.setUser(user);
+		}
+		
+		exercisePostRepository.saveAll(exercisePosts);
+		
+		//When
+		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
+		
+		//Then
+		assertEquals(result.size(),Math.min(INIT_EXERCISE_POST_NUM, PageUtil.POST_FOR_MANAGE_PAGE_SIZE));
+		assertEquals(result.get(0).getCreatedAt().isBefore(result.get(1).getCreatedAt()),true);
+	}
+	
+	/*
+	 * public List<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("User ID로 ExercisePost들 최신 순으로 찾기 ->정상")
+	public void findAllByUserIdOrderByCreatedAtDescTest() {
+		//Given
+		User user = getUserInstance();
+		
+		userRepository.save(user);
+		
+		List<ExercisePost> exercisePosts = exercisePostRepository.findAll();
+		
+		for(ExercisePost ep: exercisePosts) {
+			ep.setUser(user);
+		}
+		
+		exercisePostRepository.saveAll(exercisePosts);
+		
+		//When
+		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
+		
+		//Then
+		assertEquals(result.size(),Math.min(INIT_EXERCISE_POST_NUM, PageUtil.POST_FOR_MANAGE_PAGE_SIZE));
+		assertEquals(result.get(0).getCreatedAt().isAfter(result.get(1).getCreatedAt()),true);
+	}
+	
+	/*
 	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Integer pageNumber)
 	 */
 	@Test
@@ -132,7 +188,7 @@ public class ExercisePostServiceTest {
 		
 		//When
 		
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOByPage(1);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOByPage(1,PageUtil.COMMUNITY_PAGE_SIZE);
 		
 		//Then
 		
@@ -171,12 +227,12 @@ public class ExercisePostServiceTest {
 		//When
 		
 		// 내용 검색
-		Page<PostForCommunityViewDTO> result1 = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage("ontent",1);
+		Page<PostForCommunityViewDTO> result1 = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage("ontent",1,PageUtil.COMMUNITY_PAGE_SIZE);
 		
 		//제목 검색
-		Page<PostForCommunityViewDTO> result2 = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage("itle", 1);
+		Page<PostForCommunityViewDTO> result2 = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage("itle", 1,PageUtil.COMMUNITY_PAGE_SIZE);
 		
-		Page<PostForCommunityViewDTO> result3 = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage("none!!!", 1);
+		Page<PostForCommunityViewDTO> result3 = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage("none!!!", 1,PageUtil.COMMUNITY_PAGE_SIZE);
 		
 		//Then
 		
@@ -215,8 +271,8 @@ public class ExercisePostServiceTest {
 		
 		//When
 		
-		Page<PostForCommunityViewDTO> result1 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(TargetType.ARM, 1);
-		Page<PostForCommunityViewDTO> result2 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(TargetType.CHEST, 1);
+		Page<PostForCommunityViewDTO> result1 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(TargetType.ARM, 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result2 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(TargetType.CHEST, 1,PageUtil.COMMUNITY_PAGE_SIZE);
 		
 		//Then
 		assertEquals(result1.getContent().size(),0);
@@ -252,8 +308,8 @@ public class ExercisePostServiceTest {
 		
 		//When
 		
-		Page<PostForCommunityViewDTO> result1 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType.CHEST, "none!!!", 1);
-		Page<PostForCommunityViewDTO> result2 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType.CHEST, "title",1);
+		Page<PostForCommunityViewDTO> result1 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType.CHEST, "none!!!", 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result2 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType.CHEST, "title",1,PageUtil.COMMUNITY_PAGE_SIZE);
 		
 		//Then
 		assertEquals(result1.getContent().size(),0);
@@ -317,6 +373,34 @@ public class ExercisePostServiceTest {
 		
 		//Then
 		assertEquals(beforeNum-1,exercisePostRepository.count());
+	}
+	
+	/*
+	 *  public long countWithUserId(Long userId)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("User ID 만족하는 ExercisePost 개수 반환 -> 정상")
+	public void countWithUserIdTest() {
+		//Given
+		User user = getUserInstance();
+		
+		userRepository.save(user);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		
+		for(ExercisePost ep: exercisePostList) {
+			ep.setUser(user);
+		}
+		
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		//When
+		
+		long result = exercisePostService.countWithUserId(user.getId());
+		
+		//Then
+		assertEquals(result, INIT_EXERCISE_POST_NUM);
 	}
 	
 	/*

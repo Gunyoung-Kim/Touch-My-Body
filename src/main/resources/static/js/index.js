@@ -9,3 +9,7 @@ const goToExerciseInfo = () => {
 const goToCommunity = () => {
   location.href = '/community'
 }
+
+const goToManage = () => {
+  location.href = '/manager'
+}

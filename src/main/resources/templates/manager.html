@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html :: head"></head>
+  <head>
+    <link rel="stylesheet" href="/css/manager.css">
+  </head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+
+    <div id="main-title" class="py-5 text-center">
+      <h2>매니저 화면</h2>
+    </div>
+
+    <div class="container">
+
+      <div class="circle userManage mb-3" onclick="goToUserManage()">
+          <span class="">
+            유저 관리하기
+          </span>
+      </div>
+
+      <div class="circle exerciseManage mb-3" onclick="goToExerciseManage()">
+          <span class="">
+            운동 종류 관리하기
+          </span>
+
+      </div>
+
+      <div class="circle muscleManage mb-3" onclick="goToMuscleManage()">
+          <span class="">
+            근육 종류 관리하기
+          </span>
+      </div>
+
+      <div class="circle communityManage mb-3" onclick="goToCommunityManage()">
+        <span class="">
+            커뮤니티 관리하기
+        </span>
+      </div>
+
+    </div>
+
+
+    <footer>
+      <div th:replace="fragments.html :: footer"></div>
+    </footer>
+    <script type="text/javascript" th:src="@{/js/manager.js}"></script>
+  </body>
+</html>
