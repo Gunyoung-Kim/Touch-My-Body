@@ -3,7 +3,6 @@ package com.gunyoung.tmb.controller.rest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,31 +32,28 @@ import com.gunyoung.tmb.services.domain.like.PostLikeService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.SessionUtil;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * 
  * @author kimgun-yeong
  *
  */
 @RestController
+@RequiredArgsConstructor
 public class ExercisePostRestController {
 	
-	@Autowired
-	HttpSession session;
+	private final HttpSession session;
 	
-	@Autowired
-	UserService userService;
+	private final UserService userService;
 	
-	@Autowired
-	ExercisePostService exercisePostService;
+	private final ExercisePostService exercisePostService;
 	
-	@Autowired
-	PostLikeService postLikeService;
+	private final PostLikeService postLikeService;
 	
-	@Autowired
-	CommentService commentService;
+	private final CommentService commentService;
 	
-	@Autowired
-	CommentLikeService commentLikeService;
+	private final CommentLikeService commentLikeService;
 	
 	
 	/**

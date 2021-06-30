@@ -2,7 +2,6 @@ package com.gunyoung.tmb.services.domain.like;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +10,8 @@ import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.repos.PostLikeRepository;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * PostLikeService 구현하는 클래스
  * @author kimgun-yeong
@@ -18,10 +19,10 @@ import com.gunyoung.tmb.repos.PostLikeRepository;
  */
 @Service("postLikeService")
 @Transactional
+@RequiredArgsConstructor
 public class PostLikeServiceImpl implements PostLikeService {
 	
-	@Autowired
-	PostLikeRepository postLikeRepository;
+	private final PostLikeRepository postLikeRepository;
 
 	/**
 	 * @param id 찾으려는 PostLike의 id

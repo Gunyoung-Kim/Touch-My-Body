@@ -3,7 +3,6 @@ package com.gunyoung.tmb.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -34,20 +33,19 @@ import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.PageUtil;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class ManagerUserController {
 	
-	@Autowired
-	UserService userService;
+	private final UserService userService;
 	
-	@Autowired
-	CommentService commentService;
+	private final CommentService commentService;
 	
-	@Autowired
-	ExercisePostService exercisePostService;
+	private final ExercisePostService exercisePostService;
 	
-	@Autowired
-	RoleHierarchy roleHierarchy;
+	private final RoleHierarchy roleHierarchy;
 	
 	/**
 	 * 매니저들의 유저 검색 (for managing) 페이지 반환

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,8 @@ import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 
+import lombok.RequiredArgsConstructor;
+
 
 /**
  * ExerciesService 구현 클래스
@@ -33,16 +34,14 @@ import com.gunyoung.tmb.repos.ExerciseRepository;
  */
 @Service("exerciseService")
 @Transactional
+@RequiredArgsConstructor
 public class ExerciseServiceImpl implements ExerciseService {
 	
-	@Autowired
-	ExerciseRepository exerciseRepository;
+	private final ExerciseRepository exerciseRepository;
 	
-	@Autowired
-	MuscleService muscleService;
+	private final MuscleService muscleService;
 	
-	@Autowired
-	ExerciseMuscleService exerciseMuscleService;
+	private final ExerciseMuscleService exerciseMuscleService;
 
 	/**
 	 * @param id 찾으려는 Exercise의 id

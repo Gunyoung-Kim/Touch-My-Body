@@ -4,7 +4,6 @@ import java.util.Calendar;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,17 +22,17 @@ import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.SessionUtil;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class UserExerciseController {
 	
-	@Autowired
-	HttpSession session;
+	private final HttpSession session;
 	
-	@Autowired
-	UserService userService;
+	private final UserService userService;
 	
-	@Autowired
-	ExerciseService exerciseService;
+	private final ExerciseService exerciseService;
 	
 	/**
 	 * User의 그간의 운동 기록을 보여주는 캘린더 

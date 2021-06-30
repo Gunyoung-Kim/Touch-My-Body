@@ -33,9 +33,8 @@ public class UserDetailsServiceTest {
 	
 	@BeforeEach
 	void setup() {
-		userDetailsService = new UserDetailsServiceImpl();
 		userServiceMock = mock(UserService.class);
-		userDetailsService.setUserService(userServiceMock);
+		userDetailsService = new UserDetailsServiceImpl(userServiceMock);
 	}
 	
 	@AfterEach

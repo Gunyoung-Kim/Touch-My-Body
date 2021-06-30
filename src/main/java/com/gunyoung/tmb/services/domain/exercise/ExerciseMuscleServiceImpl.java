@@ -3,12 +3,13 @@ package com.gunyoung.tmb.services.domain.exercise;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * ExerciseMuscleService 구현 클래스
@@ -17,10 +18,10 @@ import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
  */
 @Service("exerciseMuscleService")
 @Transactional
+@RequiredArgsConstructor
 public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 	
-	@Autowired
-	ExerciseMuscleRepository exerciseMuscleRepository;
+	private final ExerciseMuscleRepository exerciseMuscleRepository;
 
 	/**
 	 * @param id 찾으려는 ExerciseMuscle의 id

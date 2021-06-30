@@ -1,27 +1,35 @@
 package com.gunyoung.tmb.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Component;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Component
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class UserAuthenticationProvider implements AuthenticationProvider{
 
-	@Autowired
-	UserDetailsService userDetailsService;
+	private final UserDetailsService userDetailsService;
+	
+	private final PasswordEncoder passwordEncoder;
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		String username = authentication.getName();
+		String inputUsername = authentication.getName();
+		String inputPassword = (String) authentication.getCredentials();
 		
-		UserDetails authenticateResult = userDetailsService.loadUserByUsername(username);
+		UserDetails userDetailsByDB = userDetailsService.loadUserByUsername(inputUsername);
 		
-		return new UsernamePasswordAuthenticationToken(authenticateResult, null, authenticateResult.getAuthorities());
+		if(!passwordEncoder.matches(inputPassword, userDetailsByDB.getPassword())) {
+			throw new BadCredentialsException(inputUsername);
+		}
+		
+		return new UsernamePasswordAuthenticationToken(userDetailsByDB.getUsername(), null, userDetailsByDB.getAuthorities());
 	}
 
 	@Override

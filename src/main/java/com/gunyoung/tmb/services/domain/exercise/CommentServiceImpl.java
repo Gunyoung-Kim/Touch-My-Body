@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,8 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 import com.gunyoung.tmb.repos.CommentRepository;
-import com.gunyoung.tmb.services.domain.user.UserService;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * CommentService 구현 클래스
@@ -25,16 +25,10 @@ import com.gunyoung.tmb.services.domain.user.UserService;
  */
 @Service("commentService")
 @Transactional
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 	
-	@Autowired
-	CommentRepository commentRepository;
-	
-	@Autowired
-	UserService userService;
-	
-	@Autowired
-	ExercisePostService exercisePostService;
+	private final CommentRepository commentRepository;
 
 	/**
 	 * @param id 찾으려는 Comment의 id

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,12 +13,14 @@ import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.jpa.MuscleNameAndCategoryDTO;
 import com.gunyoung.tmb.repos.MuscleRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service("muscleService")
 @Transactional
+@RequiredArgsConstructor
 public class MuscleServiceImpl implements MuscleService {
 	
-	@Autowired
-	MuscleRepository muscleRepository;
+	private final MuscleRepository muscleRepository;
 
 	/**
 	 * @param id 찾으려는 Muscle의 id

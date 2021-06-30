@@ -2,7 +2,6 @@ package com.gunyoung.tmb.services.domain.exercise;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +10,8 @@ import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * FeedbackService 구현 클래스
  * @author kimgun-yeong
@@ -18,10 +19,10 @@ import com.gunyoung.tmb.repos.FeedbackRepository;
  */
 @Service("feedbackService")
 @Transactional
+@RequiredArgsConstructor
 public class FeedbackServiceImpl implements FeedbackService {
 	
-	@Autowired
-	FeedbackRepository feedbackRepository;
+	private final FeedbackRepository feedbackRepository;
 
 	/**
 	 * @param id 찾으려는 Feedback 의 id

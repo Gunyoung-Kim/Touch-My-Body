@@ -2,10 +2,8 @@ package com.gunyoung.tmb.services.domain.user;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +14,8 @@ import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.utils.PageUtil;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * UserService Interface 구현 클래스 
  * @author kimgun-yeong
@@ -23,16 +23,12 @@ import com.gunyoung.tmb.utils.PageUtil;
  */
 @Service("userService")
 @Transactional
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
-	@Autowired
-	UserRepository userRepository;
+	private final UserRepository userRepository;
 	
-	@Autowired
-	UserExerciseService userExerciseService;
-	
-	@Autowired
-	PasswordEncoder passwordEncoder;
+	private final UserExerciseService userExerciseService;
 	
 	/**
 	 * @param id 찾으려는 유저의 id
@@ -93,7 +89,7 @@ public class UserServiceImpl implements UserService{
 	public User saveByJoinDTO(UserJoinDTO dto,RoleType role) {
 		User user = User.builder()
 						.email(dto.getEmail())
-						.password(passwordEncoder.encode(dto.getPassword()))
+						.password(dto.getPassword())
 						.firstName(dto.getFirstName())
 						.lastName(dto.getLastName())
 						.nickName(dto.getNickName())

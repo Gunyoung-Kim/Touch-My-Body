@@ -2,7 +2,6 @@ package com.gunyoung.tmb.services.domain.like;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +10,8 @@ import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * CommentLikeService 구현하는 클래스
  * @author kimgun-yeong
@@ -18,10 +19,10 @@ import com.gunyoung.tmb.repos.CommentLikeRepository;
  */
 @Service("commentLikeService")
 @Transactional
+@RequiredArgsConstructor
 public class CommentLikeServiceImpl implements CommentLikeService {
 
-	@Autowired
-	CommentLikeRepository commentLikeRepository;
+	private final CommentLikeRepository commentLikeRepository;
 	
 	/**
 	 * @param id 찾으려는 commentLike의 id

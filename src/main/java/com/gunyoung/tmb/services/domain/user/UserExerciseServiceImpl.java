@@ -4,12 +4,13 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * UserExerciseService 구현 클래스
@@ -18,10 +19,10 @@ import com.gunyoung.tmb.repos.UserExerciseRepository;
  */
 @Service("userExerciseService")
 @Transactional
+@RequiredArgsConstructor
 public class UserExerciseServiceImpl implements UserExerciseService {
 
-	@Autowired
-	UserExerciseRepository userExerciseRepository;
+	private final UserExerciseRepository userExerciseRepository;
 	
 	/**
 	 * @param id 찾으려는 UserExercise의 id값

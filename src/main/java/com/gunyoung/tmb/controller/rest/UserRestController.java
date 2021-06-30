@@ -1,6 +1,5 @@
 package com.gunyoung.tmb.controller.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,10 +7,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.tmb.services.domain.user.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 public class UserRestController {
-	@Autowired
-	UserService userService;
+	
+	private final UserService userService;
 	
 	/**
 	 * 

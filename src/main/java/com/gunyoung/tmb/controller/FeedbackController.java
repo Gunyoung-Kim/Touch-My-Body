@@ -2,7 +2,6 @@ package com.gunyoung.tmb.controller;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,20 +22,19 @@ import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.SessionUtil;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class FeedbackController {
 	
-	@Autowired
-	FeedbackService feedbackService;
+	private final FeedbackService feedbackService;
 	
-	@Autowired
-	UserService userService;
+	private final UserService userService;
 	
-	@Autowired
-	ExerciseService exerciseService;
+	private final ExerciseService exerciseService;
 	
-	@Autowired
-	HttpSession session;
+	private final HttpSession session;
 	
 	/**
 	 * 

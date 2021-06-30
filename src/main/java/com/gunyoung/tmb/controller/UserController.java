@@ -1,8 +1,6 @@
 package com.gunyoung.tmb.controller;
 
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +12,9 @@ import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.error.codes.JoinErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.EmailDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.duplication.NickNameDuplicationFoundedException;
-import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
-import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
-import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
-import com.gunyoung.tmb.services.domain.exercise.MuscleService;
 import com.gunyoung.tmb.services.domain.user.UserService;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * User 관련 처리 컨트롤러
@@ -26,25 +22,12 @@ import com.gunyoung.tmb.services.domain.user.UserService;
  *
  */
 @Controller
+@RequiredArgsConstructor
 public class UserController {
 	
-	@Autowired
-	UserService userService;
+	private final UserService userService;
 	
-	@Autowired
-	ExerciseService exerciseService;
-	
-	@Autowired
-	MuscleService muscleService;
-	
-	@Autowired
-	ExerciseMuscleService exerciseMuscleService;
-	
-	@Autowired
-	ExercisePostService exercisePostService;
-	
-	@Autowired
-	HttpSession session;
+	private final PasswordEncoder passwordEncoder;
 	
 	/**
 	 * 메인 화면을 반환하는 메소드
@@ -102,6 +85,8 @@ public class UserController {
 			throw new NickNameDuplicationFoundedException(JoinErrorCode.NickNameDuplicationFound.getDescription());
 		}
 		
+		// 비밀번호 암호화
+		formModel.setPassword(passwordEncoder.encode(formModel.getPassword()));
 		userService.saveByJoinDTO(formModel, RoleType.USER);
 		
 		return new ModelAndView("redirect:/");

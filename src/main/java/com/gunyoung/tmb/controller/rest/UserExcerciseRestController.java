@@ -9,7 +9,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,17 +22,17 @@ import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 import com.gunyoung.tmb.utils.SessionUtil;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 public class UserExcerciseRestController {
 	
-	@Autowired
-	HttpSession session;
+	private final HttpSession session;
 	
-	@Autowired
-	UserExerciseService userExerciseService;
+	private final UserExerciseService userExerciseService;
 	
-	@Autowired
-	ExerciseService exerciseService;
+	private final ExerciseService exerciseService;
 	
 	/**
 	 * 

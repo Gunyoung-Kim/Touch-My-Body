@@ -3,7 +3,6 @@ package com.gunyoung.tmb.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,11 +19,13 @@ import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.utils.PageUtil;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class ExerciseController {
 	
-	@Autowired
-	ExerciseService exerciseService;
+	private final ExerciseService exerciseService;
 	
 	/**
 	 * 운동들 리스트 보여주는 화면 반환 

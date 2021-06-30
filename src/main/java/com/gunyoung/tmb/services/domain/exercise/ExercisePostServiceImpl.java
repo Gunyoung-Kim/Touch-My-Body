@@ -3,7 +3,6 @@ package com.gunyoung.tmb.services.domain.exercise;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,8 @@ import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * ExercisePostService 구현 클래스
  * @author kimgun-yeong
@@ -22,10 +23,10 @@ import com.gunyoung.tmb.repos.ExercisePostRepository;
  */
 @Service("exercisePostService")
 @Transactional
+@RequiredArgsConstructor
 public class ExercisePostServiceImpl implements ExercisePostService {
 
-	@Autowired
-	ExercisePostRepository exercisePostRepository;
+	private final ExercisePostRepository exercisePostRepository;
 	
 	/**
 	 * @param id 찾으려는 ExerciePost id 값

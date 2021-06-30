@@ -2,7 +2,6 @@ package com.gunyoung.tmb.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,14 +22,15 @@ import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.utils.PageUtil;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class ExercisePostController {
 	
-	@Autowired
-	ExercisePostService exercisePostService;
+	private final ExercisePostService exercisePostService;
 	
-	@Autowired
-	CommentService commentService;
+	private final CommentService commentService;
 	
 	/**
 	 * 커뮤니티 메인 화면 반환하는 메소드
