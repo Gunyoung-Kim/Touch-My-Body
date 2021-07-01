@@ -59,6 +59,60 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
+	 * 유저 운동 기록이랑 페치 조인해서 가져오는 메소드 
+	 * @param
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public User findWithUserExerciseById(Long id) {
+		Optional<User> result = userRepository.findWithUserExercisesById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+	
+	/**
+	 * 유저 피드백이랑 페치 조인해서 가져오는 메소드 
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public User findWithFeedbacksById(Long id) {
+		Optional<User> result = userRepository.findWithFeedbacksById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+	
+	/**
+	 * 게시글 좋아요랑 페치 조인해서 가져오는 메소드
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public User findWithPostLikesById(Long id) {
+		Optional<User> result = userRepository.findWithPostLikesById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+
+	/**
+	 * 댓글 좋아요랑 페치 조인해서 가져오는 메소드
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public User findWithCommentLikesById(Long id) {
+		Optional<User> result = userRepository.findWithCommentLikesById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+
+	
+	/**
 	 * @param keyword 검색하려는 키워드	
 	 * @return
 	 * @author kimgun-yeong
@@ -170,6 +224,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User addUserExercise(User user, UserExercise userExercise) {
 		user.getUserExercises().add(userExercise);
+		
 		userExercise.setUser(user);
 		userExerciseService.save(userExercise);
 		return user;

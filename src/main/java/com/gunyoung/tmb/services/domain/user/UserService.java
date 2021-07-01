@@ -15,6 +15,12 @@ import com.gunyoung.tmb.enums.RoleType;
 public interface UserService {
 	public User findById(Long id);
 	public User findByEmail(String email);
+	
+	public User findWithUserExerciseById(Long id);
+	public User findWithFeedbacksById(Long id);
+	public User findWithPostLikesById(Long id);
+	public User findWithCommentLikesById(Long id);
+	
 	public Page<User> findAllByNickNameOrName(String keyword,Integer pageNumber);
 	
 	public User save(User user);

@@ -28,7 +28,7 @@ public class LogAspect {
 	 * 컨트롤러들의 포인트컷
 	 * @author kimgun-yeong
 	 */
-	@Pointcut("within(com.gunyoung.tmb.controller.*)")
+	@Pointcut("within(com.gunyoung.tmb.controller..*)")
 	public void onRequest() {}
 	
 	/**

@@ -72,6 +72,19 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	/**
+	 * 비즈니스 요구사항에 따라 피드백 즉시로딩 필요할떄 사용
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Exercise findWithFeedbacksById(Long id) {
+		Optional<Exercise> result = exerciseRepository.findWithFeedbacksById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+	
+	/**
 	 * 모든 운동 페이지로 가져오기 
 	 * @author kimgun-yeong
 	 */
@@ -289,5 +302,4 @@ public class ExerciseServiceImpl implements ExerciseService {
 		
 		return dto;
 	}
-
 }

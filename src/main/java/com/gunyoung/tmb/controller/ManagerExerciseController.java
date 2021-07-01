@@ -27,7 +27,7 @@ public class ManagerExerciseController {
 	
 	private final ExerciseService exerciseService;
 	
-	@RequestMapping(value="/manager/exercise/addExercise")
+	@RequestMapping(value="/manager/exercise/addExercise",method = RequestMethod.GET)
 	public ModelAndView addExerciseView(ModelAndView mav) {
 		List<String> targetTypeKoreanNames = new ArrayList<>();
 		

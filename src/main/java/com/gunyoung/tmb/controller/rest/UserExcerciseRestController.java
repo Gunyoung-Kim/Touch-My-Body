@@ -46,8 +46,6 @@ public class UserExcerciseRestController {
 		
 		Calendar paramDate = new GregorianCalendar(date.getYear(),date.getMonth(),date.getDate());
 		
-		System.out.println(paramDate.get(Calendar.YEAR)+"-" + paramDate.get(Calendar.MONTH) +"- " + paramDate.get(Calendar.DATE));
-		
 		List<UserExercise> userExerciseList = userExerciseService.findByUserIdAndDate(userId, paramDate);
 		
 		return UserExerciseWithDateDTO.of(userExerciseList);

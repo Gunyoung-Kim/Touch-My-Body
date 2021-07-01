@@ -1,7 +1,5 @@
 package com.gunyoung.tmb.controller;
 
-import java.util.Calendar;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -70,13 +68,12 @@ public class UserExerciseController {
 	@RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.POST)
 	public ModelAndView addUserExercise(@ModelAttribute("formModel") AddUserExerciseDTO formModel) {
 		Long userId = SessionUtil.getLoginUserId(session);
-		System.out.println(userId);
-		User user = userService.findById(userId);
+		//유저와 유저 운동 기록 페치 조인으로 가져옴
+		User user = userService.findWithUserExerciseById(userId);
 		
 		if(user == null) 
 			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
 		
-		System.out.println(formModel.getDate().get(Calendar.YEAR)+"-" + formModel.getDate().get(Calendar.MONTH) +"- " + formModel.getDate().get(Calendar.DATE));
 		UserExercise userExercise = AddUserExerciseDTO.toUserExercise(formModel);
 		
 		Exercise exercise = exerciseService.findByName(formModel.getExerciseName());

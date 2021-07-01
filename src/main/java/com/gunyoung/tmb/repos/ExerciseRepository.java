@@ -14,6 +14,12 @@ import com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO;
 
 public interface ExerciseRepository extends JpaRepository<Exercise,Long>{
 	public Optional<Exercise> findByName(String name);
+	
+	@Query("SELECT e FROM Exercise e "
+			+ "JOIN FETCH e.feedbacks f "
+			+ "WHERE e.id = :exerciseId")
+	public Optional<Exercise> findWithFeedbacksById(@Param("exerciseId") Long exerciseId);
+	
 	public Page<Exercise> findAll(Pageable pageable);
 	
 	/**

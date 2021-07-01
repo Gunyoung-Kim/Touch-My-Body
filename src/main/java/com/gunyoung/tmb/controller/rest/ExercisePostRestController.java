@@ -55,7 +55,7 @@ public class ExercisePostRestController {
 	
 	private final CommentLikeService commentLikeService;
 	
-	
+	// -----------------------------------------
 	/**
 	 * 유저가 게시글에 좋아요 추가했을때 처리하는 메소드
 	 * @param postId
@@ -78,6 +78,7 @@ public class ExercisePostRestController {
 		postLikeService.saveWithUserAndExercisePost(user, exercisePost);
 	}
 	
+	// -----------------------------------------
 	/**
 	 * 유저가 게시글에 좋아요 취소했을때 처리하는 메소드
 	 * @author kimgun-yeong
@@ -94,6 +95,7 @@ public class ExercisePostRestController {
 		postLikeService.delete(postLike);
 	}
 	
+	// -----------------------------------------
 	/**
 	 * 유저가 게시글에 댓글 추가할때 처리하는 메소드 
 	 * @param postId
@@ -125,6 +127,7 @@ public class ExercisePostRestController {
 		commentService.saveWithUserAndExercisePost(comment, user, exercisePost);
 	}
 	
+	// -----------------------------------------
 	/**
 	 * 유저가 게시글에 댓글 삭제할때 처리하는 메소드
 	 * @param postId
@@ -150,6 +153,7 @@ public class ExercisePostRestController {
 		commentService.delete(comment);
 	}
 	
+	// -----------------------------------------
 	/**
 	 * 유저가 댓글에 좋아요 추가 요청 처리하는 메소드 
 	 * @param postId
@@ -175,6 +179,7 @@ public class ExercisePostRestController {
 		commentLikeService.saveWithUserAndComment(user, comment);
 	}
 	
+	// -----------------------------------------
 	/**
 	 * 유저가 댓글에 좋아요 취소 요청 처리하는 메소드
 	 * @param postId 댓글이 소속된 게시글 id

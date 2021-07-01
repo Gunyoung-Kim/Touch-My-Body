@@ -55,17 +55,23 @@ public class FeedbackController {
 		return mav;
 	}
 	
+	/**
+	 * 
+	 * @param exerciseId
+	 * @param dto
+	 * @return
+	 */
 	@RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.POST)
 	public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId,@ModelAttribute AddFeedbackDTO dto) {
 		Long userId = SessionUtil.getLoginUserId(session);
 		
-		User user = userService.findById(userId);
+		User user = userService.findWithFeedbacksById(userId);
 		
 		if(userId == null) {
 			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
 		}
 		
-		Exercise exercise = exerciseService.findById(exerciseId);
+		Exercise exercise = exerciseService.findWithFeedbacksById(exerciseId);
 		
 		if(exercise == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByIdNotFoundedError.getDescription());
