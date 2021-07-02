@@ -503,7 +503,45 @@
 
     5. userCommentList (html)
 
+### 2021.7.1
 
+- OSIV 패턴 비활성화 
+
+- FeedbackController
+
+    1.  addFeedback 메소드: User, Exercise 가져올때 Feedbacks도 페치조인하는 메소드로 변경
+
+- UserExerciseController
+  
+    1. addUserExercise 메소드: User 가져올때 UserExercises 페치조인하는 메소드로 변경
+
+- ExerciseRepository
+
+    1. Feebacks랑 페치조인하는 쿼리 추가
+
+- UserRepository 
+
+    1. UserExercises랑 페치조인하는 쿼리 추가
+
+    2. Feedbacks랑 페치조인하는 쿼리 추가
+
+    3. PostLikes랑 페치조인하는 쿼리 추가 
+
+    4. CommentLikes랑 페치조인하는 쿼리 추가
+
+- ExerciseService -> Impl에 구현
+
+    1. Feedbacks랑 페치조인해서 반환하는 메소드 추가
+
+- UserService 
+
+    1. UserExercises랑 페치조인해서 반환하는 메소드 추가
+  
+    2. Feedbacks랑 페치조인해서 반환하는 메소드 추가
+
+    3. PostLikes랑 페치조인해서 반환하는 메소드 추가
+
+    4. CommentLikes랑 페치조인해서 반환하는 메소드 추가
 
 
 --- 
