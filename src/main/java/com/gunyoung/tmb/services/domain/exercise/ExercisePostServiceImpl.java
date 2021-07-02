@@ -1,6 +1,5 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -8,7 +7,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
@@ -152,7 +153,30 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	 */
 	@Override
 	public void delete(ExercisePost exercisePost) {
+		User user = exercisePost.getUser();
+		
+		if(user != null) {
+			user.getExercisePosts().remove(exercisePost);
+		}
+		
+		Exercise exercise = exercisePost.getExercise();
+		
+		if(exercise != null) {
+			exercise.getExercisePosts().remove(exercisePost);
+		}
+		
 		exercisePostRepository.delete(exercisePost);
+	}
+	
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public void deleteById(Long id) {
+		ExercisePost exercisePost = findById(id);
+		
+		if(exercisePost != null)
+			delete(exercisePost);
 	}
 
 	/**
@@ -234,17 +258,5 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 		save(exercisePost);
 		
 		return getExercisePostViewDTOWithExercisePostId(id);
-	}
-
-	private String localDateToStringForExercisePost(LocalDateTime localDateTime) {
-		int year = localDateTime.getYear();
-		int month = localDateTime.getMonthValue();
-		int date = localDateTime.getDayOfMonth();
-		int hour = localDateTime.getHour();
-		int min = localDateTime.getMinute();
-		
-		
-		//yyyy.MM.dd HH:mm
-		return year +"." + month +"." + date + " " +hour +":" + min;
 	}
 }

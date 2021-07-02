@@ -24,6 +24,7 @@ public interface ExercisePostService {
 	public ExercisePost save(ExercisePost exercisePost);
 	
 	public void delete(ExercisePost exercisePost);
+	public void deleteById(Long id);
 	
 	public long count();
 	public long countWithUserId(Long userId);

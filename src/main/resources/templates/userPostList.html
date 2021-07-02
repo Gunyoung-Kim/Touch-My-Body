@@ -45,7 +45,7 @@
             <td th:text="${object.viewNum}"></td>
             <td>
               <button type="button" class="goToBtn" th:onclick="|goToPost(${object.postId})|">보기</button>
-              <button type="button" class="deleteBtn" th:onclick="|deletePost(${object.postId})|">삭제</button>
+              <button type="button" class="deleteBtn" th:onclick="|deletePost(${userId},${object.postId})|">삭제</button>
             </td>
         </tr>
       </tbody>
@@ -79,7 +79,7 @@
     <footer>
     	<div th:replace="fragments.html :: footer"></div>
     </footer>
-    <script type="text/javascript" th:src="@{/js/userPostList}"></script>
+    <script type="text/javascript" th:src="@{/js/userPostList.js}"></script>
   </body>
 
 </html>
