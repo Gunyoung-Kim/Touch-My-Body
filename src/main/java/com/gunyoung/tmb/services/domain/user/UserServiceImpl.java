@@ -110,7 +110,32 @@ public class UserServiceImpl implements UserService{
 			return null;
 		return result.get();
 	}
-
+	
+	/**
+	 * 작성한 게시글이랑 페치 조인해서 가져오는 메소드
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public User findfWithExercisePostsById(Long id) {
+		Optional<User> result = userRepository.findWithExercisePostsById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+	
+	/**
+	 * 작성한 댓글이랑 페치 조인해서 가져오는 메소드
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public User findWithCommentsById(Long id) {
+		Optional<User> result = userRepository.findWithCommentsById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
 	
 	/**
 	 * @param keyword 검색하려는 키워드	
@@ -241,5 +266,4 @@ public class UserServiceImpl implements UserService{
 		user.getUserExercises().remove(userExercise);
 		userExerciseService.delete(userExercise);
 	}
-
 }

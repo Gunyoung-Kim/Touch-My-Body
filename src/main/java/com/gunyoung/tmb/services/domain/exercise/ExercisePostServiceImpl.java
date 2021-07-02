@@ -43,6 +43,33 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	}
 	
 	/**
+	 * @return ExercisePost, NUll(해당 id의 ExercisePost가 없을때)
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public ExercisePost findWithPostLikesById(Long id) {
+		Optional<ExercisePost> result = exercisePostRepository.findWithPostLikesById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+	
+	/**
+	 * 게시글에 달린 댓글과 페치조인해서 가져오는 메소드
+	 * @return ExercisePost, NUll(해당 id의 ExercisePost가 없을때)
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public ExercisePost findWithCommentsById(Long id) {
+		Optional<ExercisePost> result = exercisePostRepository.findWithCommentsById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+	
+	/**
 	 * @author kimgun-yeong
 	 */
 	@Override

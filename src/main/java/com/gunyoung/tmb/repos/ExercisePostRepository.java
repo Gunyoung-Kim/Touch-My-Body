@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.repos;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +13,16 @@ import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 
 public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>{
+	
+	@Query("SELECT ep FROM ExercisePost ep "
+			+ "LEFT JOIN FETCH ep.postLikes pl "
+			+ "WHERE ep.id = :exercisePostId")
+	public Optional<ExercisePost> findWithPostLikesById(@Param("exercisePostId") Long id); 
+	
+	@Query("SELECT ep FROM ExercisePost ep "
+			+ "LEFT JOIN FETCH ep.comments c "
+			+ "WHERE ep.id = :exercisePostId")
+	public Optional<ExercisePost> findWithCommentsById(@Param("exercisePostId") Long id);
 	
 	/**
 	 * User ID로 만족하는 ExercisePost들 가져오는 쿼리 <br>

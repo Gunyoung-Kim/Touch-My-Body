@@ -1,6 +1,7 @@
 package com.gunyoung.tmb.repos;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,17 @@ import org.springframework.data.repository.query.Param;
 import com.gunyoung.tmb.domain.exercise.Comment;
 
 public interface CommentRepository extends JpaRepository<Comment,Long> {
+	
+	@Query("SELECT c FROM Comment c "
+			+ "JOIN FETCH c.user u "
+			+ "JOIN FETCH c.exercisePost ep "
+			+ "WHERE c.id = :commentId")
+	public Optional<Comment> findWithUserAndExercisePostById(@Param("commentId") Long id);
+	
+	@Query("SELECT c FROM Comment c "
+			+ "LEFT JOIN FETCH c.commentLikes cl "
+			+ "WHERE c.id = :commentId")
+	public Optional<Comment> findWithCommentLikesById(@Param("commentId") Long id);
 	
 	/**
 	 * ExercisePost ID로 만족하는 Comment들 가져오는 쿼리 <br>

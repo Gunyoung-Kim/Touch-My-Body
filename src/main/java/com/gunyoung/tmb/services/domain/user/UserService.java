@@ -20,6 +20,8 @@ public interface UserService {
 	public User findWithFeedbacksById(Long id);
 	public User findWithPostLikesById(Long id);
 	public User findWithCommentLikesById(Long id);
+	public User findfWithExercisePostsById(Long id);
+	public User findWithCommentsById(Long id);
 	
 	public Page<User> findAllByNickNameOrName(String keyword,Integer pageNumber);
 	

@@ -10,6 +10,9 @@ import com.gunyoung.tmb.enums.TargetType;
 public interface ExercisePostService {
 	public ExercisePost findById(Long id);
 	
+	public ExercisePost findWithPostLikesById(Long id);
+	public ExercisePost findWithCommentsById(Long id);
+	
 	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtAsc(Long userId,Integer pageNumber, int pageSize);
 	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtDesc(Long userId,Integer pageNumber, int pageSize);
 	

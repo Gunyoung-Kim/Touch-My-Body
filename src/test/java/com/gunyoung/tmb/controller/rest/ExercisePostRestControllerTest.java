@@ -361,6 +361,7 @@ public class ExercisePostRestControllerTest {
 				.isAnonymous(false)
 				.writerIp("172.0.0.1")
 				.user(second)
+				.exercisePost(exercisePost)
 				.build();
 		
 		second.getComments().add(comment);

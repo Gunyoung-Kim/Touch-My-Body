@@ -45,6 +45,31 @@ public class CommentServiceImpl implements CommentService {
 	}
 	
 	/**
+	 * @return Comment, Null(해당 id의 Comment가 없을때)
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Comment findWithUserAndExercisePostById(Long id) {
+		Optional<Comment> result = commentRepository.findWithUserAndExercisePostById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+	
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Comment findWithCommentLikesById(Long id) {
+		Optional<Comment> result = commentRepository.findWithCommentLikesById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+	
+	/**
 	 * @param 찾으려는 Comment 들의 ExercisePost ID
 	 * @author kimgun-yeong
 	 */
@@ -169,5 +194,4 @@ public class CommentServiceImpl implements CommentService {
 		//yyyy.MM.dd HH:mm
 		return year +"." + month +"." + date + " " +hour +":" + min;
 	}
-
 }

@@ -11,6 +11,9 @@ import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 
 public interface CommentService {
 	public Comment findById(Long id);
+	public Comment findWithUserAndExercisePostById(Long id);
+	public Comment findWithCommentLikesById(Long id);
+	
 	public List<Comment> findAllByExercisePostId(Long postId);
 	public Page<Comment> findAllByUserIdOrderByCreatedAtASC(Long userId,Integer pageNum, int pageSize);
 	public Page<Comment> findAllByUserIdOrderByCreatedAtDESC(Long userId,Integer pageNum, int pageSize);

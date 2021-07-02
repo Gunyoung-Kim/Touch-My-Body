@@ -55,7 +55,6 @@ public class ExercisePostRestController {
 	
 	private final CommentLikeService commentLikeService;
 	
-	// -----------------------------------------
 	/**
 	 * 유저가 게시글에 좋아요 추가했을때 처리하는 메소드
 	 * @param postId
@@ -65,12 +64,12 @@ public class ExercisePostRestController {
 	public void addLikeToExercisePost(@PathVariable("post_id") Long postId) {
 		Long userId = SessionUtil.getLoginUserId(session);
 		
-		User user = userService.findById(userId);
+		User user = userService.findWithPostLikesById(userId);
 		
 		if(user == null)
 			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
 		
-		ExercisePost exercisePost = exercisePostService.findById(postId);
+		ExercisePost exercisePost = exercisePostService.findWithPostLikesById(postId);
 		
 		if(exercisePost == null) 
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.ExercisePostNotFoundedError.getDescription());
@@ -78,7 +77,6 @@ public class ExercisePostRestController {
 		postLikeService.saveWithUserAndExercisePost(user, exercisePost);
 	}
 	
-	// -----------------------------------------
 	/**
 	 * 유저가 게시글에 좋아요 취소했을때 처리하는 메소드
 	 * @author kimgun-yeong
@@ -95,7 +93,6 @@ public class ExercisePostRestController {
 		postLikeService.delete(postLike);
 	}
 	
-	// -----------------------------------------
 	/**
 	 * 유저가 게시글에 댓글 추가할때 처리하는 메소드 
 	 * @param postId
@@ -108,13 +105,13 @@ public class ExercisePostRestController {
 		// 세션으로 가져온 유저 id로 유저 객체 찾기
 		Long userId = SessionUtil.getLoginUserId(session);
 		
-		User user = userService.findById(userId);
+		User user = userService.findWithCommentsById(userId);
 		
 		if(user == null)
 			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
 		
 		// post_id 로 해당 ExercisePost 가져오기 
-		ExercisePost exercisePost = exercisePostService.findById(postId);
+		ExercisePost exercisePost = exercisePostService.findWithCommentsById(postId);
 		
 		if(exercisePost == null) 
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.ExercisePostNotFoundedError.getDescription());
@@ -127,7 +124,6 @@ public class ExercisePostRestController {
 		commentService.saveWithUserAndExercisePost(comment, user, exercisePost);
 	}
 	
-	// -----------------------------------------
 	/**
 	 * 유저가 게시글에 댓글 삭제할때 처리하는 메소드
 	 * @param postId
@@ -136,7 +132,7 @@ public class ExercisePostRestController {
 	 */
 	@RequestMapping(value="/community/post/{post_id}/removeComment",method = RequestMethod.POST)
 	public void removeCommentToExercisePost(@PathVariable("post_id") Long postId,@RequestParam("commentId") Long commentId) {
-		Comment comment = commentService.findById(commentId);
+		Comment comment = commentService.findWithUserAndExercisePostById(commentId);
 		
 		if(comment == null) {
 			throw new CommentNotFoundedException(CommentErrorCode.CommentNotFoundedError.getDescription());
@@ -153,7 +149,6 @@ public class ExercisePostRestController {
 		commentService.delete(comment);
 	}
 	
-	// -----------------------------------------
 	/**
 	 * 유저가 댓글에 좋아요 추가 요청 처리하는 메소드 
 	 * @param postId
@@ -165,13 +160,13 @@ public class ExercisePostRestController {
 		// 세션에 저장된 현재 접속자의 id 가져와서 이를 통해 User 객체 가져옴
 		Long userId = SessionUtil.getLoginUserId(session);
 		
-		User user = userService.findById(userId);
+		User user = userService.findWithCommentLikesById(userId);
 		
 		if(user == null) 
 			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
 		
 		// commentId로 comment 가져옴
-		Comment comment = commentService.findById(commentId);
+		Comment comment = commentService.findWithCommentLikesById(commentId);
 		
 		if(comment == null) 
 			throw new CommentNotFoundedException(CommentErrorCode.CommentNotFoundedError.getDescription());
@@ -179,7 +174,6 @@ public class ExercisePostRestController {
 		commentLikeService.saveWithUserAndComment(user, comment);
 	}
 	
-	// -----------------------------------------
 	/**
 	 * 유저가 댓글에 좋아요 취소 요청 처리하는 메소드
 	 * @param postId 댓글이 소속된 게시글 id

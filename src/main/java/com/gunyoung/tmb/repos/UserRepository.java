@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User,Long>{
 	 * @return
 	 */
 	@Query("SELECT u FROM User u "
-			+ "JOIN FETCH u.userExercises "
+			+ "LEFT JOIN FETCH u.userExercises "
 			+ "WHERE u.id = :userId")
 	public Optional<User> findWithUserExercisesById(@Param("userId") Long id);
 	
@@ -29,19 +29,29 @@ public interface UserRepository extends JpaRepository<User,Long>{
 	 * @return
 	 */
 	@Query("SELECT u FROM User u "
-			+ "JOIN FETCH u.feedbacks "
+			+ "LEFT JOIN FETCH u.feedbacks "
 			+ "WHERE u.id = :userId")
 	public Optional<User> findWithFeedbacksById(@Param("userId") Long id);
 	
 	@Query("SELECT u FROM User u "
-			+ "JOIN FETCH u.postLikes "
+			+ "LEFT JOIN FETCH u.postLikes "
 			+ "WHERE u.id = :userId")
 	public Optional<User> findWithPostLikesById(@Param("userId") Long id);
 	
 	@Query("SELECT u FROM User u "
-			+ "JOIN FETCH u.commentLikes "
+			+ "LEFT JOIN FETCH u.commentLikes "
 			+ "WHERE u.id = :userId")
 	public Optional<User> findWithCommentLikesById(@Param("userId") Long id);
+	
+	@Query("SELECT u FROM User u "
+			+ "LEFT JOIN FETCH u.exercisePosts "
+			+ "WHERE u.id = :userId")
+	public Optional<User> findWithExercisePostsById(@Param("userId") Long id);
+	
+	@Query("SELECT u FROM User u "
+			+ "LEFT JOIN FETCH u.comments "
+			+ "WHERE u.id = :userId")
+	public Optional<User> findWithCommentsById(@Param("userId") Long id);
 	
 	@Query("SELECT u FROM User u WHERE "
 			+ "(u.firstName LIKE %:keyword%) OR "

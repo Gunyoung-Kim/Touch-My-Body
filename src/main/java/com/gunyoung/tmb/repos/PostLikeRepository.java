@@ -10,13 +10,15 @@ import com.gunyoung.tmb.domain.like.PostLike;
 
 public interface PostLikeRepository extends JpaRepository<PostLike,Long>{
 	/**
-	 * Inner Join을 통한 성능 향상  
+	 * Inner Join FETCH로 user 객체와 exercisePost 객체 한번에 가져오는 메소드  
 	 * @param userId
 	 * @param exercisePostId
 	 * @return
 	 */
 	@Query("SELECT pl FROM PostLike pl "
-			+ "INNER JOIN pl.user u ON u.id = :userId "
-			+ "INNER JOIN pl.exercisePost ep ON ep.id = :exercisePostId")
+			+ "JOIN FETCH pl.user u "
+			+ "JOIN FETCH pl.exercisePost ep "
+			+ "WHERE (u.id = :userId) "
+			+ "AND (ep.id = :exercisePostId)")
 	public Optional<PostLike> findByUserIdAndExercisePostIdCustom(@Param("userId") Long userId,@Param("exercisePostId") Long exercisePostId);
 }
