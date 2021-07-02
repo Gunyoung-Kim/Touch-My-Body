@@ -543,6 +543,67 @@
 
     4. CommentLikes랑 페치조인해서 반환하는 메소드 추가
 
+### 2021.7.2
+
+- ExercisePostRestController
+
+    1. addLikeToExercisePost 메소드: User가져올때 PostLikes도 페치조인하는 메소드로 변경, Exercise 가져올떄 PostLikes도 페치조인하는 메소드로 변경
+
+    2. addCommentToExercisePost 메소드: User 가져올때 Comments도 페치조인하는 메소드로 변경, ExercisePost 가져올때 Comments도 페치조인하는 메소드로 변경 
+
+    3. addCommentToExercisePost 메소드: Comment 가져올때 User와 ExercisePost 페치조인하는 메소드로 변경
+
+    4. addLikeToComment 메소드: User 가져올떄 CommentLikes도 페치조인하는 메소드로 변경, Comment 가져올때 CommentLikes도 페치조인하는 메소드로 변경
+
+- CommentLikeRepository
+
+    1. findByUserIdAndCommentIdCustom: 쿼리문에서 Inner join -> Inner Join Fetch로 변경
+
+- CommentRepository
+
+    1. User와 ExercisePost 페치조인하는 쿼리 추가
+
+    2. CommentLikes Left 페치조인하는 쿼리 추가
+
+- ExercisePostRepository
+
+    1. PostLikes Left 페치조인하는 쿼리 추가
+
+    2. Comments Left 페치조인하는 쿼리 추가
+
+- ExerciseRepository
+
+    1. Feedbacks Left 페치조인하는 쿼리 추가
+
+- PostLikeRepository
+
+    1. User, ExercisePost 페치조인하는 쿼리 추가
+
+- UserRepsitory
+
+    1. UserExercise Left 페치조인하는 쿼리로 변경
+
+    2. Feedbacks Left 페치조인하는 쿼리로 변경
+
+    3. PostLikes Left 페치조인하는 쿼리로 변경 
+
+    4. CommentLikes Left 페치조인하는 쿼리로 변경 
+
+    5. ExercisePost Left 페치조인하는 쿼리 추가
+
+    6. Comment Left 페치조인하는 쿼리 추가
+
+- CommentService -> Impl에 구현
+
+    1. 위 페치조인 쿼리들 실행하는 메소드 추가
+
+- ExercisePostService -> Impl에 구현 
+
+    1. 위 페치조인 쿼리들 실행하는 메소드 추가
+
+- UserService -> Impl에 구현
+
+    1. 위 페치조인 쿼리들 실행하는 메소드 추가
 
 --- 
 
