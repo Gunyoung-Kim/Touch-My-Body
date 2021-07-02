@@ -605,6 +605,27 @@
 
     1. 위 페치조인 쿼리들 실행하는 메소드 추가
 
+### 2021.7.3
+
+- ManagerUserController
+
+    1. 매니저가 특정 댓글 삭제하는 요청 처리하는 메소드 추가 
+
+- CommentRepository
+
+    1. CommentForPostViewDTO로 매핑해서 가져오는 쿼리추가 - N+1문제 해결 위해
+
+- ExercisePostRepository
+
+    1. ExercisePostViewDTO호 매핑해서 가져오는 쿼리추가 - N+1문제 해결 위해 
+
+- CommentService -> Impl에 구현
+
+    1. Comment Id 받아서 해당 Comment 삭제하는 메소드 추가
+
+- Template
+
+    1. userCommentList(js)
 --- 
 
 ## To do List
