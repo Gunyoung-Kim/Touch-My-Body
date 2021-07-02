@@ -1,7 +1,5 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -146,6 +144,17 @@ public class CommentServiceImpl implements CommentService {
 	}
 	
 	/**
+	 * 
+	 */
+	@Override
+	public void deleteById(Long id) {
+		Comment comment = findById(id);
+		if(comment == null) 
+			return ;
+		delete(comment);
+	}
+	
+	/**
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -162,36 +171,6 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	@Transactional(readOnly=true)
 	public List<CommentForPostViewDTO> getCommentForPostViewDTOsByExercisePostId(Long postId) {
-		List<CommentForPostViewDTO> result = new ArrayList<>();
-		
-		List<Comment> comments = findAllByExercisePostId(postId);
-		
-		for(Comment c: comments) {
-			CommentForPostViewDTO dto = CommentForPostViewDTO.builder()
-					.commentId(c.getId())
-					.writerIp(c.getWriterIp())
-					.contents(c.getContents())
-					.isAnonymous(c.isAnonymous())
-					.writerName(c.getUser().getNickName())
-					.createdAt(localDateToStringForCommentView(c.getCreatedAt()))
-					.commentLikesNum(c.getCommentLikes().size())
-					.build();
-			
-			result.add(dto);
-		}
-		
-		return result;
-	}
-	
-	private String localDateToStringForCommentView(LocalDateTime localDateTime) {
-		int year = localDateTime.getYear();
-		int month = localDateTime.getMonthValue();
-		int date = localDateTime.getDayOfMonth();
-		int hour = localDateTime.getHour();
-		int min = localDateTime.getMinute();
-		
-		
-		//yyyy.MM.dd HH:mm
-		return year +"." + month +"." + date + " " +hour +":" + min;
+		return commentRepository.findForCommentForPostViewDTOByExercisePostId(postId);
 	}
 }

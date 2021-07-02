@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 
@@ -23,6 +24,22 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "LEFT JOIN FETCH ep.comments c "
 			+ "WHERE ep.id = :exercisePostId")
 	public Optional<ExercisePost> findWithCommentsById(@Param("exercisePostId") Long id);
+	
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT new com.gunyoung.tmb.dto.response.ExercisePostViewDTO( ep.id, ep.title, e.name, u.nickName, ep.contents, ep.viewNum, "
+			+ " (SELECT COUNT(pl) FROM PostLike pl WHERE pl.exercisePost.id = :exercisePostId), "
+			+ " (SELECT COUNT(c) FROM Comment c WHERE c.exercisePost.id = :exercisePostId), "
+			+ " ep.createdAt) FROM ExercisePost ep "
+			+ "INNER JOIN ep.user u "
+			+ "INNER JOIN ep.exercise e "
+			+ "WHERE ep.id = :exercisePostId")
+	public Optional<ExercisePostViewDTO> findForExercisePostViewDTOById(@Param("exercisePostId") Long id);
 	
 	/**
 	 * User ID로 만족하는 ExercisePost들 가져오는 쿼리 <br>

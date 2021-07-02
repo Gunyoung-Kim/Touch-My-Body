@@ -210,23 +210,10 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Override
 	@Transactional(readOnly=true)
 	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id) {
-		ExercisePost exercisePost = findById(id);
-		if(exercisePost == null)
+		Optional<ExercisePostViewDTO> result = exercisePostRepository.findForExercisePostViewDTOById(id);
+		if(result.isEmpty()) 
 			return null;
-		
-		ExercisePostViewDTO dto = ExercisePostViewDTO.builder()
-				.postId(exercisePost.getId())
-				.title(exercisePost.getTitle())
-				.exerciseName(exercisePost.getExercise().getName())
-				.writerName(exercisePost.getUser().getNickName())
-				.contents(exercisePost.getContents())
-				.viewNum(exercisePost.getViewNum())
-				.likeNum(exercisePost.getPostLikes().size())
-				.commentNum(exercisePost.getComments().size())
-				.createdAt(localDateToStringForExercisePost(exercisePost.getCreatedAt()))
-				.build();
-		
-		return dto;
+		return result.get();
 	}
 
 	/**
@@ -244,21 +231,9 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 		
 		exercisePost.setViewNum(exercisePost.getViewNum()+1);
 		
-		ExercisePostViewDTO dto = ExercisePostViewDTO.builder()
-				.postId(exercisePost.getId())
-				.title(exercisePost.getTitle())
-				.exerciseName(exercisePost.getExercise().getName())
-				.writerName(exercisePost.getUser().getNickName())
-				.contents(exercisePost.getContents())
-				.viewNum(exercisePost.getViewNum())
-				.likeNum(exercisePost.getPostLikes().size())
-				.commentNum(exercisePost.getComments().size())
-				.createdAt(localDateToStringForExercisePost(exercisePost.getCreatedAt()))
-				.build();
-		
 		save(exercisePost);
 		
-		return dto;
+		return getExercisePostViewDTOWithExercisePostId(id);
 	}
 
 	private String localDateToStringForExercisePost(LocalDateTime localDateTime) {

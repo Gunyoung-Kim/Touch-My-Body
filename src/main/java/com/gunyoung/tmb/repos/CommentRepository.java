@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.gunyoung.tmb.domain.exercise.Comment;
+import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 
 public interface CommentRepository extends JpaRepository<Comment,Long> {
 	
@@ -23,6 +24,12 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
 			+ "LEFT JOIN FETCH c.commentLikes cl "
 			+ "WHERE c.id = :commentId")
 	public Optional<Comment> findWithCommentLikesById(@Param("commentId") Long id);
+	
+	@Query("SELECT new com.gunyoung.tmb.dto.response.CommentForPostViewDTO(c.id, c.writerIp, c.contents, c.isAnonymous, u.nickName, c.createdAt, "
+			+ "(SELECT COUNT(cl) FROM CommentLike cl WHERE cl.comment.id = c.id)) FROM Comment c "
+			+ "INNER JOIN c.user u "
+			+ "WHERE c.exercisePost.id = :postId")
+	public List<CommentForPostViewDTO> findForCommentForPostViewDTOByExercisePostId(@Param("postId")Long postId);
 	
 	/**
 	 * ExercisePost ID로 만족하는 Comment들 가져오는 쿼리 <br>

@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.dto.response;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +22,6 @@ public class CommentForPostViewDTO {
 	private String contents;
 	private boolean isAnonymous;
 	private String writerName;
-	private String createdAt;
-	private int commentLikesNum;
+	private LocalDateTime createdAt;
+	private long commentLikesNum;
 }

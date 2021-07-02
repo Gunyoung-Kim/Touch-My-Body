@@ -43,7 +43,7 @@
             <td th:text="${object.writerIp}"></td>
             <td th:text="${object.contents}" colspan="3"></td>
             <td>
-              <button type="button" class="deleteBtn" th:onclick="|deletePost(${object.commentId})|">삭제</button>
+              <button type="button" class="deleteBtn" th:onclick="|deleteComment(${userId},${object.commentId})|">삭제</button>
             </td>
         </tr>
       </tbody>

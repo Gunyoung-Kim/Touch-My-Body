@@ -20,7 +20,7 @@
 
       <div class="writerAndTime">
         <span class="postWriter" th:text="*{writerName}"></span>
-        <small class="postCreatedAt" th:text="*{createdAt}"></small>
+        <small class="postCreatedAt" th:text="|${exercisePost.createdAt.toLocalDate()} ${exercisePost.createdAt.getHour()} : ${exercisePost.createdAt.getMinute()}|"></small>
       </div>
 
       <hr/>
@@ -56,9 +56,9 @@
         <tbody>
           <tr th:each="object:${comments}">
             <div class="commentWriterInfo">
-              <span th:if="${object.isAnonymous}">익명</span>
+              <span th:if="${object.isAnonymous}" style="font-weight: bold;">익명</span>
               <span th:if="!${object.isAnonymous}" th:text="${object.writerName}" style="font-weight: bold;"></span>
-              <small th:text="${object.createdAt}"></small>
+              <small th:text="|${object.createdAt.toLocalDate()} ${object.createdAt.getHour()} : ${object.createdAt.getMinute()}|"></small>
               <span style="float: right;">
                 <span sec:authorize="isAuthenticated()" ><a th:onclick="|addCommentLike(${object.commentId})|">👍</a></span>
                 <span sec:authorize="!isAuthenticated()" ><a onclick="needLogin()">👍</a></span>
@@ -86,7 +86,7 @@
         댓글쓰기
       </div>
       <form class="" th:action="@{'./' + *{postId} +'/addComment'}" method="post">
-        <input type="checkbox" name="isAnonymous"> 익명 <br>
+        <input type="checkbox" name="isAnonymous" value=true> 익명 <br>
         <textarea name="contents" rows="3" cols="80"></textarea>
         <input type="submit" name="" value="등록하기">
       </form>

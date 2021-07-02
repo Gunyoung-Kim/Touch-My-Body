@@ -22,6 +22,7 @@ public interface CommentService {
 	public Comment saveWithUserAndExercisePost(Comment comment,User user, ExercisePost exercisePost);
 	
 	public void delete(Comment comment);
+	public void deleteById(Long id);
 	
 	public long countByUserId(Long userId);
 	

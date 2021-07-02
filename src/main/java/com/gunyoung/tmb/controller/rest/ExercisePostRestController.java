@@ -1,9 +1,7 @@
 package com.gunyoung.tmb.controller.rest;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,7 +13,6 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
-import com.gunyoung.tmb.dto.reqeust.AddCommentDTO;
 import com.gunyoung.tmb.error.codes.CommentErrorCode;
 import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
 import com.gunyoung.tmb.error.codes.LikeErrorCode;
@@ -24,7 +21,6 @@ import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
-import com.gunyoung.tmb.error.exceptions.notmatch.UserNotMatchException;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.like.CommentLikeService;
@@ -91,62 +87,6 @@ public class ExercisePostRestController {
 			throw new LikeNotFoundedException(LikeErrorCode.LikeNotFoundedError.getDescription());
 		
 		postLikeService.delete(postLike);
-	}
-	
-	/**
-	 * 유저가 게시글에 댓글 추가할때 처리하는 메소드 
-	 * @param postId
-	 * @param dto
-	 * @param request
-	 * @author kimgun-yeong
-	 */
-	@RequestMapping(value="/community/post/{post_id}/addComment",method = RequestMethod.POST)
-	public void addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute AddCommentDTO dto,HttpServletRequest request) {
-		// 세션으로 가져온 유저 id로 유저 객체 찾기
-		Long userId = SessionUtil.getLoginUserId(session);
-		
-		User user = userService.findWithCommentsById(userId);
-		
-		if(user == null)
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
-		
-		// post_id 로 해당 ExercisePost 가져오기 
-		ExercisePost exercisePost = exercisePostService.findWithCommentsById(postId);
-		
-		if(exercisePost == null) 
-			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.ExercisePostNotFoundedError.getDescription());
-		
-		// request IP 가져오기 
-		String writerIp = request.getRemoteHost();
-		
-		Comment comment = AddCommentDTO.toComment(dto, writerIp);
-		
-		commentService.saveWithUserAndExercisePost(comment, user, exercisePost);
-	}
-	
-	/**
-	 * 유저가 게시글에 댓글 삭제할때 처리하는 메소드
-	 * @param postId
-	 * @param commentId
-	 * @author kimgun-yeong
-	 */
-	@RequestMapping(value="/community/post/{post_id}/removeComment",method = RequestMethod.POST)
-	public void removeCommentToExercisePost(@PathVariable("post_id") Long postId,@RequestParam("commentId") Long commentId) {
-		Comment comment = commentService.findWithUserAndExercisePostById(commentId);
-		
-		if(comment == null) {
-			throw new CommentNotFoundedException(CommentErrorCode.CommentNotFoundedError.getDescription());
-		}
-		
-		User commentUser = comment.getUser();
-		
-		if(SessionUtil.getLoginUserId(session) != commentUser.getId()) {
-			throw new UserNotMatchException(UserErrorCode.UserNotMatchError.getDescription());
-			
-			// 추후에 매니저나 관리자는 통과되게 구현할지 고민 
-		}
-		
-		commentService.delete(comment);
 	}
 	
 	/**

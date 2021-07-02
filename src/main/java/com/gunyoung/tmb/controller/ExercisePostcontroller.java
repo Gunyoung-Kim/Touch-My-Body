@@ -2,25 +2,40 @@ package com.gunyoung.tmb.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.tmb.domain.exercise.Comment;
+import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.dto.reqeust.AddCommentDTO;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.codes.CommentErrorCode;
 import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
+import com.gunyoung.tmb.error.codes.UserErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.notmatch.UserNotMatchException;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
+import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.PageUtil;
+import com.gunyoung.tmb.utils.SessionUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +46,10 @@ public class ExercisePostController {
 	private final ExercisePostService exercisePostService;
 	
 	private final CommentService commentService;
+	
+	private final UserService userService;
+	
+	private final HttpSession session;
 	
 	/**
 	 * 커뮤니티 메인 화면 반환하는 메소드
@@ -136,6 +155,71 @@ public class ExercisePostController {
 		mav.addObject("comments", comments);
 		
 		return mav;
+	}
+	
+	/**
+	 * 유저가 게시글에 댓글 추가할때 처리하는 메소드 
+	 * @param postId
+	 * @param dto
+	 * @param request
+	 * @author kimgun-yeong
+	 */
+	@RequestMapping(value="/community/post/{post_id}/addComment",method = RequestMethod.POST)
+	public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute AddCommentDTO dto,
+			@RequestParam("isAnonymous") boolean isAnonymous,HttpServletRequest request) {
+		
+		dto.setAnonymous(isAnonymous);
+		
+		// 세션으로 가져온 유저 id로 유저 객체 찾기
+		Long userId = SessionUtil.getLoginUserId(session);
+		
+		User user = userService.findWithCommentsById(userId);
+		
+		if(user == null)
+			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+		
+		// post_id 로 해당 ExercisePost 가져오기 
+		ExercisePost exercisePost = exercisePostService.findWithCommentsById(postId);
+		
+		if(exercisePost == null) 
+			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.ExercisePostNotFoundedError.getDescription());
+		
+		// request IP 가져오기 
+		String writerIp = request.getRemoteHost();
+		
+		Comment comment = AddCommentDTO.toComment(dto, writerIp);
+		
+		commentService.saveWithUserAndExercisePost(comment, user, exercisePost);
+		
+		return new ModelAndView("redirect:/community/post/" + postId);
+				
+	}
+	
+	/**
+	 * 유저가 게시글에 댓글 삭제할때 처리하는 메소드
+	 * @param postId
+	 * @param commentId
+	 * @author kimgun-yeong
+	 */
+	@RequestMapping(value="/community/post/{post_id}/removeComment",method = RequestMethod.POST)
+	public ModelAndView removeCommentToExercisePost(@PathVariable("post_id") Long postId,@RequestParam("commentId") Long commentId) {
+		Comment comment = commentService.findWithUserAndExercisePostById(commentId);
+		
+		if(comment == null) {
+			throw new CommentNotFoundedException(CommentErrorCode.CommentNotFoundedError.getDescription());
+		}
+		
+		User commentUser = comment.getUser();
+		
+		if(SessionUtil.getLoginUserId(session) != commentUser.getId()) {
+			throw new UserNotMatchException(UserErrorCode.UserNotMatchError.getDescription());
+			
+			// 추후에 매니저나 관리자는 통과되게 구현할지 고민 
+		}
+		
+		commentService.delete(comment);
+		
+		return new ModelAndView("redirect:/community/post/" + postId);
 	}
 	
 }

@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.dto.response;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +23,7 @@ public class ExercisePostViewDTO {
 	private String writerName;
 	private String contents;
 	private Integer viewNum;
-	private Integer likeNum;
-	private Integer commentNum;
-	private String createdAt;
+	private Long likeNum;
+	private Long commentNum;
+	private LocalDateTime createdAt;
 }
