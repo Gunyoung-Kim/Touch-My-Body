@@ -626,6 +626,67 @@
 - Template
 
     1. userCommentList(js)
+
+- ManagerExerciseController
+
+    1. 매니저 운동 관리 메인 화면 반환하는 메소드 추가 
+
+- ManagerExercisePostController
+   
+    1. 매니저 커뮤니티 관리 메인화면 반환하는 메소드 추가 
+
+- ManagerMuscleController
+
+    1. 매니저 근육 관리 메인화면 반환하는 메소드 추가 
+
+- ManagerExercsiePostRestController
+
+    1. 매니저가 게시글 삭제 처리하는 메소드 추가 
+
+- ManagerExerciseRestController
+
+    1. 매니저가 운동 정보 삭제 처리하는 메소드 추가 
+
+- ManagerMuscleRestController
+
+    1. 매니저가 근육 정보 삭제 처리하는 메소드 추가 
+
+- DTO
+
+    1. MuscleForTableDTO - Muscle 객체를 테이블에 보여주기 위해 사용되는 객체 
+
+- ExerciesRepository
+
+    1. 키워드 검색 대상에 유저 닉네임도 포함 
+
+ - MuscleRepository
+
+    1. 키워드로 근육 검색하는 쿼리, 이를 만족하는 개수 세는 쿼리 추가 
+
+- ExerciseService -> Impl에 구현
+
+    1. Id로 Exercise 찾아서 삭제하는 메소드 추가 
+
+- MuscleService -> Impl에 구현, 하위 항목에 대한 테스트 코드 작성
+
+    1. 모든 근육 정보들 페이지 처리해서 가져오는 메소드 추가 
+
+    2. 키워드 이름에 포함하는 근육 정보들 페이지 처리해서 가져오는 메소드 추가 
+
+    3. 1,2번에 해당하는 정보들 개수 반환하는 메소드 추가 
+
+    4. Id로 Muscle 찾아서 삭제하는 메소드 추가 
+
+- Template
+
+    1. communityForManage (css, html)
+
+    2. exerciseListViewForManage (css,js,html)
+
+    3. muscleListViewForManage (css,js,html)
+
+    4. communityForManage (css,js
+
 --- 
 
 ## To do List
