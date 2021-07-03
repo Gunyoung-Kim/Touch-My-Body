@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +54,28 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 	
 	/**
+	 * 모든 근육 정보들을 페이지 처리해서 가져오는 메소드
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Page<Muscle> findAllInPage(Integer pageNumber, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
+		return muscleRepository.findAll(pageRequest);
+	}
+	
+	/**
+	 * 키워드 이름에 포함하는 근육정보들 페이지 처리해서 가져오는 메소드
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Page<Muscle> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
+		return muscleRepository.findAllWithNameKeyword(keyword, pageRequest);
+	}	
+	
+	/**
 	 * Muscle을 category로 분류해서 반환할때 사용
 	 * @return key: TargetType.koreanName
 	 * @author kimgun-yeong
@@ -93,6 +117,33 @@ public class MuscleServiceImpl implements MuscleService {
 	public void delete(Muscle muscle) {
 		muscleRepository.delete(muscle);
 	}
-
 	
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public void deleteById(Long id) {
+		Muscle muscle = findById(id);
+		if(muscle!= null)
+			delete(muscle);
+	}
+
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public long countAll() {
+		return muscleRepository.count();
+	}
+
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public long countAllWithNameKeyword(String keyword) {
+		return muscleRepository.countAllWithNamekeyword(keyword);
+	}
+
 }

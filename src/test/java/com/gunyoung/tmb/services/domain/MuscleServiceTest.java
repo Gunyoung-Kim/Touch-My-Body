@@ -19,6 +19,7 @@ import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
+import com.gunyoung.tmb.utils.PageUtil;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
@@ -121,6 +122,48 @@ public class MuscleServiceTest {
 	}
 	
 	/*
+	 * public Page<Muscle> findAllInPage(Integer pageNumber, int pageSize)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("모든 근육 정보들을 페이지 처리해서 가져오기 ->정상")
+	public void findAllInPageTest() {
+		//Given
+		int pageSize = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
+		
+		//When
+		List<Muscle> result = muscleService.findAllInPage(1, pageSize).getContent();
+		
+		//Then
+		assertEquals(result.size(),Math.min(pageSize, INIT_MUSCLE_NUM));
+	}
+	
+	/*
+	 * public Page<Muscle> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("키워드 이름에 포함하는 근육정보들 페이지 처리해서 가져오기 ->정상")
+	public void findAllWithNameKeywordInPageTest() {
+		//Given
+		String allKeyword = "name";
+		String noneKeyword = "none!!!";
+		String oneKeyword = String.valueOf(INIT_MUSCLE_NUM);
+		
+		int pageSize = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
+		
+		//When
+		List<Muscle> allResult = muscleService.findAllWithNameKeywordInPage(allKeyword, 1, pageSize).getContent();
+		List<Muscle> noneResult = muscleService.findAllWithNameKeywordInPage(noneKeyword, 1, pageSize).getContent();
+		List<Muscle> oneResult = muscleService.findAllWithNameKeywordInPage(oneKeyword, 1, pageSize).getContent();
+		
+		//Then
+		assertEquals(allResult.size(),Math.min(pageSize, INIT_MUSCLE_NUM));
+		assertEquals(noneResult.size(),0);
+		assertEquals(oneResult.size(),1);
+	}
+	
+	/*
 	 *  public Map<String, List<String>> getAllMusclesWithSortingByCategory()
 	 */
 	
@@ -200,5 +243,28 @@ public class MuscleServiceTest {
 		
 		//Then
 		assertEquals(beforeNum-1,muscleRepository.count());
+	}
+	
+	/*
+	 *  public long countAllWithNameKeyword(String keyword)
+	 */
+	
+	@Test
+	@DisplayName("키워드를 이름에 포함하는 Muscle 개수 세기 -> 정상")
+	public void countAllWithNameKeywordTest() {
+		//Given
+		String allKeyword = "name";
+		String noneKeyword = "none!!!";
+		String oneKeyword = String.valueOf(INIT_MUSCLE_NUM);
+		
+		//When
+		long resultAll = muscleService.countAllWithNameKeyword(allKeyword);
+		long resultZero = muscleService.countAllWithNameKeyword(noneKeyword);
+		long resultOne = muscleService.countAllWithNameKeyword(oneKeyword);
+		
+		//Then
+		assertEquals(resultAll,INIT_MUSCLE_NUM);
+		assertEquals(resultZero,0);
+		assertEquals(resultOne,1);
 	}
 }

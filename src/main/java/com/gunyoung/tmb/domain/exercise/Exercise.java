@@ -78,26 +78,29 @@ public class Exercise extends BaseEntity{
 	private TargetType target;
 	
 	/**
-	 * 해당 운동으로 성장시킬 수 있는 구체적인 근육 부위들
+	 * 해당 운동으로 성장시킬 수 있는 구체적인 근육 부위들 <br>
+	 * fetch: 지연로딩 <br>
+	 * cascade: Remove - 해당 운동이 삭제되면 관련 운동 자극 근육들도 모두 삭제
 	 */
-	@OneToMany(mappedBy="exercise")
+	@OneToMany(mappedBy="exercise",cascade = {CascadeType.REMOVE})
 	@Builder.Default
 	private List<ExerciseMuscle> exerciseMuscles = new ArrayList<>();
 	
 	/**
-	 * 해당 운동에 관해 유저들이 작성한 게시물들
-	 * fetch: 지연로딩
-	 * cascade: Remove - 해당 운동이 삭제되면 관련 게시물들도 모두 삭제
+	 * 해당 운동에 관해 유저들이 작성한 게시물들 <br>
+	 * fetch: 지연로딩 <br>
+	 * cascade: Remove - 해당 운동이 삭제되면 관련 게시글들도 모두 삭제
 	 */
 	@OneToMany(mappedBy="exercise",cascade= {CascadeType.REMOVE})
 	@Builder.Default
 	private List<ExercisePost> exercisePosts = new ArrayList<>();
 	
 	/**
-	 * 관련 운동의 정보에 대해 유저가 운영자에게 보낸 정보수정 요청 피드백들
-	 * fetch: 지연로딩
+	 * 관련 운동의 정보에 대해 유저가 운영자에게 보낸 정보수정 요청 피드백들 <br>
+	 * fetch: 지연로딩 <br>
+	 * cascade: Remove - 해당 운동이 삭제되면 관련 피드백들도 모두 삭제
 	 */
-	@OneToMany(mappedBy="exercise")
+	@OneToMany(mappedBy="exercise",cascade= {CascadeType.REMOVE})
 	@Builder.Default
 	private List<Feedback> feedbacks = new ArrayList<>();
 	

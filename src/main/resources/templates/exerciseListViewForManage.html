@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head th:include="fragments.html::head"></head>
   <head>
-    <link rel="stylesheet" href="/css/exerciseListView.css">
+    <link rel="stylesheet" href="/css/exerciseListViewForManage.css">
   </head>
   <body>
     <header>
@@ -10,12 +10,14 @@
     </header>
 
     <div id="main-title" class="py-5 text-center">
-      <h2>운동 정보 보기</h2>
+      <h2>운동 정보 관리하기</h2>
     </div>
 
+    <button type="button" class="btn ml-3 addBtn" onclick="goToAdd()">운동 종류 추가</button>
+
     <div class="main_container">
-      <div class="search">
-        <form class="mb-3" method="get">
+      <div class="search" style="float: right;">
+        <form class="mb-3 mr-3" method="get">
           <input type="text" name="keyword" placeholder="이름 검색">
           <input type="submit" name="" value="검색">
         </form>
@@ -26,7 +28,7 @@
           <tr>
             <th scope="col">종류</th>
             <th scope="col" colspan="2">이름</th>
-            <th scope="col">정보</th>
+            <th scope="col">관리</th>
           </tr>
         </thead>
 
@@ -34,7 +36,10 @@
           <tr th:each="object:${listObject}">
             <td th:text="${object.target}"></td>
             <td th:text="${object.name}" colspan="2"></td>
-            <td><a th:href="@{'exercise/about/' + ${object.id}}">정보 보러가기</a></td>
+            <td>
+              <button type="button" class="btn modifyBtn" th:onclick="|goToModify(&{object.id})|">수정</button>
+              <button type="button" class="btn deleteBtn" th:onclick="|goToDelete(${object.id})|">삭제</button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -68,5 +73,6 @@
     <footer>
     	<div th:replace="fragments.html :: footer"></div>
     </footer>
+    <script type="text/javascript" th:src="@{/js/exerciseListViewForManage.js}"></script>
   </body>
 </html>

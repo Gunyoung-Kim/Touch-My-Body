@@ -94,6 +94,7 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "INNER JOIN ep.exercise e "
 			+ "WHERE (ep.title LIKE %:keyword%) "
 			+ "OR (ep.contents LIKE %:keyword%) "
+			+ "OR (u.nickName LIKE %:keyword%) "
 			+ "ORDER BY ep.createdAt DESC")
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithKeywordByPage(@Param("keyword") String keyword, Pageable pageable);
 	
@@ -127,10 +128,10 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "INNER JOIN ep.user u "
 			+ "INNER JOIN ep.exercise e "
 			+ "WHERE (e.target = :target) AND "
-			+ "((ep.title LIKE %:keyword%) OR (ep.contents LIKE %:keyword%)) "
+			+ "((ep.title LIKE %:keyword%) OR (ep.contents LIKE %:keyword%) OR (u.nickName LIKE %:keyword%)) "
 			+ "ORDER BY ep.createdAt DESC")
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(@Param("target") TargetType target,@Param("keyword")String keyword ,Pageable pageable);
-	
+		
 	/**
 	 * 해당 User ID를 만족하는 ExercisePost 개수 반환
 	 * @param userId

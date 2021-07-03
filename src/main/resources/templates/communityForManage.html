@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html :: head"></head>
+  <head>
+    <link rel="stylesheet" href="/css/communityForManage.css">
+  </head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+
+    <div id="main-title" class="py-5 text-center">
+      <h2>게시글 관리</h2>
+    </div>
+
+    <div class="search">
+      <form class="mb-3 mr-2" method="get">
+        <input type="text" name="keyword" placeholder="닉네임,제목,내용 검색">
+        <input type="submit" value="검색">
+      </form>
+    </div>
+
+    <table class="table table-striped text-center">
+      <thead>
+        <tr>
+          <th scope="col">종류</th>
+          <th scope="col" colspan="2">제목</th>
+          <th scope="col">작성자</th>
+          <th scope="col">작성일</th>
+          <th scope="col">조회수</th>
+          <th scope="col">관리</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="object:${listObject}">
+            <td th:text="${object.category.getKoreanName()}"></td>
+            <td th:text="|[${object.exerciseName}] ${object.title} |" colspan="2"></td>
+            <td th:text="${object.writer}"></td>
+            <td th:text="|${object.createdAt.toLocalDate()} ${object.createdAt.getHour()} : ${object.createdAt.getMinute()}|"></td>
+            <td th:text="${object.viewNum}"></td>
+            <td>
+              <button type="button" class="goToBtn" th:onclick="|goToPost(${object.postId})|">보기</button>
+              <button type="button" class="deleteBtn" th:onclick="|deletePost(${object.postId})|">삭제</button>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="row justify-content-center">
+      <nav>
+        <ul class="pagination justify-content-center pageUl"
+            th:with="start=${startIndex},
+                      last=${lastIndex}">
+
+           <li th:unless="${currentPage} == 1" class="pageList" >
+             <a th:href="@{/(page=${currentPage}-1)}">
+               <span aria-hidden="true">&lt;</span>
+             </a>
+           </li>
+
+           <li th:each="page: ${#numbers.sequence(start, last)}" class="pageList" >
+            <a th:text="${page}" th:href="@{/(page=${page})}"></a>
+           </li>
+
+          <li th:unless="${currentPage} == ${lastIndex}" class="pageList">
+            <a th:href="@{/(page=${currentPage}+1)}">
+              <span aria-hidden="true">&gt;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <footer>
+    	<div th:replace="fragments.html :: footer"></div>
+    </footer>
+    <script type="text/javascript" th:src="@{/js/communityForManage.js}"></script>
+  </body>
+</html>

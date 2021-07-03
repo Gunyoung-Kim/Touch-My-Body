@@ -241,6 +241,16 @@ public class ExerciseServiceImpl implements ExerciseService {
 	public void delete(Exercise exercise) {
 		exerciseRepository.delete(exercise);
 	}
+	
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public void deleteById(Long id) {
+		Exercise exercise = findById(id);
+		if(exercise != null)
+			delete(exercise);
+	}
 
 	/**
 	 * 모든 운동들 개수 반환

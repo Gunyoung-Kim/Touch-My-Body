@@ -23,6 +23,7 @@ public interface ExerciseService {
 	public Exercise saveWithAddExerciseDTO(AddExerciseDTO dto);
 	
 	public void delete(Exercise exercise);
+	public void deleteById(Long id);
 	
 	public long countAll();
 	public long countAllWithNameKeyword(String nameKeyword);

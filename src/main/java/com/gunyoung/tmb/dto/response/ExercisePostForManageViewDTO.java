@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 매니저 화면에 노출되는 유저의 게시글 목록 구성하기 위해 사용되는 객체
+ * 매니저 화면에 노출되는 게시글 목록 구성하기 위해 사용되는 객체
  * @author kimgun-yeong
  *
  */

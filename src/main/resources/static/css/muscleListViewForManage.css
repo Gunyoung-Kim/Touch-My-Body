@@ -1,0 +1,13 @@
+.deleteBtn {
+  border: 1px solid red;
+}
+
+.addBtn {
+  background-color: #000 !important;
+  color: #fff;
+  float: left;
+}
+
+.modifyBtn {
+  border: 1px solid blue;
+}
