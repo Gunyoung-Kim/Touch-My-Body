@@ -18,8 +18,10 @@ import com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO;
 import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
+import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
@@ -150,10 +152,14 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Override
 	public Exercise saveWithAddExerciseDTO(AddExerciseDTO dto) {
 		
+		if(exerciseRepository.existsByName(dto.getName())) {
+			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.ExerciseNameDuplicatedError.getDescription());
+		}
+		
 		// Exercise 객체 생성
 		Exercise exercise = Exercise.builder()
 				.name(dto.getName())
-				.description(dto.getDescriptoin())
+				.description(dto.getDescription())
 				.caution(dto.getCaution())
 				.movement(dto.getMovement())
 				.build();

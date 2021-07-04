@@ -261,7 +261,7 @@ public class ExerciseServiceTest {
 		
 		AddExerciseDTO dto = AddExerciseDTO.builder()
 				.name("newName")
-				.descriptoin("newDes")
+				.description("newDes")
 				.caution("newCau")
 				.movement("newMove")
 				.target(TargetType.BACK.getKoreanName())
@@ -296,7 +296,7 @@ public class ExerciseServiceTest {
 		
 		AddExerciseDTO dto = AddExerciseDTO.builder()
 				.name("newName")
-				.descriptoin("newDes")
+				.description("newDes")
 				.caution("newCau")
 				.movement("newMove")
 				.target("none")
@@ -330,7 +330,7 @@ public class ExerciseServiceTest {
 		
 		AddExerciseDTO dto = AddExerciseDTO.builder()
 				.name("newName")
-				.descriptoin("newDes")
+				.description("newDes")
 				.caution("newCau")
 				.movement("newMove")
 				.target(TargetType.BACK.getKoreanName())

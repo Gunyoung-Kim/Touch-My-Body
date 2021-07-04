@@ -50,4 +50,12 @@ public interface ExerciseRepository extends JpaRepository<Exercise,Long>{
 	@Query("SELECT COUNT(e) FROM Exercise e "
 			+ "WHERE e.name LIKE %:keyword%")
 	public long countAllWithNameKeyword(@Param("keyword") String keyword);
+	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	public boolean existsByName(String name);
 }

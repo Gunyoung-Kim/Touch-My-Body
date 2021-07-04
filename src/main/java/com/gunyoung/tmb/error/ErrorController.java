@@ -15,6 +15,7 @@ import com.gunyoung.tmb.error.codes.SearchCriteriaErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.EmailDuplicationFoundedException;
+import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.duplication.NickNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
@@ -48,6 +49,12 @@ public class ErrorController {
 	@ExceptionHandler(NickNameDuplicationFoundedException.class)
 	public ErrorMsg nickNameDuplicated(NickNameDuplicationFoundedException e) {
 		return new ErrorMsg(JoinErrorCode.NickNameDuplicationFound.getCode(),e.getMessage());
+	}
+	
+	@ResponseStatus(HttpStatus.CONFLICT)
+	@ExceptionHandler(ExerciseNameDuplicationFoundedException.class) 
+	public ErrorMsg exerciseNameDuplicated(ExerciseNameDuplicationFoundedException e) {
+		return new ErrorMsg(ExerciseErrorCode.ExerciseNameDuplicatedError.getCode(),e.getMessage());
 	}
 	
 	/*

@@ -5,14 +5,12 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
-import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForTableDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
@@ -89,18 +87,6 @@ public class ManagerExerciseController {
 		return mav;
 	}
 	
-	/**
-	 * 
-	 * @param dto
-	 * @param mav
-	 * @return
-	 */
-	@RequestMapping(value="/manager/exercise/add" ,method = RequestMethod.POST)
-	public ModelAndView addExercise(@ModelAttribute AddExerciseDTO dto,ModelAndView mav) {
-		exerciseService.saveWithAddExerciseDTO(dto);
-		
-		return new ModelAndView("redirect:/manager/exercise");
-	}
 	
 	/**
 	 * 

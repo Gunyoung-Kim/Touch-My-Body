@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AddExerciseDTO {
 	private String name;
-	private String descriptoin;
+	private String description;
 	private String caution;
 	private String movement;
 	private String target;
