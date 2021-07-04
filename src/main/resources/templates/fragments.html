@@ -18,6 +18,15 @@
       </a>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
+            <li sec:authorize="isAuthenticated()" class="nav-item">
+              <a class="nav-link" href="/user/exercise/calendar">내 운동 기록</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/exercise">운동 정보</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link"  href="/community">커뮤니티</a>
+            </li>
           </ul>
           <ul class="navbar-nav justify-content-end">
             <li sec:authorize="!isAuthenticated()" class="nav-item">
@@ -27,7 +36,7 @@
               <a class="nav-link" href="/join">회원가입</a>
             </li>
             <li sec:authorize="isAuthenticated()" class="nav-item">
-            	<a class="nav-link" href="/profile">개인 정보 수정</a>
+            	<a class="nav-link" href="/user/profile">내 정보 보기</a>
             </li>
             <li sec:authorize="isAuthenticated()" class="nav-item">
             	<a class="nav-link" href="/logout">로그아웃</a>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html :: head"></head>
+  <head>
+    <link rel="stylesheet" href="/css/profileCommentList.css">
+  </head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+
+    <div id="main-title" class="py-5 text-center">
+      <h2>내가 작성한 댓글</h2>
+    </div>
+
+    <div class="dropdown mb-3" style="float: right;">
+      <button class="btn btn-second dropdown-toggle" data-toggle="dropdown">
+        정렬 방식
+      </button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" th:href="@{'/user/profile/mycomments?order=desc'}">최신순</a>
+        <a class="dropdown-item" th:href="@{'/user/profile/mycomments?order=asc'}">오래된순</a>
+      </div>
+    </div>
+
+      <table class="table table-striped text-center">
+        <thead>
+          <tr>
+            <th scope="col">작성자</th>
+            <th scope="col">작성IP</th>
+            <th scope="col" colspan="3">내용</th>
+            <th scope="col">관리</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="object:${commentList}">
+              <td th:text="${object.userName}"></td>
+              <td th:text="${object.writerIp}"></td>
+              <td th:text="${object.contents}" colspan="3"></td>
+              <td>
+                <button type="button" class="deleteBtn" th:onclick="|deleteComment(${object.commentId})|">삭제</button>
+              </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="row justify-content-center">
+        <nav>
+          <ul class="pagination justify-content-center pageUl"
+              th:with="start=${startIndex},
+                        last=${lastIndex}">
+
+             <li th:unless="${currentPage} == 1" class="pageList" >
+               <a th:href="@{/(page=${currentPage}-1)}">
+                 <span aria-hidden="true">&lt;</span>
+               </a>
+             </li>
+
+             <li th:each="page: ${#numbers.sequence(start, last)}" class="pageList" >
+              <a th:text="${page}" th:href="@{/(page=${page})}"></a>
+             </li>
+
+            <li th:unless="${currentPage} == ${lastIndex}" class="pageList">
+              <a th:href="@{/(page=${currentPage}+1)}">
+                <span aria-hidden="true">&gt;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <footer>
+      	<div th:replace="fragments.html :: footer"></div>
+      </footer>
+      <script type="text/javascript" th:src="@{/js/profileCommentList.js}"></script>
+    </div>
+  </body>
+</html>

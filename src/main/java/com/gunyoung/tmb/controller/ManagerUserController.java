@@ -58,14 +58,14 @@ public class ManagerUserController {
 	@RequestMapping(value="/manager/usermanage",method= RequestMethod.GET)
 	public ModelAndView userManageView(@RequestParam(value="page", required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav) {
 		mav.setViewName("userManage");
-		int page_size = PageUtil.BY_NICKNAME_NAME_PAGE_SIZE;
+		int pageSize = PageUtil.BY_NICKNAME_NAME_PAGE_SIZE;
 		
 		Page<User> pageResult;
 		long totalPageNum;
 		
 		if(keyword != null) {
 			pageResult = userService.findAllByNickNameOrName(keyword, page);
-			totalPageNum = userService.countAllByNickNameOrName(keyword)/page_size +1;
+			totalPageNum = userService.countAllByNickNameOrName(keyword)/pageSize +1;
 		} else {
 			pageResult = new PageImpl<User>(new ArrayList<>());
 			totalPageNum = 1;
@@ -79,8 +79,8 @@ public class ManagerUserController {
 		
 		mav.addObject("listObject",resultList);
 		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/page_size)*page_size+1);
-		mav.addObject("lastIndex",(page/page_size)*page_size+page_size-1 > totalPageNum ? totalPageNum : (page/page_size)*page_size+page_size-1);
+		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
+		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
 		
 		return mav;
 	}
@@ -149,18 +149,18 @@ public class ManagerUserController {
 			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
 		}
 		
-		int page_size = PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE;
+		int pageSize = PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE;
 		
 		Page<Comment> pageResult;
 		
 		if(order.equals("asc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtASC(userId,page,page_size);
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtASC(userId,page,pageSize);
 		} else if(order.equals("desc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtDESC(userId,page,page_size);
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtDESC(userId,page,pageSize);
 		} else {
 			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.OrderByCriteriaError.getDescription());
 		}
-		long totalPageNum = commentService.countByUserId(userId)/page_size+1;
+		long totalPageNum = commentService.countByUserId(userId)/pageSize+1;
 		
 		List<CommentForManageViewDTO> dtos = new ArrayList<>();
 		
@@ -179,8 +179,8 @@ public class ManagerUserController {
 		mav.addObject("userId", userId);
 		mav.addObject("username", user.getFullName()+": " +user.getNickName());
 		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/page_size)*page_size+1);
-		mav.addObject("lastIndex",(page/page_size)*page_size+page_size-1 > totalPageNum ? totalPageNum : (page/page_size)*page_size+page_size-1);
+		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
+		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
 		
 		mav.setViewName("userCommentList");
 		return mav;
@@ -199,19 +199,19 @@ public class ManagerUserController {
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
 		}
-		int page_size = PageUtil.POST_FOR_MANAGE_PAGE_SIZE;
+		int pageSize = PageUtil.POST_FOR_MANAGE_PAGE_SIZE;
 		
 		Page<ExercisePost> pageResult; 
 		
 		if(order.equals("asc")) {
-			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(userId,page,page_size);
+			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(userId,page,pageSize);
 		} else if(order.equals("desc")) {
-			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(userId,page,page_size);
+			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(userId,page,pageSize);
 		} else {
 			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.OrderByCriteriaError.getDescription());
 		}
 		
-		long totalPageNum = exercisePostService.countWithUserId(userId)/page_size+1;
+		long totalPageNum = exercisePostService.countWithUserId(userId)/pageSize+1;
 		
 		List<ExercisePostForManageViewDTO> dtos = new ArrayList<>();
 		
@@ -230,8 +230,8 @@ public class ManagerUserController {
 		mav.addObject("userId", userId);
 		mav.addObject("username", user.getFullName()+": " +user.getNickName());
 		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/page_size)*page_size+1);
-		mav.addObject("lastIndex",(page/page_size)*page_size+page_size-1 > totalPageNum ? totalPageNum : (page/page_size)*page_size+page_size-1);
+		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
+		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
 		
 		mav.setViewName("userPostList");
 		return mav;

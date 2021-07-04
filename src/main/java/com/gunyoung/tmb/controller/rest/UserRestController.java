@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gunyoung.tmb.services.domain.exercise.CommentService;
+import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,10 @@ import lombok.RequiredArgsConstructor;
 public class UserRestController {
 	
 	private final UserService userService;
+	
+	private final CommentService commentService;
+	
+	private final ExercisePostService exercisePostService;
 	
 	/**
 	 * 
@@ -35,4 +41,21 @@ public class UserRestController {
 		return userService.existsByNickName(nickName);
 	}
 	
+	/**
+	 * 
+	 * @param commentId
+	 */
+	@RequestMapping(value="/user/profile/mycomments/remove", method=RequestMethod.DELETE)
+	public void removeMyComments(@RequestParam("commentId") Long commentId) {
+		commentService.deleteById(commentId);
+	}
+	
+	/**
+	 * 
+	 * @param postId
+	 */
+	@RequestMapping(value="/user/profile/myposts/remove",method=RequestMethod.DELETE) 
+	public void removeMyPosts(@RequestParam("postId") Long postId) {
+		exercisePostService.deleteById(postId);
+	}
 }

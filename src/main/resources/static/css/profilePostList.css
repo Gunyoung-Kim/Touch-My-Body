@@ -1,0 +1,12 @@
+.deleteBtn {
+  border: 1px solid red;
+}
+
+.goToBtn {
+  border: 1px solid blue;
+}
+
+
+.modifyBtn {
+  border: 1px solid green;
+}

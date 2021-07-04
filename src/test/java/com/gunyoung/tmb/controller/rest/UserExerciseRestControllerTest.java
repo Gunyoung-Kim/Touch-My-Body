@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,6 +97,7 @@ public class UserExerciseRestControllerTest {
 	/*
 	 *  public List<UserExercise> getExerciseRecords(@ModelAttribute("date")DateDTO date)
 	 */
+	@WithMockUser(username="test@test.com",roles= {"USER"})
 	@Test
 	@Transactional
 	@DisplayName("유저의 특정날짜 운동 기록 가져오는 컨트롤러 -> 정상")

@@ -171,7 +171,7 @@ public class ExercisePostControllerTest {
 				.params(paramMap))
 		
 		//Then
-			    .andExpect(status().isOk());
+			    .andExpect(status().is3xxRedirection());
 		
 		assertEquals(commentNum+1,commentRepository.count());
 		assertEquals(userCommentNum+1,userRepository.findById(userId).get().getComments().size());
@@ -276,7 +276,7 @@ public class ExercisePostControllerTest {
 				.session(session)
 				.param("commentId", commentId.toString()))
 		//Then
-				.andExpect(status().isOk());
+				.andExpect(status().is3xxRedirection());
 		
 		assertEquals(commentNum-1,commentRepository.count());
 		assertEquals(userCommentNum-1, userRepository.findById(userId).get().getComments().size());

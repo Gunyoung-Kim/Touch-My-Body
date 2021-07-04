@@ -687,6 +687,15 @@
 
     4. communityForManage (css,js
 
+### 2021.7.4
+
+- Error 
+
+    1. 운동 정보 추가 할때 이름 중복될때 사용되는 ErrorCode, Exception, ExceptionHandler 추가 
+
+- Template
+
+    1. addExercise (js,html)
 --- 
 
 ## To do List
