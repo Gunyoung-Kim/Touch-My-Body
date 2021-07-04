@@ -689,6 +689,24 @@
 
 ### 2021.7.4
 
+- UserController
+
+    1. User의 개인 정보 화면 반환하는 메소드 추가 
+
+    2. User의 작성한 댓글 화면 반환하는 메소드 추가 
+
+    3. User의 작성한 게시글 화면 반환하는 메소드 추가 
+
+- UserRestController
+
+    1. User의 댓글 삭제 처리하는 메소드 추가
+
+    2. User의 게시글 삭제 처리하는 메소드 추가 
+
+- DTO
+
+    1. UserProfileDTO - 내 정보 보기에서 보여줄 정보 담는 객체 
+
 - Error 
 
     1. 운동 정보 추가 할때 이름 중복될때 사용되는 ErrorCode, Exception, ExceptionHandler 추가 
@@ -696,6 +714,13 @@
 - Template
 
     1. addExercise (js,html)
+
+    2. profilePostList (css,js,html)
+
+    3. userProfile (css,js,html)
+
+    4. profileCommentList (js,html)
+  
 --- 
 
 ## To do List
