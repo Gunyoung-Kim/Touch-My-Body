@@ -3,7 +3,7 @@ const goToAdd = () => {
 }
 
 const goToModify = (exerciseId) => {
-
+    location.href = '/manager/exercise/modify/' + exerciseId;
 }
 
 const goToDelete = (exerciseId) => {

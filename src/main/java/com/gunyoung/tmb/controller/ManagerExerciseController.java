@@ -5,14 +5,19 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
+import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForTableDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.utils.PageUtil;
 
@@ -93,9 +98,48 @@ public class ManagerExerciseController {
 	 * @param mav
 	 * @return
 	 */
-	@RequestMapping(value="/manager/exercise/modify", method = RequestMethod.GET) 
-	public ModelAndView modifyExerciseView(ModelAndView mav)  {
+	@RequestMapping(value="/manager/exercise/modify/{exerciseId}", method = RequestMethod.GET) 
+	public ModelAndView modifyExerciseView(@PathVariable("exerciseId") Long exerciseId, ModelAndView mav)  {
+		Exercise exercise = exerciseService.findWithExerciseMusclesById(exerciseId);
+	
+		if(exercise == null) {
+			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByIdNotFoundedError.getDescription());
+		}
+		
+		AddExerciseDTO dto = AddExerciseDTO.of(exercise); 
+		
+		List<String> targetTypeKoreanNames = new ArrayList<>();
+		
+		for(TargetType t: TargetType.values()) {
+			targetTypeKoreanNames.add(t.getKoreanName());
+		}
+		
+		mav.addObject("exerciseId", exerciseId);
+		mav.addObject("exerciseInfo", dto);
+		mav.addObject("targetTypes", targetTypeKoreanNames);
+		
+		mav.setViewName("modifyExercise");
 		return mav;
+	}
+	
+	/**
+	 * 
+	 * @param exerciseId
+	 * @param dto
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	@RequestMapping(value="/manager/exercise/modify/{exerciseId}",method=RequestMethod.POST) 
+	public ModelAndView modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute AddExerciseDTO dto) {
+		Exercise exercise = exerciseService.findById(exerciseId);
+		
+		if(exercise == null) {
+			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByIdNotFoundedError.getDescription());
+		}
+		
+		exerciseService.saveWithAddExerciseDTO(exercise, dto);
+		
+		return new ModelAndView("redirect:/manager/exercise"); 
 	}
 	
 }

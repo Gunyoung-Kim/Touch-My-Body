@@ -271,9 +271,10 @@ public class ExerciseServiceTest {
 		long exerciseNum =  exerciseRepository.count();
 		long exerciseMuscleNum = exerciseMuscleRepository.count();
 		
+		Exercise exercise = new Exercise();
 		//When,Then
 		assertThrows(MuscleNotFoundedException.class, () -> {
-			exerciseService.saveWithAddExerciseDTO(dto);
+			exerciseService.saveWithAddExerciseDTO(exercise,dto);
 		});
 		
 		
@@ -305,10 +306,10 @@ public class ExerciseServiceTest {
 		
 		long exerciseNum =  exerciseRepository.count();
 		long exerciseMuscleNum = exerciseMuscleRepository.count();
-		
+		Exercise exercise = new Exercise();
 		//When
 		assertThrows(TargetTypeNotFoundedException.class, () -> {
-			exerciseService.saveWithAddExerciseDTO(dto);
+			exerciseService.saveWithAddExerciseDTO(exercise,dto);
 		});
 		
 		//Then
@@ -339,9 +340,9 @@ public class ExerciseServiceTest {
 		
 		long exerciseNum =  exerciseRepository.count();
 		long exerciseMuscleNum = exerciseMuscleRepository.count();
-		
+		Exercise exercise = new Exercise();
 		//When
-		Exercise result = exerciseService.saveWithAddExerciseDTO(dto);
+		Exercise result = exerciseService.saveWithAddExerciseDTO(exercise,dto);
 		
 		//Then
 		assertEquals(exerciseNum+1, exerciseRepository.count());

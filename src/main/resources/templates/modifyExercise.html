@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include ="fragments.html :: head"></head>
+  <head>
+    <link rel="stylesheet" href="/css/modifyExercise.css">
+  </head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+
+    <div id="main-title" class="py-5 text-center">
+      <h2>운동 정보 추가</h2>
+    </div>
+
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-sm-12">
+          <form method="post" th:object="${exerciseInfo}">
+            <div class="form-group">
+              <label class="form-label">운동 이름</label>
+              <input type="text" id="name" th:value="*{name}">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">운동에 대한 설명</label>
+              <textarea name="description" id="description" rows="8" cols="80" th:text="*{description}"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">운동하는 방법</label>
+              <textarea name="movement" id="movement" rows="8" cols="80" th:text="*{movement}"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">운동 시 주의 사항</label>
+              <textarea name="caution" id="caution" rows="8" cols="80" th:text="*{caution}"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">운동 부위</label>
+              <select class="" name="target" id="target">
+                <option th:each="target:${targetTypes}" th:value="${target}" th:text="${target}">
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">자극 근육</label>
+              <button type="button" class="btn" onclick="addMuscle()">추가</button>
+              <div class="" id="muscleInput">
+
+              </div>
+            </div>
+            <button type="button" id="submitButton" class="btn btn-black" th:onclick="|modifyExercise(${exerciseId})|">운동 정보 수정</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div th:replace="fragments.html :: footer"></div>
+    </footer>
+    <script type="text/javascript" th:src="@{/js/modifyExercise.js}"></script>
+  </body>
+</html>

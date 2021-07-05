@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
 import com.gunyoung.tmb.dto.response.MuscleInfoBySortDTO;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
+import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
 
@@ -34,7 +37,12 @@ public class ManagerExerciseRestController {
 	 */
 	@RequestMapping(value="/manager/exercise/add" ,method = RequestMethod.POST)
 	public void addExercise(@ModelAttribute AddExerciseDTO dto,ModelAndView mav) {
-		exerciseService.saveWithAddExerciseDTO(dto);
+		if(exerciseService.existsByName(dto.getName())) {
+			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.ExerciseNameDuplicatedError.getDescription());
+		}
+		
+		Exercise exercise = new Exercise();
+		exerciseService.saveWithAddExerciseDTO(exercise,dto);
 	}
 	
 	@RequestMapping(value="/manager/exercise/remove" ,method = RequestMethod.DELETE) 

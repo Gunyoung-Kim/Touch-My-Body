@@ -18,10 +18,8 @@ import com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO;
 import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
-import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
-import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
@@ -100,6 +98,18 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Exercise findWithExerciseMusclesById(Long id) {
+		Optional<Exercise> result = exerciseRepository.findWithExerciseMusclesById(id);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+	
+	/**
 	 * 모든 운동 페이지로 가져오기 
 	 * @author kimgun-yeong
 	 */
@@ -159,23 +169,15 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	/**
-	 * @param dto 클라이언트로부터 받은 Exercise 추가하기 위한 DTO 객체
+	 * @param dto 클라이언트로부터 받은 Exercise save하기 위한 DTO 객체
 	 * @author kimgun-yeong
 	 */
 	@Override
-	public Exercise saveWithAddExerciseDTO(AddExerciseDTO dto) {
-		
-		if(exerciseRepository.existsByName(dto.getName())) {
-			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.ExerciseNameDuplicatedError.getDescription());
-		}
-		
-		// Exercise 객체 생성
-		Exercise exercise = Exercise.builder()
-				.name(dto.getName())
-				.description(dto.getDescription())
-				.caution(dto.getCaution())
-				.movement(dto.getMovement())
-				.build();
+	public Exercise saveWithAddExerciseDTO(Exercise exercise,AddExerciseDTO dto) {
+		exercise.setName(dto.getName());
+		exercise.setDescription(dto.getDescription());
+		exercise.setCaution(dto.getCaution());
+		exercise.setMovement(dto.getMovement());
 		
 		// AddExerciseDTO에 입력된 target에 해당하는 TargetType 있는지 확인
 		boolean isTargetTypeExist = false;
@@ -330,5 +332,15 @@ public class ExerciseServiceImpl implements ExerciseService {
 		dto.setSubMuscle(subMuscleBuilder.toString());
 		
 		return dto;
+	}
+
+	/**
+	 * 해당 이름의 운동이 존재하는지
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public boolean existsByName(String name) {
+		return exerciseRepository.existsByName(name);
 	}
 }

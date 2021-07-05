@@ -12,8 +12,10 @@ import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 public interface ExerciseService {
 	public Exercise findById(Long id);
 	public Exercise findByName(String name);
+	
 	public Exercise findWithFeedbacksById(Long id);
 	public Exercise findWithExercisePostsByName(String name);
+	public Exercise findWithExerciseMusclesById(Long id);
 	
 	public Page<Exercise> findAllInPage(Integer pageNumber,int page_size);
 	public Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber,int page_size);
@@ -21,7 +23,7 @@ public interface ExerciseService {
 	public Map<String, List<String>> getAllExercisesNamewithSorting();
 	
 	public Exercise save(Exercise exercise);
-	public Exercise saveWithAddExerciseDTO(AddExerciseDTO dto);
+	public Exercise saveWithAddExerciseDTO(Exercise exercise, AddExerciseDTO dto);
 	
 	public void delete(Exercise exercise);
 	public void deleteById(Long id);
@@ -30,4 +32,6 @@ public interface ExerciseService {
 	public long countAllWithNameKeyword(String nameKeyword);
 	
 	public ExerciseForInfoViewDTO getExerciseForInfoViewDTOByExerciseId(Long exerciseId);
+	
+	public boolean existsByName(String name);
 }
