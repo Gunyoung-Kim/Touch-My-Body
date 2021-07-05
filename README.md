@@ -729,6 +729,12 @@
 
     2. 게시글 추가 처리하는 메소드 추가 
 
+- ManagerExerciseController
+
+    1. 운동 정보 수정 화면 반환하는 매소드 추가 
+
+    2. 운동 정보 수정 처리하는 메소드 추가 
+
 - DTO
 
     1. AddExercisePostDTO - 게시글 추가할때 사용되는 객체 추가 
@@ -736,6 +742,8 @@
 - ExerciseRepository
 
     1. ExericsePost와 페치조인하는 쿼리 추가 (이름으로 검색)
+
+    2. ExerciseMuscles와 페치조인하는 쿼리 추가 (ID로 검색)
 
 - ExercisePostService -> Impl에 구현, 하위항목에 대한 테스트 코드 작성
 
@@ -745,9 +753,14 @@
 
     1. ExericsePost와 페치조인하는 메소드 추가 (이름으로 검색)
 
+    2. ExerciseMuscles와 페치조인하는 메소드 추가 (ID로 검색)
+
 - Template
 
     1. addExercisePost(js,html)
+
+    2. modifyExercise (js,html)
+
 --- 
 
 ## To do List
