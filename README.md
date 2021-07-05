@@ -721,6 +721,33 @@
 
     4. profileCommentList (js,html)
   
+### 2021.7.5
+
+- ExercisePostController
+
+    1. 게시글 작성 화면 반환하는 메소드 추가 
+
+    2. 게시글 추가 처리하는 메소드 추가 
+
+- DTO
+
+    1. AddExercisePostDTO - 게시글 추가할때 사용되는 객체 추가 
+
+- ExerciseRepository
+
+    1. ExericsePost와 페치조인하는 쿼리 추가 (이름으로 검색)
+
+- ExercisePostService -> Impl에 구현, 하위항목에 대한 테스트 코드 작성
+
+    1. User, Exercise 와 관계 짓고 저장하는 메소드 추가 
+
+- ExerciseService -> Impl에 구현
+
+    1. ExericsePost와 페치조인하는 메소드 추가 (이름으로 검색)
+
+- Template
+
+    1. addExercisePost(js,html)
 --- 
 
 ## To do List
