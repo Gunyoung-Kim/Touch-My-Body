@@ -15,24 +15,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.domain.exercise.Comment;
+import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.reqeust.AddCommentDTO;
+import com.gunyoung.tmb.dto.reqeust.AddExercisePostDTO;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.CommentErrorCode;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.notmatch.UserNotMatchException;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
+import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.PageUtil;
 import com.gunyoung.tmb.utils.SessionUtil;
@@ -48,6 +53,8 @@ public class ExercisePostController {
 	private final CommentService commentService;
 	
 	private final UserService userService;
+	
+	private final ExerciseService exerciseService;
 	
 	private final HttpSession session;
 	
@@ -155,6 +162,51 @@ public class ExercisePostController {
 		mav.addObject("comments", comments);
 		
 		return mav;
+	}
+	
+	/**
+	 * 게시글 작성하는 화면 반환하는 메소드
+	 * @param mav
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	@RequestMapping(value="/community/post/addpost", method = RequestMethod.GET)
+	public ModelAndView addExercisePostView(ModelAndView mav) {
+		mav.setViewName("addExercisePost");
+		
+		return mav;
+	}
+	
+	/**
+	 * 게시글 추가 처리하는 메소드 
+	 * @param dto
+	 * @param mav
+	 * @return
+	 */
+	@RequestMapping(value="/community/post/addpost", method = RequestMethod.POST) 
+	public ModelAndView addExercisePost(@ModelAttribute AddExercisePostDTO dto, ModelAndView mav) {
+		Long userId = SessionUtil.getLoginUserId(session);
+		
+		User user = userService.findfWithExercisePostsById(userId);
+		
+		if(user == null) {
+			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+		}
+		
+		Exercise exercise = exerciseService.findWithExercisePostsByName(dto.getExerciseName());
+		
+		if(exercise == null) {
+			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByNameNotFoundedError.getDescription());
+		}
+		
+		ExercisePost exercisePost = ExercisePost.builder()
+				.title(dto.getTitle())
+				.contents(dto.getContents())
+				.build();
+		
+		exercisePostService.saveWithUserAndExercise(exercisePost, user, exercise);
+		
+		return new ModelAndView("redirect:/community");
 	}
 	
 	/**

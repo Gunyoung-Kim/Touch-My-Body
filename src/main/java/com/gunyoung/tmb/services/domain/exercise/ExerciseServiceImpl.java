@@ -87,6 +87,19 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	/**
+	 * 
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Exercise findWithExercisePostsByName(String name) {
+		Optional<Exercise> result = exerciseRepository.findWithExercisePostsByName(name);
+		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+	
+	/**
 	 * 모든 운동 페이지로 가져오기 
 	 * @author kimgun-yeong
 	 */

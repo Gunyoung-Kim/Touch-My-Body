@@ -357,6 +357,41 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
+	 * public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exericse)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("User, Exercise와 연결 짓고 저장하기 ->정상")
+	public void saveWithUserAndExerciseTest() {
+		//Given
+		User user = getUserInstance();
+		
+		userRepository.save(user);
+		
+		Exercise exercise = getExerciseInstance();
+		
+		exerciseRepository.save(exercise);
+		
+		ExercisePost exercisePost = ExercisePost.builder()
+				.title("new Title")
+				.contents("new contents")
+				.build();
+		
+		long exercisePostNum = exercisePostRepository.count();
+		int userExercisePostsNum = user.getExercisePosts().size();
+		int exerciseExercisePostsNum = exercise.getExercisePosts().size();
+		
+		//When
+		
+		exercisePostService.saveWithUserAndExercise(exercisePost, user, exercise);
+		
+		//Then
+		assertEquals(exercisePostNum +1, exercisePostRepository.count());
+		assertEquals(userExercisePostsNum +1, userRepository.findById(user.getId()).get().getExercisePosts().size());
+		assertEquals(exerciseExercisePostsNum +1, exerciseRepository.findById(exercise.getId()).get().getExercisePosts().size());
+	}
+	
+	/*
 	 *  public void delete(ExercisePost exercisePost)
 	 */
 	

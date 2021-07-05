@@ -148,6 +148,21 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	}
 
 	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exericse) {
+		user.getExercisePosts().add(exercisePost);
+		
+		exericse.getExercisePosts().add(exercisePost);
+		
+		exercisePost.setUser(user);
+		exercisePost.setExercise(exericse);
+		
+		return save(exercisePost);
+	}
+	
+	/**
 	 * @param exercisePost 삭제하려는 ExercisePost
 	 * @author kimgun-yeong
 	 */

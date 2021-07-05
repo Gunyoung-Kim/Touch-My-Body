@@ -1,11 +1,8 @@
 package com.gunyoung.tmb.controller.rest;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -16,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.DateDTO;
-import com.gunyoung.tmb.dto.response.ExerciseInfoBySortDTO;
 import com.gunyoung.tmb.dto.response.UserExerciseWithDateDTO;
-import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 import com.gunyoung.tmb.utils.SessionUtil;
 
@@ -31,8 +26,6 @@ public class UserExcerciseRestController {
 	private final HttpSession session;
 	
 	private final UserExerciseService userExerciseService;
-	
-	private final ExerciseService exerciseService;
 	
 	/**
 	 * 
@@ -49,24 +42,5 @@ public class UserExcerciseRestController {
 		List<UserExercise> userExerciseList = userExerciseService.findByUserIdAndDate(userId, paramDate);
 		
 		return UserExerciseWithDateDTO.of(userExerciseList);
-	}
-	
-	/**
-	 * 각 부위별 운동 종류 반환하는 메소드
-	 * @return
-	 * @author kimgun-yeong
-	 */
-	@RequestMapping(value="/user/exercise/calendar/addrecord/getexercises",method=RequestMethod.GET)
-	public List<ExerciseInfoBySortDTO> getExercisesByNameAndTarget() {
-		List<ExerciseInfoBySortDTO> resultList = new ArrayList<>();
-		Map<String ,List<String>> map = exerciseService.getAllExercisesNamewithSorting();
-		
-		Set<String> keySet = map.keySet();
-		
-		for(String key: keySet) {
-			resultList.add(new ExerciseInfoBySortDTO(key,map.get(key)));
-		}
-		
-		return resultList;
 	}
 }

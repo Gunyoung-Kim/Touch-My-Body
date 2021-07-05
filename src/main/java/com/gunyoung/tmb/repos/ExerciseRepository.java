@@ -20,6 +20,11 @@ public interface ExerciseRepository extends JpaRepository<Exercise,Long>{
 			+ "WHERE e.id = :exerciseId")
 	public Optional<Exercise> findWithFeedbacksById(@Param("exerciseId") Long exerciseId);
 	
+	@Query("SELECT e FROM Exercise e "
+			+ "LEFT JOIN FETCH e.exercisePosts ep "
+			+ "WHERE e.name = :exerciseName")
+	public Optional<Exercise> findWithExercisePostsByName(@Param("exerciseName")String name);
+	
 	public Page<Exercise> findAll(Pageable pageable);
 	
 	/**

@@ -2,7 +2,9 @@ package com.gunyoung.tmb.services.domain.exercise;
 
 import org.springframework.data.domain.Page;
 
+import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
@@ -22,6 +24,7 @@ public interface ExercisePostService {
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType target,String keyword ,Integer pageNumber, int pageSize);
 	
 	public ExercisePost save(ExercisePost exercisePost);
+	public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exericse);
 	
 	public void delete(ExercisePost exercisePost);
 	public void deleteById(Long id);
