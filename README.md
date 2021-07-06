@@ -769,6 +769,10 @@
 
     2. 근육 추가 처리하는 메소드 추가
 
+    3. 근육 수정 화면 반환하는 메소드 추가 
+
+    4. 근육 수정 처리하는 메소드 추가 
+
 - DTO
 
     1. AddMuscleDTO - Muscle 추가 및 수정할떄 사용되는 객체
@@ -779,7 +783,9 @@
 
 - Template 
 
-    1. addMuscle(html)   
+    1. addMuscle(html) 
+
+    2. modifyMuscle(html)  
 
 --- 
 
