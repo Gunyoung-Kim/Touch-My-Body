@@ -777,6 +777,12 @@
 
     1. 운동 별 피드백 리스트 화면 반환하는 메소드 추가 
 
+    2. 피드백 상세화면 반환하는 메소드 추가
+
+- ManagerFeedbackRestController
+
+    1. 피드백 반영 처리하는 메소드 추가 
+
 - FeedbackRepository
 
     1. 주어진 Exercise ID에 해당하는 Feedback들 페이징 처리해서 가져오는 쿼리 추가 
@@ -784,6 +790,8 @@
     2. 1번과 동일하지만 반환형이 FeedbackManageListDTO인 쿼리 추가 
 
     3. 주어진 Exercise ID를 만족하는 Feedback 개수 가져오는 쿼리 추가 
+
+    4. FeedbackViewDTO으로 매칭해서 가져오는 쿼리 추가
 
 - FeedbackService -> Impl에 구현, 테스트 코드 작성
 
@@ -795,9 +803,13 @@
 
     2. FeedbackManageListDTO - 피드백 리스트 화면 구성하기 위해 사용되는 객체 
 
+    3. FeedbackViewDTO - 피드백 정보 화면에 사용되는 객체
+
 - Error 
 
     1. Muscle Name Duplication 관련 에러코드, Exception, ExceptionHandler 추가 
+
+    2. Feedback Not Founded 관현 에러코드, Exception, ExceptionHandler 추가 
 
 - Template 
 
@@ -806,6 +818,8 @@
     2. modifyMuscle(html)  
 
     3. feedbackListViewForManage (css,js,html)
+
+    4. feedbackView (js,css,html)
 
 --- 
 
