@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head th:include="fragments.html::head"></head>
   <head>
-    <link rel="stylesheet" href="/css/exerciseListViewForManage.css">
+    <link rel="stylesheet" href="/css/feedbackListViewForManage.css">
   </head>
   <body>
     <header>
@@ -10,36 +10,34 @@
     </header>
 
     <div id="main-title" class="py-5 text-center">
-      <h2>운동 정보 관리하기</h2>
+      <h2>운동 정보 관련 피드백</h2>
     </div>
 
-    <button type="button" class="btn ml-3 addBtn" onclick="goToAdd()">운동 종류 추가</button>
+    <div class="text-center">
+      <h4 th:text="|< ${exerciseName} >|"></h4>
+    </div>
 
     <div class="main_container">
-      <div class="search" style="float: right;">
-        <form class="mb-3 mr-3" method="get">
-          <input type="text" name="keyword" placeholder="이름 검색">
-          <input type="submit" name="" value="검색">
-        </form>
-      </div>
-
       <table class="table table-striped text-center" >
         <thead>
           <tr>
-            <th scope="col">종류</th>
-            <th scope="col" colspan="2">이름</th>
+            <th scope="col">운동 종류</th>
+            <th scope="col">작성자</th>
+            <th scope="col" colspan="2">제목</th>
+            <th scope="col">작성일</th>
             <th scope="col">관리</th>
           </tr>
         </thead>
 
         <tbody>
           <tr th:each="object:${listObject}">
-            <td th:text="${object.target}"></td>
-            <td th:text="${object.name}" colspan="2"></td>
+            <td th:text="${object.exerciseName}"></td>
+            <td th:text="${object.userNickName}"></td>
+            <td th:text="${object.title}" colspan="2"></td>
+            <td th:text="|${object.createdAt.toLocalDate()} ${object.createdAt.getHour()} : ${object.createdAt.getMinute()}|"></td>
             <td>
-              <button type="button" class="btn modifyBtn" th:onclick="|goToModify(${object.id})|">수정</button>
-              <button type="button" class="btn deleteBtn" th:onclick="|goToDelete(${object.id})|">삭제</button>
-              <button type="button" class="btn feedbackBtn" th:onclick="|goToFeedback(${object.id})|">피드백 보기</button>
+              <button type="button" class="btn showBtn" th:onclick="|showFeedback(${object.id})|">보기</button>
+              <button type="button" class="btn reflectBtn" th:onclick="|reflectBtn(${object.id})|">반영완료</button>
             </td>
           </tr>
         </tbody>
@@ -74,6 +72,6 @@
     <footer>
     	<div th:replace="fragments.html :: footer"></div>
     </footer>
-    <script type="text/javascript" th:src="@{/js/exerciseListViewForManage.js}"></script>
+    <script type="text/javascript" th:src="@{/js/feedbackListViewForManage.js}"></script>
   </body>
 </html>

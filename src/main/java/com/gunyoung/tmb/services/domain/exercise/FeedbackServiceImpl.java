@@ -2,12 +2,15 @@ package com.gunyoung.tmb.services.domain.exercise;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +39,27 @@ public class FeedbackServiceImpl implements FeedbackService {
 		if(result.isEmpty())
 			return null;
 		return result.get();
+	}
+	
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Page<Feedback> findAllByExerciseIdByPage(Long exerciseId, Integer pageNum, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNum-1, pageSize);
+		return feedbackRepository.findAllByExerciseIdByPage(exerciseId, pageRequest);
+	}
+	
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public Page<FeedbackManageListDTO> findAllForFeedbackManageListDTOByExerciseIdByPage(Long exerciseId,
+			Integer pageNum, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNum-1, pageSize);
+		return feedbackRepository.findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, pageRequest);
 	}
 
 	/**
@@ -83,5 +107,14 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 		
 		feedbackRepository.delete(feedback);
+	}
+
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public long countByExerciseId(Long exerciseId) {
+		return feedbackRepository.countByExerciseId(exerciseId);
 	}
 }

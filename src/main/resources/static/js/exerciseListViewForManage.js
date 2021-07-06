@@ -6,6 +6,10 @@ const goToModify = (exerciseId) => {
     location.href = '/manager/exercise/modify/' + exerciseId;
 }
 
+const goToFeedback = (exerciseId) => {
+  location.href = '/manager/exercise/feedback/' + exerciseId;
+}
+
 const goToDelete = (exerciseId) => {
   $.ajax({
     url: '/manager/exercise/remove',

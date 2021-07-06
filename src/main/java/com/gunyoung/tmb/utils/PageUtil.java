@@ -10,7 +10,9 @@ public class PageUtil {
 	public static final int COMMENT_FOR_MANAGE_PAGE_SIZE = 30;
 	public static final int POST_FOR_MANAGE_PAGE_SIZE = 30;
 	public static final int MUSCLE_FOR_MANAGE_PAGE_SIZE = 30;
+	public static final int FEEDBACK_FOR_MANAGE_PAGE_SIZE = 20;
 	
 	public static final int COMMENT_FOR_PROFILE_PAGE_SIZE = 30;
 	public static final int POST_FOR_PROFILE_PAGE_SIZE = 30;
+
 }

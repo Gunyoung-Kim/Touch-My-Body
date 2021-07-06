@@ -23,6 +23,7 @@ import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
+import com.gunyoung.tmb.utils.PageUtil;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
@@ -98,6 +99,34 @@ public class FeedbackServiceTest {
 		
 		assertEquals(result != null, true);
 		
+	}
+	
+	/*
+	 * public Page<Feedback> findAllByExerciseIdByPage(Long exerciseId, Integer pageNum, int pageSize)
+	 */
+	@Test
+	@Transactional
+	@DisplayName("Exercise ID로 Feedback 페이징 처리해서 찾기 -> 정상")
+	public void findAllByExerciseIdByPageTest() {
+		//Given
+		int pageSize = PageUtil.FEEDBACK_FOR_MANAGE_PAGE_SIZE;
+		Exercise exercise = getExerciseInstance();
+		exerciseRepository.save(exercise);
+		
+		List<Feedback> feedbacks = feedbackRepository.findAll();
+		
+		for(Feedback f: feedbacks) {
+			f.setExercise(exercise);
+		}
+		
+		feedbackRepository.saveAll(feedbacks);
+		
+		//When
+		System.out.println(exercise.getId());
+		List<Feedback> result = feedbackService.findAllByExerciseIdByPage(exercise.getId(), 1, pageSize).getContent();
+		
+		//Then
+		assertEquals(result.size(),Math.min(INIT_FEEDBACK_NUM, pageSize));
 	}
 	
 	/*
