@@ -37,7 +37,7 @@
             <td th:text="${object.category}"></td>
             <td th:text="${object.name}" colspan="2"></td>
             <td>
-              <button type="button" class="btn modifyBtn" th:onclick="|goToModify(&{object.id})|">수정</button>
+              <button type="button" class="btn modifyBtn" th:onclick="|goToModify(${object.id})|">수정</button>
               <button type="button" class="btn deleteBtn" th:onclick="|goToDelete(${object.id})|">삭제</button>
             </td>
           </tr>

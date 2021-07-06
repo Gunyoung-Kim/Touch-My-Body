@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html :: head"></head>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+
+    <div id="main-title" class="py-5 text-center">
+      <h2>근육 정보 추가</h2>
+    </div>
+
+    <div class="container">
+      <div class="col-sm-8">
+        <form method="post" th:object="${muscleInfo}">
+          <div class="form-group mb-3">
+            <label>이름</label>
+            <input type="text" name="name" th:field="*{name}">
+          </div>
+
+          <div class="form-group mb-3">
+            <label>카테고리</label>
+            <select name="category">
+              <span th:each="type:${targetTypes}">
+                <option th:if="|!type.equals(*{category})|" th:value="${type}" th:text="${type}"></option>
+              </span>
+              <option th:if="|type.equals(*{category})|"  th:value="*{category}" th:text="*{category}" selected></option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn">근육 정보 수정</button>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <div th:replace="fragments.html :: footer"></div>
+    </footer>
+  </body>
+</html>

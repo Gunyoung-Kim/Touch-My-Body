@@ -3,7 +3,7 @@ const goToAdd = () => {
 }
 
 const goToModify = (muscleId) => {
-
+  location.href = '/manager/muscle/modify/' + muscleId;
 }
 
 const goToDelete = (muscleId) => {

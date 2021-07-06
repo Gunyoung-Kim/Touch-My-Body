@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.MuscleNameDuplicationFoundedException;
+import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
 import com.gunyoung.tmb.utils.PageUtil;
@@ -124,14 +126,54 @@ public class ManagerMuscleController {
 		return new ModelAndView("redirect:/manager/muscle");
 	}
 	
-	@RequestMapping(value="/manager/muscle/modify", method = RequestMethod.GET)
-	public ModelAndView modifyMuscleView(ModelAndView mav) {
+	/**
+	 * 
+	 * @param muscleId
+	 * @param mav
+	 * @return
+	 */
+	@RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.GET)
+	public ModelAndView modifyMuscleView(@PathVariable("muscleId") Long muscleId, ModelAndView mav) {
+		Muscle muscle = muscleService.findById(muscleId);
+		
+		if(muscle == null) {
+			throw new MuscleNotFoundedException(MuscleErrorCode.MuscleNotFoundedError.getDescription());
+		}
+		
+		List<String> targetTypeStrings = new ArrayList<>();
+		for(TargetType tt: TargetType.values()) {
+			targetTypeStrings.add(tt.getKoreanName());
+		}
+		
+		mav.addObject("muscleInfo", AddMuscleDTO.of(muscle));
+		mav.addObject("targetTypes", targetTypeStrings);
+		mav.setViewName("modifyMuscle");
+		
 		return mav;
 	}
 	
-	@RequestMapping(value="/manager/muscle/modify", method = RequestMethod.POST)
-	public ModelAndView modifyMuscle(@ModelAttribute AddMuscleDTO dto) {
+	/**
+	 * 
+	 * @param muscleId
+	 * @param dto
+	 * @return
+	 */
+	@RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.POST)
+	public ModelAndView modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute AddMuscleDTO dto) {
+		Muscle muscle = muscleService.findById(muscleId);
 		
-		return new ModelAndView("redirect:/manager/muscle/modify");
+		if(muscle == null) {
+			throw new MuscleNotFoundedException(MuscleErrorCode.MuscleNotFoundedError.getDescription());
+		}
+		
+		if(!muscle.getName().equals(dto.getName()) && muscleService.existsByName(dto.getName())) {
+			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MuscleNameDuplicationFoundedError.getDescription());
+		}
+		
+		muscle = AddMuscleDTO.toMuscle(muscle, dto);
+		
+		muscleService.save(muscle);
+		
+		return new ModelAndView("redirect:/manager/muscle");
 	}
 }
