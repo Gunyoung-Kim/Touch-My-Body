@@ -761,6 +761,26 @@
 
     2. modifyExercise (js,html)
 
+### 2021.7.6
+
+- ManagerMuscleController
+
+    1. 근육 추가 화면 반환하는 메소드 추가 
+
+    2. 근육 추가 처리하는 메소드 추가
+
+- DTO
+
+    1. AddMuscleDTO - Muscle 추가 및 수정할떄 사용되는 객체
+
+- Error 
+
+    1. Muscle Name Duplication 관련 에러코드, Exception, ExceptionHandler 추가 
+
+- Template 
+
+    1. addMuscle(html)   
+
 --- 
 
 ## To do List
