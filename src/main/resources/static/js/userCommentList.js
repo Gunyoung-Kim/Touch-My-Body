@@ -2,13 +2,16 @@ const deleteComment = (userId,commentId) => {
   $.ajax({
     url: '/manager/usermanage/'+ userId+'/comments/remove',
     method: 'DELETE',
-    data: {"comment_id": commentId}
+    data: {"comment_id": commentId},
+
+    error:function(request,status,error){
+      alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+    }
   }).done(function(data, textStatus, xhr) {
     if(xhr.status == 200) {
-      location.href = '/manager/usermanage/'+ userId+'/comments';
-    } else {
-      alert("오류 발생!" + xhr.status);
-      location.href = '/manager/usermanage/'+ userId+'/comments';
+      alert("댓글 삭제 완료");
     }
+
+    location.href = '/manager/usermanage/'+ userId+'/comments';
   })
 }

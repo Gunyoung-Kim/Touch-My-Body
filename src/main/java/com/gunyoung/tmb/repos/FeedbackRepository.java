@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.repos;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,8 +10,21 @@ import org.springframework.data.repository.query.Param;
 
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
+import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
 
 public interface FeedbackRepository extends JpaRepository<Feedback,Long>{
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT new com.gunyoung.tmb.dto.response.FeedbackViewDTO (f.id, f.title, f.content, u.nickName, e.name, f.createdAt) FROM Feedback f "
+			+ "INNER JOIN f.user u "
+			+ "INNER JOIN f.exercise e "
+			+ "WHERE f.id = :feedbackId")
+	public Optional<FeedbackViewDTO> findForFeedbackViewDTOById(@Param("feedbackId") Long id);
 	
 	/**
 	 * 

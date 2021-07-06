@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.gunyoung.tmb.error.codes.CommentErrorCode;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
+import com.gunyoung.tmb.error.codes.FeedbackErrorCode;
 import com.gunyoung.tmb.error.codes.JoinErrorCode;
 import com.gunyoung.tmb.error.codes.LikeErrorCode;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
@@ -21,6 +22,7 @@ import com.gunyoung.tmb.error.exceptions.duplication.NickNameDuplicationFoundedE
 import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
@@ -108,6 +110,12 @@ public class ErrorController {
 	@ExceptionHandler(CommentNotFoundedException.class)
 	public ErrorMsg commentNotFounded(CommentNotFoundedException e) {
 		return new ErrorMsg(CommentErrorCode.CommentNotFoundedError.getCode(),e.getMessage());
+	}
+	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ExceptionHandler(FeedbackNotFoundedException.class)
+	public ErrorMsg feedbackNotFounded(FeedbackNotFoundedException e) {
+		return new ErrorMsg(FeedbackErrorCode.FeedbackNotFoundedError.getDescription(),e.getMessage());
 	}
 	
 	/*

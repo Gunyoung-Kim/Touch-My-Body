@@ -6,9 +6,11 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
+import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
 
 public interface FeedbackService {
 	public Feedback findById(Long id);
+	public FeedbackViewDTO findForFeedbackViewDTOById(Long id);
 	
 	public Page<Feedback> findAllByExerciseIdByPage(Long exerciseId, Integer pageNum, int pageSize);
 	public Page<FeedbackManageListDTO> findAllForFeedbackManageListDTOByExerciseIdByPage(Long exerciseId,Integer pageNum, int pageSize);

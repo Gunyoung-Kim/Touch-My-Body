@@ -2,14 +2,17 @@ const deletePost = (postId) => {
   $.ajax({
     url: '/user/profile/myposts/remove',
     method: 'DELETE',
-    data: {"postId": postId}
+    data: {"postId": postId},
+    error:function(request,status,error){
+      alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+    }
   }).done(function(data,textStatus, xhr) {
     if(xhr.status == 200) {
-      location.href = '/manager/usermanage/' + userId + '/posts';
+      alert("게시글 삭제 완료: " +postId);
     } else {
       alert("오류 발생!" + xhr.status);
-      location.href = '/manager/usermanage/' + userId + '/posts';
     }
+    location.href = '/manager/usermanage/' + userId + '/posts';
   })
 }
 

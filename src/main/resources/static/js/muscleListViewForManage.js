@@ -10,7 +10,10 @@ const goToDelete = (muscleId) => {
   $.ajax({
     url: '/manager/muscle/remove',
     method: 'DELETE',
-    data: {"muscleId": muscleId}
+    data: {"muscleId": muscleId},
+    error:function(request,status,error){
+      alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+    }
   }).done(function(data,textStatus,xhr){
     if(xhr.status == 200) {
       location.href = '/manager/muscle';

@@ -11,6 +11,7 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
+import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,18 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public Feedback findById(Long id) {
 		Optional<Feedback> result = feedbackRepository.findById(id);
 		if(result.isEmpty())
+			return null;
+		return result.get();
+	}
+	
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public FeedbackViewDTO findForFeedbackViewDTOById(Long id) {
+		Optional<FeedbackViewDTO> result = feedbackRepository.findForFeedbackViewDTOById(id);
+		if(result.isEmpty()) 
 			return null;
 		return result.get();
 	}

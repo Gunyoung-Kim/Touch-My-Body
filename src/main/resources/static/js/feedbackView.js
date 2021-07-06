@@ -1,7 +1,3 @@
-const showFeedback = (feedbackId) => {
-  location.href = '/manager/exercise/feedback/detail/' + feedbackId;
-}
-
 const reflectFeedback = (feedbackId) => {
   $.ajax({
     url: '/manager/exercise/feedback/reflect/' + feedbackId,

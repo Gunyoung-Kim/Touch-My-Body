@@ -37,7 +37,7 @@
             <td th:text="|${object.createdAt.toLocalDate()} ${object.createdAt.getHour()} : ${object.createdAt.getMinute()}|"></td>
             <td>
               <button type="button" class="btn showBtn" th:onclick="|showFeedback(${object.id})|">보기</button>
-              <button type="button" class="btn reflectBtn" th:onclick="|reflectBtn(${object.id})|">반영완료</button>
+              <button type="button" class="btn reflectBtn" th:onclick="|reflectFeedback(${object.id})|">반영완료</button>
             </td>
           </tr>
         </tbody>

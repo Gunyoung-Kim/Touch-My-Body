@@ -1,0 +1,25 @@
+.content {
+  width:80%;
+  margin: 30px auto;
+}
+
+.writeComment {
+  width:80%;
+  margin: 30px auto;
+}
+
+.feedbackWriter {
+  font-size: 1em;
+}
+
+.feedbackCreatedAt {
+  float: right;
+}
+
+.feedbackContent {
+  font-size: 1.17em;
+}
+
+.mainText {
+  height: 400px;
+}

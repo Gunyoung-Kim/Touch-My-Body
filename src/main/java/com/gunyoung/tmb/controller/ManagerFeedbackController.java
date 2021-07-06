@@ -10,8 +10,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
+import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
+import com.gunyoung.tmb.error.codes.FeedbackErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
 import com.gunyoung.tmb.utils.PageUtil;
@@ -54,6 +57,26 @@ public class ManagerFeedbackController {
 		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
 		
 		mav.setViewName("feedbackListViewForManage");
+		
+		return mav;
+	}
+	
+	/**
+	 * 
+	 * @param feedbackId
+	 * @param mav
+	 * @return
+	 */
+	@RequestMapping(value="/manager/exercise/feedback/detail/{feedbackId}" ,method = RequestMethod.GET) 
+	public ModelAndView feedbackView(@PathVariable("feedbackId") Long feedbackId, ModelAndView mav) {
+		FeedbackViewDTO dto = feedbackService.findForFeedbackViewDTOById(feedbackId);
+		
+		if(dto == null) {
+			throw new FeedbackNotFoundedException(FeedbackErrorCode.FeedbackNotFoundedError.getDescription());
+		}
+		
+		mav.addObject("feedbackInfo", dto);
+		mav.setViewName("feedbackView");
 		
 		return mav;
 	}

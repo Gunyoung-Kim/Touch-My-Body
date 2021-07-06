@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head th:include="fragments.html::head"></head>
+  <head>
+    <link rel="stylesheet" href="/css/feedbackView.css">
+  </head>
+  <body>
+    <header>
+      <div th:replace="fragments.html :: main-nav"></div>
+    </header>
+
+    <div id="main-title" class="py-5 text-center">
+      <h2>피드백 정보</h2>
+    </div>
+
+    <div class="content" th:object="${feedbackInfo}">
+      <div class="title">
+        <h3 th:text="|[*{exerciseName}]*{title}|"></h3>
+      </div>
+
+      <hr>
+
+      <div class="writerAndTime">
+        <span class="feedbackWriter" th:text="*{userNickName}"></span>
+        <small class="feedbackCreatedAt" th:text="|${feedbackInfo.createdAt.toLocalDate()} ${feedbackInfo.createdAt.getHour()} : ${feedbackInfo.createdAt.getMinute()}|"></small>
+      </div>
+
+      <hr>
+
+      <div class="mainText">
+        <pre class="feedbackContent" th:text="*{content}"></pre>
+      </div>
+
+      <hr>
+      <button type="button" class="btn btn-black" th:onclick="|reflectFeedback(${feedbackInfo.id})|">반영 완료</button>
+    </div>
+
+
+    <footer>
+      <div th:replace="fragments.html :: footer"></div>
+    </footer>
+
+    <script type="text/javascript" th:src="@{/js/feedbackView.js}"></script>
+  </body>
+</html>
