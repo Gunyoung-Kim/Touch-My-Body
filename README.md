@@ -771,11 +771,29 @@
 
     3. 근육 수정 화면 반환하는 메소드 추가 
 
-    4. 근육 수정 처리하는 메소드 추가 
+    4. 근육 수정 처리하는 메소드 추가
+
+- ManagerFeedbackController
+
+    1. 운동 별 피드백 리스트 화면 반환하는 메소드 추가 
+
+- FeedbackRepository
+
+    1. 주어진 Exercise ID에 해당하는 Feedback들 페이징 처리해서 가져오는 쿼리 추가 
+
+    2. 1번과 동일하지만 반환형이 FeedbackManageListDTO인 쿼리 추가 
+
+    3. 주어진 Exercise ID를 만족하는 Feedback 개수 가져오는 쿼리 추가 
+
+- FeedbackService -> Impl에 구현, 테스트 코드 작성
+
+    1. FeedbackRepository 추가한 쿼리 실행하는 메소드들 추가 
 
 - DTO
 
     1. AddMuscleDTO - Muscle 추가 및 수정할떄 사용되는 객체
+
+    2. FeedbackManageListDTO - 피드백 리스트 화면 구성하기 위해 사용되는 객체 
 
 - Error 
 
@@ -786,6 +804,8 @@
     1. addMuscle(html) 
 
     2. modifyMuscle(html)  
+
+    3. feedbackListViewForManage (css,js,html)
 
 --- 
 
