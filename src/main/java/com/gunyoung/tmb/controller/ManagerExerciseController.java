@@ -17,6 +17,7 @@ import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForTableDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
+import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.utils.PageUtil;
@@ -135,6 +136,10 @@ public class ManagerExerciseController {
 		
 		if(exercise == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByIdNotFoundedError.getDescription());
+		}
+		
+		if(!exercise.getName().equals(dto.getName()) && exerciseService.existsByName(dto.getName())) {
+			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.ExerciseNameDuplicatedError.getDescription());
 		}
 		
 		exerciseService.saveWithAddExerciseDTO(exercise, dto);

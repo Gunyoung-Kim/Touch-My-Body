@@ -47,4 +47,11 @@ public interface MuscleRepository extends JpaRepository<Muscle,Long> {
 			+ "WHERE m.name LIKE %:keyword%")
 	public long countAllWithNamekeyword(@Param("keyword") String keyword);
 	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public boolean existsByName(String name);
+	
 }	

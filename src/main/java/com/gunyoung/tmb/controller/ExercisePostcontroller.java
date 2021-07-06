@@ -265,8 +265,6 @@ public class ExercisePostController {
 		
 		if(SessionUtil.getLoginUserId(session) != commentUser.getId()) {
 			throw new UserNotMatchException(UserErrorCode.UserNotMatchError.getDescription());
-			
-			// 추후에 매니저나 관리자는 통과되게 구현할지 고민 
 		}
 		
 		commentService.delete(comment);

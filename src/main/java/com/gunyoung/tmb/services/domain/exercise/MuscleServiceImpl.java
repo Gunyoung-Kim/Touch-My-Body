@@ -146,4 +146,13 @@ public class MuscleServiceImpl implements MuscleService {
 		return muscleRepository.countAllWithNamekeyword(keyword);
 	}
 
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public boolean existsByName(String name) {
+		return muscleRepository.existsByName(name);
+	}
+
 }

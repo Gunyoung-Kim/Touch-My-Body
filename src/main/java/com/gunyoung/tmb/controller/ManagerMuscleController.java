@@ -5,13 +5,20 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
+import com.gunyoung.tmb.dto.reqeust.AddMuscleDTO;
 import com.gunyoung.tmb.dto.response.MuscleForTableDTO;
+import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.codes.MuscleErrorCode;
+import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
+import com.gunyoung.tmb.error.exceptions.duplication.MuscleNameDuplicationFoundedException;
+import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
 import com.gunyoung.tmb.utils.PageUtil;
 
@@ -61,13 +68,59 @@ public class ManagerMuscleController {
 		return mav;
 	}
 	
+	/**
+	 * 근육 추가 화면 반환하는 메소드 
+	 * @param mav
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	@RequestMapping(value="/manager/muscle/add" , method= RequestMethod.GET)
 	public ModelAndView addMuscleView(ModelAndView mav) {
+		List<String> targetTypeStrings = new ArrayList<>();
+		for(TargetType tt: TargetType.values()) {
+			targetTypeStrings.add(tt.getKoreanName());
+		}
+		
+		mav.addObject("targetTypes", targetTypeStrings);
+		mav.setViewName("addMuscle");
+		
 		return mav;
 	}
 	
+	/**
+	 * 근육 추가 처리하는 메소드
+	 * @param dto
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	@RequestMapping(value="/manager/muscle/add" ,method=RequestMethod.POST)
-	public ModelAndView addMuscle() {
+	public ModelAndView addMuscle(@ModelAttribute AddMuscleDTO dto) {
+		if(muscleService.existsByName(dto.getName())) {
+			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MuscleNameDuplicationFoundedError.getDescription());
+		}
+		
+		TargetType newMusclesCategory = null;
+		
+		String category = dto.getCategory();
+		
+		for(TargetType tt: TargetType.values()) {
+			if(tt.getKoreanName().equals(category)) {
+				newMusclesCategory = tt;
+				break;
+			}
+		}
+		
+		if(newMusclesCategory == null) {
+			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TargetTypeNotFoundedError.getDescription());
+		}
+		
+		Muscle newMuscle = Muscle.builder()
+				.name(dto.getName())
+				.category(newMusclesCategory)
+				.build();
+		
+		muscleService.save(newMuscle);
+		
 		return new ModelAndView("redirect:/manager/muscle");
 	}
 	
@@ -77,7 +130,7 @@ public class ManagerMuscleController {
 	}
 	
 	@RequestMapping(value="/manager/muscle/modify", method = RequestMethod.POST)
-	public ModelAndView modifyMuscle(ModelAndView mav) {
+	public ModelAndView modifyMuscle(@ModelAttribute AddMuscleDTO dto) {
 		
 		return new ModelAndView("redirect:/manager/muscle/modify");
 	}

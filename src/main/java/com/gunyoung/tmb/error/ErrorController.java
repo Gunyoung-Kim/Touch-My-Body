@@ -16,6 +16,7 @@ import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.EmailDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoundedException;
+import com.gunyoung.tmb.error.exceptions.duplication.MuscleNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.duplication.NickNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
@@ -55,6 +56,12 @@ public class ErrorController {
 	@ExceptionHandler(ExerciseNameDuplicationFoundedException.class) 
 	public ErrorMsg exerciseNameDuplicated(ExerciseNameDuplicationFoundedException e) {
 		return new ErrorMsg(ExerciseErrorCode.ExerciseNameDuplicatedError.getCode(),e.getMessage());
+	}
+	
+	@ResponseStatus(HttpStatus.CONFLICT) 
+	@ExceptionHandler(MuscleNameDuplicationFoundedException.class)
+	public ErrorMsg muscleNameDuplicated(MuscleNameDuplicationFoundedException e) {
+		return new ErrorMsg(MuscleErrorCode.MuscleNameDuplicationFoundedError.getCode(),e.getMessage());
 	}
 	
 	/*

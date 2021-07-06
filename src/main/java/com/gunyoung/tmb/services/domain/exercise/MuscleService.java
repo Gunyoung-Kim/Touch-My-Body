@@ -23,4 +23,6 @@ public interface MuscleService {
 	
 	public long countAll();
 	public long countAllWithNameKeyword(String keyword);
+	
+	public boolean existsByName(String name);
 }
