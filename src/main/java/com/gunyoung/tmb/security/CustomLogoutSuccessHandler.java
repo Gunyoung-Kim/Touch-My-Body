@@ -16,12 +16,17 @@ import com.gunyoung.tmb.utils.SessionUtil;
 @Component
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
+	/**
+	 * 로그아웃 성공시 실행되는 로직 <br>
+	 * @author kimgun-yeong
+	 */
 	@Override
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 			throws IOException, ServletException {
 		HttpSession session = request.getSession();
 		
-		SessionUtil.removeLoginUserId(session);
+		SessionUtil.clearSession(session);
+		//SessionUtil.removeLoginUserId(session);
 		response.sendRedirect("/");
 	}
 

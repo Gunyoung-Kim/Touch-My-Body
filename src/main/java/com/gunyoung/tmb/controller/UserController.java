@@ -66,6 +66,8 @@ public class UserController {
 	public ModelAndView index(ModelAndView mav) {
 		mav.setViewName("index");
 		
+		System.out.println(SessionUtil.getLoginUserId(session));
+		
 		return mav;
 	}
 	
