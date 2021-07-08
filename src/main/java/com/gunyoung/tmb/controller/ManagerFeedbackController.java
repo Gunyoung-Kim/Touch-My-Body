@@ -42,7 +42,7 @@ public class ManagerFeedbackController {
 		Exercise exercise = exerciseService.findById(exerciseId);
 		
 		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByIdNotFoundedError.getDescription());
+			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		int pageSize = PageUtil.FEEDBACK_FOR_MANAGE_PAGE_SIZE;
@@ -72,7 +72,7 @@ public class ManagerFeedbackController {
 		FeedbackViewDTO dto = feedbackService.findForFeedbackViewDTOById(feedbackId);
 		
 		if(dto == null) {
-			throw new FeedbackNotFoundedException(FeedbackErrorCode.FeedbackNotFoundedError.getDescription());
+			throw new FeedbackNotFoundedException(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		mav.addObject("feedbackInfo", dto);

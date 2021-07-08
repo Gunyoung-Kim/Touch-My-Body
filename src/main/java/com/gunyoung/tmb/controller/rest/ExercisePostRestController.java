@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.CommentLike;
@@ -57,18 +58,19 @@ public class ExercisePostRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/addLike",method = RequestMethod.POST)
+	@LoginIdSessionNotNull
 	public void addLikeToExercisePost(@PathVariable("post_id") Long postId) {
 		Long userId = SessionUtil.getLoginUserId(session);
 		
 		User user = userService.findWithPostLikesById(userId);
 		
 		if(user == null)
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		
 		ExercisePost exercisePost = exercisePostService.findWithPostLikesById(postId);
 		
 		if(exercisePost == null) 
-			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.ExercisePostNotFoundedError.getDescription());
+			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
 		
 		postLikeService.saveWithUserAndExercisePost(user, exercisePost);
 	}
@@ -78,13 +80,14 @@ public class ExercisePostRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/removeLike",method = RequestMethod.POST)
+	@LoginIdSessionNotNull
 	public void removeLikeToExercisePost(@PathVariable("post_id") Long postId) {
 		Long userId = SessionUtil.getLoginUserId(session);
 		
 		PostLike postLike = postLikeService.findByUserIdAndExercisePostId(userId, postId);
 		
 		if(postLike == null) 
-			throw new LikeNotFoundedException(LikeErrorCode.LikeNotFoundedError.getDescription());
+			throw new LikeNotFoundedException(LikeErrorCode.LIKE_NOT_FOUNDED_ERROR.getDescription());
 		
 		postLikeService.delete(postLike);
 	}
@@ -96,6 +99,7 @@ public class ExercisePostRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/comment/addlike",method = RequestMethod.POST)
+	@LoginIdSessionNotNull
 	public void addLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId) {
 		// 세션에 저장된 현재 접속자의 id 가져와서 이를 통해 User 객체 가져옴
 		Long userId = SessionUtil.getLoginUserId(session);
@@ -103,13 +107,13 @@ public class ExercisePostRestController {
 		User user = userService.findWithCommentLikesById(userId);
 		
 		if(user == null) 
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		
 		// commentId로 comment 가져옴
 		Comment comment = commentService.findWithCommentLikesById(commentId);
 		
 		if(comment == null) 
-			throw new CommentNotFoundedException(CommentErrorCode.CommentNotFoundedError.getDescription());
+			throw new CommentNotFoundedException(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getDescription());
 		
 		commentLikeService.saveWithUserAndComment(user, comment);
 	}
@@ -121,13 +125,14 @@ public class ExercisePostRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/comment/removelike",method = RequestMethod.POST)
+	@LoginIdSessionNotNull
 	public void removeLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId) { 
 		Long userId = SessionUtil.getLoginUserId(session);	
 		
 		CommentLike commentLike = commentLikeService.findByUserIdAndCommentId(userId, commentId);
 		
 		if(commentLike == null) 
-			throw new LikeNotFoundedException(LikeErrorCode.LikeNotFoundedError.getDescription());
+			throw new LikeNotFoundedException(LikeErrorCode.LIKE_NOT_FOUNDED_ERROR.getDescription());
 		
 		commentLikeService.delete(commentLike);
 	}

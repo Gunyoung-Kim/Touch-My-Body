@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum LikeErrorCode {
 	
-	LikeNotFoundedError("LK001","Like is not founded!")
+	LIKE_NOT_FOUNDED_ERROR("LK001","Like is not founded!")
 	
 	;
 	private String code;

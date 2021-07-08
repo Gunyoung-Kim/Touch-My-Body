@@ -15,6 +15,11 @@ public class ManagerMuscleRestController {
 	
 	private final MuscleService muscleService;
 	
+	/**
+	 * 
+	 * @param muscleId
+	 * @author kimgun-yeong
+	 */
 	@RequestMapping(value="/manager/muscle/remove" ,method = RequestMethod.DELETE)
 	public void removeMuscle(@RequestParam("muscleId") Long muscleId) {
 		muscleService.deleteById(muscleId);

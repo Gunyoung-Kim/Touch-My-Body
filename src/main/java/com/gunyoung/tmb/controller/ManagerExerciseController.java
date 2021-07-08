@@ -104,7 +104,7 @@ public class ManagerExerciseController {
 		Exercise exercise = exerciseService.findWithExerciseMusclesById(exerciseId);
 	
 		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByIdNotFoundedError.getDescription());
+			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		AddExerciseDTO dto = AddExerciseDTO.of(exercise); 
@@ -135,11 +135,11 @@ public class ManagerExerciseController {
 		Exercise exercise = exerciseService.findById(exerciseId);
 		
 		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByIdNotFoundedError.getDescription());
+			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		if(!exercise.getName().equals(dto.getName()) && exerciseService.existsByName(dto.getName())) {
-			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.ExerciseNameDuplicatedError.getDescription());
+			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getDescription());
 		}
 		
 		exerciseService.saveWithAddExerciseDTO(exercise, dto);

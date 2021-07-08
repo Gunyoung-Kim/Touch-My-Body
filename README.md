@@ -821,6 +821,12 @@
 
     4. feedbackView (js,css,html)
 
+### 2021.7.7
+
+- RedisSessionConfig
+
+    1. Redis-Cli로 Lettuce 채택
+
 --- 
 
 ## To do List

@@ -27,7 +27,7 @@ public class ManagerFeedbackRestController {
 		Feedback feedback = feedbackService.findById(feedbackId);
 		
 		if(feedback == null) {
-			throw new FeedbackNotFoundedException(FeedbackErrorCode.FeedbackNotFoundedError.getDescription());
+			throw new FeedbackNotFoundedException(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		feedback.setReflected(true);

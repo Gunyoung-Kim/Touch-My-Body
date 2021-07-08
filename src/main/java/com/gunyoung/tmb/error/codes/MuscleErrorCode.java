@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum MuscleErrorCode {
 	
-	MuscleNotFoundedError("M001","Muscle is not founded"),
-	MuscleNameDuplicationFoundedError("M002","Duplication for muscle name is founded")
+	MUSCLE_NOT_FOUNDED_ERROR("M001","Muscle is not founded"),
+	MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR("M002","Duplication for muscle name is founded")
 	;
 	private String code;
 	private String description;

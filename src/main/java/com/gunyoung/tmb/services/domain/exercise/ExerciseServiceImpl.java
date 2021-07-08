@@ -190,7 +190,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 		}
 		
 		if(!isTargetTypeExist) {
-			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TargetTypeNotFoundedError.getDescription());
+			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		// Main Muscle 들 이름으로 Muscle 객체들 가져오기
@@ -201,7 +201,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 			Muscle muscle = muscleService.findByName(muscleName);
 			
 			if(muscle == null)
-				throw new MuscleNotFoundedException(MuscleErrorCode.MuscleNotFoundedError.getDescription());
+				throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
 			
 			mainMuscles.add(muscle);
 		}
@@ -214,7 +214,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 			Muscle muscle = muscleService.findByName(muscleName);
 			
 			if(muscle == null)
-				throw new MuscleNotFoundedException(MuscleErrorCode.MuscleNotFoundedError.getDescription());
+				throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
 			
 			subMuscles.add(muscle);
 		}

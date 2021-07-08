@@ -1,5 +1,9 @@
 package com.gunyoung.tmb.error;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -25,6 +29,7 @@ import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedExceptio
 import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.nonexist.SessionAttributesNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.notmatch.UserNotMatchException;
@@ -45,25 +50,25 @@ public class ErrorController {
 	@ResponseStatus(HttpStatus.CONFLICT)
 	@ExceptionHandler(EmailDuplicationFoundedException.class)
 	public ErrorMsg emailDuplicated(EmailDuplicationFoundedException e) {
-		return new ErrorMsg(JoinErrorCode.EmailDuplicationFound.getCode(),e.getMessage());
+		return new ErrorMsg(JoinErrorCode.EMAIL_DUPLICATION_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
 	@ResponseStatus(HttpStatus.CONFLICT)
 	@ExceptionHandler(NickNameDuplicationFoundedException.class)
 	public ErrorMsg nickNameDuplicated(NickNameDuplicationFoundedException e) {
-		return new ErrorMsg(JoinErrorCode.NickNameDuplicationFound.getCode(),e.getMessage());
+		return new ErrorMsg(JoinErrorCode.NICKNAME_DUPLICATION_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
 	@ResponseStatus(HttpStatus.CONFLICT)
 	@ExceptionHandler(ExerciseNameDuplicationFoundedException.class) 
 	public ErrorMsg exerciseNameDuplicated(ExerciseNameDuplicationFoundedException e) {
-		return new ErrorMsg(ExerciseErrorCode.ExerciseNameDuplicatedError.getCode(),e.getMessage());
+		return new ErrorMsg(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getCode(),e.getMessage());
 	}
 	
 	@ResponseStatus(HttpStatus.CONFLICT) 
 	@ExceptionHandler(MuscleNameDuplicationFoundedException.class)
 	public ErrorMsg muscleNameDuplicated(MuscleNameDuplicationFoundedException e) {
-		return new ErrorMsg(MuscleErrorCode.MuscleNameDuplicationFoundedError.getCode(),e.getMessage());
+		return new ErrorMsg(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
 	/*
@@ -73,49 +78,49 @@ public class ErrorController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ExceptionHandler(UserNotFoundedException.class)
 	public ErrorMsg userNotFounded(UserNotFoundedException e) {
-		return new ErrorMsg(UserErrorCode.UserNotFoundedError.getCode(),e.getMessage());
+		return new ErrorMsg(UserErrorCode.USER_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ExceptionHandler(ExerciseNotFoundedException.class)
 	public ErrorMsg exerciseNotFounded(ExerciseNotFoundedException e) {
-		return new ErrorMsg(ExerciseErrorCode.ExerciseByNameNotFoundedError.getCode(),e.getMessage());
+		return new ErrorMsg(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ExceptionHandler(MuscleNotFoundedException.class)
 	public ErrorMsg muscleNotFounded(MuscleNotFoundedException e) {
-		return new ErrorMsg(MuscleErrorCode.MuscleNotFoundedError.getCode(),e.getMessage());
+		return new ErrorMsg(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ExceptionHandler(ExercisePostNotFoundedException.class)
 	public ErrorMsg exercisePostNotFounded(ExercisePostNotFoundedException e) {
-		return new ErrorMsg(ExercisePostErrorCode.ExercisePostNotFoundedError.getCode(),e.getMessage());
+		return new ErrorMsg(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ExceptionHandler(TargetTypeNotFoundedException.class)
 	public ErrorMsg targetTypeNotFounded(TargetTypeNotFoundedException e) {
-		return new ErrorMsg(TargetTypeErrorCode.TargetTypeNotFoundedError.getCode(),e.getMessage());
+		return new ErrorMsg(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ExceptionHandler(LikeNotFoundedException.class)
 	public ErrorMsg likeNotFounded(LikeNotFoundedException e) {
-		return new ErrorMsg(LikeErrorCode.LikeNotFoundedError.getCode(),e.getMessage());
+		return new ErrorMsg(LikeErrorCode.LIKE_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ExceptionHandler(CommentNotFoundedException.class)
 	public ErrorMsg commentNotFounded(CommentNotFoundedException e) {
-		return new ErrorMsg(CommentErrorCode.CommentNotFoundedError.getCode(),e.getMessage());
+		return new ErrorMsg(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ExceptionHandler(FeedbackNotFoundedException.class)
 	public ErrorMsg feedbackNotFounded(FeedbackNotFoundedException e) {
-		return new ErrorMsg(FeedbackErrorCode.FeedbackNotFoundedError.getDescription(),e.getMessage());
+		return new ErrorMsg(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
 	/*
@@ -125,7 +130,7 @@ public class ErrorController {
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	@ExceptionHandler(UserNotMatchException.class)
 	public ErrorMsg userNotMatch(UserNotMatchException e) {
-		return new ErrorMsg(UserErrorCode.UserNotMatchError.getCode(), e.getMessage());
+		return new ErrorMsg(UserErrorCode.USER_NOT_MATCH_ERROR.getCode(), e.getMessage());
 	}
 	
 	/*
@@ -135,6 +140,21 @@ public class ErrorController {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(SearchCriteriaInvalidException.class)
 	public ErrorMsg searchCriteriaInvalid(SearchCriteriaInvalidException e) {
-		return new ErrorMsg(SearchCriteriaErrorCode.OrderByCriteriaError.getCode(),e.getMessage());
+		return new ErrorMsg(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getCode(),e.getMessage());
+	}
+	
+	/*
+	 *  --------------------- REDIRECT ------------------------------------------------
+	 */
+	
+	@ResponseStatus(HttpStatus.MOVED_PERMANENTLY)
+	@ExceptionHandler(SessionAttributesNotFoundedException.class)
+	public void sessionAttributesNotFounded(SessionAttributesNotFoundedException e,HttpServletResponse response) {
+		try {
+			response.sendRedirect("/login");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }

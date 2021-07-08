@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ExercisePostErrorCode {
 	
-	ExercisePostNotFoundedError("EP001","Exercise's post is not founded");
+	EXERCISE_POST_NOT_FOUNDED_ERROR("EP001","Exercise's post is not founded");
 	
 	private String code;
 	private String description;

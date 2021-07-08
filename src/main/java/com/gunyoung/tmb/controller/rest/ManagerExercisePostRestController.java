@@ -15,6 +15,11 @@ public class ManagerExercisePostRestController {
 	
 	private final ExercisePostService exercisePostService;
 	
+	/**
+	 * 
+	 * @param postId
+	 * @author kimgun-yeong
+	 */
 	@RequestMapping(value="/manager/community/remove/post", method = RequestMethod.DELETE)
 	public void removeExercisePostByManager(@RequestParam("postId") Long postId) {
 		exercisePostService.deleteById(postId);

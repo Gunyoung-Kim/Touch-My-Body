@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum JoinErrorCode {
 	
-	EmailDuplicationFound("J001","Email duplication is founded"),
-	NickNameDuplicationFound("J002","Nickname duplication is founded")
+	EMAIL_DUPLICATION_FOUNDED_ERROR("J001","Email duplication is founded"),
+	NICKNAME_DUPLICATION_FOUNDED_ERROR("J002","Nickname duplication is founded")
 	
 	;
 	private String code;

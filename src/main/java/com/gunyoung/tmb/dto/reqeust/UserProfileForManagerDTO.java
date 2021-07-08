@@ -42,7 +42,7 @@ public class UserProfileForManagerDTO {
 		}
 		
 		if(newRole == null) {
-			throw new RoleNotFoundedException(UserErrorCode.RoleNotFoundedError.getDescription());
+			throw new RoleNotFoundedException(UserErrorCode.ROLE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		user.setRole(newRole);

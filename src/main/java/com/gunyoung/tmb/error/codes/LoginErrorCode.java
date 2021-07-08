@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum LoginErrorCode {
 	
-	UnrecognizedRole("L001","Role is Unrecognized");
+	UNRECOGNIZED_ROLE_ERROR("L001","Role is Unrecognized");
 	
 	private String code;
 	private String description;

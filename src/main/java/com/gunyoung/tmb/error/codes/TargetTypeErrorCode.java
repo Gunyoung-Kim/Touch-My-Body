@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum TargetTypeErrorCode {
 	
-	TargetTypeNotFoundedError("T001","There is no such Target Type")
+	TARGET_TYPE_NOT_FOUNDED_ERROR("T001","There is no such Target Type")
 	
 	;
 	private String code;

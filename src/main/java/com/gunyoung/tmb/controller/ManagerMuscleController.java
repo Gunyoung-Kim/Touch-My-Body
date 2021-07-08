@@ -98,7 +98,7 @@ public class ManagerMuscleController {
 	@RequestMapping(value="/manager/muscle/add" ,method=RequestMethod.POST)
 	public ModelAndView addMuscle(@ModelAttribute AddMuscleDTO dto) {
 		if(muscleService.existsByName(dto.getName())) {
-			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MuscleNameDuplicationFoundedError.getDescription());
+			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
 		TargetType newMusclesCategory = null;
@@ -113,7 +113,7 @@ public class ManagerMuscleController {
 		}
 		
 		if(newMusclesCategory == null) {
-			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TargetTypeNotFoundedError.getDescription());
+			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		Muscle newMuscle = Muscle.builder()
@@ -137,7 +137,7 @@ public class ManagerMuscleController {
 		Muscle muscle = muscleService.findById(muscleId);
 		
 		if(muscle == null) {
-			throw new MuscleNotFoundedException(MuscleErrorCode.MuscleNotFoundedError.getDescription());
+			throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		List<String> targetTypeStrings = new ArrayList<>();
@@ -163,11 +163,11 @@ public class ManagerMuscleController {
 		Muscle muscle = muscleService.findById(muscleId);
 		
 		if(muscle == null) {
-			throw new MuscleNotFoundedException(MuscleErrorCode.MuscleNotFoundedError.getDescription());
+			throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		if(!muscle.getName().equals(dto.getName()) && muscleService.existsByName(dto.getName())) {
-			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MuscleNameDuplicationFoundedError.getDescription());
+			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
 		muscle = AddMuscleDTO.toMuscle(muscle, dto);

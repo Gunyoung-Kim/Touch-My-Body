@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum FeedbackErrorCode {
 	
-	FeedbackNotFoundedError("F001","Feedback is not founded")
+	FEEDBACK_NOT_FOUNDED_ERROR("F001","Feedback is not founded")
 	
 	;
 	private String code;

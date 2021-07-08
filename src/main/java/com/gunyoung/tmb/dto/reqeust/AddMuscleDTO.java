@@ -48,7 +48,7 @@ public class AddMuscleDTO {
 		}
 		
 		if(newMusclesCategory == null) {
-			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TargetTypeNotFoundedError.getDescription());
+			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		muscle.setCategory(newMusclesCategory);

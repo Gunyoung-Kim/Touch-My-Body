@@ -71,7 +71,7 @@ public class ExerciseController {
 		ExerciseForInfoViewDTO dto = exerciseService.getExerciseForInfoViewDTOByExerciseId(exerciseId);
 		
 		if(dto == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByIdNotFoundedError.getDescription());
+			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		mav.setViewName("exerciseInfo");

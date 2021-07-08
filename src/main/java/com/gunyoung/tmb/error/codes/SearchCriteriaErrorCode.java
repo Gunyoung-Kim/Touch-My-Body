@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum SearchCriteriaErrorCode {
 	
-	OrderByCriteriaError("S001","Criteria for order by is unvalid")
+	ORDER_BY_CRITERIA_ERROR("S001","Criteria for order by is unvalid")
 	;
 	private String code;
 	private String description;

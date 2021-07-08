@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
@@ -66,8 +67,6 @@ public class UserController {
 	public ModelAndView index(ModelAndView mav) {
 		mav.setViewName("index");
 		
-		System.out.println(SessionUtil.getLoginUserId(session));
-		
 		return mav;
 	}
 	
@@ -106,13 +105,13 @@ public class UserController {
 		String email = formModel.getEmail();
 		
 		if(userService.existsByEmail(email)) {
-			throw new EmailDuplicationFoundedException(JoinErrorCode.EmailDuplicationFound.getDescription());
+			throw new EmailDuplicationFoundedException(JoinErrorCode.EMAIL_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
 		String nickName = formModel.getNickName();
 		
 		if(userService.existsByNickName(nickName)) {
-			throw new NickNameDuplicationFoundedException(JoinErrorCode.NickNameDuplicationFound.getDescription());
+			throw new NickNameDuplicationFoundedException(JoinErrorCode.NICKNAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
 		// 비밀번호 암호화
@@ -128,13 +127,14 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value="/user/profile",method=RequestMethod.GET)
+	@LoginIdSessionNotNull
 	public ModelAndView profileView(ModelAndView mav) {
 		Long userId = SessionUtil.getLoginUserId(session);
 		
 		User user = userService.findById(userId);
 		
 		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		UserProfileDTO dto = UserProfileDTO.of(user);
@@ -152,13 +152,14 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value="/user/profile/mycomments", method=RequestMethod.GET)
+	@LoginIdSessionNotNull
 	public ModelAndView myCommentsView(ModelAndView mav,@RequestParam(value="page", required=false,defaultValue="1") Integer page
 			,@RequestParam(value="order", defaultValue="desc") String order) {
 		Long userId = SessionUtil.getLoginUserId(session);
 		
 		User user = userService.findById(userId);
 		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		int pageSize = PageUtil.COMMENT_FOR_PROFILE_PAGE_SIZE;
@@ -170,7 +171,7 @@ public class UserController {
 		} else if(order.equals("desc")) {
 			pageResult = commentService.findAllByUserIdOrderByCreatedAtDESC(userId,page,pageSize);
 		} else {
-			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.OrderByCriteriaError.getDescription());
+			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 		}
 		long totalPageNum = commentService.countByUserId(userId)/pageSize+1;
 		
@@ -204,13 +205,14 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value="/user/profile/myposts",method=RequestMethod.GET)
+	@LoginIdSessionNotNull
 	public ModelAndView myPostsView(ModelAndView mav, @RequestParam(value="page", required=false,defaultValue="1") Integer page
 			,@RequestParam(value="order", defaultValue="desc") String order ) {
 		Long userId = SessionUtil.getLoginUserId(session);
 		
 		User user = userService.findById(userId);
 		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		int pageSize = PageUtil.POST_FOR_PROFILE_PAGE_SIZE;
 		
@@ -221,7 +223,7 @@ public class UserController {
 		} else if(order.equals("desc")) {
 			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(userId,page,pageSize);
 		} else {
-			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.OrderByCriteriaError.getDescription());
+			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 		}
 		
 		long totalPageNum = exercisePostService.countWithUserId(userId)/pageSize+1;

@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum CommentErrorCode {
 	
-	CommentNotFoundedError("C001","Can't find such comment")
+	COMMENT_NOT_FOUNDED_ERROR("C001","Can't find such comment")
 	
 	;
 	private String code;

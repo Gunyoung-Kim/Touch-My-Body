@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
@@ -66,20 +67,21 @@ public class UserExerciseController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.POST)
+	@LoginIdSessionNotNull
 	public ModelAndView addUserExercise(@ModelAttribute("formModel") AddUserExerciseDTO formModel) {
 		Long userId = SessionUtil.getLoginUserId(session);
 		//유저와 유저 운동 기록 페치 조인으로 가져옴
 		User user = userService.findWithUserExerciseById(userId);
 		
 		if(user == null) 
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		
 		UserExercise userExercise = AddUserExerciseDTO.toUserExercise(formModel);
 		
 		Exercise exercise = exerciseService.findByName(formModel.getExerciseName());
 		
 		if(exercise == null)
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByNameNotFoundedError.getDescription());
+			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription());
 		
 		userExercise.setExercise(exercise);
 		

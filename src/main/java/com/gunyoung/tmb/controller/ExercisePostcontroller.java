@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
@@ -109,7 +110,7 @@ public class ExercisePostController {
 		try {
 			type = TargetType.valueOf(targetName);
 		} catch(IllegalArgumentException e) {
-			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TargetTypeNotFoundedError.getDescription());
+			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		mav.setViewName("community");
@@ -152,7 +153,7 @@ public class ExercisePostController {
 		ExercisePostViewDTO postDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreasViewNum(postId);
 		
 		if(postDTO == null) {
-			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.ExercisePostNotFoundedError.getDescription());
+			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		List<CommentForPostViewDTO> comments = commentService.getCommentForPostViewDTOsByExercisePostId(postId);
@@ -183,20 +184,21 @@ public class ExercisePostController {
 	 * @param mav
 	 * @return
 	 */
-	@RequestMapping(value="/community/post/addpost", method = RequestMethod.POST) 
+	@RequestMapping(value="/community/post/addpost", method = RequestMethod.POST)
+	@LoginIdSessionNotNull
 	public ModelAndView addExercisePost(@ModelAttribute AddExercisePostDTO dto, ModelAndView mav) {
 		Long userId = SessionUtil.getLoginUserId(session);
 		
 		User user = userService.findfWithExercisePostsById(userId);
 		
 		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		Exercise exercise = exerciseService.findWithExercisePostsByName(dto.getExerciseName());
 		
 		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByNameNotFoundedError.getDescription());
+			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		ExercisePost exercisePost = ExercisePost.builder()
@@ -217,6 +219,7 @@ public class ExercisePostController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/addComment",method = RequestMethod.POST)
+	@LoginIdSessionNotNull
 	public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute AddCommentDTO dto,
 			@RequestParam("isAnonymous") boolean isAnonymous,HttpServletRequest request) {
 		
@@ -228,13 +231,13 @@ public class ExercisePostController {
 		User user = userService.findWithCommentsById(userId);
 		
 		if(user == null)
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		
 		// post_id 로 해당 ExercisePost 가져오기 
 		ExercisePost exercisePost = exercisePostService.findWithCommentsById(postId);
 		
 		if(exercisePost == null) 
-			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.ExercisePostNotFoundedError.getDescription());
+			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
 		
 		// request IP 가져오기 
 		String writerIp = request.getRemoteHost();
@@ -254,17 +257,18 @@ public class ExercisePostController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/removeComment",method = RequestMethod.POST)
+	@LoginIdSessionNotNull
 	public ModelAndView removeCommentToExercisePost(@PathVariable("post_id") Long postId,@RequestParam("commentId") Long commentId) {
 		Comment comment = commentService.findWithUserAndExercisePostById(commentId);
 		
 		if(comment == null) {
-			throw new CommentNotFoundedException(CommentErrorCode.CommentNotFoundedError.getDescription());
+			throw new CommentNotFoundedException(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		User commentUser = comment.getUser();
 		
 		if(SessionUtil.getLoginUserId(session) != commentUser.getId()) {
-			throw new UserNotMatchException(UserErrorCode.UserNotMatchError.getDescription());
+			throw new UserNotMatchException(UserErrorCode.USER_NOT_MATCH_ERROR.getDescription());
 		}
 		
 		commentService.delete(comment);

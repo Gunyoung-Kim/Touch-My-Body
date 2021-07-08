@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
@@ -47,7 +48,7 @@ public class FeedbackController {
 		Exercise exercise = exerciseService.findById(exerciseId);
 		
 		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByIdNotFoundedError.getDescription());
+			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		mav.setViewName("addFeedback");
@@ -62,19 +63,20 @@ public class FeedbackController {
 	 * @return
 	 */
 	@RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.POST)
+	@LoginIdSessionNotNull
 	public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId,@ModelAttribute AddFeedbackDTO dto) {
 		Long userId = SessionUtil.getLoginUserId(session);
 		
 		User user = userService.findWithFeedbacksById(userId);
 		
 		if(userId == null) {
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		Exercise exercise = exerciseService.findWithFeedbacksById(exerciseId);
 		
 		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.ExerciseByIdNotFoundedError.getDescription());
+			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		Feedback feedback = Feedback.builder()

@@ -96,7 +96,7 @@ public class ManagerUserController {
 	public ModelAndView manageUserProfileView(@PathVariable("user_id") Long userId, ModelAndView mav) {
 		User user = userService.findById(userId);
 		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 	
 		List<String> list = getManageableRoles();
@@ -119,7 +119,7 @@ public class ManagerUserController {
 	public ModelAndView manageUserProfile(@PathVariable("user_id") Long userId,@ModelAttribute UserProfileForManagerDTO dto) {
 		User user = userService.findById(userId);
 		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		try {
@@ -146,7 +146,7 @@ public class ManagerUserController {
 			,@RequestParam(value="order", defaultValue="desc") String order ,ModelAndView mav) {
 		User user = userService.findById(userId);
 		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		int pageSize = PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE;
@@ -158,7 +158,7 @@ public class ManagerUserController {
 		} else if(order.equals("desc")) {
 			pageResult = commentService.findAllByUserIdOrderByCreatedAtDESC(userId,page,pageSize);
 		} else {
-			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.OrderByCriteriaError.getDescription());
+			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 		}
 		long totalPageNum = commentService.countByUserId(userId)/pageSize+1;
 		
@@ -197,7 +197,7 @@ public class ManagerUserController {
 			,@RequestParam(value="order", defaultValue="desc") String order ,ModelAndView mav) {
 		User user = userService.findById(userId);
 		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.UserNotFoundedError.getDescription());
+			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		int pageSize = PageUtil.POST_FOR_MANAGE_PAGE_SIZE;
 		
@@ -208,7 +208,7 @@ public class ManagerUserController {
 		} else if(order.equals("desc")) {
 			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(userId,page,pageSize);
 		} else {
-			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.OrderByCriteriaError.getDescription());
+			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 		}
 		
 		long totalPageNum = exercisePostService.countWithUserId(userId)/pageSize+1;

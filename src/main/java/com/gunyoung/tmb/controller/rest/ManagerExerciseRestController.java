@@ -38,7 +38,7 @@ public class ManagerExerciseRestController {
 	@RequestMapping(value="/manager/exercise/add" ,method = RequestMethod.POST)
 	public void addExercise(@ModelAttribute AddExerciseDTO dto,ModelAndView mav) {
 		if(exerciseService.existsByName(dto.getName())) {
-			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.ExerciseNameDuplicatedError.getDescription());
+			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getDescription());
 		}
 		
 		Exercise exercise = new Exercise();

@@ -29,6 +29,12 @@ public class ManagerUserRestController {
 		commentService.deleteById(commentId);
 	}
 	
+	/**
+	 * 
+	 * @param userId
+	 * @param postId
+	 * @author kimgun-yeong
+	 */
 	@RequestMapping(value="/manager/usermanage/{user_id}/posts/remove",method = RequestMethod.DELETE) 
 	public void removePostByManager(@PathVariable("user_id") Long userId,@RequestParam("post_id") Long postId) {
 		exercisePostService.deleteById(postId);

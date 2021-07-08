@@ -5,9 +5,10 @@ import lombok.Getter;
 @Getter
 public enum UserErrorCode {
 	
-	UserNotFoundedError("U001","Can't find user"),
-	UserNotMatchError("U002", "Request user is not match to owner of source"),
-	RoleNotFoundedError("U003", "Such role is not founded")
+	USER_NOT_FOUNDED_ERROR("U001","Can't find user"),
+	USER_NOT_MATCH_ERROR("U002", "Request user is not match to owner of source"),
+	ROLE_NOT_FOUNDED_ERROR("U003", "Such role is not founded"),
+	SESSION_ATTRIBUTES_NOT_FOUNDED_ERROR("U004", "Login ID Session nonexist")
 	;
 	private String code;
 	private String description;
