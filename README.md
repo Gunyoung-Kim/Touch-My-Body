@@ -24,6 +24,8 @@
 
    - Prod: Mysql 8.0
 
+   - Session Storage: Redis
+
    - Test: H2
 
 --- 

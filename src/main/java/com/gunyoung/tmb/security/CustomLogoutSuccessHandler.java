@@ -26,7 +26,6 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 		HttpSession session = request.getSession();
 		
 		SessionUtil.clearSession(session);
-		//SessionUtil.removeLoginUserId(session);
 		response.sendRedirect("/");
 	}
 

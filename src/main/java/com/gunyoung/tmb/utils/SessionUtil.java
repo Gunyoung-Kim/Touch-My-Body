@@ -3,6 +3,7 @@ package com.gunyoung.tmb.utils;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.WebAttributes;
 
 public class SessionUtil {
 	
@@ -54,8 +55,8 @@ public class SessionUtil {
 	 * 로그인 후 리다이렉트 될 주소 세션에 저장
 	 * @author kimgun-yeong
 	 */
-	public static void setAfterLoginRedirectedUrl(HttpSession session) {
-		session.setAttribute(AFTER_LOGIN_REDIRECTED_URL, session);
+	public static void setAfterLoginRedirectedUrl(HttpSession session,String url) {
+		session.setAttribute(AFTER_LOGIN_REDIRECTED_URL, url);
 	}
 	
 	/**
@@ -72,6 +73,12 @@ public class SessionUtil {
 	 */
 	public static void removeAfterLoginRedirectedUrl(HttpSession session) {
 		session.removeAttribute(AFTER_LOGIN_REDIRECTED_URL);
+	}
+	
+	// -------------------- AUTHENTICATION ------------------------------------------------
+	
+	public static void removeAuthenticationExceptionAttributes(HttpSession session) {
+		session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
 	}
 	
 	

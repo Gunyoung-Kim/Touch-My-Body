@@ -38,4 +38,5 @@ public class LoginAspect {
 			throw new SessionAttributesNotFoundedException(UserErrorCode.SESSION_ATTRIBUTES_NOT_FOUNDED_ERROR.getDescription());
 		}
 	}
+	
 }

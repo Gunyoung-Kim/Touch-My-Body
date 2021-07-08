@@ -3,6 +3,7 @@ package com.gunyoung.tmb.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.data.domain.Page;
@@ -76,7 +77,13 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value="/login",method=RequestMethod.GET)
-	public ModelAndView loginView(ModelAndView mav) {
+	public ModelAndView loginView(HttpServletRequest request,ModelAndView mav) {
+		String redirectedUrl = request.getHeader("Referer");
+		
+		if(redirectedUrl != null && !redirectedUrl.contains("/login")) {
+			SessionUtil.setAfterLoginRedirectedUrl(session,redirectedUrl);
+		}
+		
 		mav.setViewName("login");
 		
 		return mav;
