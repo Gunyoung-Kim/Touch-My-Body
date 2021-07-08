@@ -256,7 +256,7 @@ public class ExercisePostController {
 	 * @param commentId
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/{post_id}/removeComment",method = RequestMethod.POST)
+	@RequestMapping(value="/community/post/{post_id}/removeComment",method = RequestMethod.DELETE)
 	@LoginIdSessionNotNull
 	public ModelAndView removeCommentToExercisePost(@PathVariable("post_id") Long postId,@RequestParam("commentId") Long commentId) {
 		Comment comment = commentService.findWithUserAndExercisePostById(commentId);

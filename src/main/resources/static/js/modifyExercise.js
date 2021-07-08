@@ -89,7 +89,7 @@ const modifyExercise = (exerciseId) => {
 
   $.ajax({
     url: '/manager/exercise/modify/' +exerciseId,
-    method: 'POST',
+    method: 'PUT',
     data: {"name": name, "description" : description, "movement": movement,"caution" :caution, "target" : target,
         "mainMuscles": mainMuscles, "subMuscles":subMuscles},
 

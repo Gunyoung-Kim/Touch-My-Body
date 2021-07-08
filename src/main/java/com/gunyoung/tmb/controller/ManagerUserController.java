@@ -9,7 +9,6 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,13 +18,11 @@ import org.springframework.web.servlet.ModelAndView;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
-import com.gunyoung.tmb.dto.reqeust.UserProfileForManagerDTO;
 import com.gunyoung.tmb.dto.response.CommentForManageViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostForManageViewDTO;
 import com.gunyoung.tmb.dto.response.UserManageListDTO;
 import com.gunyoung.tmb.error.codes.SearchCriteriaErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
-import com.gunyoung.tmb.error.exceptions.BusinessException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
@@ -104,34 +101,8 @@ public class ManagerUserController {
 		mav.setViewName("userProfileForManage");
 		mav.addObject("userInfo", user);
 		mav.addObject("roleList", list);
-		
+		mav.addObject("userId", userId)	;
 		return mav;
-	}
-	
-	/**
-	 * 
-	 * @param userId
-	 * @param dto
-	 * @return
-	 * @author kimgun-yeong
-	 */
-	@RequestMapping(value="/manager/usermanage/{user_id}", method = RequestMethod.POST)
-	public ModelAndView manageUserProfile(@PathVariable("user_id") Long userId,@ModelAttribute UserProfileForManagerDTO dto) {
-		User user = userService.findById(userId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
-		try {
-			UserProfileForManagerDTO.mergeUserWithUserProfileForManagerDTO(user, dto);
-		} catch(BusinessException be) {
-			throw be;
-		}
-		
-		// 만약 접속자의 것이라면 처리하는거 나중에 추가
-		userService.save(user);
-		
-		return new ModelAndView("redirect:/manager/usermanage/"+userId);
 	}
 	
 	/**

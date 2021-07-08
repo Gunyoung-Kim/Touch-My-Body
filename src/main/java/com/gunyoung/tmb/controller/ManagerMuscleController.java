@@ -147,33 +147,10 @@ public class ManagerMuscleController {
 		
 		mav.addObject("muscleInfo", AddMuscleDTO.of(muscle));
 		mav.addObject("targetTypes", targetTypeStrings);
+		mav.addObject("muscleId", muscleId);
 		mav.setViewName("modifyMuscle");
 		
 		return mav;
 	}
 	
-	/**
-	 * 
-	 * @param muscleId
-	 * @param dto
-	 * @return
-	 */
-	@RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.POST)
-	public ModelAndView modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute AddMuscleDTO dto) {
-		Muscle muscle = muscleService.findById(muscleId);
-		
-		if(muscle == null) {
-			throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
-		if(!muscle.getName().equals(dto.getName()) && muscleService.existsByName(dto.getName())) {
-			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
-		}
-		
-		muscle = AddMuscleDTO.toMuscle(muscle, dto);
-		
-		muscleService.save(muscle);
-		
-		return new ModelAndView("redirect:/manager/muscle");
-	}
 }

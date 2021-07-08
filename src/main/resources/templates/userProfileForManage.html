@@ -48,14 +48,14 @@
           </div>
 
 
-          <form method="post">
+          <form>
             <div class="form-group mb-3">
               <label>권한</label>
-              <select name="role">
+              <select name="role" id="roleSelect">
                 <option th:each="role:${roleList}" th:value="${role}" th:text="${role}"></option>
               </select>
             </div>
-            <button type="submit" class="btn">변경하기</button>
+            <button type="button" class="btn btn-black" th:onclick="|modifyUserProfile(${userId})|">변경하기</button>
           </form>
         </div>
       </div>

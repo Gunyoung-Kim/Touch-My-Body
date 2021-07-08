@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +16,6 @@ import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForTableDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
-import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.utils.PageUtil;
@@ -121,30 +119,6 @@ public class ManagerExerciseController {
 		
 		mav.setViewName("modifyExercise");
 		return mav;
-	}
-	
-	/**
-	 * 
-	 * @param exerciseId
-	 * @param dto
-	 * @return
-	 * @author kimgun-yeong
-	 */
-	@RequestMapping(value="/manager/exercise/modify/{exerciseId}",method=RequestMethod.POST) 
-	public ModelAndView modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute AddExerciseDTO dto) {
-		Exercise exercise = exerciseService.findById(exerciseId);
-		
-		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
-		if(!exercise.getName().equals(dto.getName()) && exerciseService.existsByName(dto.getName())) {
-			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getDescription());
-		}
-		
-		exerciseService.saveWithAddExerciseDTO(exercise, dto);
-		
-		return new ModelAndView("redirect:/manager/exercise"); 
 	}
 	
 }
