@@ -879,6 +879,18 @@
 
     1. Security 관련 정적 메소드 추가를 통한 코드 리팩토링
 
+### 2021.7.9
+
+- UserController
+
+    1. Login 뷰 진입할때 세션에 리다이렉트 될 URL 저장
+
+- CustomLoginSuccessHandler
+
+    1. 로그인 성공 후 리다이렉트 로직 추가 
+
+    2. 로그인 성공 후 로그인 실패 세션 내용 삭제
+
 --- 
 
 ## To do List
