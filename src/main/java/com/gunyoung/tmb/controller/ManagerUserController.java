@@ -1,6 +1,7 @@
 package com.gunyoung.tmb.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -24,11 +25,13 @@ import com.gunyoung.tmb.dto.response.UserManageListDTO;
 import com.gunyoung.tmb.error.codes.SearchCriteriaErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.request.AccessDeniedException;
 import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.PageUtil;
+import com.gunyoung.tmb.utils.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -96,7 +99,16 @@ public class ManagerUserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 	
-		List<String> list = getManageableRoles();
+		List<String> list = getReachableAuthorityStrings(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+		List<String> targetList = getReachableAuthorityStrings(SecurityUtil.getAuthoritiesByUserRoleType(user.getRole()));
+		
+		/*
+		 *  접속자의 권한이 대상 유저의 권한 보다 낮으면 예외 발생 
+		 *  권한 구조가 일자이기에 가능한 로직, 추후에 일자에서 변경 되면 이 로직도 변경 요망
+		 */
+		if(targetList.size() > list.size()) {
+			throw new AccessDeniedException(UserErrorCode.ACESS_DENIED_ERROR.getDescription());
+		}
 		
 		mav.setViewName("userProfileForManage");
 		mav.addObject("userInfo", user);
@@ -208,18 +220,13 @@ public class ManagerUserController {
 		return mav;
 	}
 	
-	
 	/**
-	 * 현재 접속자보다 roleHierarchy 상 낮거나 같은 Role들의 리스트 반환하는 메소드
+	 * 
+	 * @param authorities
 	 * @return
 	 * @author kimgun-yeong
 	 */
-	private List<String> getManageableRoles() {
-		List<String> result = new ArrayList<>();
-		for(GrantedAuthority a : roleHierarchy.getReachableGrantedAuthorities(SecurityContextHolder.getContext().getAuthentication().getAuthorities())) {
-			result.add(a.getAuthority().substring(5));
-		}
-		return result;
+	private List<String> getReachableAuthorityStrings(Collection<? extends GrantedAuthority> authorities) {
+		return SecurityUtil.getAuthorityStrings(roleHierarchy.getReachableGrantedAuthorities(authorities));
 	}
-	
 }

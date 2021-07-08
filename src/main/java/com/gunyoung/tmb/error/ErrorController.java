@@ -34,6 +34,7 @@ import com.gunyoung.tmb.error.exceptions.nonexist.SessionAttributesNotFoundedExc
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.notmatch.UserNotMatchException;
+import com.gunyoung.tmb.error.exceptions.request.AccessDeniedException;
 import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
 
 /**
@@ -148,6 +149,12 @@ public class ErrorController {
 	@ExceptionHandler(SearchCriteriaInvalidException.class)
 	public ErrorMsg searchCriteriaInvalid(SearchCriteriaInvalidException e) {
 		return new ErrorMsg(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getCode(),e.getMessage());
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(AccessDeniedException.class)
+	public ErrorMsg accessDenied(AccessDeniedException e) {
+		return new ErrorMsg(UserErrorCode.ACESS_DENIED_ERROR.getCode(), e.getMessage());
 	}
 	
 	/*
