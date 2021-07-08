@@ -21,4 +21,12 @@ public interface PostLikeRepository extends JpaRepository<PostLike,Long>{
 			+ "WHERE (u.id = :userId) "
 			+ "AND (ep.id = :exercisePostId)")
 	public Optional<PostLike> findByUserIdAndExercisePostIdCustom(@Param("userId") Long userId,@Param("exercisePostId") Long exercisePostId);
+	
+	/**
+	 * 유저 ID와 ExercisePost ID로 해당 PostLike 존재하는지 여부
+	 * @param userId
+	 * @param exercisePostId
+	 * @return
+	 */
+	public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId);
 }

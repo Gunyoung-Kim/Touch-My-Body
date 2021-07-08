@@ -12,4 +12,6 @@ public interface PostLikeService {
 	public PostLike saveWithUserAndExercisePost(User user, ExercisePost exercisePost);
 	
 	public void delete(PostLike postLike);
+	
+	public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId);
 }

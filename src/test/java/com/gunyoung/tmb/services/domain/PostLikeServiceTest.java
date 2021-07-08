@@ -139,21 +139,11 @@ public class PostLikeServiceTest {
 	@DisplayName("User, ExercisePost의 PostLike 추가 -> 정상")
 	public void saveWithUserAndExercisePostTest() {
 		//Given
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("first")
-				.lastName("last")
-				.role(RoleType.USER)
-				.nickName("nickName")
-				.build();
+		User user = getUserInstance();
 		
 		userRepository.save(user);
 		
-		ExercisePost exercisePost = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
+		ExercisePost exercisePost = getExercisePostInstance();
 		
 		exercisePostRepository.save(exercisePost);
 		
@@ -199,21 +189,11 @@ public class PostLikeServiceTest {
 	public void deleteWithRelationWithOtherEntityTest() {
 		//Given
 		PostLike postLike = postLikeRepository.findAll().get(0);
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("first")
-				.lastName("last")
-				.role(RoleType.USER)
-				.nickName("nickName")
-				.build();
+		User user = getUserInstance();
 		
 		userRepository.save(user);
 		
-		ExercisePost exercisePost = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
+		ExercisePost exercisePost = getExercisePostInstance();
 		
 		exercisePostRepository.save(exercisePost);
 		
@@ -266,21 +246,11 @@ public class PostLikeServiceTest {
 	public void test() {
 		//Given
 		PostLike postLike = postLikeRepository.findAll().get(0);
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("first")
-				.lastName("last")
-				.role(RoleType.USER)
-				.nickName("nickName")
-				.build();
+		User user = getUserInstance();
 		
 		userRepository.save(user);
 		
-		ExercisePost exercisePost = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
+		ExercisePost exercisePost = getExercisePostInstance();
 		
 		exercisePostRepository.save(exercisePost);
 		
@@ -297,6 +267,66 @@ public class PostLikeServiceTest {
 		//Then
 		assertEquals(result != null, true);
 	
+	}
+	
+	/*
+	 *  public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId);
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("유저 ID와 게시글 ID로 존재여부 확인 ->정상")
+	public void  existsByUserIdAndExercisePostIdTest() {
+		//Given
+		User user = getUserInstance();
+		userRepository.save(user);
+		ExercisePost exercisePost = getExercisePostInstance();
+		exercisePostRepository.save(exercisePost);
+		
+		ExercisePost exercisePostNotHost =  getExercisePostInstance();
+		exercisePostRepository.save(exercisePostNotHost);
+		
+		List<PostLike> postLikes = postLikeRepository.findAll();
+		
+		PostLike existPostLike = postLikes.get(0);
+		
+		existPostLike.setUser(user);
+		existPostLike.setExercisePost(exercisePost);
+		
+		postLikeRepository.save(existPostLike);
+		
+		//When
+		boolean trueResult = postLikeService.existsByUserIdAndExercisePostId(user.getId(), exercisePost.getId());
+		boolean falseResult = postLikeService.existsByUserIdAndExercisePostId(user.getId(), exercisePostNotHost.getId());
+	
+		//Then
+		assertEquals(trueResult, true);
+		assertEquals(falseResult,false);
+	}
+	
+	
+	/*
+	 * 
+	 */
+	
+	private User getUserInstance() {
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("first")
+				.lastName("last")
+				.role(RoleType.USER)
+				.nickName("nickName")
+				.build();
+		return user;
+	}
+	
+	private ExercisePost getExercisePostInstance() {
+		ExercisePost exercisePost = ExercisePost.builder()
+				.title("title")
+				.contents("contents")
+				.build();
+		return exercisePost;
 	}
 	
 }

@@ -12,4 +12,6 @@ public interface CommentLikeService {
 	public CommentLike saveWithUserAndComment(User user, Comment comment);
 	
 	public void delete(CommentLike commentLike);
+	
+	public boolean existsByUserIdAndCommentId(Long userId, Long commentId);
 }

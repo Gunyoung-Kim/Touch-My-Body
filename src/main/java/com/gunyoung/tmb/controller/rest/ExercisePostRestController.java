@@ -18,6 +18,7 @@ import com.gunyoung.tmb.error.codes.CommentErrorCode;
 import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
 import com.gunyoung.tmb.error.codes.LikeErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
+import com.gunyoung.tmb.error.exceptions.duplication.LikeAlreadyExistException;
 import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
@@ -72,6 +73,9 @@ public class ExercisePostRestController {
 		if(exercisePost == null) 
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
 		
+		if(postLikeService.existsByUserIdAndExercisePostId(userId, postId)) 
+			throw new LikeAlreadyExistException(LikeErrorCode.LIKE_ALREADY_EXIST_ERROR.getDescription());
+		
 		postLikeService.saveWithUserAndExercisePost(user, exercisePost);
 	}
 	
@@ -114,6 +118,9 @@ public class ExercisePostRestController {
 		
 		if(comment == null) 
 			throw new CommentNotFoundedException(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getDescription());
+		
+		if(commentLikeService.existsByUserIdAndCommentId(userId, commentId)) 
+			throw new LikeAlreadyExistException(LikeErrorCode.LIKE_ALREADY_EXIST_ERROR.getDescription());
 		
 		commentLikeService.saveWithUserAndComment(user, comment);
 	}

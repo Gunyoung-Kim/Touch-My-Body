@@ -102,4 +102,13 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 		commentLikeRepository.delete(commentLike);
 	}
 
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public boolean existsByUserIdAndCommentId(Long userId, Long commentId) {
+		return commentLikeRepository.existsByUserIdAndCommentId(userId, commentId);
+	}
+
 }

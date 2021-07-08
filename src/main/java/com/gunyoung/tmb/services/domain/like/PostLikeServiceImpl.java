@@ -98,5 +98,14 @@ public class PostLikeServiceImpl implements PostLikeService {
 		}
 		postLikeRepository.delete(postLike);
 	}
+
+	/**
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId) {
+		return postLikeRepository.existsByUserIdAndExercisePostId(userId, exercisePostId);
+	}
 	
 }

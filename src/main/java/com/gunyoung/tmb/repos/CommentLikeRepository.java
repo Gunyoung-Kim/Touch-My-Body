@@ -23,4 +23,12 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike,Long>{
 			+ "WHERE (u.id = :userId) "
 			+ "AND (c.id = :commentId)")
 	public Optional<CommentLike> findByUserIdAndCommentIdCustom(@Param("userId") Long userId,@Param("commentId") Long commentId);
+	
+	/**
+	 * 유저 ID, Comment ID 로 존재하는지 여부 
+	 * @param userId
+	 * @param commentId
+	 * @return
+	 */
+	public boolean existsByUserIdAndCommentId(Long userId, Long commentId);
 }

@@ -107,22 +107,11 @@ public class CommentLikeServiceTest {
 	@DisplayName("유저 id와 댓글 id로 찾기 -> 해당 조건 만족의 CommentLike 없음")
 	public void findByUserIdAndCommentIdNonExist() {
 		//Given
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("test")
-				.lastName("test")
-				.nickName("test")
-				.role(RoleType.USER)
-				.build();
+		User user = getUserInstance();
 	
 		userRepository.save(user);
 		
-		Comment comment = Comment.builder()
-				.contents("new")
-				.isAnonymous(false)
-				.writerIp("172.0.0.1")
-				.build();
+		Comment comment = getCommentInstance();
 		
 		commentRepository.save(comment);
 		
@@ -140,22 +129,11 @@ public class CommentLikeServiceTest {
 		//Given
 		CommentLike existCommentLike = commentLikeRepository.findAll().get(0);
 		
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("test")
-				.lastName("test")
-				.nickName("test")
-				.role(RoleType.USER)
-				.build();
+		User user = getUserInstance();
 	
 		userRepository.save(user);
 		
-		Comment comment = Comment.builder()
-				.contents("new")
-				.isAnonymous(false)
-				.writerIp("172.0.0.1")
-				.build();
+		Comment comment = getCommentInstance();
 		
 		commentRepository.save(comment);
 		
@@ -219,22 +197,11 @@ public class CommentLikeServiceTest {
 	@DisplayName("User와 Comment로 CommentLike 생성 후 저장 -> 정상")
 	public void  saveWithUserAndCommentTest() {
 		//Given
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("first")
-				.lastName("last")
-				.role(RoleType.USER)
-				.nickName("nickName")
-				.build();
+		User user = getUserInstance();
 		
 		userRepository.save(user);
 		
-		Comment comment = Comment.builder()
-				.writerIp("172.0.0.1")
-				.contents("Good Comment")
-				.isAnonymous(false)
-				.build();
+		Comment comment = getCommentInstance();
 		
 		commentRepository.save(comment);
 		
@@ -281,21 +248,11 @@ public class CommentLikeServiceTest {
 		//Given
 		CommentLike commentLike = commentLikeRepository.findAll().get(0);
 		
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("first")
-				.lastName("last")
-				.role(RoleType.USER)
-				.nickName("nickName")
-				.build();
+		User user = getUserInstance();
 		
 		userRepository.save(user);
 		
-		Comment comment = Comment.builder()
-				.contents("new comment")
-				.writerIp("172.0.0.1")
-				.build();
+		Comment comment = getCommentInstance();
 		
 		commentRepository.save(comment);
 		
@@ -319,5 +276,64 @@ public class CommentLikeServiceTest {
 		assertEquals(userCommentLikeNum-1,userRepository.findById(userId).get().getCommentLikes().size());
 		assertEquals(commentCommentLikeNum-1, commentRepository.findById(commentId).get().getCommentLikes().size());
 		assertEquals(commentLikeNum-1 , commentLikeRepository.count());
+	}
+	
+	/*
+	 *  public boolean existsByUserIdAndCommentId(Long userId, Long commentId);
+	 */
+	@Test
+	@Transactional
+	@DisplayName("User ID, Comment ID로 존재여부 확인 ->정상")
+	public void existsByUserIdAndCommentIdTest() {
+		//Given
+		User user = getUserInstance();
+		User userNotHost = getUserInstance();
+		userNotHost.setEmail("notHost@test.com");
+		userNotHost.setNickName("notHost");
+		
+		userRepository.save(user);
+		userRepository.save(userNotHost);
+		
+		Comment comment = getCommentInstance();
+		commentRepository.save(comment);
+		
+		CommentLike commentLike = CommentLike.builder()
+				.comment(comment)
+				.user(user)
+				.build();
+		
+		commentLikeRepository.save(commentLike);
+		
+		//When
+		boolean trueResult = commentLikeService.existsByUserIdAndCommentId(user.getId(), comment.getId());
+		boolean falseResult = commentLikeService.existsByUserIdAndCommentId(userNotHost.getId(), comment.getId());
+		
+		//Then
+		assertEquals(trueResult,true);
+		assertEquals(falseResult,false);
+	}
+	
+	/*
+	 * 
+	 */
+	
+	private User getUserInstance() {
+		User user = User.builder()
+		.email("test@test.com")
+		.password("abcd1234")
+		.firstName("first")
+		.lastName("last")
+		.role(RoleType.USER)
+		.nickName("nickName")
+		.build();
+		return user;
+	}
+	
+	private Comment getCommentInstance() {
+		Comment comment = Comment.builder()
+				.contents("new comment")
+				.writerIp("172.0.0.1")
+				.build();
+		return comment;
 	}
 }
