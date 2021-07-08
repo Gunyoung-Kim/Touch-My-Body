@@ -841,6 +841,14 @@
 
     1. 게시글과 댓글에 좋아요 중복 추가 방지 코드 추가 
 
+- ManagerUserController
+
+    1. 자신보다 높은 권한의 유저 정보 열람 불가하도록 수정
+
+- ManagerUserRestController
+
+    1. 자신보다 높은 권한의 유저 정보 변경 불가하도록 수정
+
 - CommentLikeRepository
 
     1. 유저 ID, Comment ID 로 존재하는지 여부 쿼리 추가 
@@ -863,6 +871,11 @@
 
     2. LikeAlreadtExist 관련 ErrorCode, Exception, ExceptionHandler 추가 
 
+    3. AccessDenied 관련 ErrorCode,Exception,ExceptionHandler 추가 
+
+- SecurityUtil
+
+    1. Security 관련 정적 메소드 추가를 통한 코드 리팩토링
 
 --- 
 
