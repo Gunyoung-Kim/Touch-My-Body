@@ -827,13 +827,22 @@
 
     1. Redis-Cli로 Lettuce 채택
 
+### 2021.7.8
+
+- AOP
+
+    1. LoginIdSessionNotNull 어노테이션 추가
+
+    2. LoginAspect 클래스에 1번 어노테이션에 적용되는 어드바이스 추가 
+
+    3. 2번 어드바이스 적용할 컨트롤러 메소드에 1번 어노테이션 추가
+
+- Error
+
+    1. SessionAttributesNotFounded 관련 ErrorCode,Exception,ExceptionHandler 추가
+
 --- 
 
 ## To do List
 
 - 비즈니스 예외 구조도 만들기 
-
-- 세션 유틸로 로그인드 아이디 겟하는 메소드 쓰는 컨트롤러 메소드는 비포얼로 해당 세션값이 널인지 아닌지 확인하고 널이면 로그인 화면으로 넘어가게 하는 비포얼 어드바이스 추가 
-
-
-- 로그인 되있는지 확인하는 거 AOP
