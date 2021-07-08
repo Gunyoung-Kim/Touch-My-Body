@@ -837,9 +837,32 @@
 
     3. 2번 어드바이스 적용할 컨트롤러 메소드에 1번 어노테이션 추가
 
+- ExercisePostRestController
+
+    1. 게시글과 댓글에 좋아요 중복 추가 방지 코드 추가 
+
+- CommentLikeRepository
+
+    1. 유저 ID, Comment ID 로 존재하는지 여부 쿼리 추가 
+
+- PostLikeRepository
+
+    1.  유저 ID, ExercisePost ID 로 존재하는지 여부 쿼리 추가 
+
+- CommentLikeService -> Impl에 구현, 하위 항목에 대한 테스트 코드 작성
+
+    1. 유저 ID, Comment ID 로 존재하는지 여부 메소드 추가
+
+- PostLikeService -> Impl에 구현, 하위 항목에 대한 테스트 코드 작성
+
+    1. 유저 ID, ExercisePost ID 로 존재하는지 여부 메소드 추가
+
 - Error
 
     1. SessionAttributesNotFounded 관련 ErrorCode,Exception,ExceptionHandler 추가
+
+    2. LikeAlreadtExist 관련 ErrorCode, Exception, ExceptionHandler 추가 
+
 
 --- 
 
