@@ -38,7 +38,9 @@
 
 ## DB 테이블 설계 
 
-![touchmb](https://user-images.githubusercontent.com/60494603/122730217-f289de80-d2b4-11eb-8a08-91e95cf9b497.png)
+![TouchMyBodyTable](https://user-images.githubusercontent.com/60494603/125125625-cc799080-e134-11eb-8868-5ade689ad6db.png)
+
+- 테이블 설명 : [테이블 설명 보러가기] (https://github.com/Gunyoung-Kim/TouchMyBody_ABOUT/blob/master/DB_Info.md)
 
 ---
 
