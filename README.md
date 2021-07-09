@@ -891,6 +891,45 @@
 
     2. 로그인 성공 후 로그인 실패 세션 내용 삭제
 
+- RedisCacheConfig 
+
+    1. Redis Cache 설정 관련 Bean들 추가 
+
+- RedisSessionConfig
+
+    1. RedisSession, Cache 서버 분리 위해 설정 파일 및 설정 분리 
+
+### 2021.7.10
+
+- RedisCacheConfig
+
+    1. Cache 종류 별로 설정 추가 
+
+- CacheUtil
+
+    1. Cache 관련 상수들 추가
+
+- ExerciseService
+
+    1. getAllExercisesNamewithSorting 결과에 캐싱 적용
+
+- MuscleService
+
+    1. getAllMusclesWithSortingByCategory 결과에 캐싱 적용
+
+- CommentLikeService
+
+    1. existsByUserIdAndCommentId 결과에 캐싱 적용
+
+- PostLikeService
+
+    1. existsByUserIdAndExercisePostId 결과에 캐싱 적용
+
+- UserService
+
+    1. countAllByNickNameOrName 결과에 캐싱 적용
+
+
 --- 
 
 ## To do List
