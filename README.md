@@ -40,23 +40,51 @@
 
 ![TouchMyBodyTable](https://user-images.githubusercontent.com/60494603/125125625-cc799080-e134-11eb-8868-5ade689ad6db.png)
 
-- 테이블 설명 : [테이블 설명 보러가기] (https://github.com/Gunyoung-Kim/TouchMyBody_ABOUT/blob/master/DB_Info.md)
+- 테이블 설명 : [테이블 설명 보러가기](https://github.com/Gunyoung-Kim/TouchMyBody_ABOUT/blob/master/DB_Info.md)
 
 ---
 
-## CONTROLLER 설계
+## 성능 개선 
 
----
+- JPA 사용에 따른 N+1 문제 발생에 대한 경각심 고취
 
-## 테스트
+   1. 모든 연관 엔티티 로딩 -> 지연 로딩으로 설정 
 
-- 테스트 작성 시기: 테스트 주도 개발 방식(TDD)을 준수하기 위해 테스트 선 작성 후 소스코드 작성했습니다.
+   2. 엔티티 로딩 시 연관 엔티티 로딩도 필요시 크게 2가지 방식 사용
+
+        2-1. 페치 조인 활용 
+
+        2-2. 쿼리 결과를 양쪽 엔티티에서 필요한 필드들로만 구성된 DTO 객체에 매핑
+
+- Cache의 활용
+
+   1. Cache Storage로 REDIS 활용
+
+   2. 사용자의 요청이 잦고 내용 변동이 그나마 적은 항목에 대해 캐싱
+
+- Session Storage와 Cache Storage의 분리 
+
+   1. Session과 Cache 모두 저장소로 REDIS 사용 
+
+   2. REDIS의 인메모리 방식의 이점 -> 두 항목의 저장소로 활용
+
+   3. 두 항목 같은 REDIS 저장소 사용 시 메모리 공유 -> 사용자 증가 시 잦은 Swap -> Redis의 디스크 접근 횟수 증가 
+
+      -> Redis의 장점 퇴색 -> 세션과 캐시 서로 다른 Redis 저장소 방식 채택!
 
 ---
 
 ## 화면 설계
 
+- 화면 구조: 
+
 ---
+
+## 코드 패키지 
+
+- 패키지 설명: [패키지 설명 보러가기](https://github.com/Gunyoung-Kim/TouchMyBody_ABOUT/blob/master/Package_Info.md)
+
+--- 
 
 ## 개발 일지 
 
@@ -64,6 +92,3 @@
 
 --- 
 
-## To do List
-
-- 비즈니스 예외 구조도 만들기 
