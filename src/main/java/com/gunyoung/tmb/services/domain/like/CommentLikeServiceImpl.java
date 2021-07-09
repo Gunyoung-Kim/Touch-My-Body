@@ -2,6 +2,8 @@ package com.gunyoung.tmb.services.domain.like;
 
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +11,7 @@ import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
+import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -59,6 +62,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	 * @author kimgun-yeong
 	 */
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.COMMENT_LIKE_NAME,allEntries=true)
 	public CommentLike save(CommentLike commentLike) {
 		return commentLikeRepository.save(commentLike);
 	}
@@ -88,6 +92,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	 * @author kimgun-yeong
 	 */
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.COMMENT_LIKE_NAME,allEntries=true)
 	public void delete(CommentLike commentLike) {
 		User user = commentLike.getUser();
 	
@@ -107,6 +112,9 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	 */
 	@Override
 	@Transactional(readOnly=true)
+	@Cacheable(cacheNames=CacheUtil.COMMENT_LIKE_NAME,
+			key="#root.methodName.concat(':').concat('#userId').concat(':').concat('#exercisePostId')",
+			unless="#result != true")
 	public boolean existsByUserIdAndCommentId(Long userId, Long commentId) {
 		return commentLikeRepository.existsByUserIdAndCommentId(userId, commentId);
 	}

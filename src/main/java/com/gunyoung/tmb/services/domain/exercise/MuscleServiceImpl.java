@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.jpa.MuscleNameAndCategoryDTO;
 import com.gunyoung.tmb.repos.MuscleRepository;
+import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -47,7 +48,7 @@ public class MuscleServiceImpl implements MuscleService {
 	 */
 	@Override
 	@Transactional(readOnly=true)
-	@Cacheable(cacheNames="muscle", key="#name")
+	@Cacheable(cacheNames=CacheUtil.MUSCLE_NAME,key="#name")
 	public Muscle findByName(String name) {
 		Optional<Muscle> result = muscleRepository.findByName(name);
 		if(result.isEmpty())
@@ -85,6 +86,7 @@ public class MuscleServiceImpl implements MuscleService {
 	 */
 	@Override
 	@Transactional(readOnly =true)
+	@Cacheable(cacheNames=CacheUtil.MUSCLE_NAME, key="#root.methodName")
 	public Map<String, List<String>> getAllMusclesWithSortingByCategory() {
 		Map<String,List<String>> result = new HashMap<>();
 		List<MuscleNameAndCategoryDTO> muscles = muscleRepository.findAllWithNamaAndCategory();
@@ -108,7 +110,7 @@ public class MuscleServiceImpl implements MuscleService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	@CacheEvict(cacheNames="muscle", key="#muscle.name")
+	@CacheEvict(cacheNames="muscle", allEntries=true)
 	public Muscle save(Muscle muscle) {
 		return muscleRepository.save(muscle);
 	}
@@ -118,7 +120,7 @@ public class MuscleServiceImpl implements MuscleService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	@CacheEvict(cacheNames="muscle", key="#muscle.name")
+	@CacheEvict(cacheNames="muscle", allEntries=true)
 	public void delete(Muscle muscle) {
 		muscleRepository.delete(muscle);
 	}

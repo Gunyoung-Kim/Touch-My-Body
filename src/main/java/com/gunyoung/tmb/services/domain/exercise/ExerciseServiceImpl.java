@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
+import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -138,6 +141,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	 */
 	@Override
 	@Transactional(readOnly=true)
+	@Cacheable(cacheNames=CacheUtil.EXERCISE_NAME,key="#root.methodName")
 	public Map<String, List<String>> getAllExercisesNamewithSorting() {
 		Map<String, List<String>> result = new HashMap<>();
 		List<ExerciseNameAndTargetDTO> list = exerciseRepository.findAllWithNameAndTarget();
@@ -164,6 +168,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	 * @author kimgun-yeong
 	 */
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_NAME,allEntries=true)
 	public Exercise save(Exercise exercise) {
 		return exerciseRepository.save(exercise);
 	}
@@ -246,7 +251,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 		}
 		
 		//Exercise 객체 저장 
-		exerciseRepository.save(exercise);
+		save(exercise);
 		
 		//ExerciseMuscle 객체 저장
 		exerciseMuscleService.saveAll(exerciseMuscles);
@@ -259,6 +264,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	 * @author kimgun-yeong
 	 */
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_NAME,allEntries=true)
 	public void delete(Exercise exercise) {
 		exerciseRepository.delete(exercise);
 	}

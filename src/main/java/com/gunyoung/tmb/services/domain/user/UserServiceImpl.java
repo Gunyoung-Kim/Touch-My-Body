@@ -2,6 +2,8 @@ package com.gunyoung.tmb.services.domain.user;
 
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.utils.CacheUtil;
 import com.gunyoung.tmb.utils.PageUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -155,6 +158,7 @@ public class UserServiceImpl implements UserService{
 	 * @author kimgun-yeong
 	 */
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.USER_NAME, allEntries=true)
 	public User save(User user) {
 		return userRepository.save(user);
 	}
@@ -182,6 +186,7 @@ public class UserServiceImpl implements UserService{
 	 * @author kimgun-yeong
 	 */
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.USER_NAME, allEntries=true)
 	public void deleteUser(User user) {
 		userRepository.delete(user);
 	}
@@ -236,6 +241,7 @@ public class UserServiceImpl implements UserService{
 	 */
 	@Override
 	@Transactional(readOnly=true)
+	@Cacheable(cacheNames=CacheUtil.USER_NAME,key="#root.methodName.concat(':').concat(#keyword)")
 	public long countAllByNickNameOrName(String keyword) {
 		return userRepository.countAllByNickNameOrName(keyword);
 	}

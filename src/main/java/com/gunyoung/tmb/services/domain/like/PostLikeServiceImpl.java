@@ -2,6 +2,8 @@ package com.gunyoung.tmb.services.domain.like;
 
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +11,7 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.repos.PostLikeRepository;
+import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -59,6 +62,7 @@ public class PostLikeServiceImpl implements PostLikeService {
 	 * @author kimgun-yeong
 	 */
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME,allEntries=true)
 	public PostLike save(PostLike postLike) {
 		return postLikeRepository.save(postLike);
 	}
@@ -86,6 +90,7 @@ public class PostLikeServiceImpl implements PostLikeService {
 	 * @author kimgun-yeong
 	 */
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME,allEntries=true)
 	public void delete(PostLike postLike) {
 		User user = postLike.getUser();
 		if(user != null) {
@@ -104,6 +109,9 @@ public class PostLikeServiceImpl implements PostLikeService {
 	 */
 	@Override
 	@Transactional(readOnly=true)
+	@Cacheable(cacheNames=CacheUtil.POST_LIKE_NAME,
+		key="#root.methodName.concat(':').concat('#userId').concat(':').concat('#exercisePostId')",
+		unless="#result != true")
 	public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId) {
 		return postLikeRepository.existsByUserIdAndExercisePostId(userId, exercisePostId);
 	}
