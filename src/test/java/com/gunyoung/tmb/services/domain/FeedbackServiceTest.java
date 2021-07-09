@@ -11,7 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
@@ -26,7 +25,6 @@ import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
 import com.gunyoung.tmb.utils.PageUtil;
 
 @SpringBootTest
-@TestPropertySource("classpath:application-test.properties")
 public class FeedbackServiceTest {
 
 	private static final int INIT_FEEDBACK_NUM = 30;

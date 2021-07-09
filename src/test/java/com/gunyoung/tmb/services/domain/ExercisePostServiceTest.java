@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
@@ -29,7 +28,6 @@ import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.utils.PageUtil;
 
 @SpringBootTest
-@TestPropertySource("classpath:application-test.properties")
 public class ExercisePostServiceTest {
 
 	private static final int INIT_EXERCISE_POST_NUM = 30;

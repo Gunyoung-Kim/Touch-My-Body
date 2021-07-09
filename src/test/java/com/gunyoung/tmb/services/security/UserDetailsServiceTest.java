@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.test.context.TestPropertySource;
 
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.enums.RoleType;
@@ -24,7 +23,6 @@ import com.gunyoung.tmb.services.domain.user.UserService;
  *
  */
 @SpringBootTest
-@TestPropertySource("classpath:application-test.properties")
 public class UserDetailsServiceTest {
 	
 	UserDetailsServiceImpl userDetailsService;

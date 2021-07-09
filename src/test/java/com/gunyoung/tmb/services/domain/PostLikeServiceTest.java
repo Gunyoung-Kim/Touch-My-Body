@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
@@ -29,7 +28,6 @@ import com.gunyoung.tmb.services.domain.like.PostLikeService;
  *
  */
 @SpringBootTest
-@TestPropertySource("classpath:application-test.properties")
 public class PostLikeServiceTest {
 	
 	private static final int INIT_POST_LIKE_NUM = 30;

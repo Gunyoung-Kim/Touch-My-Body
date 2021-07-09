@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,7 @@ public class MuscleServiceImpl implements MuscleService {
 	 */
 	@Override
 	@Transactional(readOnly=true)
+	@Cacheable(cacheNames="muscle", key="#name")
 	public Muscle findByName(String name) {
 		Optional<Muscle> result = muscleRepository.findByName(name);
 		if(result.isEmpty())
@@ -105,6 +108,7 @@ public class MuscleServiceImpl implements MuscleService {
 	 * @author kimgun-yeong
 	 */
 	@Override
+	@CacheEvict(cacheNames="muscle", key="#muscle.name")
 	public Muscle save(Muscle muscle) {
 		return muscleRepository.save(muscle);
 	}
@@ -114,6 +118,7 @@ public class MuscleServiceImpl implements MuscleService {
 	 * @author kimgun-yeong
 	 */
 	@Override
+	@CacheEvict(cacheNames="muscle", key="#muscle.name")
 	public void delete(Muscle muscle) {
 		muscleRepository.delete(muscle);
 	}
