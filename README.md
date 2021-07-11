@@ -64,11 +64,9 @@
 
 - Session Storage와 Cache Storage의 분리 
 
-   1. Session과 Cache 모두 저장소로 REDIS 사용 
+   1. REDIS의 인메모리 방식의 이점 -> 두 항목의 저장소로 활용
 
-   2. REDIS의 인메모리 방식의 이점 -> 두 항목의 저장소로 활용
-
-   3. 두 항목 같은 REDIS 저장소 사용 시 메모리 공유 -> 사용자 증가 시 잦은 Swap -> Redis의 디스크 접근 횟수 증가 
+   2. 두 항목 같은 REDIS 저장소 사용 시 메모리 공유 -> 사용자 증가 시 잦은 Swap -> Redis의 디스크 접근 횟수 증가 
 
       -> Redis의 장점 퇴색 -> 세션과 캐시 서로 다른 Redis 저장소 방식 채택!
 
