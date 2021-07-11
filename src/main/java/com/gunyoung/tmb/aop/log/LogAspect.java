@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.gunyoung.tmb.utils.HttpRequestUtil;
+
 /**
  *  로깅을 위한 클래스 
  * @author kimgun-yeong
@@ -57,7 +59,8 @@ public class LogAspect {
 			return pjp.proceed(pjp.getArgs());
 		} finally {
 			long end = System.currentTimeMillis();
-			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, request.getRemoteHost(), end- start);
+			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, 
+					HttpRequestUtil.getRemoteHost(request), end- start);
 		}
 	}
 	

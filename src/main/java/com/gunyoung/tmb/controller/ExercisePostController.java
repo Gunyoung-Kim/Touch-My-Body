@@ -40,6 +40,7 @@ import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserService;
+import com.gunyoung.tmb.utils.HttpRequestUtil;
 import com.gunyoung.tmb.utils.PageUtil;
 import com.gunyoung.tmb.utils.SessionUtil;
 
@@ -240,7 +241,7 @@ public class ExercisePostController {
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
 		
 		// request IP 가져오기 
-		String writerIp = request.getRemoteHost();
+		String writerIp = HttpRequestUtil.getRemoteHost(request);
 		
 		Comment comment = AddCommentDTO.toComment(dto, writerIp);
 		
