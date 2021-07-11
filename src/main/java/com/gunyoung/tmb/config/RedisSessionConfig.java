@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds=3600)
 @RequiredArgsConstructor
-@Profile("default")
+@Profile("dev")
 public class RedisSessionConfig {
 	
 	private final ObjectMapper objectMapper;

@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableCaching
 @RequiredArgsConstructor
-@Profile("default")
+@Profile("dev")
 public class RedisCacheConfig {
 	
 	@Value("${redis.cache.host}")
