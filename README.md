@@ -1,4 +1,4 @@
-# Touch-My-Body
+# Touch-My-Body [![Build Status](http://3.37.251.83:32789/job/touchmybody/badge/icon)](http://3.37.251.83:32789/job/touchmybody/)
 
 ## 프로젝트 주 기능
 
@@ -16,9 +16,9 @@
 
 - 프로젝트 참여 인원: 1명 (김건영)
 
-- 개발 기간: 2021.06.21 ~ 2021.07.10
+- 개발 기간: 2021.06.21 ~ 2021.07.11
 
-- 사용기술 및 개발 환경: Spring Boot, Spring JPA, Spring Security, JUnit5, Maven, Thymeleaf
+- 사용기술 및 개발 환경: Spring Boot, Spring JPA, Spring Security, JUnit5, Maven, HTML, CSS , Javascript
 
 - 사용 데이터베이스
 
@@ -34,13 +34,15 @@
 
 ## 코드 배포 구조
 
+![tmb_deploy_stc1](https://user-images.githubusercontent.com/60494603/125197187-a7e9f980-e297-11eb-8e5f-242cd46a5d3d.png)
+
 ---
 
 ## DB 테이블 설계 
 
-![TouchMyBodyTable](https://user-images.githubusercontent.com/60494603/125125625-cc799080-e134-11eb-8868-5ade689ad6db.png)
-
 - 테이블 설명 : [테이블 설명 보러가기](https://github.com/Gunyoung-Kim/TouchMyBody_ABOUT/blob/master/DB_Info.md)
+
+![TouchMyBodyTable](https://user-images.githubusercontent.com/60494603/125125625-cc799080-e134-11eb-8868-5ade689ad6db.png)
 
 ---
 
@@ -72,12 +74,6 @@
 
 ---
 
-## 화면 설계
-
-- 화면 구조: 
-
----
-
 ## 코드 패키지 
 
 - 패키지 설명: [패키지 설명 보러가기](https://github.com/Gunyoung-Kim/TouchMyBody_ABOUT/blob/master/Package_Info.md)
@@ -92,6 +88,9 @@
 
 ## 버전 기록 
 
+- 버전 기록 링크 : [버전기록 보러가기](https://github.com/Gunyoung-Kim/TouchMyBody_ABOUT/blob/master/Version_Note.md)
 
---- 
+---
+
+TouchMyBody 2021-
 
