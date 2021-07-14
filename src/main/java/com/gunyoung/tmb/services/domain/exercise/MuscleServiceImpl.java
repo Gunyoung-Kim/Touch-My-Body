@@ -86,7 +86,7 @@ public class MuscleServiceImpl implements MuscleService {
 	 */
 	@Override
 	@Transactional(readOnly =true)
-	@Cacheable(cacheNames=CacheUtil.MUSCLE_NAME, key="#root.methodName")
+	@Cacheable(cacheNames=CacheUtil.MUSCLE_SORT_NAME, key="#root.methodName")
 	public Map<String, List<String>> getAllMusclesWithSortingByCategory() {
 		Map<String,List<String>> result = new HashMap<>();
 		List<MuscleNameAndCategoryDTO> muscles = muscleRepository.findAllWithNamaAndCategory();
@@ -110,7 +110,7 @@ public class MuscleServiceImpl implements MuscleService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	@CacheEvict(cacheNames="muscle", allEntries=true)
+	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_NAME,CacheUtil.MUSCLE_SORT_NAME}, allEntries=true)
 	public Muscle save(Muscle muscle) {
 		return muscleRepository.save(muscle);
 	}
@@ -120,7 +120,7 @@ public class MuscleServiceImpl implements MuscleService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	@CacheEvict(cacheNames="muscle", allEntries=true)
+	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_NAME,CacheUtil.MUSCLE_SORT_NAME}, allEntries=true)
 	public void delete(Muscle muscle) {
 		muscleRepository.delete(muscle);
 	}

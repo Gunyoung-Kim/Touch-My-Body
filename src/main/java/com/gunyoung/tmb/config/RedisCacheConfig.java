@@ -18,6 +18,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
@@ -93,9 +94,9 @@ public class RedisCacheConfig {
 		Map<String,RedisCacheConfiguration> cacheConfigurations= new HashMap<>();
 		cacheConfigurations.put(CacheUtil.USER_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.USER_EXPIRE_MIN)));
 		cacheConfigurations.put(CacheUtil.MUSCLE_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.MUSCLE_EXPIRE_MIN))
-				// Muscle 객체에는 FetchType이 Lazy인 연관 엔티티가 없어서 Serialize 바로 가능
-				.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<Muscle>(Muscle.class))));
-		cacheConfigurations.put(CacheUtil.EXERCISE_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.EXERCISE_EXPIRE_MIN)));
+				.serializeValuesWith(SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<Muscle>(Muscle.class))));
+		cacheConfigurations.put(CacheUtil.MUSCLE_SORT_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.MUSCLE_SORT_EXPIRE_MIN)));
+		cacheConfigurations.put(CacheUtil.EXERCISE_SORT_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.EXERCISE_SORT_EXPIRE_MIN)));
 		cacheConfigurations.put(CacheUtil.COMMENT_LIKE_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.COMMENT_LIKE_EXPIRE_MIN)));
 		cacheConfigurations.put(CacheUtil.POST_LIKE_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.POST_LIKE_EXPIRE_MIN)));
 		return cacheConfigurations;
