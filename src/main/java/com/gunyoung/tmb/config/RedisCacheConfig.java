@@ -26,12 +26,22 @@ import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Redis를 이용한 캐시를 위한 설정 클래스 <br>
+ * @Profile("dev") - Test에 반영안되도록 추가  
+ * @author kimgun-yeong
+ *
+ */
 @Configuration
 @EnableCaching
 @RequiredArgsConstructor
 @Profile("dev")
 public class RedisCacheConfig {
 	
+	/**
+	 * Redis Session Storage와 Redis Cache Storage를 분리
+	 * @author kimgun-yeong
+	 */
 	@Value("${redis.cache.host}")
 	private String redisCacheHost;
 	
@@ -39,8 +49,8 @@ public class RedisCacheConfig {
 	private int redisCachePort;
 	
 	/**
-	 * 
-	 * @return
+	 * Redis-Cli로 Lettuce 채택
+	 * @return 
 	 * @author kimgun-yeong
 	 */
 	@Bean(name="redisCacheConnectionFactory")
@@ -50,7 +60,7 @@ public class RedisCacheConfig {
 	}
 	
 	/**
-	 * 
+	 * Redis Cache에 대한 설정들을 한데모아 RedisCacheManager Bean 생성
 	 * @param redisConnectionfactorty
 	 * @return
 	 * @author kimgun-yeong

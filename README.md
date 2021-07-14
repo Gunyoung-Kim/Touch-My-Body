@@ -1,4 +1,4 @@
-# Touch-My-Body [![Build Status](http://3.37.251.83:32789/job/touchmybody/badge/icon)](http://3.37.251.83:32789/job/touchmybody/)
+# Touch-My-Body
 
 ## 프로젝트 주 기능
 
@@ -79,6 +79,24 @@
 - 패키지 설명: [패키지 설명 보러가기](https://github.com/Gunyoung-Kim/TouchMyBody_ABOUT/blob/master/Package_Info.md)
 
 --- 
+
+## Git 브랜치 전략 
+
+### Git-Flow 전략 사용
+
+- master: 실제 배포가 진행되는 브랜치
+
+- develop: 버그 수정이 진행되는 브랜치 
+
+- feature: 기능 개발이 진행되는 브랜치
+
+- release: 주석 작성, README 수정 등 배포 준비 진행되는 브랜치 
+
+- hotfix: 배포시 문제가 발생했을때 빠른 조치를 위해 사용하는 브랜치
+
+-> master, develop 브랜치만이 계속 유지 나머지는 생성 삭제 반복
+
+---
 
 ## 개발 일지 
 
