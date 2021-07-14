@@ -17,9 +17,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 
 /**
+ * Redis Session을 위한 설정 클래스 <br>
  * 세션 만료 시간은 1시간 - 운동 기록 작성 고려
+ * @Profile("dev") - Test에 반영되지 않기 위해 추가
  * @author kimgun-yeong
- *
  */
 @Configuration
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds=3600)
@@ -29,6 +30,11 @@ public class RedisSessionConfig {
 	
 	private final ObjectMapper objectMapper;
 	
+	
+	/**
+	 * Redis Session Storage, Redis Cache Storage 분리
+	 * @author kimgun-yeong
+	 */
 	@Value("${redis.session.host}")
 	private String redisSessionHost;
 	
@@ -36,7 +42,7 @@ public class RedisSessionConfig {
 	private int redisSessionPort;
 	
 	/**
-	 * REDIS-CLi로 LETTUCE 
+	 * REDIS-CLi로 LETTUCE 채택
 	 * @return
 	 */
 	@Bean

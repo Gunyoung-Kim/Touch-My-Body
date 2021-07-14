@@ -77,9 +77,9 @@ const addExercise = () => {
   let subMuscles = [];
 
   for(let i=1 ; i <inputNum;i++) {
-    let muscleName = $(`muscle${i}`).val();
+    let muscleName = $(`#muscle${i}`).val();
     if(muscleName != "") {
-      if($(`isMain${i}`).val() == "true") {
+      if($(`#isMain${i}`).val() == "true") {
         mainMuscles.push(muscleName);
       } else {
         subMuscles.push(muscleName);

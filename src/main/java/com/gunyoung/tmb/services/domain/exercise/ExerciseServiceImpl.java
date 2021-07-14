@@ -141,7 +141,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	 */
 	@Override
 	@Transactional(readOnly=true)
-	@Cacheable(cacheNames=CacheUtil.EXERCISE_NAME,key="#root.methodName")
+	@Cacheable(cacheNames=CacheUtil.EXERCISE_SORT_NAME,key="#root.methodName")
 	public Map<String, List<String>> getAllExercisesNamewithSorting() {
 		Map<String, List<String>> result = new HashMap<>();
 		List<ExerciseNameAndTargetDTO> list = exerciseRepository.findAllWithNameAndTarget();
@@ -168,7 +168,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_NAME,allEntries=true)
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
 	public Exercise save(Exercise exercise) {
 		return exerciseRepository.save(exercise);
 	}
@@ -264,7 +264,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_NAME,allEntries=true)
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
 	public void delete(Exercise exercise) {
 		exerciseRepository.delete(exercise);
 	}

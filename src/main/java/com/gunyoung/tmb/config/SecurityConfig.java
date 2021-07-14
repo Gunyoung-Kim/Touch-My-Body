@@ -30,6 +30,11 @@ import com.gunyoung.tmb.services.domain.user.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Spring-Security 관련 설정 클래스
+ * @author kimgun-yeong
+ *
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -42,6 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	private final LogoutSuccessHandler logoutSuccessHandler;
 	
 	/**
+	 * 유저의 권한 체계 설정 <br>
+	 * 관리자(ADMIN) > 매니저(MANAGER) > 일반 유저(USER)
 	 * @return RoleHierarchy 객체 - 유저 권환 계급 체계 반환 
 	 * @author kimgun-yeong
 	 */
@@ -59,6 +66,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		return roleHierarchy;
 	}
 	
+	/**
+	 * 유저의 권한 체계 추가 
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	@Bean
 	public SecurityExpressionHandler<FilterInvocation> expressionHandler() {
 		DefaultWebSecurityExpressionHandler webSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
@@ -66,6 +78,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		return webSecurityExpressionHandler;
 	}
 	
+	/**
+	 * 
+	 * @author kimgun-yeong
+	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
