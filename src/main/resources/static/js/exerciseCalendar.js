@@ -3,6 +3,8 @@ let date = new Date();
 
 let current;
 
+let isDone;
+
 const renderCalendar = () => {
 
   const viewYear = date.getFullYear();
@@ -40,7 +42,7 @@ const renderCalendar = () => {
   dates.forEach((dateNum,i) => {
     const condition = i >= firstDateIndex && i <= lastDateIndex +1 ? 'this' : 'other';
 
-    dates[i] = `<div class="date" onclick="getRecords(${dateNum})"><span class="${condition}">${dateNum}</span></div>`;
+    dates[i] = `<div class="date" id="date${dateNum}" onclick="getRecords(${dateNum})"><span class="${condition}">${dateNum}</span></div>`;
   })
 
   document.querySelector('.dates').innerHTML = dates.join('');
@@ -108,4 +110,8 @@ const getRecords = (dateNum) => {
       }
     }
   })
+}
+
+const getIsDone = () => {
+
 }

@@ -9,13 +9,16 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.DateDTO;
+import com.gunyoung.tmb.dto.response.UserExerciseIsDoneDTO;
 import com.gunyoung.tmb.dto.response.UserExerciseWithDateDTO;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
+import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 public class UserExcerciseRestController {
 	
 	private final HttpSession session;
+	
+	private final UserService userService;
 	
 	private final UserExerciseService userExerciseService;
 	
@@ -44,5 +49,15 @@ public class UserExcerciseRestController {
 		List<UserExercise> userExerciseList = userExerciseService.findByUserIdAndDate(userId, paramDate);
 		
 		return UserExerciseWithDateDTO.of(userExerciseList);
+	}
+	
+	@RequestMapping(value="/user/exercise/calendar/isdone",method=RequestMethod.GET)
+	@LoginIdSessionNotNull
+	public List<UserExerciseIsDoneDTO> getIsDoneList(@RequestParam("year") int year, @RequestParam("month") int month) {
+		Long userId = SessionUtil.getLoginUserId(session);
+		
+		List<UserExerciseIsDoneDTO> result = userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId, year, month);
+		
+		return result;
 	}
 }
