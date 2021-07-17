@@ -60,7 +60,7 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 	@Override
 	@Transactional(readOnly=true)
 	public List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year,int month) {
-		Calendar[] firstAndLastDay = DateUtil.calendarForStartAndEndOfYearAndMonth(year, month-1);
+		Calendar[] firstAndLastDay = DateUtil.calendarForStartAndEndOfYearAndMonth(year, month);
 		List<Calendar> calendarList = userExerciseRepository.findUserExercisesIdForDayToDay(userId, firstAndLastDay[0], firstAndLastDay[1]);
 		int lastDateOfMonth = firstAndLastDay[1].get(Calendar.DATE);
 		boolean[] isDoneArr = new  boolean[lastDateOfMonth+1];	
@@ -68,8 +68,6 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 		for(Calendar c : calendarList) {
 			isDoneArr[c.get(Calendar.DATE)] = true;
 		}
-		
-		System.out.println(firstAndLastDay[0].get(Calendar.DATE) +"~" +firstAndLastDay[1].get(Calendar.DATE));
 		
 		List<UserExerciseIsDoneDTO> dtoList = new ArrayList<>();
 		

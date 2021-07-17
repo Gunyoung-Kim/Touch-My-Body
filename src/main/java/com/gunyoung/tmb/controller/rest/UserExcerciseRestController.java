@@ -29,8 +29,6 @@ public class UserExcerciseRestController {
 	
 	private final HttpSession session;
 	
-	private final UserService userService;
-	
 	private final UserExerciseService userExerciseService;
 	
 	/**

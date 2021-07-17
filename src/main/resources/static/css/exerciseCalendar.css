@@ -133,3 +133,7 @@
   transform: translate(-50%, -50%);
   content: '';
 }
+
+.doneDay{
+  background: linear-gradient(to bottom, , #F5F5DC 50%);
+}

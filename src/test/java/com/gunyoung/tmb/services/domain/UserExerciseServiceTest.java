@@ -32,7 +32,7 @@ import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 public class UserExerciseServiceTest {
 	
 	private static final int INIT_USER_EXERCISE_NUM = 30;
-	private static final Calendar DEFAULT_CALENDAR = new GregorianCalendar(1999,1,16);
+	private static final Calendar DEFAULT_CALENDAR = new GregorianCalendar(1999,Calendar.JANUARY,16);
 	
 	@Autowired
 	UserExerciseRepository userExerciseRepository;
@@ -154,10 +154,6 @@ public class UserExerciseServiceTest {
 		int existDay = DEFAULT_CALENDAR.get(Calendar.DATE);
 		//When
 		List<UserExerciseIsDoneDTO> result = userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId,existYear,existMonth);
-	
-		for(UserExerciseIsDoneDTO dto: result) {
-			System.out.println(dto.getDate() +": " + dto.isDone());
-		}
 		
 		//Then
 		assertEquals(result.get(existDay-1).isDone(),true);
