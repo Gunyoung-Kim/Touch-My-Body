@@ -22,25 +22,25 @@
               <select id="target" onchange="targetChange(this.value)">
                 <option selected disabled>운동 부위 선택</option>
               </select>
-              <select id="exercises" name="exerciseName">
+              <select id="exerciseName" name="exerciseName">
                 <option selected disabled>운동 종류 선택</option>
               </select>
             </div>
             <div class="form-group mb-2">
               <label>세트</label>
-              <input type="number" name="sets" max="100" min="1" aria-describedby="setsHelp">
+              <input type="number" id="sets" name="sets" max="100" min="1" aria-describedby="setsHelp">
               <small id="setsHelp" class="form-text text-muted">
                 최소 1회 ~ 최대 100회 입력 가능
               </small>
             </div>
             <div class="form-group mb-2">
               <label>반복 횟수</label>
-              <input type="number" name="laps" max="300" min="1" aria-describedby="lapsHelp">
+              <input type="number" id="laps" name="laps" max="300" min="1" aria-describedby="lapsHelp">
               <small id="lapsHelp" class="form-text text-muted">
                 최소 1회 ~ 최대 300회 입력 가능
               </small>
               <label>무게(kg)</label>
-              <input type="number" name="weight" max="10000" min="1" aria-describedby="weightHelp">
+              <input type="number" id="weight" name="weight" max="10000" min="1" aria-describedby="weightHelp">
               <small id="weightHelp" class="form-text text-muted">
                 최소 1kg ~ 최대 10000kg 입력 가능
               </small>
@@ -49,7 +49,7 @@
             <div class="form-group mb-2">
               <label>간단한 설명</label>
               <div>
-                <input type="text" name="description" aria-describedby="descriptionHelp">
+                <input type="text" id="description" name="description" aria-describedby="descriptionHelp">
               </div>
               <small id="descriptionHelp" class="fomm-text text-muted">
                 ex) 스쿼트 했다면 스미스 머신을 사용했는지, 싱글 레그로 했는지
@@ -57,9 +57,9 @@
             </div>
             <div class="form-group mb-2">
               <label>운동한 날짜</label>
-              <input type="date" name="date" class="form-control">
+              <input type="date" id="date" name="date" class="form-control">
             </div>
-            <button type="submit" id="submitButton" class="btn btn-black">추가</button>
+            <button type="button" id="submitButton" class="btn btn-black" onclick="add()">추가</button>
           </form>
         </div>
       </div>

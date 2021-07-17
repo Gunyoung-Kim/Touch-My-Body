@@ -16,10 +16,25 @@ public interface UserExerciseRepository extends JpaRepository<UserExercise,Long>
 	 * @param userId
 	 * @param date
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@Query("SELECT ue FROM UserExercise ue "
 			+ "INNER JOIN ue.user u "
 			+ "WHERE (u.id = :userId) "
 			+ "and (ue.date = :date) ")
 	public List<UserExercise> findUserExercisesByUserIdAndDate(@Param("userId")Long userId,@Param("date") Calendar date);
+	
+	/**
+	 * 특정 유저의 특정 날짜 사이에 존재하는 운동정보의 날짜들을 가져오는 쿼리 
+	 * @param start
+	 * @param end
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT ue.date FROM UserExercise ue "
+			+ "INNER JOIN ue.user u "
+			+ "WHERE (u.id = :userId) "
+			+ "AND (ue.date >= :startDay) "
+			+ "AND (ue.date <= :endDay)")
+	public List<Calendar> findUserExercisesIdForDayToDay(@Param("userId")Long userId, @Param("startDay")Calendar start, @Param("endDay")Calendar end);
 }
