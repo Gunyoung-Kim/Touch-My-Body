@@ -25,17 +25,14 @@ import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
-import com.gunyoung.tmb.error.codes.CommentErrorCode;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
-import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
-import com.gunyoung.tmb.error.exceptions.notmatch.UserNotMatchException;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
@@ -46,6 +43,11 @@ import com.gunyoung.tmb.utils.SessionUtil;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * ExercisePost 관련 화면 반환하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @Controller
 @RequiredArgsConstructor
 public class ExercisePostController {
@@ -63,7 +65,9 @@ public class ExercisePostController {
 	/**
 	 * 커뮤니티 메인 화면 반환하는 메소드
 	 * @param mav
+	 * @param keyword ExercisePost 제목 및 내용의 검색 키워드
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community",method=RequestMethod.GET)
 	public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") int page,
@@ -144,10 +148,12 @@ public class ExercisePostController {
 	}
 	
 	/**
-	 * 게시글을 보여주는 뷰 반환하는 메소드 
-	 * @param postId
+	 * 게시글을 보여주는 뷰 반환하는 메소드
+	 * @param postId 찾고자하는 ExercisePost 의 ID
 	 * @param mav
+	 * @throws ExercisePostNotFoundedException 해당 ID의 ExercisePost 없으면
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}" ,method = RequestMethod.GET)
 	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId,ModelAndView mav) {
@@ -180,10 +186,14 @@ public class ExercisePostController {
 	}
 	
 	/**
-	 * 게시글 추가 처리하는 메소드 
+	 * 게시글 추가 처리하는 메소드 <br>
+	 * 정상 처리 시 커뮤니티 메인 화면으로 리다이렉트
 	 * @param dto
 	 * @param mav
+	 * @throws UserNotFoundedException 세션에 저장된 ID에 해당하는 User 없으면
+	 * @throws ExerciseNotFoundedException dto의 exerciseName에 해당하는 Exercise 없으면 
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/addpost", method = RequestMethod.POST)
 	@LoginIdSessionNotNull
@@ -213,10 +223,13 @@ public class ExercisePostController {
 	}
 	
 	/**
-	 * 유저가 게시글에 댓글 추가할때 처리하는 메소드 
-	 * @param postId
+	 * 유저가 게시글에 댓글 추가할때 처리하는 메소드 <br>
+	 * 정상 처리시 해당 게시글로 리다이렉트
+	 * @param postId 댓글을 추가하려는 ExercisePost
 	 * @param dto
 	 * @param request
+	 * @throws UserNotFoundedException 세션에 저장된 ID에 해당하는 User 없으면
+	 * @throws ExercisePostNotFoundedException 해당 ID의 ExercisePost 없으면 
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/addComment",method = RequestMethod.POST)
@@ -249,32 +262,6 @@ public class ExercisePostController {
 		
 		return new ModelAndView("redirect:/community/post/" + postId);
 				
-	}
-	
-	/**
-	 * 유저가 게시글에 댓글 삭제할때 처리하는 메소드
-	 * @param postId
-	 * @param commentId
-	 * @author kimgun-yeong
-	 */
-	@RequestMapping(value="/community/post/{post_id}/removeComment",method = RequestMethod.DELETE)
-	@LoginIdSessionNotNull
-	public ModelAndView removeCommentToExercisePost(@PathVariable("post_id") Long postId,@RequestParam("commentId") Long commentId) {
-		Comment comment = commentService.findWithUserAndExercisePostById(commentId);
-		
-		if(comment == null) {
-			throw new CommentNotFoundedException(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
-		User commentUser = comment.getUser();
-		
-		if(SessionUtil.getLoginUserId(session) != commentUser.getId()) {
-			throw new UserNotMatchException(UserErrorCode.USER_NOT_MATCH_ERROR.getDescription());
-		}
-		
-		commentService.delete(comment);
-		
-		return new ModelAndView("redirect:/community/post/" + postId);
 	}
 	
 }

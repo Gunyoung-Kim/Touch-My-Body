@@ -26,6 +26,11 @@ import com.gunyoung.tmb.utils.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 매니저의 User 관련 요청 처리하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @RestController
 @RequiredArgsConstructor
 public class ManagerUserRestController {
@@ -39,9 +44,11 @@ public class ManagerUserRestController {
 	private final RoleHierarchy roleHierarchy;
 	
 	/**
-	 * 
-	 * @param userId
+	 * User의 정보 수정 요청 처리하는 메소드 (아직은 권한만 변경 가능)
+	 * @param userId 정보 수정하려는 대상 User의 Id
 	 * @param dto
+	 * @throws UserNotFoundedException 해당 Id의 User 없으면
+	 * @throws AccessDeniedException 접속자가 대상 User 보다 권한이 낮으면
 	 * @return
 	 * @author kimgun-yeong
 	 */
@@ -73,8 +80,9 @@ public class ManagerUserRestController {
 	}
 	
 	/**
-	 * 
-	 * @param commentId
+	 * 특정 유저가 작성한 댓글 삭제 요청 처리하는 메소드
+	 * @param userId 댓글 작성한 User의 Id
+	 * @param commentId 삭제하려는 대상 Comment의 Id
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage/{user_id}/comments/remove", method = RequestMethod.DELETE)
@@ -83,9 +91,9 @@ public class ManagerUserRestController {
 	}
 	
 	/**
-	 * 
-	 * @param userId
-	 * @param postId
+	 * 특정 유저가 작성한 게시글 삭제 요청 처리하는 메소드
+	 * @param userId 게시글 작성한 User의 Id
+	 * @param postId 삭제하려는 대상 ExercisePost의 Id
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage/{user_id}/posts/remove",method = RequestMethod.DELETE) 
@@ -94,9 +102,10 @@ public class ManagerUserRestController {
 	}
 	
 	/**
-	 * 
+	 * 입력된 권한이 접근 가능한 권한 목록 반환하는 메소드
 	 * @param authorities
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	private List<String> getReachableAuthorityStrings(Collection<? extends GrantedAuthority> authorities) {
 		return SecurityUtil.getAuthorityStrings(roleHierarchy.getReachableGrantedAuthorities(authorities));

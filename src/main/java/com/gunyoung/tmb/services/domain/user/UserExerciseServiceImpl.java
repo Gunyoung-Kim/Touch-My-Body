@@ -54,7 +54,7 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 	}
 	
 	/**
-	 * 
+	 * 특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환하는 메소드
 	 * @author kimgun-yeong
 	 */
 	@Override

@@ -35,6 +35,11 @@ import com.gunyoung.tmb.utils.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 매니저의 User 관리 관련 화면 반환하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @Controller
 @RequiredArgsConstructor
 public class ManagerUserController {
@@ -51,7 +56,7 @@ public class ManagerUserController {
 	 * 매니저들의 유저 검색 (for managing) 페이지 반환
 	 * @param mav
 	 * @param page 검색하려는 페이지
-	 * @param keyword 검색 키워드
+	 * @param keyword User 닉네임 검색 키워드
 	 * @return
 	 * @author kimgun-yeong
 	 */
@@ -86,9 +91,11 @@ public class ManagerUserController {
 	}
 	
 	/**
-	 * 
-	 * @param userId
+	 * 특정 User 관리 화면 반환하는 메소드
+	 * @param userId 관리하려는 대상 User의 Id
 	 * @param mav
+	 * @throws UserNotFoundedException 해당 Id의 User 없으면 
+	 * @throws AccessDeniedException 접속자의 권한이 대상 User의 권한보다 낮다면
 	 * @return
 	 * @author kimgun-yeong
 	 */
@@ -118,11 +125,14 @@ public class ManagerUserController {
 	}
 	
 	/**
-	 * 특정 유저의 댓글 목록 보여주는 화면 반환하는 메소드 
-	 * @param userId
-	 * @param order
+	 * 특정 유저의 댓글 목록 보여주는 화면 반환하는 메소드
+	 * @param userId 댓글 목록 확인하려는 대상 User의 Id
+	 * @param order 검색의 정렬 조건 (최신순 또는 오래된순)
 	 * @param mav
+	 * @throws UserNotFoundedException 해당 Id의 User 없으면
+	 * @throws SearchCriteriaInvalidException 검색 결과 정렬 방식이 올바르지 못하다면 
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage/{user_id}/comments", method = RequestMethod.GET) 
 	public ModelAndView manageUserComments(@PathVariable("user_id") Long userId,@RequestParam(value="page", required=false,defaultValue="1") Integer page
@@ -170,10 +180,13 @@ public class ManagerUserController {
 	}
 	/**
 	 * 특정 유저의 게시글 목록 보여주는 화면 반환하는 메소드
-	 * @param userId
-	 * @param order
+	 * @param userId 열람하려는 게시글 목록의 대상 User의 Id 
+	 * @param order 검색의 정렬 조건 (최신순 또는 오래된순)
 	 * @param mav
+	 * @throws UserNotFoundedException 해당 Id의 User 없으면
+	 * @throws SearchCriteriaInvalidException 검색 결과 정렬 방식이 올바르지 못하다면
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage/{user_id}/posts",method=RequestMethod.GET)
 	public ModelAndView managerUserPosts(@PathVariable("user_id") Long userId, @RequestParam(value="page", required=false,defaultValue="1") Integer page
@@ -221,8 +234,8 @@ public class ManagerUserController {
 	}
 	
 	/**
-	 * 
-	 * @param authorities
+	 * 입력된 권한으로 접근 가능한 권한이 목록 (string) 반환하는 메소드
+	 * @param authorities 
 	 * @return
 	 * @author kimgun-yeong
 	 */

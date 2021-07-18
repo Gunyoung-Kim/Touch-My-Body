@@ -21,6 +21,11 @@ import com.gunyoung.tmb.utils.PageUtil;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 매니저의 피드백 관리 관련 화면 반환하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @Controller
 @RequiredArgsConstructor
 public class ManagerFeedbackController {
@@ -30,11 +35,13 @@ public class ManagerFeedbackController {
 	private final ExerciseService exerciseService;
 	
 	/**
-	 * 
-	 * @param exerciseId
+	 * 특정 Exercise 정보에 대해 작성된 Feedback 리스트 화면 반환하는 메소드
+	 * @param exerciseId Feedback들의 대상 Exercise의 ID
 	 * @param page
 	 * @param mav
+	 * @throws ExerciseNotFoundedException 해당 Id의 Exercise 없으면
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/feedback/{exerciseId}" ,method= RequestMethod.GET) 
 	public ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId,@RequestParam(value="page", defaultValue="1") int page
@@ -62,10 +69,12 @@ public class ManagerFeedbackController {
 	}
 	
 	/**
-	 * 
-	 * @param feedbackId
+	 * 특정 Feedback의 상세정보 화면 반환하는 메소드
+	 * @param feedbackId 상세정보 열람하고자 하는 대상 Feedback의 ID
 	 * @param mav
+	 * @throws FeedbackNotFoundedException 해당 Id의 Feedback 없으면
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/feedback/detail/{feedbackId}" ,method = RequestMethod.GET) 
 	public ModelAndView feedbackView(@PathVariable("feedbackId") Long feedbackId, ModelAndView mav) {

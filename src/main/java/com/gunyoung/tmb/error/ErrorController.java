@@ -16,6 +16,7 @@ import com.gunyoung.tmb.error.codes.FeedbackErrorCode;
 import com.gunyoung.tmb.error.codes.JoinErrorCode;
 import com.gunyoung.tmb.error.codes.LikeErrorCode;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
+import com.gunyoung.tmb.error.codes.PrivacyPolicyErrorCode;
 import com.gunyoung.tmb.error.codes.SearchCriteriaErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
@@ -30,6 +31,7 @@ import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedExceptio
 import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.nonexist.PrivacyPolicyNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.SessionAttributesNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
@@ -129,6 +131,12 @@ public class ErrorController {
 	@ExceptionHandler(FeedbackNotFoundedException.class)
 	public ErrorMsg feedbackNotFounded(FeedbackNotFoundedException e) {
 		return new ErrorMsg(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
+	}
+	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ExceptionHandler(PrivacyPolicyNotFoundedException.class)
+	public ErrorMsg privacyPolicyNotFounded(PrivacyPolicyNotFoundedException e) {
+		return new ErrorMsg(PrivacyPolicyErrorCode.PRIVACY_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
 	/*

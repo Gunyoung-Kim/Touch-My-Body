@@ -23,6 +23,7 @@ import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.notmatch.UserNotMatchException;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.like.CommentLikeService;
@@ -33,7 +34,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 
+ * ExercisePost 관련 요청 처리하는 컨트롤러
  * @author kimgun-yeong
  *
  */
@@ -55,7 +56,10 @@ public class ExercisePostRestController {
 	
 	/**
 	 * 유저가 게시글에 좋아요 추가했을때 처리하는 메소드
-	 * @param postId
+	 * @param postId 게시글 추가하려는 대상 ExercisePost의 Id
+	 * @throws UserNotFoundedException 세션에 저장된 Id에 해당하는 User 없으면
+	 * @throws ExercisePostNotFoundedException 해당 Id의 ExercisePost 없으면
+	 * @throws LikeAlreadyExistException 해당 ExercisePost에 User의 PostLike가 이미 존재한다면
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/addLike",method = RequestMethod.POST)
@@ -81,6 +85,8 @@ public class ExercisePostRestController {
 	
 	/**
 	 * 유저가 게시글에 좋아요 취소했을때 처리하는 메소드
+	 * @param postId 게시글 취소하려는 ExercisePost의 Id
+	 * @throws LikeNotFoundedException 세션의 저장된 UserId와 postId를 만족하는 PostLike 없으면
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/removeLike",method = RequestMethod.POST)
@@ -98,8 +104,11 @@ public class ExercisePostRestController {
 	
 	/**
 	 * 유저가 댓글에 좋아요 추가 요청 처리하는 메소드 
-	 * @param postId
-	 * @param commentId
+	 * @param postId 댓글이 속해있는 ExercisePost의 Id
+	 * @param commentId 좋아요 추가하려는 대상 Comment의 Id
+	 * @throws UserNotFoundedException 세션에 저장된 Id의 User 없으면
+	 * @throws CommentNotFoundedException 해당 Id의 Comment 없으면
+	 * @throws LikeAlreadyExistException 해당 유저가 댓글에 이미 좋아요 추가했으면
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/comment/addlike",method = RequestMethod.POST)
@@ -127,8 +136,9 @@ public class ExercisePostRestController {
 	
 	/**
 	 * 유저가 댓글에 좋아요 취소 요청 처리하는 메소드
-	 * @param postId 댓글이 소속된 게시글 id
+	 * @param postId 댓글이 소속된 ExercisePost id
 	 * @param commentId 좋아요를 취소하고자 하는 댓글
+	 * @throws LikeNotFoundedException 해당 유저가 해당 댓글에 좋아요 추가하지 않았었으면
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}/comment/removelike",method = RequestMethod.POST)
@@ -142,6 +152,32 @@ public class ExercisePostRestController {
 			throw new LikeNotFoundedException(LikeErrorCode.LIKE_NOT_FOUNDED_ERROR.getDescription());
 		
 		commentLikeService.delete(commentLike);
+	}
+	
+	/**
+	 * 유저가 게시글에 댓글 삭제할때 처리하는 메소드
+	 * @param postId 댓글이 작성된 ExercisePost의 ID
+	 * @param commentId 삭제하려는 대상 Comment의 ID
+	 * @throws CommentNotFoundedException 해당 ID의 Comment 없으면
+	 * @throws UserNotMatchException 세션에 저장된 ID와 댓글 작성자의 ID 일치하지 않으면 
+	 * @author kimgun-yeong
+	 */
+	@RequestMapping(value="/community/post/{post_id}/removeComment",method = RequestMethod.DELETE)
+	@LoginIdSessionNotNull
+	public void removeCommentToExercisePost(@PathVariable("post_id") Long postId,@RequestParam("commentId") Long commentId) {
+		Comment comment = commentService.findWithUserAndExercisePostById(commentId);
+		
+		if(comment == null) {
+			throw new CommentNotFoundedException(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getDescription());
+		}
+		
+		User commentUser = comment.getUser();
+		
+		if(SessionUtil.getLoginUserId(session) != commentUser.getId()) {
+			throw new UserNotMatchException(UserErrorCode.USER_NOT_MATCH_ERROR.getDescription());
+		}
+		
+		commentService.delete(comment);
 	}
 	
 }
