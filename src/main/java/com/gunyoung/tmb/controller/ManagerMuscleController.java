@@ -26,6 +26,11 @@ import com.gunyoung.tmb.utils.PageUtil;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 매니저의 Muscle 관리 관련 화면 반환하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @Controller
 @RequiredArgsConstructor
 public class ManagerMuscleController {
@@ -33,9 +38,9 @@ public class ManagerMuscleController {
 	private final MuscleService muscleService;
 	
 	/**
-	 * 
+	 * Muscle의 리스트 화면 반환하는 메소드
 	 * @param page
-	 * @param keyword
+	 * @param keyword Muscle Name 검색 키워드 
 	 * @param mav
 	 * @return
 	 * @author kimgun-yeong
@@ -92,6 +97,8 @@ public class ManagerMuscleController {
 	/**
 	 * 근육 추가 처리하는 메소드
 	 * @param dto
+	 * @throws MuscleNameDuplicationFoundedException 추가하려는 Muscle의 Name이 중복된다면
+	 * @throws TargetTypeNotFoundedException 추가하려는 Muscle의 category와 일치하는 TargetType 없으면
 	 * @return
 	 * @author kimgun-yeong
 	 */
@@ -127,10 +134,12 @@ public class ManagerMuscleController {
 	}
 	
 	/**
-	 * 
-	 * @param muscleId
+	 * Muscle 정보 수정 화면 반환하는 메소드 
+	 * @param muscleId 정보 수정하려는 대상 Muscle의 Id
 	 * @param mav
+	 * @throws MuscleNotFoundedException 해당 Id의 Muscle 없으면
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.GET)
 	public ModelAndView modifyMuscleView(@PathVariable("muscleId") Long muscleId, ModelAndView mav) {

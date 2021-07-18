@@ -25,6 +25,11 @@ import com.gunyoung.tmb.utils.SessionUtil;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Feedback 관련 화면 반환하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @Controller
 @RequiredArgsConstructor
 public class FeedbackController {
@@ -38,10 +43,12 @@ public class FeedbackController {
 	private final HttpSession session;
 	
 	/**
-	 * 
-	 * @param exerciseId
+	 * Feedback 추가 화면 반환하는 메소드
+	 * @param exerciseId Feedback 추가하려는 Exercise의 ID
 	 * @param mav
+	 * @throws ExerciseNotFoundedException 해당 ID의 Exercise 없으면
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.GET)
 	public ModelAndView addFeedbackView(@PathVariable("exercise_id") Long exerciseId,ModelAndView mav) {
@@ -57,10 +64,14 @@ public class FeedbackController {
 	}
 	
 	/**
-	 * 
-	 * @param exerciseId
+	 * Feedback 추가 처리하는 메소드 <br>
+	 * 추가 성공 시 Feedback 추가 화면으로 리다이렉트
+	 * @param exerciseId Feedback 추가하려는 Exercise의 ID
 	 * @param dto
+	 * @throws UserNotFoundedException 세션에 저장된 ID에 해당하는 User 없으면
+	 * @throws ExerciseNotFoundedException 해당 ID에 해당하는 Exercise 없으면
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.POST)
 	@LoginIdSessionNotNull

@@ -6,20 +6,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.tmb.error.codes.PrivacyPolicyErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.PrivacyPolicyNotFoundedException;
+
+/**
+ * 개인정보 처리방침 화면 반환하는 메소드
+ * @author kimgun-yeong
+ *
+ */
 @Controller
 public class PrivacyPolicyController {
 	
 	public static final int LATEST_POLICY_VERSION = 1;
 	
 	/**
-	 * <pre>
-	 *  - 기능: 가장 최근에 적용된 개인정보처리 방침 문서를 보여주는 컨트롤러
-	 *  - 반환: 
-	 *  	- 성공
-	 *  	View: privacyPolicy_LATEST_POLICY_VERSION.html
-	 *  </pre>
+	 *  가장 최근에 적용된 개인정보 처리방침 문서 화면 반환하는 메소드
 	 *  @author kimgun-yeong
-	 *  
 	 */
 	@RequestMapping(value="/privacypolicy", method = RequestMethod.GET)
 	public ModelAndView privacyPolicyLastest(ModelAndView mav) {
@@ -29,21 +31,15 @@ public class PrivacyPolicyController {
 	}
 	
 	/**
-	 * <pre>
-	 *  - 기능: url에 표시된 버전의 개인정보처리 방침 문서를 보여주는 컨트롤러
-	 *  - 반환: 
-	 *  	- 성공
-	 *  	View: privacyPolicy_version.html
-	 *  	- 실패
-	 *  	해당하는 버전의 개인정보 처리방침이 없을 
-	 *  </pre>
+	 *  특정 버전의 개인정보 처리방침 화면 반환하는 메소드
 	 *  @param version 열람하려는 개인정보 처리방침의 버전 값 
+	 *  @throws PrivacyPolicyNotFoundedException 해당 버전의 개인정보 처리방침 없으면
 	 *  @author kimgun-yeong
 	 */
 	@RequestMapping(value="/privacypolicy/{version}", method = RequestMethod.GET)
 	public ModelAndView privacyPolicyWithVersion(@PathVariable("version") int version,ModelAndView mav) {
 		if(version <=0 || version > LATEST_POLICY_VERSION) {
-			return new ModelAndView("redirect:/errorpage");
+			throw new PrivacyPolicyNotFoundedException(PrivacyPolicyErrorCode.PRIVACY_NOT_FOUNDED_ERROR.getDescription());
 		}
 		mav.setViewName("privacyPolicy_" +version);
 		

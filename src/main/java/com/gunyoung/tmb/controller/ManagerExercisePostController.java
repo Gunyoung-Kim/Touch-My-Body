@@ -16,6 +16,11 @@ import com.gunyoung.tmb.utils.PageUtil;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 매니저의 게시글 관리 관련 화면 반환하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @Controller
 @RequiredArgsConstructor
 public class ManagerExercisePostController {
@@ -23,9 +28,9 @@ public class ManagerExercisePostController {
 	private final ExercisePostService exercisePostService;
 	
 	/**
-	 * 
+	 * ExercisePost 리스트 화면 반환하는 메소드
 	 * @param page
-	 * @param keyword
+	 * @param keyword title,contents 검색 키워드
 	 * @param mav
 	 * @return
 	 * @author kimgun-yeong

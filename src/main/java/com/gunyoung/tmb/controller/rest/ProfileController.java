@@ -10,12 +10,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Code의 무중단 배포를 위한 프로필 반환하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @RestController
 @RequiredArgsConstructor
 public class ProfileController {
 	
 	private final Environment env;
 	
+	/**
+	 * 적용된 프로필중 server1 이나 server2 있으면 반환
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	@RequestMapping(value="/profile", method= RequestMethod.GET)
 	public String getProfile() {
 		List<String> profiles = Arrays.asList(env.getActiveProfiles());

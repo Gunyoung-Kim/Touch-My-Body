@@ -18,11 +18,15 @@ import com.gunyoung.tmb.dto.reqeust.DateDTO;
 import com.gunyoung.tmb.dto.response.UserExerciseIsDoneDTO;
 import com.gunyoung.tmb.dto.response.UserExerciseWithDateDTO;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
-import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * UserExercise 관련 요청 처리하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @RestController
 @RequiredArgsConstructor
 public class UserExcerciseRestController {
@@ -32,7 +36,7 @@ public class UserExcerciseRestController {
 	private final UserExerciseService userExerciseService;
 	
 	/**
-	 * 
+	 * 접속자의 특정 날짜의 운동 기록들 반환하는 메소드
 	 * @param date year,month,date 포함하는 dto
 	 * @return
 	 * @author kimgun-yeong
@@ -49,6 +53,13 @@ public class UserExcerciseRestController {
 		return UserExerciseWithDateDTO.of(userExerciseList);
 	}
 	
+	/**
+	 * 접속자의 특정 달에 각 일에 운동 했는지 여부 반환하는 메소드 
+	 * @param year
+	 * @param month
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	@RequestMapping(value="/user/exercise/calendar/isdone",method=RequestMethod.GET)
 	@LoginIdSessionNotNull
 	public List<UserExerciseIsDoneDTO> getIsDoneList(@RequestParam("year") int year, @RequestParam("month") int month) {
