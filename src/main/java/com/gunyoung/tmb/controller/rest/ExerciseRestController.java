@@ -14,6 +14,11 @@ import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Exercise 관련 요청 처리하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @RestController
 @RequiredArgsConstructor
 public class ExerciseRestController {	
@@ -21,7 +26,8 @@ public class ExerciseRestController {
 	private final ExerciseService exerciseService;
 	
 	/**
-	 * 각 부위별 운동 종류 반환하는 메소드
+	 * 각 부위별 운동 종류 반환하는 메소드 <br>
+	 * Exercise를 target으로 분류해서 반환
 	 * @return
 	 * @author kimgun-yeong
 	 */

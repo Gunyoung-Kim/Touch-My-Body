@@ -23,6 +23,11 @@ import com.gunyoung.tmb.utils.SessionUtil;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * UserExercise 관련 화면 반환하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @Controller
 @RequiredArgsConstructor
 public class UserExerciseController {
@@ -34,7 +39,7 @@ public class UserExerciseController {
 	private final ExerciseService exerciseService;
 	
 	/**
-	 * User의 그간의 운동 기록을 보여주는 캘린더 
+	 * User의 그간의 운동 기록을 보여주는 캘린더 화면 반환하는 메소드
 	 * @param mav
 	 * @return
 	 * @author kimgun-yeong
@@ -47,7 +52,7 @@ public class UserExerciseController {
 	}
 	
 	/**
-	 * User의 오늘의 운동 기록을 추가하는 뷰 반환하는 메소드
+	 * User의 오늘의 운동 기록을 추가하는 화면 반환하는 메소드
 	 * @param mav
 	 * @return
 	 * @author kimgun-yeong
@@ -63,7 +68,7 @@ public class UserExerciseController {
 	 * User의 오늘의 운동 기록 추가 처리하는 메소드
 	 * @param mav
 	 * @return
-	 * @throws UserNotFoundedException - 접속된 세션의 id의 user 가 없을 때
+	 * @throws UserNotFoundedException 접속된 세션의 id의 user 가 없을 때
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.POST)

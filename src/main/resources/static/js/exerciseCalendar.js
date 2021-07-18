@@ -3,6 +3,8 @@ let date = new Date();
 
 let current;
 
+let isDone;
+
 const renderCalendar = () => {
 
   const viewYear = date.getFullYear();
@@ -40,7 +42,11 @@ const renderCalendar = () => {
   dates.forEach((dateNum,i) => {
     const condition = i >= firstDateIndex && i <= lastDateIndex +1 ? 'this' : 'other';
 
-    dates[i] = `<div class="date" onclick="getRecords(${dateNum})"><span class="${condition}">${dateNum}</span></div>`;
+    if(condition === 'this') {
+      dates[i] = `<div class="date" id="date${dateNum}" onclick="getRecords(${dateNum})"><span class="${condition}">${dateNum}</span></div>`;
+    } else {
+      dates[i] = `<div class="date" id="otherdate${dateNum}"><span class="${condition}">${dateNum}</span></div>`;
+    }
   })
 
   document.querySelector('.dates').innerHTML = dates.join('');
@@ -56,21 +62,49 @@ const renderCalendar = () => {
   }
 }
 
+const getIsDone = () => {
+  $.ajax({
+    url: '/user/exercise/calendar/isdone',
+    method: 'GET',
+    data: {"year": date.getFullYear(), "month":date.getMonth()},
+
+    success:function(data) {
+      console.log(data);
+      if(data.length == 0) {
+        console.log("결과가 없습니다");
+      } else {
+        $.each(data,function() {
+          let nalzza = this.date;
+          let isDone = this.done;
+          console.log(isDone);
+          if(isDone == true) {
+            $(`#date${nalzza}`).append('<div><small>운동함</small></div>')
+          }
+        })
+      }
+    }
+  })
+}
+
 renderCalendar();
+getIsDone();
 
 const prevMonth = () => {
   date.setMonth(date.getMonth() -1);
   renderCalendar();
+  getIsDone();
 }
 
 const nextMonth = () => {
   date.setMonth(date.getMonth() +1);
   renderCalendar();
+  getIsDone();
 }
 
 const goToday = () => {
   date = new Date();
   renderCalendar();
+  getIsDone();
 }
 
 const goToAddRecords = () => {

@@ -3,6 +3,7 @@ package com.gunyoung.tmb.services.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
+import com.gunyoung.tmb.dto.response.UserExerciseIsDoneDTO;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
@@ -30,6 +32,7 @@ import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 public class UserExerciseServiceTest {
 	
 	private static final int INIT_USER_EXERCISE_NUM = 30;
+	private static final Calendar DEFAULT_CALENDAR = new GregorianCalendar(1999,Calendar.JANUARY,16);
 	
 	@Autowired
 	UserExerciseRepository userExerciseRepository;
@@ -49,7 +52,7 @@ public class UserExerciseServiceTest {
 													.sets(i)
 													.weight(i)
 													.description(i+"번째 description")
-													.date(Calendar.getInstance())
+													.date(DEFAULT_CALENDAR)
 													.build();
 			
 			userExerciseRepository.save(userExercise);
@@ -104,13 +107,7 @@ public class UserExerciseServiceTest {
 	@DisplayName("유저Id와 날짜로 운동 기록 찾기 ->정상")
 	public void findByUserIdAndDateTest() {
 		//Given
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("test")
-				.lastName("test")
-				.nickName("test")
-				.build();
+		User user = getUserInstance();
 	
 		user = userRepository.save(user);
 		Long userId = user.getId();
@@ -126,10 +123,42 @@ public class UserExerciseServiceTest {
 		}
 		
 		//When
-		List<UserExercise> resultList = userExerciseService.findByUserIdAndDate(userId, Calendar.getInstance());
+		List<UserExercise> resultList = userExerciseService.findByUserIdAndDate(userId, DEFAULT_CALENDAR);
 		
 		//Then
 		assertEquals(resultList.size(),INIT_USER_EXERCISE_NUM/3);
+	}
+	
+	/*
+	 * public List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year,int month)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("유저 id, 년, 월로 날짜에 운동 했는지 여부 -> 정상")
+	public void findIsDoneDTOByUserIdAndYearAndMonth() {
+		//Given
+		User user = getUserInstance();
+		
+		user = userRepository.save(user);
+		Long userId = user.getId();
+		
+		UserExercise ue = userExerciseRepository.findAll().get(0);
+		
+		ue.setUser(user);
+		
+		userExerciseRepository.save(ue);
+		
+		int existYear = DEFAULT_CALENDAR.get(Calendar.YEAR);
+		int existMonth = DEFAULT_CALENDAR.get(Calendar.MONTH);
+		int existDay = DEFAULT_CALENDAR.get(Calendar.DATE);
+		//When
+		List<UserExerciseIsDoneDTO> result = userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId,existYear,existMonth);
+		
+		//Then
+		assertEquals(result.get(existDay-1).isDone(),true);
+		assertEquals(result.get(existDay-1).getDate(),existDay);
+
 	}
 	
 	/*
@@ -161,7 +190,7 @@ public class UserExerciseServiceTest {
 												.laps(1)
 												.sets(1)
 												.weight(1)
-												.date(Calendar.getInstance())
+												.date(DEFAULT_CALENDAR)
 												.description("new")
 												.build();
 		Long countBefore = userExerciseRepository.count();
@@ -192,6 +221,17 @@ public class UserExerciseServiceTest {
 		Optional<UserExercise> result = userExerciseRepository.findById(id);
 		
 		assertEquals(result.isEmpty(),true);
+	}
+	
+	private User getUserInstance() {
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234")
+				.firstName("test")
+				.lastName("test")
+				.nickName("test")
+				.build();
+		return user;
 	}
 	
 }

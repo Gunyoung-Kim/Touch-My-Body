@@ -1,5 +1,6 @@
 package com.gunyoung.tmb.services.domain.user;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.user.UserExercise;
+import com.gunyoung.tmb.dto.response.UserExerciseIsDoneDTO;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
+import com.gunyoung.tmb.utils.DateUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -51,6 +54,36 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 	}
 	
 	/**
+	 * 특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환하는 메소드
+	 * @author kimgun-yeong
+	 */
+	@Override
+	@Transactional(readOnly=true)
+	public List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year,int month) {
+		Calendar[] firstAndLastDay = DateUtil.calendarForStartAndEndOfYearAndMonth(year, month);
+		List<Calendar> calendarList = userExerciseRepository.findUserExercisesIdForDayToDay(userId, firstAndLastDay[0], firstAndLastDay[1]);
+		int lastDateOfMonth = firstAndLastDay[1].get(Calendar.DATE);
+		boolean[] isDoneArr = new  boolean[lastDateOfMonth+1];	
+		
+		for(Calendar c : calendarList) {
+			isDoneArr[c.get(Calendar.DATE)] = true;
+		}
+		
+		List<UserExerciseIsDoneDTO> dtoList = new ArrayList<>();
+		
+		for(int i=1;i<=lastDateOfMonth;i++) {
+			UserExerciseIsDoneDTO dto = UserExerciseIsDoneDTO.builder()
+					.date(i)
+					.isDone(isDoneArr[i])
+					.build();
+			
+			dtoList.add(dto);
+		}
+		
+		return dtoList;
+	}
+	
+	/**
 	 * @param userExercise 저장하려는 UserExercise
 	 * @return 저장된 결과
 	 * @author kimgun-yeong
@@ -68,5 +101,4 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 	public void delete(UserExercise userExercise) {
 		userExerciseRepository.delete(userExercise);
 	}
-	
 }

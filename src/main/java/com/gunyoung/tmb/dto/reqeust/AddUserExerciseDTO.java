@@ -55,6 +55,7 @@ public class AddUserExerciseDTO {
 												.date(dto.getDate())
 												.description(dto.getDescription())
 												.build();
+		
 		return userExercise;
 	}
 }

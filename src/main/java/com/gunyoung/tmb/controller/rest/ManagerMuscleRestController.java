@@ -16,6 +16,11 @@ import com.gunyoung.tmb.services.domain.exercise.MuscleService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 매니저의 Muscle 관련 요청 처리하는 컨트롤러
+ * @author kimgun-yeong
+ *
+ */
 @RestController
 @RequiredArgsConstructor
 public class ManagerMuscleRestController {
@@ -23,10 +28,13 @@ public class ManagerMuscleRestController {
 	private final MuscleService muscleService;
 	
 	/**
-	 * 
-	 * @param muscleId
+	 * Muscle 정보 수정 요청 처리하는 메소드
+	 * @param muscleId 정보 수정하려는 대상 Muscle의 Id
 	 * @param dto
+	 * @throws MuscleNotFoundedException 해당 Id의 Muscle 없으면
+	 * @throws MuscleNameDuplicationFoundedException 수정된 이름이 이미 존재하는 Muscle의 이름과 일치한다면
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.PUT)
 	public void modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute AddMuscleDTO dto) {
@@ -47,8 +55,8 @@ public class ManagerMuscleRestController {
 	
 	
 	/**
-	 * 
-	 * @param muscleId
+	 * Muscle의 삭제 요철 처리하는 메소드
+	 * @param muscleId 삭제하려는 대상 Muscle의 Id
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/muscle/remove" ,method = RequestMethod.DELETE)

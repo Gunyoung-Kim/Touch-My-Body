@@ -63,6 +63,7 @@ public class UserController {
 	 * 메인 화면을 반환하는 메소드
 	 * @param mav
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/",method=RequestMethod.GET)
 	public ModelAndView index(ModelAndView mav) {
@@ -72,9 +73,11 @@ public class UserController {
 	}
 	
 	/**
-	 * 로그인 화면을 반환하는 메소드
+	 * 로그인 화면을 반환하는 메소드 <br>
+	 * 로그인 화면으로 들어오기전 위치 로그인 성공 후 리다이렉트 위해 세션에 저장
 	 * @param mav
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/login",method=RequestMethod.GET)
 	public ModelAndView loginView(HttpServletRequest request,ModelAndView mav) {
@@ -94,6 +97,7 @@ public class UserController {
 	 * @param formModel
 	 * @param mav
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/join",method=RequestMethod.GET)
 	public ModelAndView joinView(@ModelAttribute("formModel")UserJoinDTO formModel,ModelAndView mav) {
@@ -103,9 +107,14 @@ public class UserController {
 	}
 	
 	/**
-	 * 회원가입을 처리하는 메소드
+	 * 회원가입을 처리하는 메소드 <br>
+	 * 입력된 password는 암호화를 거쳐 저장 <br>
+	 * 정상 처리 시 메인화면으로 리다이렉트
 	 * @param mav
+	 * @throws EmailDuplicationFoundedException 입력된 email이 이미 존재한다면
+	 * @throws NickNameDuplicationFoundedException 입력된 nickName이 이미 존재한다면
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/join",method=RequestMethod.POST)
 	public ModelAndView join(@ModelAttribute("formModel")UserJoinDTO formModel) {
@@ -129,9 +138,11 @@ public class UserController {
 	}
 	
 	/**
-	 * 
+	 * 접속자의 개인정보 화면 반환하는 메소드
 	 * @param mav
+	 * @throws UserNotFoundedException 세션에 저장된 Id에 해당하는 User 없으면
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/profile",method=RequestMethod.GET)
 	@LoginIdSessionNotNull
@@ -152,11 +163,14 @@ public class UserController {
 	}
 	
 	/**
-	 * 
+	 * 접속자의 본인이 작성한 댓글 목록 화면 반환하는 메소드
 	 * @param mav
 	 * @param page
-	 * @param order
+	 * @param order 검색 결과의 정렬 조건 (최신순 또는 오래된순)
+	 * @throws UserNotFoundedException 세션에 저장된 Id에 해당하는 User 없으면 
+	 * @throws SearchCriteriaInvalidException 검색 정렬 조건이 적절치 못하다면 
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/profile/mycomments", method=RequestMethod.GET)
 	@LoginIdSessionNotNull
@@ -205,11 +219,14 @@ public class UserController {
 	}
 	
 	/**
-	 * 
+	 * 접속자의 본인이 작성한 게시글 목록 화면 반환하는 메소드
 	 * @param mav
 	 * @param page
-	 * @param order
+	 * @param order 검색 결과의 정렬 조건 (최신순 또는 오래된순)
+	 * @throws UserNotFoundedException 세션에 저장된 Id에 해당하는 User 없으면 
+	 * @throws SearchCriteriaInvalidException 검색 정렬 조건이 적절치 못하다면
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/profile/myposts",method=RequestMethod.GET)
 	@LoginIdSessionNotNull

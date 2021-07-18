@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.gunyoung.tmb</groupId>
 	<artifactId>TouchMyBody</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>TouchMyBody</name>
 	<description>Touch My Body With Spring</description>
 	<properties>
