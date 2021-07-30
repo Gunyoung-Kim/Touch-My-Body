@@ -7,8 +7,8 @@ import org.springframework.security.web.WebAttributes;
 
 public class SessionUtil {
 	
-	private static final String LOGIN_USER_ID = "LOGIN_USER_ID";
-	private static final String AFTER_LOGIN_REDIRECTED_URL = "AFTER_LOGIN_REDIRECTED_URL";
+	public static final String LOGIN_USER_ID = "LOGIN_USER_ID";
+	public static final String AFTER_LOGIN_REDIRECTED_URL = "AFTER_LOGIN_REDIRECTED_URL";
 	
 	private SessionUtil() {}
 	

@@ -89,7 +89,7 @@ public class ExercisePostRestController {
 	 * @throws LikeNotFoundedException 세션의 저장된 UserId와 postId를 만족하는 PostLike 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/{post_id}/removeLike",method = RequestMethod.POST)
+	@RequestMapping(value="/community/post/{post_id}/removelike",method = RequestMethod.DELETE)
 	@LoginIdSessionNotNull
 	public void removeLikeToExercisePost(@PathVariable("post_id") Long postId) {
 		Long userId = SessionUtil.getLoginUserId(session);
@@ -141,7 +141,7 @@ public class ExercisePostRestController {
 	 * @throws LikeNotFoundedException 해당 유저가 해당 댓글에 좋아요 추가하지 않았었으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/{post_id}/comment/removelike",method = RequestMethod.POST)
+	@RequestMapping(value="/community/post/{post_id}/comment/removelike",method = RequestMethod.DELETE)
 	@LoginIdSessionNotNull
 	public void removeLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId) { 
 		Long userId = SessionUtil.getLoginUserId(session);	
