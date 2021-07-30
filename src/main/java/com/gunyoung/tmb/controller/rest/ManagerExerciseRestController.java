@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
@@ -41,11 +40,10 @@ public class ManagerExerciseRestController {
 	 * @param dto
 	 * @param mav
 	 * @throws ExerciseNameDuplicationFoundedException 입력된 이름의 Exercise 이미 존재하면
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/add" ,method = RequestMethod.POST)
-	public void addExercise(@ModelAttribute AddExerciseDTO dto,ModelAndView mav) {
+	public void addExercise(@ModelAttribute AddExerciseDTO dto) {
 		if(exerciseService.existsByName(dto.getName())) {
 			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getDescription());
 		}
@@ -60,7 +58,6 @@ public class ManagerExerciseRestController {
 	 * @param dto
 	 * @throws ExerciseNotFoundedException 해당 Id의 Exercise 없으면
 	 * @throws ExerciseNameDuplicationFoundedException 변경된 이름이 다른 Exercise의 이름과 일치하면
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/modify/{exerciseId}",method=RequestMethod.PUT) 

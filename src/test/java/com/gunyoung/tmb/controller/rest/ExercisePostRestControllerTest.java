@@ -27,7 +27,7 @@ import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**
- * ExercisePostRestController 에 대한 테스트 클래스 <br>
+ * {@link ExercisePostRestController} 에 대한 테스트 클래스 <br>
  * 테스트 범위:(통합 테스트) 프레젠테이션 계층 - 서비스 계층 - 영속성 계층 <br>
  * MockMvc 활용을 통한 통합 테스트
  * @author kimgun-yeong
