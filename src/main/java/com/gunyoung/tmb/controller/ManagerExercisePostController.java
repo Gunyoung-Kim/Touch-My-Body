@@ -28,7 +28,8 @@ public class ManagerExercisePostController {
 	private final ExercisePostService exercisePostService;
 	
 	/**
-	 * ExercisePost 리스트 화면 반환하는 메소드
+	 * ExercisePost 리스트 화면 반환하는 메소드 <br>
+	 * 키워드 빈 문자열일 시 아무것도 리스트에 반환하지 않음
 	 * @param page
 	 * @param keyword title,contents 검색 키워드
 	 * @param mav

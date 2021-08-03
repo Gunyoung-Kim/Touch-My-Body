@@ -80,7 +80,7 @@ public class FeedbackController {
 		
 		User user = userService.findWithFeedbacksById(userId);
 		
-		if(userId == null) {
+		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		

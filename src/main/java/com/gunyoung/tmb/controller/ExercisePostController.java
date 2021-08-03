@@ -72,7 +72,6 @@ public class ExercisePostController {
 	@RequestMapping(value="/community",method=RequestMethod.GET)
 	public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") int page,
 			@RequestParam(value="keyword",required=false)String keyword,ModelAndView mav) {
-		mav.setViewName("community");
 		int page_size = PageUtil.COMMUNITY_PAGE_SIZE;
 		
 		Page<PostForCommunityViewDTO> pageResult;
@@ -96,6 +95,7 @@ public class ExercisePostController {
 		mav.addObject("targetNames", targetTypes);
 		mav.addObject("startIndex",(page/page_size)*page_size+1);
 		mav.addObject("lastIndex",(page/page_size)*page_size+page_size-1 > totalPageNum ? totalPageNum : (page/page_size)*page_size+page_size-1);
+		mav.setViewName("community");
 		
 		return mav;
 	}
@@ -106,6 +106,7 @@ public class ExercisePostController {
 	 * @param keyword
 	 * @param mav
 	 * @param targetName
+	 * @throws TargetTypeNotFoundedException 요청 카테고리가 존재하지 않을 때
 	 * @return
 	 */
 	@RequestMapping(value="/community/{target}",method = RequestMethod.GET)
