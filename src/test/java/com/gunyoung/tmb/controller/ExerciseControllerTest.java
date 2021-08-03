@@ -128,7 +128,7 @@ public class ExerciseControllerTest {
 		exerciseRepository.save(exercise);
 		
 		//When
-		MvcResult result = mockMvc.perform(get("/exercise/about/" + exercise.getId()+1))
+		MvcResult result = mockMvc.perform(get("/exercise/about/" + exercise.getId()))
 		
 		//Then
 				.andExpect(status().isOk())
