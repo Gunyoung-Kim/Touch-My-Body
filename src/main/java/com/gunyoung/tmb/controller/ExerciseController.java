@@ -79,7 +79,7 @@ public class ExerciseController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/exercise/about/{exercise_id}", method = RequestMethod.GET)
-	public ModelAndView exerciseInfoMainView(@PathVariable("exercise_id") Long exerciseId,ModelAndView mav) {
+	public ModelAndView exerciseInfoDetailView(@PathVariable("exercise_id") Long exerciseId,ModelAndView mav) {
 		
 		ExerciseForInfoViewDTO dto = exerciseService.getExerciseForInfoViewDTOByExerciseId(exerciseId);
 		
