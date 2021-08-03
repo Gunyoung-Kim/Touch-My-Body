@@ -69,6 +69,7 @@ public class UserExerciseController {
 	 * @param mav
 	 * @return
 	 * @throws UserNotFoundedException 접속된 세션의 id의 user 가 없을 때
+	 * @throws ExerciseNotFoundedException 해당 이름을 만족하는 Exercise 가 없을 때
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.POST)
