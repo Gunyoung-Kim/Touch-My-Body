@@ -16,5 +16,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AddFeedbackDTO {
 	private String title;
-	private String content;
+	private String contents;
 }

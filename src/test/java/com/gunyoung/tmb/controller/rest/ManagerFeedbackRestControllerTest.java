@@ -39,7 +39,7 @@ public class ManagerFeedbackRestControllerTest {
 	
 	private Feedback getFeedbackInstance() {
 		Feedback feedback = Feedback.builder()
-				.content("content")
+				.contents("content")
 				.isReflected(false)
 				.title("title")
 				.build();

@@ -92,7 +92,7 @@ public class FeedbackController {
 		
 		Feedback feedback = Feedback.builder()
 				.title(dto.getTitle())
-				.content(dto.getContent())
+				.contents(dto.getContents())
 				.build();
 		
 		feedbackService.saveWithUserAndExercise(feedback, user, exercise);

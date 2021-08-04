@@ -117,7 +117,7 @@ public class FeedbackControllerTest {
 	private MultiValueMap<String, String> getAddFeedbackDTOMap() {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("title", "title");
-		map.add("content", "content");
+		map.add("contents", "contents");
 		return map;
 	}
 	
@@ -200,6 +200,7 @@ public class FeedbackControllerTest {
 		
 		assertEquals(0,feedbackRepository.count());
 	}
+	
 	@Test
 	@Transactional
 	@DisplayName("Feedback 추가 처리 -> 정상")

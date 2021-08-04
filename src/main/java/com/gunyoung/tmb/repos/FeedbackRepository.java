@@ -20,7 +20,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long>{
 	 * @return
 	 * @author kimgun-yeong
 	 */
-	@Query("SELECT new com.gunyoung.tmb.dto.response.FeedbackViewDTO (f.id, f.title, f.content, u.nickName, e.name, f.createdAt) FROM Feedback f "
+	@Query("SELECT new com.gunyoung.tmb.dto.response.FeedbackViewDTO (f.id, f.title, f.contents, u.nickName, e.name, f.createdAt) FROM Feedback f "
 			+ "INNER JOIN f.user u "
 			+ "INNER JOIN f.exercise e "
 			+ "WHERE f.id = :feedbackId")
