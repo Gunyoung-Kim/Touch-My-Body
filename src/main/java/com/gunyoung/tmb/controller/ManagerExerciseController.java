@@ -44,30 +44,31 @@ public class ManagerExerciseController {
 	 */
 	@RequestMapping(value="/manager/exercise",method= RequestMethod.GET)
 	public ModelAndView exerciseViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav) {
-		int page_size = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
+		int pageSize = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
 		
 		Page<Exercise> pageResult;
 		long totalPageNum;
 		
 		if(keyword != null) {
-			pageResult = exerciseService.findAllWithNameKeywordInPage(keyword, page, page_size);
-			totalPageNum = exerciseService.countAllWithNameKeyword(keyword)/page_size +1;
+			pageResult = exerciseService.findAllWithNameKeywordInPage(keyword, page, pageSize);
+			totalPageNum = exerciseService.countAllWithNameKeyword(keyword)/pageSize +1;
 		} else {
-			pageResult = exerciseService.findAllInPage(page, page_size);
-			totalPageNum = exerciseService.countAll()/page_size +1;
+			pageResult = exerciseService.findAllInPage(page, pageSize);
+			totalPageNum = exerciseService.countAll()/pageSize +1;
 		}
 		
-		List<ExerciseForTableDTO> resultList = new ArrayList<>();
+		List<ExerciseForTableDTO> listObject = new ArrayList<>();
 		
 		for(Exercise e: pageResult) {
-			resultList.add(ExerciseForTableDTO.of(e));
+			listObject.add(ExerciseForTableDTO.of(e));
 		}
 		
-		mav.setViewName("exerciseListViewForManage");
-		mav.addObject("listObject",resultList);
+		mav.addObject("listObject",listObject);
 		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/page_size)*page_size+1);
-		mav.addObject("lastIndex",(page/page_size)*page_size+page_size-1 > totalPageNum ? totalPageNum : (page/page_size)*page_size+page_size-1);
+		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
+		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setViewName("exerciseListViewForManage");
 		
 		return mav;
 	}
@@ -86,8 +87,9 @@ public class ManagerExerciseController {
 			targetTypeKoreanNames.add(t.getKoreanName());
 		}
 		
-		mav.setViewName("addExercise");
 		mav.addObject("targetTypes", targetTypeKoreanNames);
+		
+		mav.setViewName("addExercise");
 		
 		return mav;
 	}
@@ -109,7 +111,7 @@ public class ManagerExerciseController {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		AddExerciseDTO dto = AddExerciseDTO.of(exercise); 
+		AddExerciseDTO addExerciseDTO = AddExerciseDTO.of(exercise); 
 		
 		List<String> targetTypeKoreanNames = new ArrayList<>();
 		
@@ -118,10 +120,11 @@ public class ManagerExerciseController {
 		}
 		
 		mav.addObject("exerciseId", exerciseId);
-		mav.addObject("exerciseInfo", dto);
+		mav.addObject("exerciseInfo", addExerciseDTO);
 		mav.addObject("targetTypes", targetTypeKoreanNames);
 		
 		mav.setViewName("modifyExercise");
+		
 		return mav;
 	}
 	

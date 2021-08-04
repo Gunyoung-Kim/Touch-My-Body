@@ -60,17 +60,18 @@ public class ManagerMuscleController {
 			totalPageNum = muscleService.countAll()/pageSize +1;
 		}
 		
-		List<MuscleForTableDTO> resultList = new ArrayList<>();
+		List<MuscleForTableDTO> listObject = new ArrayList<>();
 		
 		for(Muscle m : pageResult) {
-			resultList.add(MuscleForTableDTO.of(m));
+			listObject.add(MuscleForTableDTO.of(m));
 		}
 		
-		mav.setViewName("muscleListViewForManage");
-		mav.addObject("listObject",resultList);
+		mav.addObject("listObject",listObject);
 		mav.addObject("currentPage",page);
 		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
 		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setViewName("muscleListViewForManage");
 		
 		return mav;
 	}
@@ -83,12 +84,13 @@ public class ManagerMuscleController {
 	 */
 	@RequestMapping(value="/manager/muscle/add" , method= RequestMethod.GET)
 	public ModelAndView addMuscleView(ModelAndView mav) {
-		List<String> targetTypeStrings = new ArrayList<>();
+		List<String> targetTypeKoreanNames = new ArrayList<>();
 		for(TargetType tt: TargetType.values()) {
-			targetTypeStrings.add(tt.getKoreanName());
+			targetTypeKoreanNames.add(tt.getKoreanName());
 		}
 		
-		mav.addObject("targetTypes", targetTypeStrings);
+		mav.addObject("targetTypes", targetTypeKoreanNames);
+		
 		mav.setViewName("addMuscle");
 		
 		return mav;
@@ -149,14 +151,15 @@ public class ManagerMuscleController {
 			throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		List<String> targetTypeStrings = new ArrayList<>();
+		List<String> targetTypeKoreanNames = new ArrayList<>();
 		for(TargetType tt: TargetType.values()) {
-			targetTypeStrings.add(tt.getKoreanName());
+			targetTypeKoreanNames.add(tt.getKoreanName());
 		}
 		
 		mav.addObject("muscleInfo", AddMuscleDTO.of(muscle));
-		mav.addObject("targetTypes", targetTypeStrings);
+		mav.addObject("targetTypes", targetTypeKoreanNames);
 		mav.addObject("muscleId", muscleId);
+		
 		mav.setViewName("modifyMuscle");
 		
 		return mav;

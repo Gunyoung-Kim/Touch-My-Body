@@ -71,37 +71,38 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community",method=RequestMethod.GET)
 	public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") int page,
-			@RequestParam(value="keyword",required=false)String keyword,ModelAndView mav) {
-		int page_size = PageUtil.COMMUNITY_PAGE_SIZE;
+			@RequestParam(value="keyword",required=false)String keyword, ModelAndView mav) {
+		int pageSize = PageUtil.COMMUNITY_PAGE_SIZE;
 		
 		Page<PostForCommunityViewDTO> pageResult;
 		long totalPageNum;
 		
 		if(keyword == null) {
-			pageResult = exercisePostService.findAllForPostForCommunityViewDTOByPage(page,PageUtil.COMMUNITY_PAGE_SIZE);
-			totalPageNum = exercisePostService.count()/page_size +1;
+			pageResult = exercisePostService.findAllForPostForCommunityViewDTOByPage(page, PageUtil.COMMUNITY_PAGE_SIZE);
+			totalPageNum = exercisePostService.count()/pageSize + 1;
 		} else {
-			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, page,PageUtil.COMMUNITY_PAGE_SIZE);
-			totalPageNum = exercisePostService.countWithTitleAndContentsKeyword(keyword)/page_size +1;
+			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, page, PageUtil.COMMUNITY_PAGE_SIZE);
+			totalPageNum = exercisePostService.countWithTitleAndContentsKeyword(keyword)/pageSize +1;
 		}
 		
-		List<PostForCommunityViewDTO> resultList = pageResult.getContent();
+		List<PostForCommunityViewDTO> listObject = pageResult.getContent();
 		
 		TargetType[] targetTypes = TargetType.values();
 		
-		mav.addObject("listObject",resultList);
+		mav.addObject("listObject",listObject);
 		mav.addObject("category", "전체");
 		mav.addObject("currentPage",page);
 		mav.addObject("targetNames", targetTypes);
-		mav.addObject("startIndex",(page/page_size)*page_size+1);
-		mav.addObject("lastIndex",(page/page_size)*page_size+page_size-1 > totalPageNum ? totalPageNum : (page/page_size)*page_size+page_size-1);
+		mav.addObject("startIndex",(page/pageSize)*pageSize + 1);
+		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize - 1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize + pageSize - 1);
+		
 		mav.setViewName("community");
 		
 		return mav;
 	}
 	
 	/**
-	 * 특정 부류 게시글만 반환하는 메소
+	 * 특정 부류 게시글만 반환하는 메소드
 	 * @param page
 	 * @param keyword
 	 * @param mav
@@ -111,7 +112,7 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community/{target}",method = RequestMethod.GET)
 	public ModelAndView exercisePostViewWithTarget(@RequestParam(value="page", required = false,defaultValue="1") int page
-			,@RequestParam(value="keyword",required=false)String keyword,ModelAndView mav,@PathVariable("target") String targetName) {
+			, @RequestParam(value="keyword",required=false)String keyword, ModelAndView mav, @PathVariable("target") String targetName) {
 		TargetType type;
 		try {
 			type = TargetType.valueOf(targetName);
@@ -119,30 +120,31 @@ public class ExercisePostController {
 			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		mav.setViewName("community");
-		int page_size = PageUtil.COMMUNITY_PAGE_SIZE;
+		int pageSize = PageUtil.COMMUNITY_PAGE_SIZE;
 		
 		Page<PostForCommunityViewDTO> pageResult;
 		long totalPageNum;
 		
 		if(keyword == null) {
 			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(type, page,PageUtil.COMMUNITY_PAGE_SIZE);
-			totalPageNum = exercisePostService.countWithTarget(type)/page_size +1;
+			totalPageNum = exercisePostService.countWithTarget(type)/pageSize + 1;
 		} else {
 			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(type, keyword, page,PageUtil.COMMUNITY_PAGE_SIZE);
-			totalPageNum = exercisePostService.countWithTargetAndKeyword(type, keyword)/page_size +1;
+			totalPageNum = exercisePostService.countWithTargetAndKeyword(type, keyword)/pageSize + 1;
 		}
 		
-		List<PostForCommunityViewDTO> resultList = pageResult.getContent();
+		List<PostForCommunityViewDTO> listObject = pageResult.getContent();
 		
 		TargetType[] targetTypes = TargetType.values();
 		
-		mav.addObject("listObject",resultList);
+		mav.addObject("listObject",listObject);
 		mav.addObject("targetNames", targetTypes);
 		mav.addObject("category", type.getKoreanName());
 		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/page_size)*page_size+1);
-		mav.addObject("lastIndex",(page/page_size)*page_size+page_size-1 > totalPageNum ? totalPageNum : (page/page_size)*page_size+page_size-1);
+		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
+		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setViewName("community");
 		
 		return mav;
 
@@ -158,17 +160,18 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community/post/{post_id}" ,method = RequestMethod.GET)
 	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId,ModelAndView mav) {
-		ExercisePostViewDTO postDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreasViewNum(postId);
+		ExercisePostViewDTO postViewDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreasViewNum(postId);
 		
-		if(postDTO == null) {
+		if(postViewDTO == null) {
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		List<CommentForPostViewDTO> comments = commentService.getCommentForPostViewDTOsByExercisePostId(postId);
+		List<CommentForPostViewDTO> commentsInPost = commentService.getCommentForPostViewDTOsByExercisePostId(postId);
+		
+		mav.addObject("exercisePost",postViewDTO);
+		mav.addObject("comments", commentsInPost);
 		
 		mav.setViewName("postView");
-		mav.addObject("exercisePost",postDTO);
-		mav.addObject("comments", comments);
 		
 		return mav;
 	}
@@ -199,9 +202,9 @@ public class ExercisePostController {
 	@RequestMapping(value="/community/post/addpost", method = RequestMethod.POST)
 	@LoginIdSessionNotNull
 	public ModelAndView addExercisePost(@ModelAttribute AddExercisePostDTO dto, ModelAndView mav) {
-		Long userId = SessionUtil.getLoginUserId(session);
+		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
-		User user = userService.findfWithExercisePostsById(userId);
+		User user = userService.findfWithExercisePostsById(loginUserId);
 		
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
@@ -236,14 +239,14 @@ public class ExercisePostController {
 	@RequestMapping(value="/community/post/{post_id}/addComment",method = RequestMethod.POST)
 	@LoginIdSessionNotNull
 	public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute AddCommentDTO dto,
-			@RequestParam("isAnonymous") boolean isAnonymous,HttpServletRequest request) {
+			@RequestParam("isAnonymous") boolean isAnonymous, HttpServletRequest request) {
 		
 		dto.setAnonymous(isAnonymous);
 		
 		// 세션으로 가져온 유저 id로 유저 객체 찾기
-		Long userId = SessionUtil.getLoginUserId(session);
+		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
-		User user = userService.findWithCommentsById(userId);
+		User user = userService.findWithCommentsById(loginUserId);
 		
 		if(user == null)
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());

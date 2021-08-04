@@ -30,7 +30,6 @@ public class RedisSessionConfig {
 	
 	private final ObjectMapper objectMapper;
 	
-	
 	/**
 	 * Redis Session Storage, Redis Cache Storage 분리
 	 * @author kimgun-yeong
@@ -44,6 +43,7 @@ public class RedisSessionConfig {
 	/**
 	 * REDIS-CLi로 LETTUCE 채택
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
@@ -56,6 +56,7 @@ public class RedisSessionConfig {
 	 * key serializer : stringSerializer <br>
 	 * value serializer : genericjsonSerializer
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@Bean
 	public RedisTemplate<String, Object> redisTemplate() {

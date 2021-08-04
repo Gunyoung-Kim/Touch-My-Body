@@ -75,9 +75,9 @@ public class UserExerciseController {
 	@RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.POST)
 	@LoginIdSessionNotNull
 	public ModelAndView addUserExercise(@ModelAttribute("formModel") AddUserExerciseDTO formModel) {
-		Long userId = SessionUtil.getLoginUserId(session);
+		Long loginUserId = SessionUtil.getLoginUserId(session);
 		//유저와 유저 운동 기록 페치 조인으로 가져옴
-		User user = userService.findWithUserExerciseById(userId);
+		User user = userService.findWithUserExerciseById(loginUserId);
 		
 		if(user == null) 
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());

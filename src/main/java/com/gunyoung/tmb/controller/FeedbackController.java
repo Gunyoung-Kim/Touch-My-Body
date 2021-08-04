@@ -76,9 +76,9 @@ public class FeedbackController {
 	@RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.POST)
 	@LoginIdSessionNotNull
 	public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId,@ModelAttribute AddFeedbackDTO dto) {
-		Long userId = SessionUtil.getLoginUserId(session);
+		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
-		User user = userService.findWithFeedbacksById(userId);
+		User user = userService.findWithFeedbacksById(loginUserId);
 		
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());

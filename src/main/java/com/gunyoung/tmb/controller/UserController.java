@@ -81,10 +81,10 @@ public class UserController {
 	 */
 	@RequestMapping(value="/login",method=RequestMethod.GET)
 	public ModelAndView loginView(HttpServletRequest request,ModelAndView mav) {
-		String redirectedUrl = request.getHeader("Referer");
+		String afterLoginRedirectedUrl = request.getHeader("Referer");
 		
-		if(redirectedUrl != null && !redirectedUrl.contains("/login")) {
-			SessionUtil.setAfterLoginRedirectedUrl(session,redirectedUrl);
+		if(afterLoginRedirectedUrl != null && !afterLoginRedirectedUrl.contains("/login")) {
+			SessionUtil.setAfterLoginRedirectedUrl(session,afterLoginRedirectedUrl);
 		}
 		
 		mav.setViewName("login");
@@ -147,18 +147,20 @@ public class UserController {
 	@RequestMapping(value="/user/profile",method=RequestMethod.GET)
 	@LoginIdSessionNotNull
 	public ModelAndView profileView(ModelAndView mav) {
-		Long userId = SessionUtil.getLoginUserId(session);
+		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
-		User user = userService.findById(userId);
+		User user = userService.findById(loginUserId);
 		
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		UserProfileDTO dto = UserProfileDTO.of(user);
+		UserProfileDTO userProfileDTO = UserProfileDTO.of(user);
+		
+		mav.addObject("profile", userProfileDTO);
 		
 		mav.setViewName("userProfile");
-		mav.addObject("profile", dto);
+		
 		return mav;
 	}
 	
@@ -176,9 +178,9 @@ public class UserController {
 	@LoginIdSessionNotNull
 	public ModelAndView myCommentsView(ModelAndView mav,@RequestParam(value="page", required=false,defaultValue="1") Integer page
 			,@RequestParam(value="order", defaultValue="desc") String order) {
-		Long userId = SessionUtil.getLoginUserId(session);
+		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
-		User user = userService.findById(userId);
+		User user = userService.findById(loginUserId);
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -188,15 +190,15 @@ public class UserController {
 		Page<Comment> pageResult;
 		
 		if(order.equals("asc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtASC(userId,page,pageSize);
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtASC(loginUserId, page, pageSize);
 		} else if(order.equals("desc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtDESC(userId,page,pageSize);
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtDESC(loginUserId, page, pageSize);
 		} else {
 			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 		}
-		long totalPageNum = commentService.countByUserId(userId)/pageSize+1;
+		long totalPageNum = commentService.countByUserId(loginUserId) / pageSize + 1;
 		
-		List<CommentForManageViewDTO> dtos = new ArrayList<>();
+		List<CommentForManageViewDTO> commentListForView = new ArrayList<>();
 		
 		for(Comment c: pageResult.getContent()) {
 			CommentForManageViewDTO dto = CommentForManageViewDTO.builder()
@@ -206,10 +208,10 @@ public class UserController {
 					.contents(c.getContents())
 					.build();
 			
-			dtos.add(dto);
+			commentListForView.add(dto);
 		}
 		
-		mav.addObject("commentList", dtos);
+		mav.addObject("commentList", commentListForView);
 		mav.addObject("currentPage",page);
 		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
 		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
@@ -232,9 +234,9 @@ public class UserController {
 	@LoginIdSessionNotNull
 	public ModelAndView myPostsView(ModelAndView mav, @RequestParam(value="page", required=false,defaultValue="1") Integer page
 			,@RequestParam(value="order", defaultValue="desc") String order ) {
-		Long userId = SessionUtil.getLoginUserId(session);
+		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
-		User user = userService.findById(userId);
+		User user = userService.findById(loginUserId);
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -243,16 +245,16 @@ public class UserController {
 		Page<ExercisePost> pageResult; 
 		
 		if(order.equals("asc")) {
-			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(userId,page,pageSize);
+			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(loginUserId,page,pageSize);
 		} else if(order.equals("desc")) {
-			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(userId,page,pageSize);
+			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(loginUserId,page,pageSize);
 		} else {
 			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 		}
 		
-		long totalPageNum = exercisePostService.countWithUserId(userId)/pageSize+1;
+		long totalPageNum = exercisePostService.countWithUserId(loginUserId)/pageSize+1;
 		
-		List<ExercisePostForManageViewDTO> dtos = new ArrayList<>();
+		List<ExercisePostForManageViewDTO> postListForView = new ArrayList<>();
 		
 		for(ExercisePost ep: pageResult.getContent()) {
 			ExercisePostForManageViewDTO dto = ExercisePostForManageViewDTO.builder()
@@ -262,10 +264,10 @@ public class UserController {
 					.createdAt(ep.getCreatedAt())
 					.viewNum(ep.getViewNum())
 					.build();
-			dtos.add(dto);
+			postListForView.add(dto);
 		}
 		
-		mav.addObject("postList", dtos);
+		mav.addObject("postList", postListForView);
 		mav.addObject("currentPage",page);
 		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
 		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
