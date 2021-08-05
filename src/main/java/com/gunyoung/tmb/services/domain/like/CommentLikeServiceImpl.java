@@ -50,7 +50,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	@Override
 	@Transactional(readOnly=true)
 	public CommentLike findByUserIdAndCommentId(Long userId, Long commentId) {
-		Optional<CommentLike> result = commentLikeRepository.findByUserIdAndCommentIdCustom(userId, commentId);
+		Optional<CommentLike> result = commentLikeRepository.findByUserIdAndCommentIdFetch(userId, commentId);
 		if(result.isEmpty())
 			return null;
 		return result.get();

@@ -12,9 +12,9 @@ import com.gunyoung.tmb.domain.user.UserExercise;
 public interface UserExerciseRepository extends JpaRepository<UserExercise,Long>{
 	
 	/**
-	 * inner join을 통한 성능 향상
-	 * @param userId
-	 * @param date
+	 * User ID, UserExercise date 를 만족하는 UserExercise들 찾기 
+	 * @param userId 찾으려는 UserExercise의 User ID
+	 * @param date 찾으려는 UserExercise의 date
 	 * @return
 	 * @author kimgun-yeong
 	 */
@@ -22,12 +22,12 @@ public interface UserExerciseRepository extends JpaRepository<UserExercise,Long>
 			+ "INNER JOIN ue.user u "
 			+ "WHERE (u.id = :userId) "
 			+ "and (ue.date = :date) ")
-	public List<UserExercise> findUserExercisesByUserIdAndDate(@Param("userId")Long userId,@Param("date") Calendar date);
+	public List<UserExercise> findUserExercisesByUserIdAndDate(@Param("userId")Long userId, @Param("date") Calendar date);
 	
 	/**
 	 * 특정 유저의 특정 날짜 사이에 존재하는 운동정보의 날짜들을 가져오는 쿼리 
-	 * @param start
-	 * @param end
+	 * @param start 검색 시작 날짜
+	 * @param end 검색 종료 날짜
 	 * @return
 	 * @author kimgun-yeong
 	 */
