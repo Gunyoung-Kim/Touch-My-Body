@@ -47,8 +47,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 	private final ExerciseMuscleService exerciseMuscleService;
 
 	/**
+	 * ID로 Exercise 찾기
 	 * @param id 찾으려는 Exercise의 id
 	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -61,8 +63,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	/**
+	 * name으로 Exercise 찾기
 	 * @param name 찾으려는 Exercise의 이름
 	 * @return Exercise, Null(해당 name의 Exercise가 없을때)
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -75,7 +79,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	/**
-	 * 비즈니스 요구사항에 따라 피드백 즉시로딩 필요할떄 사용
+	 * ID 로 Feedbacks 페치 조인 후 반환 
+	 * @param id 찾으려는 Exercise의 id
+	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -88,7 +95,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	/**
-	 * 
+	 * ID로 ExercisePosts 페치 조인 후 반환
+	 * @param id 찾으려는 Exercise의 id
+	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
+	 * @since 11 
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -101,6 +111,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	/**
+	 * ID로 ExerciseMuscles 페치 조인 후 반환
+	 * @param id 찾으려는 Exercise의 id
+	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
+	 * @since 11 
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -113,7 +127,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	/**
-	 * 모든 운동 페이지로 가져오기 
+	 * 모든 Exercise 페이지로 가져오기 
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -124,7 +138,8 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	/**
-	 * 이름에 키워드를 포함하는 모든 운동 페이지로 가져오는 메소드
+	 * name에 키워드를 포함하는 모든 Exercise 페이지로 가져오는 메소드
+	 * @param keyword name 검색 키워드 
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -136,7 +151,8 @@ public class ExerciseServiceImpl implements ExerciseService {
 	
 	
 	/**
-	 * 모든 운동들을 주 운동 부위들로 분류해 반환하는 메소드
+	 * 모든 Exercise들을 target들로 분류해 반환 <br>
+	 * Cache 이용
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -162,7 +178,9 @@ public class ExerciseServiceImpl implements ExerciseService {
 		return result;
 	}
 
-	/**
+	/** 
+	 * Exercise 생성 및 수정 <br>
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 Cache 삭제 
 	 * @param exercise 저장하려는 Exercise
 	 * @return 저장된 Exercise
 	 * @author kimgun-yeong
@@ -174,7 +192,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	/**
-	 * @param dto 클라이언트로부터 받은 Exercise save하기 위한 DTO 객체
+	 * {@link SaveExerciseDTO} 에 담긴 정보로 Exercise save
+	 * @param dto 클라이언트로부터 받은 Exercise save하기 위한 {@link SaveExerciseDTO} 객체
+	 * @throws TargetTypeNotFoundedException dto 객체에 담긴 target이 아무런 TargetType의 이름이 아닐때 
+	 * @throws MuscleNotFoundedException dto 객체에 담긴 muscleName들 중에 해당하는 Muscle없을 때 
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -260,6 +281,8 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	/**
+	 * Exercise 삭제 <br>
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 Cache 삭제 
 	 * @param exercise 삭제하려는 Exercise
 	 * @author kimgun-yeong
 	 */
@@ -270,6 +293,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	/**
+	 * ID를 만족하는 Exercise 삭제
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -280,7 +304,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	/**
-	 * 모든 운동들 개수 반환
+	 * 모든 Exercise들 개수 반환
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -301,8 +325,9 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	/**
-	 * Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 
-	 * @return ExerciseForInfoViewDTO, null(해당 id의 Exercise 없을때)
+	 * Exercise Id로 찾은 Exercise로 {@link ExerciseForInfoViewDTO} 생성 및 반환 
+	 * @param exerciseId 찾으려는 Exercise의 ID
+	 * @return {@link ExerciseForInfoViewDTO}, null(해당 id의 Exercise 없을때)
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -341,7 +366,8 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	/**
-	 * 해당 이름의 운동이 존재하는지
+	 * 해당 name의 Exercise 존재하는지 여부 반환
+	 * @param 찾으려는 Exercise의 name
 	 * @author kimgun-yeong
 	 */
 	@Override
