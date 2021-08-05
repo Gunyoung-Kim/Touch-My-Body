@@ -16,11 +16,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddCommentDTO {
+public class SaveCommentDTO {
 	private String contents;
 	private boolean isAnonymous;
 	
-	public static Comment toComment(AddCommentDTO dto,String writerIp) {
+	public static Comment toComment(SaveCommentDTO dto,String writerIp) {
 		Comment comment = Comment.builder()
 				.writerIp(writerIp)
 				.contents(dto.getContents())

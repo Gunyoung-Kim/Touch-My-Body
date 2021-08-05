@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddFeedbackDTO {
+public class SaveFeedbackDTO {
 	private String title;
 	private String contents;
 }

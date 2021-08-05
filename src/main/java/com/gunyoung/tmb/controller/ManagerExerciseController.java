@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
-import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
+import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForTableDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
@@ -111,7 +111,7 @@ public class ManagerExerciseController {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		AddExerciseDTO addExerciseDTO = AddExerciseDTO.of(exercise); 
+		SaveExerciseDTO addExerciseDTO = SaveExerciseDTO.of(exercise); 
 		
 		List<String> targetTypeKoreanNames = new ArrayList<>();
 		

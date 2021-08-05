@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddUserExerciseDTO {
+public class SaveUserExerciseDTO {
 	
 	@Max(300)
 	@Min(1)
@@ -44,7 +44,7 @@ public class AddUserExerciseDTO {
 	
 	private String exerciseName;
 	
-	public static UserExercise toUserExercise(AddUserExerciseDTO dto) {
+	public static UserExercise toUserExercise(SaveUserExerciseDTO dto) {
 		
 		
 		

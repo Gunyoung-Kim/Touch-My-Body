@@ -12,7 +12,7 @@ import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
-import com.gunyoung.tmb.dto.reqeust.AddUserExerciseDTO;
+import com.gunyoung.tmb.dto.reqeust.SaveUserExerciseDTO;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
@@ -74,7 +74,7 @@ public class UserExerciseController {
 	 */
 	@RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.POST)
 	@LoginIdSessionNotNull
-	public ModelAndView addUserExercise(@ModelAttribute("formModel") AddUserExerciseDTO formModel) {
+	public ModelAndView addUserExercise(@ModelAttribute("formModel") SaveUserExerciseDTO formModel) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		//유저와 유저 운동 기록 페치 조인으로 가져옴
 		User user = userService.findWithUserExerciseById(loginUserId);
@@ -82,7 +82,7 @@ public class UserExerciseController {
 		if(user == null) 
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		
-		UserExercise userExercise = AddUserExerciseDTO.toUserExercise(formModel);
+		UserExercise userExercise = SaveUserExerciseDTO.toUserExercise(formModel);
 		
 		Exercise exercise = exerciseService.findByName(formModel.getExerciseName());
 		

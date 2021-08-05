@@ -13,7 +13,7 @@ import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
-import com.gunyoung.tmb.dto.reqeust.AddFeedbackDTO;
+import com.gunyoung.tmb.dto.reqeust.SaveFeedbackDTO;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
@@ -77,7 +77,7 @@ public class FeedbackController {
 	 */
 	@RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.POST)
 	@LoginIdSessionNotNull
-	public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId,@ModelAttribute AddFeedbackDTO dto) {
+	public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId,@ModelAttribute SaveFeedbackDTO dto) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
 		User user = userService.findWithFeedbacksById(loginUserId);

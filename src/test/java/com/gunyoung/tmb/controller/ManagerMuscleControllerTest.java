@@ -69,7 +69,7 @@ public class ManagerMuscleControllerTest {
 		return nonExistMuscleId;
 	}
 	
-	private MultiValueMap<String, String> getAddMuscleDTOMap(String name, String category) {
+	private MultiValueMap<String, String> getSaveMuscleDTOMap(String name, String category) {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("name", name);
 		map.add("category", category);
@@ -140,7 +140,7 @@ public class ManagerMuscleControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/muscle/add" ,method=RequestMethod.POST)
-	 * public ModelAndView addMuscle(@ModelAttribute AddMuscleDTO dto)
+	 * public ModelAndView addMuscle(@ModelAttribute SaveMuscleDTO dto)
 	 */
 	
 	@WithMockUser(roles = {"MANAGER"})
@@ -152,7 +152,7 @@ public class ManagerMuscleControllerTest {
 		Muscle muscle = getMuscleInstance();
 		muscleRepository.save(muscle);
 		
-		MultiValueMap<String, String> paramMap =  getAddMuscleDTOMap(muscle.getName(),TargetType.BACK.getKoreanName());
+		MultiValueMap<String, String> paramMap =  getSaveMuscleDTOMap(muscle.getName(),TargetType.BACK.getKoreanName());
 		
 		//When
 		mockMvc.perform(post("/manager/muscle/add")
@@ -171,7 +171,7 @@ public class ManagerMuscleControllerTest {
 	public void addMuscleTargetTypeNonExist() throws Exception {
 		//Given
 		String nonExistTargetTypeName = "nonExist";
-		MultiValueMap<String, String> paramMap =  getAddMuscleDTOMap("muscle",nonExistTargetTypeName);
+		MultiValueMap<String, String> paramMap =  getSaveMuscleDTOMap("muscle",nonExistTargetTypeName);
 		
 		//When
 		mockMvc.perform(post("/manager/muscle/add")
@@ -189,7 +189,7 @@ public class ManagerMuscleControllerTest {
 	@DisplayName("Muscle 추가 처리 -> 정상")
 	public void addMuscleTest() throws Exception {
 		//Given
-		MultiValueMap<String, String> paramMap =  getAddMuscleDTOMap("muscle",TargetType.BACK.getKoreanName());
+		MultiValueMap<String, String> paramMap =  getSaveMuscleDTOMap("muscle",TargetType.BACK.getKoreanName());
 		
 		//When
 		mockMvc.perform(post("/manager/muscle/add")

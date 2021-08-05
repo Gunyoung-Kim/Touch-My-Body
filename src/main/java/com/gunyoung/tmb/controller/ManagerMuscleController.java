@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
-import com.gunyoung.tmb.dto.reqeust.AddMuscleDTO;
+import com.gunyoung.tmb.dto.reqeust.SaveMuscleDTO;
 import com.gunyoung.tmb.dto.response.MuscleForTableDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
@@ -105,7 +105,7 @@ public class ManagerMuscleController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/muscle/add" ,method=RequestMethod.POST)
-	public ModelAndView addMuscle(@ModelAttribute AddMuscleDTO dto) {
+	public ModelAndView addMuscle(@ModelAttribute SaveMuscleDTO dto) {
 		if(muscleService.existsByName(dto.getName())) {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
@@ -156,7 +156,7 @@ public class ManagerMuscleController {
 			targetTypeKoreanNames.add(tt.getKoreanName());
 		}
 		
-		mav.addObject("muscleInfo", AddMuscleDTO.of(muscle));
+		mav.addObject("muscleInfo", SaveMuscleDTO.of(muscle));
 		mav.addObject("targetTypes", targetTypeKoreanNames);
 		mav.addObject("muscleId", muscleId);
 		

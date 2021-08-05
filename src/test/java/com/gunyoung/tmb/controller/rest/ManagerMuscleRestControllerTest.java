@@ -50,7 +50,7 @@ public class ManagerMuscleRestControllerTest {
 		return muscle;
 	}
 	
-	private MultiValueMap<String,String> getAddMuscleDTOMap(String name,TargetType type) {
+	private MultiValueMap<String,String> getSaveMuscleDTOMap(String name,TargetType type) {
 		MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
 		map.add("name", name);
 		map.add("category", type.getKoreanName());
@@ -63,7 +63,7 @@ public class ManagerMuscleRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.PUT)
-	 * public void modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute AddMuscleDTO dto)
+	 * public void modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute SaveMuscleDTO dto)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
@@ -77,7 +77,7 @@ public class ManagerMuscleRestControllerTest {
 		
 		muscleRepository.save(muscle);
 		
-		MultiValueMap<String,String> paramMap = getAddMuscleDTOMap("changedName",muscle.getCategory());
+		MultiValueMap<String,String> paramMap = getSaveMuscleDTOMap("changedName",muscle.getCategory());
 		
 		//When
 		mockMvc.perform(put("/manager/muscle/modify/"+muscle.getId()+1)
@@ -104,7 +104,7 @@ public class ManagerMuscleRestControllerTest {
 		targetMuscle.setName(targetMuscleName);
 		muscleRepository.save(targetMuscle);
 		
-		MultiValueMap<String,String> paramMap = getAddMuscleDTOMap(existingName,targetMuscle.getCategory());
+		MultiValueMap<String,String> paramMap = getSaveMuscleDTOMap(existingName,targetMuscle.getCategory());
 		
 		//When
 		mockMvc.perform(put("/manager/muscle/modify/" + targetMuscle.getId())
@@ -127,7 +127,7 @@ public class ManagerMuscleRestControllerTest {
 		
 		String changedName = "changedName";
 		
-		MultiValueMap<String,String> paramMap = getAddMuscleDTOMap(changedName,muscle.getCategory());
+		MultiValueMap<String,String> paramMap = getSaveMuscleDTOMap(changedName,muscle.getCategory());
 		
 		//When
 		mockMvc.perform(put("/manager/muscle/modify/"+muscle.getId())

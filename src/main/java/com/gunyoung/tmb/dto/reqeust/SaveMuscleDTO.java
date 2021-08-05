@@ -20,12 +20,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddMuscleDTO {
+public class SaveMuscleDTO {
 	private String name;
 	private String category;
 	
-	public static AddMuscleDTO of(Muscle muscle) {
-		AddMuscleDTO dto = AddMuscleDTO.builder()
+	public static SaveMuscleDTO of(Muscle muscle) {
+		SaveMuscleDTO dto = SaveMuscleDTO.builder()
 				.name(muscle.getName())
 				.category(muscle.getCategory().getKoreanName())
 				.build();
@@ -33,7 +33,7 @@ public class AddMuscleDTO {
 		return dto;
 	}
 	
-	public static Muscle toMuscle(Muscle muscle, AddMuscleDTO dto) throws BusinessException{
+	public static Muscle toMuscle(Muscle muscle, SaveMuscleDTO dto) throws BusinessException{
 		muscle.setName(dto.getName());
 		
 		TargetType newMusclesCategory = null;

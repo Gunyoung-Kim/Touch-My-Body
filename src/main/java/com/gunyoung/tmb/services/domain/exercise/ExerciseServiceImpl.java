@@ -17,7 +17,7 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO;
-import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
+import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
@@ -178,13 +178,13 @@ public class ExerciseServiceImpl implements ExerciseService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	public Exercise saveWithAddExerciseDTO(Exercise exercise,AddExerciseDTO dto) {
+	public Exercise saveWithSaveExerciseDTO(Exercise exercise,SaveExerciseDTO dto) {
 		exercise.setName(dto.getName());
 		exercise.setDescription(dto.getDescription());
 		exercise.setCaution(dto.getCaution());
 		exercise.setMovement(dto.getMovement());
 		
-		// AddExerciseDTO에 입력된 target에 해당하는 TargetType 있는지 확인
+		// SaveExerciseDTO에 입력된 target에 해당하는 TargetType 있는지 확인
 		boolean isTargetTypeExist = false;
 		for(TargetType type: TargetType.values()) {
 			if(dto.getTarget().equals(type.getKoreanName())) {

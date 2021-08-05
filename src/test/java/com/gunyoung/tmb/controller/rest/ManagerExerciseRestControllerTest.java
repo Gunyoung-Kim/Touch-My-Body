@@ -78,7 +78,7 @@ public class ManagerExerciseRestControllerTest {
 		return muscle;
 	}
 	
-	private MultiValueMap<String,String> getAddExerciseDTOMap(String name) {
+	private MultiValueMap<String,String> getSaveExerciseDTOMap(String name) {
 		MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
 		map.add("name", name);
 		map.add("description", "d");
@@ -97,7 +97,7 @@ public class ManagerExerciseRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/exercise/add" ,method = RequestMethod.POST)
-	 * public void addExercise(@ModelAttribute AddExerciseDTO dto,ModelAndView mav)
+	 * public void addExercise(@ModelAttribute SaveExerciseDTO dto,ModelAndView mav)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
@@ -110,7 +110,7 @@ public class ManagerExerciseRestControllerTest {
 		
 		exerciseRepository.save(exercise);
 		
-		MultiValueMap<String,String> paramMap = getAddExerciseDTOMap(exercise.getName());
+		MultiValueMap<String,String> paramMap = getSaveExerciseDTOMap(exercise.getName());
 		
 		//When
 		mockMvc.perform(post("/manager/exercise/add")
@@ -127,7 +127,7 @@ public class ManagerExerciseRestControllerTest {
 	@DisplayName("Exercise 추가 -> 정상")
 	public void addExerciseTest() throws Exception {
 		//Given
-		MultiValueMap<String,String> paramMap = getAddExerciseDTOMap("exercise");
+		MultiValueMap<String,String> paramMap = getSaveExerciseDTOMap("exercise");
 		
 		//When
 		mockMvc.perform(post("/manager/exercise/add")
@@ -140,7 +140,7 @@ public class ManagerExerciseRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/exercise/modify/{exerciseId}",method=RequestMethod.PUT) 
-	 * public void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute AddExerciseDTO dto)
+	 * public void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute SaveExerciseDTO dto)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
@@ -154,7 +154,7 @@ public class ManagerExerciseRestControllerTest {
 		
 		exerciseRepository.save(exercise);
 		
-		MultiValueMap<String,String> paramMap = getAddExerciseDTOMap("modifiedName");
+		MultiValueMap<String,String> paramMap = getSaveExerciseDTOMap("modifiedName");
 		
 		//When
 		mockMvc.perform(put("/manager/exercise/modify/"+ exercise.getId()+1)
@@ -183,7 +183,7 @@ public class ManagerExerciseRestControllerTest {
 		
 		exerciseRepository.save(anotherExercise);
 		
-		MultiValueMap<String,String> paramMap = getAddExerciseDTOMap(existingName);
+		MultiValueMap<String,String> paramMap = getSaveExerciseDTOMap(existingName);
 		
 		//When
 		mockMvc.perform(put("/manager/exercise/modify/"+ anotherExercise.getId())
@@ -206,7 +206,7 @@ public class ManagerExerciseRestControllerTest {
 		
 		exerciseRepository.save(exercise);
 		
-		MultiValueMap<String,String> paramMap = getAddExerciseDTOMap(changedName);
+		MultiValueMap<String,String> paramMap = getSaveExerciseDTOMap(changedName);
 		
 		//When
 		mockMvc.perform(put("/manager/exercise/modify/"+ exercise.getId())

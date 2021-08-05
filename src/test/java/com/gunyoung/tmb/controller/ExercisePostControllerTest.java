@@ -117,7 +117,7 @@ public class ExercisePostControllerTest {
 		return mvcResult.getModelAndView().getModel();
 	}
 	
-	private MultiValueMap<String, String> getAddExercisePostDTOMap(String exerciseName) {
+	private MultiValueMap<String, String> getSaveExercisePostDTOMap(String exerciseName) {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("title", "title");
 		map.add("contents", "contents");
@@ -126,7 +126,7 @@ public class ExercisePostControllerTest {
 		return map;
 	}
 	
-	private MultiValueMap<String, String> getAddCommentDTOMap() {
+	private MultiValueMap<String, String> getSaveCommentDTOMap() {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("contents", "contents");
 		map.add("isAnonymous", "false");
@@ -345,7 +345,7 @@ public class ExercisePostControllerTest {
 	/*
 	 * @RequestMapping(value="/community/post/addpost", method = RequestMethod.POST)
 	 * @LoginIdSessionNotNull
-	 * public ModelAndView addExercisePost(@ModelAttribute AddExercisePostDTO dto, ModelAndView mav)
+	 * public ModelAndView addExercisePost(@ModelAttribute SaveExercisePostDTO dto, ModelAndView mav)
 	 */
 	
 	@Test
@@ -362,7 +362,7 @@ public class ExercisePostControllerTest {
 		//When
 		mockMvc.perform(post("/community/post/addpost")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, nonExistUserId)
-				.params(getAddExercisePostDTOMap(exerciseName)))
+				.params(getSaveExercisePostDTOMap(exerciseName)))
 				
 		//Then
 				.andExpect(status().isNoContent());
@@ -384,7 +384,7 @@ public class ExercisePostControllerTest {
 		//When
 		mockMvc.perform(post("/community/post/addpost")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
-				.params(getAddExercisePostDTOMap(nonExistExerciseName)))
+				.params(getSaveExercisePostDTOMap(nonExistExerciseName)))
 		
 		//Then
 				.andExpect(status().isNoContent());
@@ -404,7 +404,7 @@ public class ExercisePostControllerTest {
 		//When
 		mockMvc.perform(post("/community/post/addpost")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
-				.params(getAddExercisePostDTOMap(exerciseName)))
+				.params(getSaveExercisePostDTOMap(exerciseName)))
 		
 		//Then
 				.andExpect(redirectedUrl("/community"));
@@ -415,7 +415,7 @@ public class ExercisePostControllerTest {
 	/*
 	 * @RequestMapping(value="/community/post/{post_id}/addComment",method = RequestMethod.POST)
 	 * @LoginIdSessionNotNull
-	 * public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute AddCommentDTO dto,
+	 * public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute SaveCommentDTO dto,
 	 *		@RequestParam("isAnonymous") boolean isAnonymous,HttpServletRequest request)
 	 */
 	
@@ -437,7 +437,7 @@ public class ExercisePostControllerTest {
 		//When
 		mockMvc.perform(post("/community/post/" + ep.getId() + "/addComment")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, nonExistUserId)
-				.params(getAddCommentDTOMap())
+				.params(getSaveCommentDTOMap())
 				.param("isAnonymous", "false"))
 		
 		//Then
@@ -464,7 +464,7 @@ public class ExercisePostControllerTest {
 		//When
 		mockMvc.perform(post("/community/post/" + nonExistExercisePostId + "/addComment")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
-				.params(getAddCommentDTOMap())
+				.params(getSaveCommentDTOMap())
 				.param("isAnonymous", "false"))
 		
 		//Then
@@ -488,7 +488,7 @@ public class ExercisePostControllerTest {
 		//When
 		mockMvc.perform(post("/community/post/" + ep.getId() + "/addComment")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
-				.params(getAddCommentDTOMap())
+				.params(getSaveCommentDTOMap())
 				.param("isAnonymous", "false"))
 		
 		//Then

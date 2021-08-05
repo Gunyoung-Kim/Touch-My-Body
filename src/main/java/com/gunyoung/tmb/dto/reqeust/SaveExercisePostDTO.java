@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddExercisePostDTO {
+public class SaveExercisePostDTO {
 	private String title;
 	private String contents;
 	private String exerciseName;

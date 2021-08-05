@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddExerciseDTO {
+public class SaveExerciseDTO {
 	private String name;
 	private String description;
 	private String caution;
@@ -34,12 +34,12 @@ public class AddExerciseDTO {
 	private List<String> subMuscles = new ArrayList<>();
 	
 	/**
-	 * Exercise 객체를 통해 AddExerciseDTO 객체 생성 및 반환하는 메소드 
+	 * Exercise 객체를 통해 SaveExerciseDTO 객체 생성 및 반환하는 메소드 
 	 * @param exercise
 	 * @return
 	 */
-	public static AddExerciseDTO of(Exercise exercise) {
-		AddExerciseDTO dto = AddExerciseDTO.builder()
+	public static SaveExerciseDTO of(Exercise exercise) {
+		SaveExerciseDTO dto = SaveExerciseDTO.builder()
 				.name(exercise.getName())
 				.description(exercise.getDescription())
 				.caution(exercise.getCaution())

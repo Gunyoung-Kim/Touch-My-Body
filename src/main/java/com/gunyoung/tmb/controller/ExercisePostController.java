@@ -19,8 +19,8 @@ import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
-import com.gunyoung.tmb.dto.reqeust.AddCommentDTO;
-import com.gunyoung.tmb.dto.reqeust.AddExercisePostDTO;
+import com.gunyoung.tmb.dto.reqeust.SaveCommentDTO;
+import com.gunyoung.tmb.dto.reqeust.SaveExercisePostDTO;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
@@ -201,7 +201,7 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community/post/addpost", method = RequestMethod.POST)
 	@LoginIdSessionNotNull
-	public ModelAndView addExercisePost(@ModelAttribute AddExercisePostDTO dto, ModelAndView mav) {
+	public ModelAndView addExercisePost(@ModelAttribute SaveExercisePostDTO dto, ModelAndView mav) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
 		User user = userService.findfWithExercisePostsById(loginUserId);
@@ -238,7 +238,7 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community/post/{post_id}/addComment",method = RequestMethod.POST)
 	@LoginIdSessionNotNull
-	public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute AddCommentDTO dto,
+	public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute SaveCommentDTO dto,
 			@RequestParam("isAnonymous") boolean isAnonymous, HttpServletRequest request) {
 		
 		dto.setAnonymous(isAnonymous);
@@ -260,7 +260,7 @@ public class ExercisePostController {
 		// request IP 가져오기 
 		String writerIp = HttpRequestUtil.getRemoteHost(request);
 		
-		Comment comment = AddCommentDTO.toComment(dto, writerIp);
+		Comment comment = SaveCommentDTO.toComment(dto, writerIp);
 		
 		commentService.saveWithUserAndExercisePost(comment, user, exercisePost);
 		
