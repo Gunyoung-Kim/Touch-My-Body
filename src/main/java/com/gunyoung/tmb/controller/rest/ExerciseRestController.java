@@ -34,12 +34,12 @@ public class ExerciseRestController {
 	@RequestMapping(value="/user/exercise/getexercises",method=RequestMethod.GET)
 	public List<ExerciseInfoBySortDTO> getExercisesByNameAndTarget() {
 		List<ExerciseInfoBySortDTO> resultList = new ArrayList<>();
-		Map<String ,List<String>> map = exerciseService.getAllExercisesNamewithSorting();
+		Map<String ,List<String>> exerciseSortResultMap = exerciseService.getAllExercisesNamewithSorting();
 		
-		Set<String> keySet = map.keySet();
+		Set<String> keySet = exerciseSortResultMap.keySet();
 		
 		for(String key: keySet) {
-			resultList.add(new ExerciseInfoBySortDTO(key,map.get(key)));
+			resultList.add(new ExerciseInfoBySortDTO(key,exerciseSortResultMap.get(key)));
 		}
 		
 		return resultList;

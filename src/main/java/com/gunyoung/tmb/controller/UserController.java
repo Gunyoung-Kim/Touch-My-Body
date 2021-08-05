@@ -217,6 +217,7 @@ public class UserController {
 		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
 		
 		mav.setViewName("profileCommentList");
+		
 		return mav;
 	}
 	

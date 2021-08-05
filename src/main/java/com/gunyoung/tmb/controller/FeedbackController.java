@@ -58,8 +58,10 @@ public class FeedbackController {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		mav.setViewName("addFeedback");
 		mav.addObject("exerciseName", exercise.getName());
+		
+		mav.setViewName("addFeedback");
+		
 		return mav;
 	}
 	

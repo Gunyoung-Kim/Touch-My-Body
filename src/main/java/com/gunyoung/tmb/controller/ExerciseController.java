@@ -61,11 +61,12 @@ public class ExerciseController {
 			listObject.add(ExerciseForTableDTO.of(e));
 		}
 		
-		mav.setViewName("exerciseListView");
 		mav.addObject("listObject",listObject);
 		mav.addObject("currentPage",page);
 		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
 		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setViewName("exerciseListView");
 		
 		return mav;
 	}
@@ -87,8 +88,9 @@ public class ExerciseController {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		mav.setViewName("exerciseInfo");
 		mav.addObject("exerciseInfo", exerciseforInfoViewDTO);
+		
+		mav.setViewName("exerciseInfo");
 		
 		return mav;
 	}

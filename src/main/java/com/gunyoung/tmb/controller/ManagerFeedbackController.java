@@ -85,6 +85,7 @@ public class ManagerFeedbackController {
 		}
 		
 		mav.addObject("feedbackInfo", feedbackViewDTO);
+		
 		mav.setViewName("feedbackView");
 		
 		return mav;

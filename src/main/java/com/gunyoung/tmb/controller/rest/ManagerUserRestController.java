@@ -52,21 +52,21 @@ public class ManagerUserRestController {
 	 * @return
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/usermanage/{user_id}", method = RequestMethod.PUT)
-	public void manageUserProfile(@PathVariable("user_id") Long userId,@ModelAttribute UserProfileForManagerDTO dto) {
+	@RequestMapping(value="/manager/usermanage/{userId}", method = RequestMethod.PUT)
+	public void manageUserProfile(@PathVariable("userId") Long userId,@ModelAttribute UserProfileForManagerDTO dto) {
 		User user = userService.findById(userId);
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		List<String> list = getReachableAuthorityStrings(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-		List<String> targetList = getReachableAuthorityStrings(SecurityUtil.getAuthoritiesByUserRoleType(user.getRole()));
+		List<String> myReachableAuthStringList = getReachableAuthorityStrings(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+		List<String> targetReacheableStringList = getReachableAuthorityStrings(SecurityUtil.getAuthoritiesByUserRoleType(user.getRole()));
 		
 		/*
 		 *  접속자의 권한이 대상 유저의 권한 보다 낮으면 예외 발생 
 		 *  권한 구조가 일자이기에 가능한 로직, 추후에 일자에서 변경 되면 이 로직도 변경 요망
 		 */
-		if(targetList.size() > list.size()) {
+		if(targetReacheableStringList.size() > myReachableAuthStringList.size()) {
 			throw new AccessDeniedException(UserErrorCode.ACESS_DENIED_ERROR.getDescription());
 		}
 		
