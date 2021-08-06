@@ -34,8 +34,10 @@ public class UserServiceImpl implements UserService{
 	private final UserExerciseService userExerciseService;
 	
 	/**
+	 * ID로 User 찾기
 	 * @param id 찾으려는 유저의 id
 	 * @return User, null(해당 id의 유저가 존재하지 않을때)
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -48,8 +50,10 @@ public class UserServiceImpl implements UserService{
 	}
 
 	/**
+	 * email로 User 찾기
 	 * @param email 찾으려는 유저의 email
 	 * @return User, null(해당 email의 유저가 존재하지 않을때)
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -62,8 +66,9 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
-	 * 유저 운동 기록이랑 페치 조인해서 가져오는 메소드 
-	 * @param
+	 * UserExercises 페치 조인해서 가져오는 메소드 
+	 * @param id User의 ID
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -76,7 +81,9 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
-	 * 유저 피드백이랑 페치 조인해서 가져오는 메소드 
+	 * Feedbacks 페치 조인해서 가져오는 메소드
+	 * @param id User의 ID
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -89,7 +96,9 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
-	 * 게시글 좋아요랑 페치 조인해서 가져오는 메소드
+	 * PostLikes 페치 조인해서 가져오는 메소드
+	 * @param id User의 ID
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -102,7 +111,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	/**
-	 * 댓글 좋아요랑 페치 조인해서 가져오는 메소드
+	 * CommentLikes 페치 조인해서 가져오는 메소드
+	 * @param id User의 ID
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -115,7 +126,9 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
-	 * 작성한 게시글이랑 페치 조인해서 가져오는 메소드
+	 * ExercisePosts 페치 조인해서 가져오는 메소드
+	 * @param id User의 ID
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -128,7 +141,9 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
-	 * 작성한 댓글이랑 페치 조인해서 가져오는 메소드
+	 * Comments 페치 조인해서 가져오는 메소드
+	 * @param id User의 ID
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -141,7 +156,8 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
-	 * @param keyword 검색하려는 키워드	
+	 * User name, nickName 검색 키워드에 해당하는 User들 페이지 반환 
+	 * @param keyword User name, nickName 검색 키워드 	
 	 * @return
 	 * @author kimgun-yeong
 	 */
@@ -153,6 +169,8 @@ public class UserServiceImpl implements UserService{
 	}
 
 	/**
+	 * User 생성 및 수정 <br>
+	 * {@code CacheUtil.USER_NAME} 관련 캐쉬 삭제
 	 * @param user 저장하려는 User 객체
 	 * @return User
 	 * @author kimgun-yeong
@@ -164,7 +182,9 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
+	 * {@link UserJoinDTO} 객체에 담긴 정보를 이용하여 User 객체 생성 후 저장
 	 * @param dto 저장할 User 객체 정보가 담긴 dto 객체
+	 * @param role 저장할 User의 role
 	 * @return 저장된 객체
 	 * @author kimgun-yeong
 	 */
@@ -182,6 +202,8 @@ public class UserServiceImpl implements UserService{
 	}
 
 	/**
+	 * User 삭제 <br>
+	 * {@code CacheUtil.USER_NAME} 관련 캐쉬 삭제
 	 * @param user 삭제하려는 user
 	 * @author kimgun-yeong
 	 */
@@ -192,6 +214,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	/**
+	 * email로 User 존재 여부 반환
 	 * @param email 검색하려는 Email
 	 * @return 해당 email의 유저가 존재하는지 여부
 	 * @author kimgun-yeong
@@ -203,6 +226,7 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
+	 * nickName으로 User 존재 여부 반환
 	 * @param nickName 검색하려는 ninkName
 	 * @return 해당 nickName의 유저 존재하는지 여부
 	 * @author kimgun-yeong
@@ -214,17 +238,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	/**
-	 * @param email 검색하려는 Email
-	 * @return 해당 email이 중복되는지 여부, 중복 시 true
-	 * @author kimgun-yeong
-	 */
-	@Override
-	@Transactional(readOnly=true)
-	public boolean checkDuplicationForEmail(String email) {
-		return existsByEmail(email);
-	}
-
-	/**
+	 * 모든 User 수 반환
 	 * @return 모든 유저의 수 반환 
 	 * @author kimgun-yeong
 	 */
@@ -235,6 +249,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	/**
+	 * User name, nickName 키워드를 만족하는 User 수 반환
 	 * @param keyword 검색하려는 닉네임이나 이름 키워드 
 	 * @return 조건을 만족하는 User의 모든 수 
 	 * @author kimgun-yeong
