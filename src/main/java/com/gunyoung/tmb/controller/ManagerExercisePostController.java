@@ -52,11 +52,12 @@ public class ManagerExercisePostController {
 			totalPageNum = 1;
 		}
 		
-		mav.setViewName("communityForManage");
 		mav.addObject("listObject", pageResult);
 		mav.addObject("currentPage",page);
 		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
 		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setViewName("communityForManage");
 		
 		return mav;
 	}

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
-import com.gunyoung.tmb.dto.reqeust.AddMuscleDTO;
+import com.gunyoung.tmb.dto.reqeust.SaveMuscleDTO;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.MuscleNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
@@ -37,7 +37,7 @@ public class ManagerMuscleRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.PUT)
-	public void modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute AddMuscleDTO dto) {
+	public void modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute SaveMuscleDTO dto) {
 		Muscle muscle = muscleService.findById(muscleId);
 		
 		if(muscle == null) {
@@ -48,7 +48,7 @@ public class ManagerMuscleRestController {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
-		muscle = AddMuscleDTO.toMuscle(muscle, dto);
+		muscle = SaveMuscleDTO.toMuscle(muscle, dto);
 		
 		muscleService.save(muscle);
 	}

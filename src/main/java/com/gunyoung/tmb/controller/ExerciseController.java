@@ -42,30 +42,31 @@ public class ExerciseController {
 	 */
 	@RequestMapping(value="/exercise",method = RequestMethod.GET)
 	public ModelAndView exerciseInfoMainView(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav) {
-		int page_size = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
+		int pageSize = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
 		
 		Page<Exercise> pageResult;
 		long totalPageNum;
 		
 		if(keyword != null) {
-			pageResult = exerciseService.findAllWithNameKeywordInPage(keyword, page, page_size);
-			totalPageNum = exerciseService.countAllWithNameKeyword(keyword)/page_size +1;
+			pageResult = exerciseService.findAllWithNameKeywordInPage(keyword, page, pageSize);
+			totalPageNum = exerciseService.countAllWithNameKeyword(keyword)/pageSize +1;
 		} else {
-			pageResult = exerciseService.findAllInPage(page, page_size);
-			totalPageNum = exerciseService.countAll()/page_size +1;
+			pageResult = exerciseService.findAllInPage(page, pageSize);
+			totalPageNum = exerciseService.countAll()/pageSize +1;
 		}
 		
-		List<ExerciseForTableDTO> resultList = new ArrayList<>();
+		List<ExerciseForTableDTO> listObject = new ArrayList<>();
 		
 		for(Exercise e: pageResult) {
-			resultList.add(ExerciseForTableDTO.of(e));
+			listObject.add(ExerciseForTableDTO.of(e));
 		}
 		
-		mav.setViewName("exerciseListView");
-		mav.addObject("listObject",resultList);
+		mav.addObject("listObject",listObject);
 		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/page_size)*page_size+1);
-		mav.addObject("lastIndex",(page/page_size)*page_size+page_size-1 > totalPageNum ? totalPageNum : (page/page_size)*page_size+page_size-1);
+		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
+		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setViewName("exerciseListView");
 		
 		return mav;
 	}
@@ -81,14 +82,15 @@ public class ExerciseController {
 	@RequestMapping(value="/exercise/about/{exercise_id}", method = RequestMethod.GET)
 	public ModelAndView exerciseInfoDetailView(@PathVariable("exercise_id") Long exerciseId,ModelAndView mav) {
 		
-		ExerciseForInfoViewDTO dto = exerciseService.getExerciseForInfoViewDTOByExerciseId(exerciseId);
+		ExerciseForInfoViewDTO exerciseforInfoViewDTO = exerciseService.getExerciseForInfoViewDTOByExerciseId(exerciseId);
 		
-		if(dto == null) {
+		if(exerciseforInfoViewDTO == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
+		mav.addObject("exerciseInfo", exerciseforInfoViewDTO);
+		
 		mav.setViewName("exerciseInfo");
-		mav.addObject("exerciseInfo", dto);
 		
 		return mav;
 	}

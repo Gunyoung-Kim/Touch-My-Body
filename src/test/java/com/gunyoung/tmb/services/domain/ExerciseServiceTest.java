@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Muscle;
-import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
+import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
@@ -247,17 +247,17 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
-	 *  public Exercise saveWithAddExerciseDTO(AddExerciseDTO dto)
+	 *  public Exercise saveWithSaveExerciseDTO(SaveExerciseDTO dto)
 	 */
 	
 	@Test
 	@Transactional
-	@DisplayName("AddExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음")
-	public void saveWithAddExerciseDTOMuscleNotFounded() {
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음")
+	public void saveWithSaveExerciseDTOMuscleNotFounded() {
 		//Given
 		String nonExistMuscleName =  "none";
 		
-		AddExerciseDTO dto = AddExerciseDTO.builder()
+		SaveExerciseDTO dto = SaveExerciseDTO.builder()
 				.name("newName")
 				.description("newDes")
 				.caution("newCau")
@@ -272,7 +272,7 @@ public class ExerciseServiceTest {
 		Exercise exercise = new Exercise();
 		//When,Then
 		assertThrows(MuscleNotFoundedException.class, () -> {
-			exerciseService.saveWithAddExerciseDTO(exercise,dto);
+			exerciseService.saveWithSaveExerciseDTO(exercise,dto);
 		});
 		
 		
@@ -282,8 +282,8 @@ public class ExerciseServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("AddExerciseDTO로 Exercise 추가하기 -> 해당 TargetType 없음")
-	public void saveWithAddExerciseDTOTargetTypeNotFounded() {
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 TargetType 없음")
+	public void saveWithSaveExerciseDTOTargetTypeNotFounded() {
 		//Given
 		String existMuscleName = "new Muscle";
 		Muscle muscle = Muscle.builder()
@@ -293,7 +293,7 @@ public class ExerciseServiceTest {
 		muscleRepository.save(muscle);
 		
 		
-		AddExerciseDTO dto = AddExerciseDTO.builder()
+		SaveExerciseDTO dto = SaveExerciseDTO.builder()
 				.name("newName")
 				.description("newDes")
 				.caution("newCau")
@@ -307,7 +307,7 @@ public class ExerciseServiceTest {
 		Exercise exercise = new Exercise();
 		//When
 		assertThrows(TargetTypeNotFoundedException.class, () -> {
-			exerciseService.saveWithAddExerciseDTO(exercise,dto);
+			exerciseService.saveWithSaveExerciseDTO(exercise,dto);
 		});
 		
 		//Then
@@ -317,8 +317,8 @@ public class ExerciseServiceTest {
 	}
 	@Test
 	@Transactional
-	@DisplayName("AddExerciseDTO로 Exercise 추가하기 -> 정상")
-	public void saveWithAddExerciseDTOTest() {
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 정상")
+	public void saveWithSaveExerciseDTOTest() {
 		//Given
 		String existMuscleName = "new Muscle";
 		Muscle muscle = Muscle.builder()
@@ -327,7 +327,7 @@ public class ExerciseServiceTest {
 				.build();
 		muscleRepository.save(muscle);
 		
-		AddExerciseDTO dto = AddExerciseDTO.builder()
+		SaveExerciseDTO dto = SaveExerciseDTO.builder()
 				.name("newName")
 				.description("newDes")
 				.caution("newCau")
@@ -340,7 +340,7 @@ public class ExerciseServiceTest {
 		long exerciseMuscleNum = exerciseMuscleRepository.count();
 		Exercise exercise = new Exercise();
 		//When
-		Exercise result = exerciseService.saveWithAddExerciseDTO(exercise,dto);
+		Exercise result = exerciseService.saveWithSaveExerciseDTO(exercise,dto);
 		
 		//Then
 		assertEquals(exerciseNum+1, exerciseRepository.count());

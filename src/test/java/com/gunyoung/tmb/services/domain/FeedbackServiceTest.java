@@ -47,7 +47,7 @@ public class FeedbackServiceTest {
 		for(int i=1;i<=INIT_FEEDBACK_NUM;i++) {
 			Feedback feedback = Feedback.builder()
 									 .title("title" +i)
-									 .content("content" +i)
+									 .contents("content" +i)
 									 .build();
 									 
 			list.add(feedback);
@@ -155,7 +155,7 @@ public class FeedbackServiceTest {
 		//Given
 		Feedback newFeedback = Feedback.builder()
 									.title("New Title")
-									.content("New contents")
+									.contents("New contents")
 									.build();
 		Long beforeNum = feedbackRepository.count();
 		
@@ -176,7 +176,7 @@ public class FeedbackServiceTest {
 		//Given
 		Feedback feedback = Feedback.builder()
 				 .title("title")
-				 .content("content")
+				 .contents("content")
 				 .build();
 		
 		User user = getUserInstance();

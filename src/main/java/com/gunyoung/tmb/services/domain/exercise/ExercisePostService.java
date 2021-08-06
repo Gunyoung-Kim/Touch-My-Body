@@ -28,6 +28,7 @@ public interface ExercisePostService {
 	
 	public void delete(ExercisePost exercisePost);
 	public void deleteById(Long id);
+	public void checkIsMineAndDelete(Long userId, Long exercisePostId);
 	
 	public long count();
 	public long countWithUserId(Long userId);

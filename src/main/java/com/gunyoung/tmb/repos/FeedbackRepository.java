@@ -15,20 +15,22 @@ import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
 public interface FeedbackRepository extends JpaRepository<Feedback,Long>{
 	
 	/**
-	 * 
-	 * @param id
+	 * ID를 만족하는 Feedback 필드 Select 후 {@link FeedbackViewDTO} 매핑하는 쿼리 
+	 * @param id 찾으려는 Feedback의 ID
 	 * @return
 	 * @author kimgun-yeong
 	 */
-	@Query("SELECT new com.gunyoung.tmb.dto.response.FeedbackViewDTO (f.id, f.title, f.content, u.nickName, e.name, f.createdAt) FROM Feedback f "
+	@Query("SELECT new com.gunyoung.tmb.dto.response.FeedbackViewDTO (f.id, f.title, f.contents, u.nickName, e.name, f.createdAt) FROM Feedback f "
 			+ "INNER JOIN f.user u "
 			+ "INNER JOIN f.exercise e "
 			+ "WHERE f.id = :feedbackId")
 	public Optional<FeedbackViewDTO> findForFeedbackViewDTOById(@Param("feedbackId") Long id);
 	
 	/**
-	 * 
-	 * @param id
+	 * Exercise ID를 만족하는 모든 Feedback 찾기 <br>
+	 * Feedback 생성 오래된 순으로 정렬 <br>
+	 * 페이징 처리 
+	 * @param exerciseId 찾으려는 Feedback의 Exercise ID
 	 * @param pageable
 	 * @return
 	 * @author kimgun-yeong
@@ -40,11 +42,14 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long>{
 	public Page<Feedback> findAllByExerciseIdByPage(@Param("exerciseId") Long exericseId, Pageable pageable);
 	
 	/**
-	 * <br>
-	 * 피드백 반영 되지 않은것만 가져옴
-	 * @param exericseId
+	 * Exercise ID를 만족하는 Feedback들의 필드로 {@link FeedbackManageListDTO} 매핑해서 가져오는 쿼리 <br>
+	 * 피드백 반영 되지 않은것만 가져옴 <br>
+	 * Feedback 생성 오래된 순으로 정렬 <br>
+	 * 페이징 처리
+	 * @param exericseId 찾으려는 Feedback의 Exercise ID
 	 * @param pageable
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@Query("SELECT new com.gunyoung.tmb.dto.response.FeedbackManageListDTO (f.id, f.title, u.nickName, e.name, f.createdAt) FROM Feedback f "
 			+ "INNER JOIN f.user u "
@@ -55,9 +60,10 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long>{
 	public Page<FeedbackManageListDTO> findAllForFeedbackManageListDTOByExerciseIdByPage(@Param("exerciseId") Long exericseId, Pageable pageable);
 	
 	/**
-	 * 
-	 * @param exerciseId
+	 * Exercise ID를 만족하는 모든 Feedback 개수 찾기 
+	 * @param exerciseId 찾으려는 Feedback의 Exercise ID
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@Query("SELECT COUNT(f) FROM Feedback f "
 			+ "INNER JOIN f.exercise e "

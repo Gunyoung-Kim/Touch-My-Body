@@ -11,12 +11,37 @@ import org.springframework.data.repository.query.Param;
 import com.gunyoung.tmb.domain.user.User;
 
 public interface UserRepository extends JpaRepository<User,Long>{
+	
+	/**
+	 * email로 User 존재하는지 확인
+	 * @param email 찾으려는 User의 email
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	public boolean existsByEmail(String email);
+	
+	/**
+	 * nickName으로 User 존재하는지 확인
+	 * @param nickName 찾으려는 User의 nickName
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	public boolean existsByNickName(String nickName);
+	
+	/**
+	 * email 로 User 찾기 
+	 * @param email 찾으려는 User의 email
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	public Optional<User> findByEmail(String email);
 	
 	/**
-	 * 지연로딩 되어있는 UserExercises를 비즈니스 요구사항에 따라 즉시 로딩이 필요할떄 사용 
-	 * @param id
+	 * ID로 User 찾기 <br>
+	 * UserExercise Left 페치 조인 
+	 * @param id 찾으려는 User의 ID
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@Query("SELECT u FROM User u "
 			+ "LEFT JOIN FETCH u.userExercises "
@@ -24,35 +49,74 @@ public interface UserRepository extends JpaRepository<User,Long>{
 	public Optional<User> findWithUserExercisesById(@Param("userId") Long id);
 	
 	/**
-	 * 지연로딩 되어있는 Feedbacks를 비즈니스 요구사항에 따라 즉시 로딩이 필요할 때 사용
-	 * @param id
+	 * ID로 User 찾기 <br>
+	 * Feedbacks Left 페치 조인 
+	 * @param id 찾으려는 User의 ID
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@Query("SELECT u FROM User u "
 			+ "LEFT JOIN FETCH u.feedbacks "
 			+ "WHERE u.id = :userId")
 	public Optional<User> findWithFeedbacksById(@Param("userId") Long id);
 	
+	/**
+	 * ID로 User 찾기 <br>
+	 * PostLikes Left 페치 조인
+	 * @param id 찾으려는 User의 ID
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	@Query("SELECT u FROM User u "
 			+ "LEFT JOIN FETCH u.postLikes "
 			+ "WHERE u.id = :userId")
 	public Optional<User> findWithPostLikesById(@Param("userId") Long id);
 	
+	/**
+	 * ID로 User 찾기 <br>
+	 * CommentLikes Left 페치 조인
+	 * @param id 찾으려는 User의 ID
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	@Query("SELECT u FROM User u "
 			+ "LEFT JOIN FETCH u.commentLikes "
 			+ "WHERE u.id = :userId")
 	public Optional<User> findWithCommentLikesById(@Param("userId") Long id);
 	
+	/**
+	 * ID로 User 찾기 <br>
+	 * ExercisePosts Left 페치 조인
+	 * @param id 찾으려는 User의 ID
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	@Query("SELECT u FROM User u "
 			+ "LEFT JOIN FETCH u.exercisePosts "
 			+ "WHERE u.id = :userId")
 	public Optional<User> findWithExercisePostsById(@Param("userId") Long id);
 	
+	/**
+	 * ID로 User 찾기 <br>
+	 * Comments Left 페치 조인
+	 * @param id 찾으려는 User의 ID
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	@Query("SELECT u FROM User u "
 			+ "LEFT JOIN FETCH u.comments "
 			+ "WHERE u.id = :userId")
 	public Optional<User> findWithCommentsById(@Param("userId") Long id);
 	
+	/**
+	 * nickName, name 검색 키워드로 User들 찾기 <br>
+	 * role로 정렬 <br>
+	 * 페이징 처리 
+	 * @param keyword User의 nickName, name 검색 키워드 
+	 * @param pageable
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	@Query("SELECT u FROM User u WHERE "
 			+ "(u.firstName LIKE %:keyword%) OR "
 			+ "(u.lastName LIKE %:keyword%) OR "
@@ -60,13 +124,15 @@ public interface UserRepository extends JpaRepository<User,Long>{
 			+ "ORDER BY u.role")
 	public Page<User> findAllByNickNameOrName(@Param("keyword")String keyword,Pageable pageable);
 	
-	public boolean existsByEmail(String email);
-	public boolean existsByNickName(String nickName);
-	
+	/**
+	 * nickName, name 검색 키워드로 만족하는 User들 개수 찾기
+	 * @param keyword User의 nickName, name 검색 키워드 
+	 * @return
+	 * @author kimgun-yeong
+	 */
 	@Query("SELECT COUNT(u) FROM User u WHERE "
 			+ "(u.firstName LIKE %:keyword%) OR "
 			+ "(u.lastName LIKE %:keyword%) OR "
-			+ "(u.nickName LIKE %:keyword%) "
-			+ "ORDER BY u.role")
+			+ "(u.nickName LIKE %:keyword%)")
 	public long countAllByNickNameOrName(@Param("keyword") String keyword);
 }

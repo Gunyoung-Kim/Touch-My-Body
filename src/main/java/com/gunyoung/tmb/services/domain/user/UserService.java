@@ -33,8 +33,6 @@ public interface UserService {
 	public boolean existsByEmail(String email);
 	public boolean existsByNickName(String nickName);
 	
-	public boolean checkDuplicationForEmail(String email);
-	
 	public long countAll();
 	public long countAllByNickNameOrName(String keyword);
 	

@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 유저가 운동정보에 대한 피드백 추가할때 사용하는 객체
+ * 게시글 추가할때 사용되는 객체
  * @author kimgun-yeong
  *
  */
@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AddFeedbackDTO {
+public class SaveExercisePostDTO {
 	private String title;
-	private String content;
+	private String contents;
+	private String exerciseName;
 }

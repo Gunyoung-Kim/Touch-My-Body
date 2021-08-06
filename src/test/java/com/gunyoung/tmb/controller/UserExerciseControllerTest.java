@@ -104,7 +104,7 @@ public class UserExerciseControllerTest {
 		return nonExistUserId;
 	}
 	
-	private MultiValueMap<String, String> getAddUserExerciseDTOMap(String exerciseName) {
+	private MultiValueMap<String, String> getSaveUserExerciseDTOMap(String exerciseName) {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("laps", "1");
 		map.add("sets", "1");
@@ -160,7 +160,7 @@ public class UserExerciseControllerTest {
 	/*
 	 * @RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.POST)
 	 * @LoginIdSessionNotNull
-	 * public ModelAndView addUserExercise(@ModelAttribute("formModel") AddUserExerciseDTO formModel)
+	 * public ModelAndView addUserExercise(@ModelAttribute("formModel") SaveUserExerciseDTO formModel)
 	 */
 	
 	@WithMockUser
@@ -174,7 +174,7 @@ public class UserExerciseControllerTest {
 		Exercise exercise = getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
-		MultiValueMap<String, String> paramMap = getAddUserExerciseDTOMap(exercise.getName());
+		MultiValueMap<String, String> paramMap = getSaveUserExerciseDTOMap(exercise.getName());
 		
 		//When
 		mockMvc.perform(post("/user/exercise/calendar/addrecord")
@@ -191,7 +191,7 @@ public class UserExerciseControllerTest {
 	@DisplayName("운동 기록 추가 처리 -> 해당 이름을 만족하는 Exercise 없을 때")
 	public void addUserExerciseNonExist() throws Exception {
 		//Given
-		MultiValueMap<String, String> paramMap = getAddUserExerciseDTOMap("nonExistExerciseName");
+		MultiValueMap<String, String> paramMap = getSaveUserExerciseDTOMap("nonExistExerciseName");
 		
 		//When
 		mockMvc.perform(post("/user/exercise/calendar/addrecord")
@@ -211,7 +211,7 @@ public class UserExerciseControllerTest {
 		Exercise exercise = getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
-		MultiValueMap<String, String> paramMap = getAddUserExerciseDTOMap(exercise.getName());
+		MultiValueMap<String, String> paramMap = getSaveUserExerciseDTOMap(exercise.getName());
 		
 		//When
 		mockMvc.perform(post("/user/exercise/calendar/addrecord")

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
-import com.gunyoung.tmb.dto.reqeust.AddMuscleDTO;
+import com.gunyoung.tmb.dto.reqeust.SaveMuscleDTO;
 import com.gunyoung.tmb.dto.response.MuscleForTableDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
@@ -60,17 +60,18 @@ public class ManagerMuscleController {
 			totalPageNum = muscleService.countAll()/pageSize +1;
 		}
 		
-		List<MuscleForTableDTO> resultList = new ArrayList<>();
+		List<MuscleForTableDTO> listObject = new ArrayList<>();
 		
 		for(Muscle m : pageResult) {
-			resultList.add(MuscleForTableDTO.of(m));
+			listObject.add(MuscleForTableDTO.of(m));
 		}
 		
-		mav.setViewName("muscleListViewForManage");
-		mav.addObject("listObject",resultList);
+		mav.addObject("listObject",listObject);
 		mav.addObject("currentPage",page);
 		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
 		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setViewName("muscleListViewForManage");
 		
 		return mav;
 	}
@@ -83,12 +84,13 @@ public class ManagerMuscleController {
 	 */
 	@RequestMapping(value="/manager/muscle/add" , method= RequestMethod.GET)
 	public ModelAndView addMuscleView(ModelAndView mav) {
-		List<String> targetTypeStrings = new ArrayList<>();
+		List<String> targetTypeKoreanNames = new ArrayList<>();
 		for(TargetType tt: TargetType.values()) {
-			targetTypeStrings.add(tt.getKoreanName());
+			targetTypeKoreanNames.add(tt.getKoreanName());
 		}
 		
-		mav.addObject("targetTypes", targetTypeStrings);
+		mav.addObject("targetTypes", targetTypeKoreanNames);
+		
 		mav.setViewName("addMuscle");
 		
 		return mav;
@@ -103,7 +105,7 @@ public class ManagerMuscleController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/muscle/add" ,method=RequestMethod.POST)
-	public ModelAndView addMuscle(@ModelAttribute AddMuscleDTO dto) {
+	public ModelAndView addMuscle(@ModelAttribute SaveMuscleDTO dto) {
 		if(muscleService.existsByName(dto.getName())) {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
@@ -149,14 +151,15 @@ public class ManagerMuscleController {
 			throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		List<String> targetTypeStrings = new ArrayList<>();
+		List<String> targetTypeKoreanNames = new ArrayList<>();
 		for(TargetType tt: TargetType.values()) {
-			targetTypeStrings.add(tt.getKoreanName());
+			targetTypeKoreanNames.add(tt.getKoreanName());
 		}
 		
-		mav.addObject("muscleInfo", AddMuscleDTO.of(muscle));
-		mav.addObject("targetTypes", targetTypeStrings);
+		mav.addObject("muscleInfo", SaveMuscleDTO.of(muscle));
+		mav.addObject("targetTypes", targetTypeKoreanNames);
 		mav.addObject("muscleId", muscleId);
+		
 		mav.setViewName("modifyMuscle");
 		
 		return mav;

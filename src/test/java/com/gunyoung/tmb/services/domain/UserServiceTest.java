@@ -286,25 +286,6 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *   public boolean checkDuplicationForEmail(String email)
-	 */
-	@Test
-	@DisplayName("Email 중복 여부 체크 -> 정상")
-	public void checkDuplicationForEmailTest() {
-		//Given
-		String nonExistEmail = "nonexist@test.com";
-		String existEmail = "1_user@test.com";
-		
-		//When
-		boolean resultNonExist = userService.checkDuplicationForEmail(nonExistEmail);
-		boolean resultExist = userService.checkDuplicationForEmail(existEmail);
-		
-		//Then
-		assertEquals(resultNonExist,false);
-		assertEquals(resultExist,true);
-	}
-	
-	/*
 	 *   public long countAll()
 	 */
 	@Test

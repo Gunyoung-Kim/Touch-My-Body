@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class FeedbackViewDTO {
 	private Long id;
 	private String title;
-	private String content;
+	private String contents;
 	private String userNickName;
 	private String exerciseName;
 	private LocalDateTime createdAt;

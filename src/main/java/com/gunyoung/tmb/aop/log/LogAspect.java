@@ -53,14 +53,14 @@ public class LogAspect {
 			params = "[ " + paramMapToString(paramMap) + "]";
 		}
 		
-		long start = System.currentTimeMillis();
+		long timeBeforeProceed = System.currentTimeMillis();
 		
 		try {
 			return pjp.proceed(pjp.getArgs());
 		} finally {
-			long end = System.currentTimeMillis();
+			long timeAfterProceed = System.currentTimeMillis();
 			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, 
-					HttpRequestUtil.getRemoteHost(request), end- start);
+					HttpRequestUtil.getRemoteHost(request), timeAfterProceed- timeBeforeProceed);
 		}
 	}
 	
@@ -72,9 +72,10 @@ public class LogAspect {
 	 */
 	private String paramMapToString(Map<String, String[]> paramMap) {
 		StringBuilder sb = new StringBuilder();
+		
 		paramMap.entrySet().stream().forEach(entry -> {
-			sb.append(entry.getKey()+" : ");
-			for(int i=0;i <entry.getValue().length;i++) {
+			sb.append(entry.getKey() + " : ");
+			for(int i=0 ; i < entry.getValue().length ; i++) {
 				sb.append(entry.getValue()[i] +" ");
 			}
 			sb.append(", ");

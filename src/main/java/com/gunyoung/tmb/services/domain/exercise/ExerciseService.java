@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
-import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
+import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 
 public interface ExerciseService {
@@ -23,7 +23,7 @@ public interface ExerciseService {
 	public Map<String, List<String>> getAllExercisesNamewithSorting();
 	
 	public Exercise save(Exercise exercise);
-	public Exercise saveWithAddExerciseDTO(Exercise exercise, AddExerciseDTO dto);
+	public Exercise saveWithSaveExerciseDTO(Exercise exercise, SaveExerciseDTO dto);
 	
 	public void delete(Exercise exercise);
 	public void deleteById(Long id);

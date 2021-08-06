@@ -44,11 +44,11 @@ public class UserExcerciseRestController {
 	@RequestMapping(value="/user/exercise/calendar/records",method=RequestMethod.GET)
 	@LoginIdSessionNotNull
 	public List<UserExerciseWithDateDTO> getExerciseRecords(@ModelAttribute DateDTO date) {
-		Long userId = SessionUtil.getLoginUserId(session);
+		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
 		Calendar paramDate = new GregorianCalendar(date.getYear(),date.getMonth(),date.getDate());
 		
-		List<UserExercise> userExerciseList = userExerciseService.findByUserIdAndDate(userId, paramDate);
+		List<UserExercise> userExerciseList = userExerciseService.findByUserIdAndDate(loginUserId, paramDate);
 		
 		return UserExerciseWithDateDTO.of(userExerciseList);
 	}
@@ -63,10 +63,10 @@ public class UserExcerciseRestController {
 	@RequestMapping(value="/user/exercise/calendar/isdone",method=RequestMethod.GET)
 	@LoginIdSessionNotNull
 	public List<UserExerciseIsDoneDTO> getIsDoneList(@RequestParam("year") int year, @RequestParam("month") int month) {
-		Long userId = SessionUtil.getLoginUserId(session);
+		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
-		List<UserExerciseIsDoneDTO> result = userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId, year, month);
+		List<UserExerciseIsDoneDTO> isDoneList = userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(loginUserId, year, month);
 		
-		return result;
+		return isDoneList;
 	}
 }

@@ -1,6 +1,6 @@
 # Touch-My-Body
 
-최신 버전 : ver 0.0.4
+최신 버전 : ver 0.0.5
 
 ## 프로젝트 주 기능
 
@@ -20,7 +20,7 @@
 
 - 개발 기간: 2021.06.21 ~ 2021.07.11
 
-- 사용기술 및 개발 환경: Spring Boot, Spring JPA, Spring Security, JUnit5, Maven, HTML, CSS , Javascript
+- 사용기술 및 개발 환경: Spring Boot, Spring JPA, Spring MVC, Spring Security, JUnit5, Maven, 
 
 - 사용 데이터베이스
 
@@ -73,6 +73,18 @@
    2. 두 항목 같은 REDIS 저장소 사용 시 메모리 공유 -> 사용자 증가 시 잦은 Swap -> Redis의 디스크 접근 횟수 증가 
 
       -> Redis의 장점 퇴색 -> 세션과 캐시 서로 다른 Redis 저장소 방식 채택!
+
+---
+
+### 테스트 방식 
+
+1. RestController, Controller 클래스 
+
+   - 통합 테스트 : 프레젠테이션 계층 - 서비스 계층 - 영속성 계층 
+
+2. Service 클래스 
+
+   - 통합 테스트 : 서비스 계층 - 영속성 계층 
 
 ---
 

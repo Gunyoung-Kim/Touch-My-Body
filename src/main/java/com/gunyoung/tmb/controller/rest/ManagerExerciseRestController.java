@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
-import com.gunyoung.tmb.dto.reqeust.AddExerciseDTO;
+import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.MuscleInfoBySortDTO;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoundedException;
@@ -43,13 +43,13 @@ public class ManagerExerciseRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/add" ,method = RequestMethod.POST)
-	public void addExercise(@ModelAttribute AddExerciseDTO dto) {
+	public void addExercise(@ModelAttribute SaveExerciseDTO dto) {
 		if(exerciseService.existsByName(dto.getName())) {
 			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getDescription());
 		}
 		
 		Exercise exercise = new Exercise();
-		exerciseService.saveWithAddExerciseDTO(exercise,dto);
+		exerciseService.saveWithSaveExerciseDTO(exercise,dto);
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public class ManagerExerciseRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/modify/{exerciseId}",method=RequestMethod.PUT) 
-	public void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute AddExerciseDTO dto) {
+	public void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute SaveExerciseDTO dto) {
 		Exercise exercise = exerciseService.findById(exerciseId);
 		
 		if(exercise == null) {
@@ -72,7 +72,7 @@ public class ManagerExerciseRestController {
 			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getDescription());
 		}
 		
-		exerciseService.saveWithAddExerciseDTO(exercise, dto);
+		exerciseService.saveWithSaveExerciseDTO(exercise, dto);
 	}
 	
 	/**
@@ -96,12 +96,12 @@ public class ManagerExerciseRestController {
 	@RequestMapping(value="/manager/exercise/getmuscles",method = RequestMethod.GET)
 	public List<MuscleInfoBySortDTO> getMusclesSortByCategory() {
 		List<MuscleInfoBySortDTO> response = new ArrayList<>();
-		Map<String,List<String>> resultMap = muscleService.getAllMusclesWithSortingByCategory();
+		Map<String,List<String>> muscleSortResultMap = muscleService.getAllMusclesWithSortingByCategory();
 		
-		for(String category: resultMap.keySet()) {
+		for(String category: muscleSortResultMap.keySet()) {
 			MuscleInfoBySortDTO dto = MuscleInfoBySortDTO.builder()
 					.target(category)
-					.muscleNames(resultMap.get(category))
+					.muscleNames(muscleSortResultMap.get(category))
 					.build();
 			
 			response.add(dto);

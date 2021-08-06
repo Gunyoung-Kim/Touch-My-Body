@@ -32,8 +32,8 @@ public class LoginAspect {
 	 */
 	@Before("@annotation(com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull)")
 	public void checkLoginIdSessionIsNotNull(JoinPoint dp) {
-		Long id = SessionUtil.getLoginUserId(session);
-		if(id == null) {
+		Long loginUserId = SessionUtil.getLoginUserId(session);
+		if(loginUserId == null) {
 			throw new SessionAttributesNotFoundedException(UserErrorCode.SESSION_ATTRIBUTES_NOT_FOUNDED_ERROR.getDescription());
 		}
 	}

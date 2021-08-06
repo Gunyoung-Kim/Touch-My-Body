@@ -114,10 +114,10 @@ public class FeedbackControllerTest {
 		return nonExistExerciseId;
 	}
 	
-	private MultiValueMap<String, String> getAddFeedbackDTOMap() {
+	private MultiValueMap<String, String> getSaveFeedbackDTOMap() {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("title", "title");
-		map.add("content", "content");
+		map.add("contents", "contents");
 		return map;
 	}
 	
@@ -162,7 +162,7 @@ public class FeedbackControllerTest {
 	/*
 	 * @RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.POST)
 	 * @LoginIdSessionNotNull
-	 * public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId,@ModelAttribute AddFeedbackDTO dto)
+	 * public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId,@ModelAttribute SaveFeedbackDTO dto)
 	 */
 	
 	@Test
@@ -176,7 +176,7 @@ public class FeedbackControllerTest {
 		//When
 		mockMvc.perform(post("/exercise/about/" + exercise.getId() + "/addfeedback")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, getNonExistUserId())
-				.params(getAddFeedbackDTOMap()))
+				.params(getSaveFeedbackDTOMap()))
 				
 		//Then
 				.andExpect(status().isNoContent());
@@ -193,13 +193,14 @@ public class FeedbackControllerTest {
 		//When
 		mockMvc.perform(post("/exercise/about/" + nonExistExerciseId + "/addfeedback")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
-				.params(getAddFeedbackDTOMap()))
+				.params(getSaveFeedbackDTOMap()))
 				
 		//Then
 				.andExpect(status().isNoContent());
 		
 		assertEquals(0,feedbackRepository.count());
 	}
+	
 	@Test
 	@Transactional
 	@DisplayName("Feedback 추가 처리 -> 정상")
@@ -211,7 +212,7 @@ public class FeedbackControllerTest {
 		//When
 		mockMvc.perform(post("/exercise/about/" + exercise.getId() + "/addfeedback")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
-				.params(getAddFeedbackDTOMap()))
+				.params(getSaveFeedbackDTOMap()))
 				
 		//Then
 				.andExpect(redirectedUrl("/exercise/about/" + exercise.getId()+"/addfeedback"));

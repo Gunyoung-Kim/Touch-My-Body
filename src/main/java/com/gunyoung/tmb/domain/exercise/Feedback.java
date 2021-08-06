@@ -53,7 +53,7 @@ public class Feedback extends BaseEntity {
 	 */
 	@Column(columnDefinition="TEXT",nullable= false)
 	@NotEmpty
-	private String content;
+	private String contents;
 	
 	/**
 	 * 피드백이 반영됐는지 여부

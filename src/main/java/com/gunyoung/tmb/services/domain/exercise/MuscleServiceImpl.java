@@ -28,8 +28,10 @@ public class MuscleServiceImpl implements MuscleService {
 	private final MuscleRepository muscleRepository;
 
 	/**
+	 * ID로 Muscle 찾기
 	 * @param id 찾으려는 Muscle의 id
 	 * @return Muscle, Null (해당 id의 Muscle이 없을때)
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -42,8 +44,10 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 	
 	/**
+	 * name으로 Muscle 찾기
 	 * @param name 찾으려는 Muscle 이름
 	 * @return Muscle, Null (해당 이름의 Muscle이 없을때)
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -58,7 +62,7 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 	
 	/**
-	 * 모든 근육 정보들을 페이지 처리해서 가져오는 메소드
+	 * 모든 Muscle들 페이지 반환
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -69,7 +73,8 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 	
 	/**
-	 * 키워드 이름에 포함하는 근육정보들 페이지 처리해서 가져오는 메소드
+	 * 키워드 name에 포함하는 Muscle 페이지 반환
+	 * @param keyword Muscle name 검색 키워드 
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -80,7 +85,8 @@ public class MuscleServiceImpl implements MuscleService {
 	}	
 	
 	/**
-	 * Muscle을 category로 분류해서 반환할때 사용
+	 * 모든 Muscle들 category로 분류해서 반환 <br>
+	 * Cache 사용
 	 * @return key: TargetType.koreanName
 	 * @author kimgun-yeong
 	 */
@@ -105,6 +111,8 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 
 	/**
+	 * Muscle 생성 및 수정 <br>
+	 * {@code CacheUtil.MUSCLE_NAME}, {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제 
 	 * @param muscle 저장하려는 Muscle
 	 * @return 저장된 Muscle
 	 * @author kimgun-yeong
@@ -116,6 +124,8 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 
 	/**
+	 * Muscle 삭제 <br>
+	 * {@code CacheUtil.MUSCLE_NAME}, {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제
 	 * @param muscle 삭제하려는 muscle
 	 * @author kimgun-yeong
 	 */
@@ -126,6 +136,8 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 	
 	/**
+	 * ID를 만족하는 Muscle 삭제
+	 * @param id 삭제하려는 Muscle의 ID
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -136,6 +148,7 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 
 	/**
+	 * 모든 Muscle의 개수 반환
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -145,6 +158,8 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 
 	/**
+	 * name 키워드 만족하는 모든 Muscle 개수 반환
+	 * @param keyword Muscle name 검색 키워드  
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -154,6 +169,8 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 
 	/**
+	 * name을 만족하느 Muscle 존재 여부 반환
+	 * @param name 찾으려는 Muscle의 이
 	 * @author kimgun-yeong
 	 */
 	@Override

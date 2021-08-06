@@ -24,8 +24,10 @@ public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 	private final ExerciseMuscleRepository exerciseMuscleRepository;
 
 	/**
+	 * ID로 ExerciseMuscle 찾기
 	 * @param id 찾으려는 ExerciseMuscle의 id
 	 * @return ExerciseMuscle, Null(해당 id의 ExerciseMuscle없을때)
+	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -38,6 +40,7 @@ public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 	}
 
 	/**
+	 * ExerciseMuscle 생성 및 수정
 	 * @param exerciseMuscle 저장하려는 exerciseMuscle
 	 * @return 저장된 ExerciseMuscle
 	 * @author kimgun-yeong
@@ -48,6 +51,7 @@ public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 	}
 	
 	/**
+	 * 다수의 ExerciseMuscle 생성 및 수정
 	 * @param exerciseMuscles 저장하려는 ExerciseMuscles
 	 * @author kimgun-yeong
 	 */
@@ -58,6 +62,7 @@ public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 	
 	
 	/**
+	 * ExerciseMuscle 삭제
 	 * @param exerciseMuscle 삭제하려는 ExerciseMuscle
 	 * @author kimgun-yeong
 	 */

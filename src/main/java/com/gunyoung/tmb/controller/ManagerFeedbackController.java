@@ -78,13 +78,14 @@ public class ManagerFeedbackController {
 	 */
 	@RequestMapping(value="/manager/exercise/feedback/detail/{feedbackId}" ,method = RequestMethod.GET) 
 	public ModelAndView feedbackView(@PathVariable("feedbackId") Long feedbackId, ModelAndView mav) {
-		FeedbackViewDTO dto = feedbackService.findForFeedbackViewDTOById(feedbackId);
+		FeedbackViewDTO feedbackViewDTO = feedbackService.findForFeedbackViewDTOById(feedbackId);
 		
-		if(dto == null) {
+		if(feedbackViewDTO == null) {
 			throw new FeedbackNotFoundedException(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		mav.addObject("feedbackInfo", dto);
+		mav.addObject("feedbackInfo", feedbackViewDTO);
+		
 		mav.setViewName("feedbackView");
 		
 		return mav;

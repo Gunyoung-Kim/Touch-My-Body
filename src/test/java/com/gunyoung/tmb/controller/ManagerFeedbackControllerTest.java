@@ -72,7 +72,7 @@ public class ManagerFeedbackControllerTest {
 	
 	private Feedback getFeedbackInstance() {
 		Feedback feedback = Feedback.builder()
-				.content("content")
+				.contents("contents")
 				.title("title")
 				.build();
 		

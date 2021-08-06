@@ -60,8 +60,9 @@ public class ExercisePost extends BaseEntity {
 	@NotEmpty
 	private String contents;
 	
-	/*
-	 * 해당 게시글의 조회수
+	/**
+	 * 해당 게시글의 조회수 <br>
+	 * default = 0 
 	 */
 	@Builder.Default
 	private Integer viewNum = 0;
@@ -78,7 +79,7 @@ public class ExercisePost extends BaseEntity {
 	/**
 	 * 해당 게시글에 추가된 좋아요들
 	 * fetch: 지연로딩
-	 * cascade: Remove = 해당 게시글이 삭제되면 관련 좋아요들도 삭제
+	 * cascade: Remove - 해당 게시글이 삭제되면 관련 좋아요들도 삭제
 	 */
 	@OneToMany(mappedBy="exercisePost",cascade= {CascadeType.REMOVE})
 	@Builder.Default
