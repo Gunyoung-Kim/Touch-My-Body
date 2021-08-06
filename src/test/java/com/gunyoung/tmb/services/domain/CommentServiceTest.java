@@ -318,6 +318,60 @@ public class CommentServiceTest {
 	}
 	
 	/*
+	 * public void checkIsMineAndDelete(Long userId, Long commentId) {
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID, Comment ID로 User의 Comment인지 확인 후 맞다면 삭제 -> User의 Comment 아님")
+	public void checkIsMineAndDeleteNotMine() {
+		//Given
+		User user = getUserInstance();
+		
+		userRepository.save(user);
+		
+		Comment comment = commentRepository.findAll().get(0);
+		
+		comment.setUser(user);
+		
+		commentRepository.save(comment);
+		
+		Long otherUserId = user.getId() + 1;
+		Long commentId = comment.getId();
+	
+		//When
+		commentService.checkIsMineAndDelete(otherUserId, commentId);
+		
+		//Then
+		assertEquals(true,commentRepository.existsById(commentId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID, Comment ID로 User의 Comment인지 확인 후 맞다면 삭제 -> 정상")
+	public void checkIsMineAndDeleteTest() {
+		//Given
+		User user = getUserInstance();
+		
+		userRepository.save(user);
+		
+		Comment comment = commentRepository.findAll().get(0);
+		
+		comment.setUser(user);
+		
+		commentRepository.save(comment);
+		
+		Long userId = user.getId();
+		Long commentId = comment.getId();
+		
+		//When
+		commentService.checkIsMineAndDelete(userId, commentId);
+		
+		//Then
+		assertEquals(false,commentRepository.existsById(commentId));
+	}
+	
+	/*
 	 * public long countByUserId(Long userId)
 	 */
 	@Test

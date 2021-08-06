@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.controller.rest;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.user.UserService;
+import com.gunyoung.tmb.utils.SessionUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +28,8 @@ public class UserRestController {
 	private final CommentService commentService;
 	
 	private final ExercisePostService exercisePostService;
+	
+	private final HttpSession session;
 	
 	/**
 	 * email 중복여부 반환하는 메소드
@@ -55,7 +60,9 @@ public class UserRestController {
 	 */
 	@RequestMapping(value="/user/profile/mycomments/remove", method=RequestMethod.DELETE)
 	public void removeMyComments(@RequestParam("commentId") Long commentId) {
-		commentService.deleteById(commentId);
+		Long LoginUserId = SessionUtil.getLoginUserId(session);
+		
+		commentService.checkIsMineAndDelete(LoginUserId, commentId);
 	}
 	
 	/**

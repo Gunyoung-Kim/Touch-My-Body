@@ -15,6 +15,19 @@ import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 public interface CommentRepository extends JpaRepository<Comment,Long> {
 	
 	/**
+	 * User ID, Comment ID 로 Comment 찾기 
+	 * @param userId 찾으려는 Comment 작성 User ID
+	 * @param commentId 찾으려는 Comment ID
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT c FROM Comment c "
+			+ "INNER JOIN c.user u "
+			+ "WHERE (c.id = :commentId) "
+			+ "AND (u.id = :userId)")
+	public Optional<Comment> findByUserIdAndCommentId(@Param("userId") Long userId, @Param("commentId") Long commentId);
+	
+	/**
 	 * ID로 Comment 찾기 <br>
 	 * User, ExercisePost INNER 페치 조인 
 	 * @param id 찾으려는 Comment의 ID

@@ -174,6 +174,20 @@ public class CommentServiceImpl implements CommentService {
 	}
 	
 	/**
+	 * 해당 Comment ID의 Comment 작성자의 ID가 userID와 일치하면 삭제
+	 * @param userId Comment 작성자의 ID와 비교할 User ID
+	 * @param commentId 삭제하려는 Comment의 ID
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public void checkIsMineAndDelete(Long userId, Long commentId) {
+		Optional<Comment> comment = commentRepository.findByUserIdAndCommentId(userId, commentId);
+		comment.ifPresent((c) -> {
+			delete(c);
+		});
+	}
+	
+	/**
 	 * User ID 만족하는 Comment들 개수 반환
 	 * @param Comment들 작성자의 ID
 	 * @author kimgun-yeong
@@ -193,4 +207,6 @@ public class CommentServiceImpl implements CommentService {
 	public List<CommentForPostViewDTO> getCommentForPostViewDTOsByExercisePostId(Long postId) {
 		return commentRepository.findForCommentForPostViewDTOByExercisePostId(postId);
 	}
+
+
 }

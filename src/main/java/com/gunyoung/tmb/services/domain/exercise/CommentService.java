@@ -23,6 +23,7 @@ public interface CommentService {
 	
 	public void delete(Comment comment);
 	public void deleteById(Long id);
+	public void checkIsMineAndDelete(Long userId, Long commentId);
 	
 	public long countByUserId(Long userId);
 	

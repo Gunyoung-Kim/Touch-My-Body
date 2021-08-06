@@ -22,6 +22,7 @@ import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.utils.SessionUtil;
 
 /**
  * {@link UserRestController} 에 대한 테스트 클래스
@@ -167,14 +168,44 @@ public class UserRestControllerTest {
 	@WithMockUser
 	@Test
 	@Transactional
-	@DisplayName("자신이 작성한 특정댓글 삭제 -> 정상")
-	public void removeMyCommentsTest() throws Exception {
+	@DisplayName("자신이 작성한 특정 댓글 삭제 -> 내 댓글 아님")
+	public void removeMyCommentsNotMine() throws Exception {
 		//Given
+		User user = getUserInstance(RoleType.USER);
+		
+		userRepository.save(user);
+		
 		Comment comment = getCommentInstance();
 		commentRepository.save(comment);
 		
 		//When
 		mockMvc.perform(delete("/user/profile/mycomments/remove")
+				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
+				.param("commentId", String.valueOf(comment.getId())))
+		
+		//Then
+				.andExpect(status().isOk());
+		
+		assertEquals(1, commentRepository.count());
+	}
+	
+	@WithMockUser
+	@Test
+	@Transactional
+	@DisplayName("자신이 작성한 특정댓글 삭제 -> 정상")
+	public void removeMyCommentsTest() throws Exception {
+		//Given
+		User user = getUserInstance(RoleType.USER);
+		
+		userRepository.save(user);
+		
+		Comment comment = getCommentInstance();
+		comment.setUser(user);
+		commentRepository.save(comment);
+		
+		//When
+		mockMvc.perform(delete("/user/profile/mycomments/remove")
+				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
 				.param("commentId", String.valueOf(comment.getId())))
 		
 		//Then
