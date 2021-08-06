@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.user.UserService;
@@ -59,10 +60,11 @@ public class UserRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/profile/mycomments/remove", method=RequestMethod.DELETE)
+	@LoginIdSessionNotNull
 	public void removeMyComments(@RequestParam("commentId") Long commentId) {
-		Long LoginUserId = SessionUtil.getLoginUserId(session);
+		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
-		commentService.checkIsMineAndDelete(LoginUserId, commentId);
+		commentService.checkIsMineAndDelete(loginUserId, commentId);
 	}
 	
 	/**
@@ -70,8 +72,11 @@ public class UserRestController {
 	 * @param postId 삭제하려는 대상 exercisePost의 Id
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/user/profile/myposts/remove",method=RequestMethod.DELETE) 
+	@RequestMapping(value="/user/profile/myposts/remove",method=RequestMethod.DELETE)
+	@LoginIdSessionNotNull
 	public void removeMyPosts(@RequestParam("postId") Long postId) {
-		exercisePostService.deleteById(postId);
+		Long loginUserId = SessionUtil.getLoginUserId(session);
+		
+		exercisePostService.checkIsMineAndDelete(loginUserId, postId);
 	}
 }

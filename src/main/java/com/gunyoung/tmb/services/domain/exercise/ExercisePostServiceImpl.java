@@ -214,6 +214,20 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 		if(exercisePost != null)
 			delete(exercisePost);
 	}
+	
+	/**
+	 * User ID, ExercisePost ID 에 해당하는 ExercisePost 있으면 삭제 
+	 * @param userId User의 ID
+	 * @param exercisePostId ExercisePost의 ID
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public void checkIsMineAndDelete(Long userId, Long exercisePostId) {
+		Optional<ExercisePost> exercisePost = exercisePostRepository.findByUserIdAndExercisePostId(userId, exercisePostId);
+		exercisePost.ifPresent((ep)-> {
+			delete(ep);
+		});
+	}
 
 	/**
 	 * 모든 ExercisePost의 개수 반환

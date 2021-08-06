@@ -222,14 +222,45 @@ public class UserRestControllerTest {
 	@WithMockUser
 	@Test
 	@Transactional
-	@DisplayName("자신이 작성한 특정댓글 삭제 -> 정상")
-	public void removeMyPostsTest() throws Exception {
+	@DisplayName("자신이 작성한 특정 댓글 삭제 -> 내 댓글 아님")
+	public void removeMyPostsNotMine() throws Exception {
 		//Given
+		User user = getUserInstance(RoleType.USER);
+		
+		userRepository.save(user);
+		
 		ExercisePost exercisePost = getExercisePostInstance();
+		
 		exercisePostRepository.save(exercisePost);
 		
 		//When
 		mockMvc.perform(delete("/user/profile/myposts/remove")
+				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
+				.param("postId", String.valueOf(exercisePost.getId())))
+		
+		//Then
+				.andExpect(status().isOk());
+		
+		assertEquals(1, exercisePostRepository.count());
+	}
+	
+	@WithMockUser
+	@Test
+	@Transactional
+	@DisplayName("자신이 작성한 특정댓글 삭제 -> 정상")
+	public void removeMyPostsTest() throws Exception {
+		//Given
+		User user = getUserInstance(RoleType.USER);
+		
+		userRepository.save(user);
+		
+		ExercisePost exercisePost = getExercisePostInstance();
+		exercisePost.setUser(user);
+		exercisePostRepository.save(exercisePost);
+		
+		//When
+		mockMvc.perform(delete("/user/profile/myposts/remove")
+				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
 				.param("postId", String.valueOf(exercisePost.getId())))
 		
 		//Then

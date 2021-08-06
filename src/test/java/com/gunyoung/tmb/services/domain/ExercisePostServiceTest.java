@@ -409,6 +409,60 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
+	 * public void checkIsMineAndDelete(Long userId, Long exercisePostId) {
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID, ExercisePost ID로 찾고 존재하면 삭제 -> 존재하지 않음")
+	public void checkIsMineAndDeleteNotMine() {
+		//Given
+		User user = getUserInstance();
+		
+		userRepository.save(user);
+		
+		ExercisePost ep = exercisePostRepository.findAll().get(0);
+		ep.setUser(user);
+		
+		exercisePostRepository.save(ep);
+		
+		Long otherUserId = user.getId() + 1;
+		Long exercisePostId = ep.getId();
+		
+		//When
+		exercisePostService.checkIsMineAndDelete(otherUserId, exercisePostId);
+		
+		//Then
+		
+		assertEquals(true, exercisePostRepository.existsById(exercisePostId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID, ExercisePost ID로 찾고 존재하면 삭제 -> 정상 삭제")
+	public void checkIsMineAndDeleteTest() {
+		//Given
+		User user = getUserInstance();
+		
+		userRepository.save(user);
+		
+		ExercisePost ep = exercisePostRepository.findAll().get(0);
+		ep.setUser(user);
+		
+		exercisePostRepository.save(ep);
+		
+		Long userId = user.getId();
+		Long exercisePostId = ep.getId();
+		
+		//When
+		exercisePostService.checkIsMineAndDelete(userId, exercisePostId);
+		
+		//Then
+		assertEquals(false, exercisePostRepository.existsById(exercisePostId));
+	}
+	
+	
+	/*
 	 *  public long countWithUserId(Long userId)
 	 */
 	@Test

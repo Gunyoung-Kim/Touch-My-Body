@@ -16,6 +16,19 @@ import com.gunyoung.tmb.enums.TargetType;
 public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>{
 	
 	/**
+	 * User ID와 ExercisePost ID로 ExercisePost 찾기
+	 * @param userId 찾으려는 ExercisePost의 User ID
+	 * @param exercisePostId 찾으려는 ExercisePost의 ID
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT ep FROM ExercisePost ep "
+			+ "INNER JOIN ep.user u "
+			+ "WHERE (ep.id = :exercisePostId) "
+			+ "AND (u.id = :userId)")
+	public Optional<ExercisePost> findByUserIdAndExercisePostId(@Param("userId") Long userId, @Param("exercisePostId") Long exercisePostId);
+	
+	/**
 	 * ID로 ExercisePost 찾기 <br>
 	 * PostLikes Left 페치 조인
 	 * @param id 찾으려는 ExercisePost의 ID
