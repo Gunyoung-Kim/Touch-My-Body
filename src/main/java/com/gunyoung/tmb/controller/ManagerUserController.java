@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
@@ -61,7 +62,8 @@ public class ManagerUserController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage",method= RequestMethod.GET)
-	public ModelAndView userManageView(@RequestParam(value="page", required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav) {
+	public ModelAndView userManageView(@RequestParam(value="page", required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,
+			ModelAndPageView mav) {
 		int pageSize = PageUtil.BY_NICKNAME_NAME_PAGE_SIZE;
 		
 		Page<User> pageResult;
@@ -82,9 +84,8 @@ public class ManagerUserController {
 		}
 		
 		mav.addObject("listObject",listObject);
-		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
-		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setPageNumbers(page, pageSize, totalPageNum);
 		
 		mav.setViewName("userManage");
 		
@@ -139,7 +140,7 @@ public class ManagerUserController {
 	 */
 	@RequestMapping(value="/manager/usermanage/{user_id}/comments", method = RequestMethod.GET) 
 	public ModelAndView manageUserComments(@PathVariable("user_id") Long userId,@RequestParam(value="page", required=false,defaultValue="1") Integer page
-			,@RequestParam(value="order", defaultValue="desc") String order ,ModelAndView mav) {
+			,@RequestParam(value="order", defaultValue="desc") String order , ModelAndPageView mav) {
 		User user = userService.findById(userId);
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
@@ -156,6 +157,7 @@ public class ManagerUserController {
 		} else {
 			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 		}
+		
 		long totalPageNum = commentService.countByUserId(userId)/pageSize+1;
 		
 		List<CommentForManageViewDTO> commentListForView = new ArrayList<>();
@@ -174,9 +176,8 @@ public class ManagerUserController {
 		mav.addObject("commentList", commentListForView);
 		mav.addObject("userId", userId);
 		mav.addObject("username", user.getFullName()+": " +user.getNickName());
-		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
-		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setPageNumbers(page, pageSize, totalPageNum);
 		
 		mav.setViewName("userCommentList");
 		
@@ -194,7 +195,7 @@ public class ManagerUserController {
 	 */
 	@RequestMapping(value="/manager/usermanage/{user_id}/posts",method=RequestMethod.GET)
 	public ModelAndView managerUserPosts(@PathVariable("user_id") Long userId, @RequestParam(value="page", required=false,defaultValue="1") Integer page
-			,@RequestParam(value="order", defaultValue="desc") String order , ModelAndView mav) {
+			,@RequestParam(value="order", defaultValue="desc") String order , ModelAndPageView mav) {
 		User user = userService.findById(userId);
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
@@ -230,9 +231,8 @@ public class ManagerUserController {
 		mav.addObject("postList", postListForView);
 		mav.addObject("userId", userId);
 		mav.addObject("username", user.getFullName()+": " +user.getNickName());
-		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
-		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setPageNumbers(page, pageSize, totalPageNum);
 		
 		mav.setViewName("userPostList");
 		

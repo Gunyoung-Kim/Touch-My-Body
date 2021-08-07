@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.reqeust.SaveMuscleDTO;
 import com.gunyoung.tmb.dto.response.MuscleForTableDTO;
@@ -46,7 +47,8 @@ public class ManagerMuscleController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/muscle",method = RequestMethod.GET)
-	public ModelAndView muscleViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav) {
+	public ModelAndView muscleViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,
+			ModelAndPageView mav) {
 		int pageSize = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
 		
 		Page<Muscle> pageResult;
@@ -67,9 +69,8 @@ public class ManagerMuscleController {
 		}
 		
 		mav.addObject("listObject",listObject);
-		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
-		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setPageNumbers(page, pageSize, totalPageNum);
 		
 		mav.setViewName("muscleListViewForManage");
 		
