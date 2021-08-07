@@ -53,7 +53,7 @@ public class PostLikeServiceImpl implements PostLikeService {
 	@Override
 	@Transactional(readOnly = true)
 	public PostLike findByUserIdAndExercisePostId(Long userId, Long exercisePostId) {
-		Optional<PostLike> result = postLikeRepository.findByUserIdAndExercisePostIdCustom(userId, exercisePostId);
+		Optional<PostLike> result = postLikeRepository.findByUserIdAndExercisePostId(userId, exercisePostId);
 		if(result.isEmpty())
 			return null;
 		
@@ -101,15 +101,6 @@ public class PostLikeServiceImpl implements PostLikeService {
 	@Override
 	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME,allEntries=true)
 	public void delete(PostLike postLike) {
-		User user = postLike.getUser();
-		if(user != null) {
-			user.getPostLikes().remove(postLike);
-		}
-		
-		ExercisePost exercisePost = postLike.getExercisePost();
-		if(exercisePost != null) {
-			exercisePost.getPostLikes().remove(postLike);
-		}
 		postLikeRepository.delete(postLike);
 	}
 

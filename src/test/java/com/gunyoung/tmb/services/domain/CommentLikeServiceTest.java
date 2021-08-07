@@ -239,43 +239,6 @@ public class CommentLikeServiceTest {
 		assertEquals(beforeNum-1, commentLikeRepository.count());
 	}
 	
-	@Test
-	@Transactional
-	@DisplayName("CommentLike 삭제, 다른 Entity와의 연관성 삭제 -> 정상")
-	public void deleteWithRelationWithOtherEntityTest() {
-		//Given
-		CommentLike commentLike = commentLikeRepository.findAll().get(0);
-		
-		User user = getUserInstance();
-		
-		userRepository.save(user);
-		
-		Comment comment = getCommentInstance();
-		
-		commentRepository.save(comment);
-		
-		comment.getCommentLikes().add(commentLike);
-		user.getCommentLikes().add(commentLike);
-		commentLike.setUser(user);
-		commentLike.setComment(comment);
-		
-		commentLikeRepository.save(commentLike);
-		
-		int userCommentLikeNum = user.getCommentLikes().size();
-		Long userId = user.getId();
-		int commentCommentLikeNum = comment.getCommentLikes().size();
-		Long commentId = comment.getId();
-		long commentLikeNum = commentLikeRepository.count();
-		
-		//When
-		commentLikeService.delete(commentLike);
-		
-		//Then
-		assertEquals(userCommentLikeNum-1,userRepository.findById(userId).get().getCommentLikes().size());
-		assertEquals(commentCommentLikeNum-1, commentRepository.findById(commentId).get().getCommentLikes().size());
-		assertEquals(commentLikeNum-1 , commentLikeRepository.count());
-	}
-	
 	/*
 	 *  public boolean existsByUserIdAndCommentId(Long userId, Long commentId);
 	 */
