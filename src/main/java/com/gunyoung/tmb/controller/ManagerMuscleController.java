@@ -111,16 +111,9 @@ public class ManagerMuscleController {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
-		TargetType newMusclesCategory = null;
-		
 		String category = dto.getCategory();
 		
-		for(TargetType tt: TargetType.values()) {
-			if(tt.getKoreanName().equals(category)) {
-				newMusclesCategory = tt;
-				break;
-			}
-		}
+		TargetType newMusclesCategory = TargetType.getFromKoreanName(category);
 		
 		if(newMusclesCategory == null) {
 			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());

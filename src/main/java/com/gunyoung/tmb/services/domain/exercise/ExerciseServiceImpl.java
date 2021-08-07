@@ -206,18 +206,14 @@ public class ExerciseServiceImpl implements ExerciseService {
 		exercise.setMovement(dto.getMovement());
 		
 		// SaveExerciseDTO에 입력된 target에 해당하는 TargetType 있는지 확인
-		boolean isTargetTypeExist = false;
-		for(TargetType type: TargetType.values()) {
-			if(dto.getTarget().equals(type.getKoreanName())) {
-				exercise.setTarget(type);
-				isTargetTypeExist= true;
-				break;
-			}
-		}
 		
-		if(!isTargetTypeExist) {
+		TargetType exerciseTarget = TargetType.getFromKoreanName(dto.getTarget());
+		
+		if(exerciseTarget == null) {
 			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
 		}
+		
+		exercise.setTarget(exerciseTarget);
 		
 		// Main Muscle 들 이름으로 Muscle 객체들 가져오기
 		List<String> mainMusclesName = dto.getMainMuscles();

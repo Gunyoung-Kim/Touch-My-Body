@@ -315,6 +315,7 @@ public class ExerciseServiceTest {
 		assertEquals(exerciseNum, exerciseRepository.count());
 		assertEquals(exerciseMuscleNum,exerciseMuscleRepository.count());
 	}
+	
 	@Test
 	@Transactional
 	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 정상")

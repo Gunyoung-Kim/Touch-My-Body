@@ -2,6 +2,11 @@ package com.gunyoung.tmb.enums;
 
 import lombok.Getter;
 
+/**
+ * Exercise, Muscle 들의 대분류
+ * @author kimgun-yeong
+ *
+ */
 @Getter
 public enum TargetType {
 	CHEST("가슴","Chest"),
@@ -19,5 +24,18 @@ public enum TargetType {
 		this.englishName = englishName;
 	}
 	
-	
+	/**
+	 * 인수와 일치하는 koreanName을 가지는 TargetType을 반환
+	 * @param koreanName
+	 * @return TargetType, null(해당 KoreanName의 TargetType 없을 때)
+	 */
+	public static TargetType getFromKoreanName(String koreanName) {
+		for(TargetType tt: TargetType.values()) {
+			if(tt.getKoreanName().equals(koreanName)) {
+				return tt;
+			}
+		}
+		
+		return null;
+	}
 }
