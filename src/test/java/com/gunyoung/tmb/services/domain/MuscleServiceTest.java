@@ -1,6 +1,7 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
 import com.gunyoung.tmb.utils.PageUtil;
@@ -183,6 +185,54 @@ public class MuscleServiceTest {
 		assertEquals(result.size(),2);
 		assertEquals(result.get(TargetType.ARM.getKoreanName()).size(),INIT_MUSCLE_NUM);
 		assertEquals(result.get(TargetType.BACK.getKoreanName()).size(),1);
+	}
+	
+	/*
+	 * public List<Muscle> getMuscleListFromMuscleNameList(List<String> muscleNames) throws MuscleNotFoundedException 
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("Muscle 이름 리스트로 부터 Muscle 리스트 반환하기 -> 해당 이름의 Muscle 없을 때")
+	public void getMuscleListFromMuscleNameListNonExist() {
+		//Given
+		String nonExistName = "nonExist";
+		
+		List<Muscle> muscleList = muscleRepository.findAll();
+		
+		List<String> muscleNameList = new ArrayList<>();
+		muscleNameList.add(nonExistName);
+		
+		for(int i=0;i<muscleList.size()/2;i++) {
+			muscleNameList.add(muscleList.get(i).getName());
+		}
+		
+		//When, Then 
+		assertThrows(MuscleNotFoundedException.class, () -> {
+			muscleService.getMuscleListFromMuscleNameList(muscleNameList);
+			
+		});
+		
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Muscle 이름 리스트로 부터 Muscle 리스트 반환하기 -> 정상")
+	public void getMuscleListFromMuscleNameListTest() {
+		//Given
+		List<Muscle> muscleList = muscleRepository.findAll();
+		
+		List<String> muscleNameList = new ArrayList<>();
+		
+		for(int i=0;i<muscleList.size();i++) {
+			muscleNameList.add(muscleList.get(i).getName());
+		}
+		
+		//When
+		List<Muscle> result = muscleService.getMuscleListFromMuscleNameList(muscleNameList);
+		
+		//Then
+		assertEquals(muscleList.size(), result.size());
 	}
 	
 	/*

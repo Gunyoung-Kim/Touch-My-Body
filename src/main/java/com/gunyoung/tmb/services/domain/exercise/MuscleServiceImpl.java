@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.jpa.MuscleNameAndCategoryDTO;
+import com.gunyoung.tmb.error.codes.MuscleErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.utils.CacheUtil;
 
@@ -108,6 +110,28 @@ public class MuscleServiceImpl implements MuscleService {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Muscle name List 이용하여 Muscle List 반환
+	 * @param muscleNames Muscle name list
+	 * @return 
+	 * @throws MuscleNotFoundedException Muscle name에 해당하는 Muscle 없을 때
+	 * @author kimgun-yeong
+	 */
+	public List<Muscle> getMuscleListFromMuscleNameList(List<String> muscleNames) throws MuscleNotFoundedException {
+		List<Muscle> muscleList = new ArrayList<>();
+		
+		for(String muscleName: muscleNames) {
+			Muscle muscle = findByName(muscleName);
+			
+			if(muscle == null)
+				throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
+			
+			muscleList.add(muscle);
+		}
+		
+		return muscleList;
 	}
 
 	/**
