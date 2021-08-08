@@ -187,13 +187,13 @@ public class CommentLikeServiceTest {
 	}
 	
 	/* 
-	 *  public CommentLike saveWithUserAndComment(User user, Comment comment)
+	 *  public CommentLike createAndSaveWithUserAndComment(User user, Comment comment)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("User와 Comment로 CommentLike 생성 후 저장 -> 정상")
-	public void  saveWithUserAndCommentTest() {
+	public void  createAndSaveWithUserAndCommentTest() {
 		//Given
 		User user = getUserInstance();
 		
@@ -211,7 +211,7 @@ public class CommentLikeServiceTest {
 		long commentId = comment.getId();
 		
 		//When
-		commentLikeService.saveWithUserAndComment(user, comment);
+		commentLikeService.createAndSaveWithUserAndComment(user, comment);
 		
 		//Then
 		assertEquals(commentLikeNum+1, commentLikeRepository.count());

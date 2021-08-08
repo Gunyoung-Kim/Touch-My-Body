@@ -130,7 +130,7 @@ public class ExercisePostRestController {
 		if(commentLikeService.existsByUserIdAndCommentId(loginUserId, commentId)) 
 			throw new LikeAlreadyExistException(LikeErrorCode.LIKE_ALREADY_EXIST_ERROR.getDescription());
 		
-		commentLikeService.saveWithUserAndComment(user, comment);
+		commentLikeService.createAndSaveWithUserAndComment(user, comment);
 	}
 	
 	/**

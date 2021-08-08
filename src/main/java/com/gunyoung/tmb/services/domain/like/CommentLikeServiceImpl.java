@@ -81,7 +81,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	public CommentLike saveWithUserAndComment(User user, Comment comment) {
+	public CommentLike createAndSaveWithUserAndComment(User user, Comment comment) {
 		CommentLike commentLike = CommentLike.builder()
 				.user(user)
 				.comment(comment)
