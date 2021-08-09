@@ -80,7 +80,7 @@ public class PostLikeServiceImpl implements PostLikeService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	public PostLike saveWithUserAndExercisePost(User user, ExercisePost exercisePost) {
+	public PostLike createAndSaveWithUserAndExercisePost(User user, ExercisePost exercisePost) {
 		PostLike postLike = PostLike.builder()
 				.user(user)
 				.exercisePost(exercisePost)

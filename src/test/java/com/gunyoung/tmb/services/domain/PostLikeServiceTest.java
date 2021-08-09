@@ -154,7 +154,7 @@ public class PostLikeServiceTest {
 		
 		
 		//When
-		postLikeService.saveWithUserAndExercisePost(user, exercisePost);
+		postLikeService.createAndSaveWithUserAndExercisePost(user, exercisePost);
 		
 		//Then
 		assertEquals(userPostLikeNum +1,userRepository.findById(userId).get().getPostLikes().size());
