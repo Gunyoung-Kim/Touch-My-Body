@@ -30,8 +30,8 @@ import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentServiceImpl;
 
 /**
- * {@link CommenServiceImpl} 에 대한 테스트 클래스 <br>
- * 테스트 범위: (단위 테스트) CommenServiceImpl only
+ * {@link CommentServiceImpl} 에 대한 테스트 클래스 <br>
+ * 테스트 범위: (단위 테스트) CommentServiceImpl only
  * {@link org.mockito.BDDMockito}를 활용한 서비스 계층에 대한 단위 테스트
  * @author kimgun-yeong
  *

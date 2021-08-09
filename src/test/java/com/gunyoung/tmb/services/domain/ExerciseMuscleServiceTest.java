@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
-import com.gunyoung.tmb.domain.exercise.Muscle;
-import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
 
@@ -47,14 +44,6 @@ public class ExerciseMuscleServiceTest {
 	@AfterEach
 	void tearDown() {
 		exerciseMuscleRepository.deleteAll();
-	}
-	
-	private Muscle getMuscleInstance(String name, TargetType category) {
-		Muscle muscle = Muscle.builder()
-				.name(name)
-				.category(category)
-				.build();
-		return muscle;
 	}
 	
 	/*
@@ -152,31 +141,5 @@ public class ExerciseMuscleServiceTest {
 		
 		//Then
 		assertEquals(beforeNum-1,exerciseMuscleRepository.count());
-	}
-	
-	/*
-	 * public List<ExerciseMuscle> getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(Exercise exercise, List<Muscle> muscleList,boolean isMain)
-	 */
-	
-	@Test
-	@DisplayName("Exercise, Muscle List, isMain 인자를 이용해 ExerciseMuscle List 생성 후 반환 -> 정상")
-	public void getExerciseMuscleListFromExerciseAndMuscleListAndIsMain() {
-		//Given
-		int muscleNum = 5;
-		List<Muscle> muscleList = new ArrayList<>();
-		
-		for(int i=0;i< muscleNum; i++) {
-			Muscle muscle = getMuscleInstance("muscle" + i,TargetType.ARM);
-			muscleList.add(muscle);
-		}
-		
-		Exercise exercise = new Exercise();
-		boolean isMain = true;
-		
-		//When
-		List<ExerciseMuscle> result = exerciseMuscleService.getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(exercise, muscleList, isMain);
-		
-		//Then
-		assertEquals(muscleNum, result.size());
 	}
 }
