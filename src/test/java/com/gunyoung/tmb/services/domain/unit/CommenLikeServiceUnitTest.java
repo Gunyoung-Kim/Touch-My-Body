@@ -23,7 +23,7 @@ import com.gunyoung.tmb.services.domain.like.CommentLikeServiceImpl;
 /**
  * {@link CommenLikeServiceImpl} 에 대한 테스트 클래스 <br>
  * 테스트 범위: (단위 테스트) CommenLikeServiceImpl only
- * Mockito를 활용한 서비스 계층에 대한 단위 테스트
+ * {@link org.mockito.BDDMockito}를 활용한 서비스 계층에 대한 단위 테스트
  * @author kimgun-yeong
  *
  */
