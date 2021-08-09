@@ -296,7 +296,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostIdAndIncreasViewNum(Long id) {
+	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(Long id) {
 		ExercisePost exercisePost = findById(id);
 		if(exercisePost == null)
 			return null;

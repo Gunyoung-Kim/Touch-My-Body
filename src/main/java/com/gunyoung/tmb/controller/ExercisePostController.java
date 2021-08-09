@@ -159,7 +159,7 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community/post/{post_id}" ,method = RequestMethod.GET)
 	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId,ModelAndView mav) {
-		ExercisePostViewDTO postViewDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreasViewNum(postId);
+		ExercisePostViewDTO postViewDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(postId);
 		
 		if(postViewDTO == null) {
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
