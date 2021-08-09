@@ -21,7 +21,6 @@ import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
-import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.utils.CacheUtil;
@@ -194,7 +193,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 	 * {@link SaveExerciseDTO} 에 담긴 정보로 Exercise save
 	 * @param dto 클라이언트로부터 받은 Exercise save하기 위한 {@link SaveExerciseDTO} 객체
 	 * @throws TargetTypeNotFoundedException dto 객체에 담긴 target이 아무런 TargetType의 이름이 아닐때 
-	 * @throws MuscleNotFoundedException dto 객체에 담긴 muscleName들 중에 해당하는 Muscle없을 때 
 	 * @author kimgun-yeong
 	 */
 	@Override
