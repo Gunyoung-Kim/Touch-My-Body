@@ -145,7 +145,6 @@ public class FeedbackServiceUnitTest {
 		int pageNum = 1;
 		int pageSize = 1;
 		
-		
 		//When
 		feedbackService.findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, pageNum, pageSize);
 		
