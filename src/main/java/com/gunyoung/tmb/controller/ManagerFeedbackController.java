@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
 import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
@@ -45,7 +46,7 @@ public class ManagerFeedbackController {
 	 */
 	@RequestMapping(value="/manager/exercise/feedback/{exerciseId}" ,method= RequestMethod.GET) 
 	public ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId,@RequestParam(value="page", defaultValue="1") int page
-			,ModelAndView mav) {
+			,ModelAndPageView mav) {
 		Exercise exercise = exerciseService.findById(exerciseId);
 		
 		if(exercise == null) {
@@ -59,9 +60,8 @@ public class ManagerFeedbackController {
 		
 		mav.addObject("listObject", pageResult);
 		mav.addObject("exerciseName", exercise.getName());
-		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
-		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setPageNumbers(page, pageSize, totalPageNum);
 		
 		mav.setViewName("feedbackListViewForManage");
 		

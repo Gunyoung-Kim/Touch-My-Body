@@ -518,7 +518,7 @@ public class ExercisePostRestControllerTest {
 				 .param("commentId", String.valueOf(comment.getId()+1)))
 		 
 		 //Then
-		 		 .andExpect(status().isNoContent());
+		 		 .andExpect(status().isOk());
 		 
 		 assertEquals(1, commentRepository.findAll().size());
 	 }
@@ -548,7 +548,7 @@ public class ExercisePostRestControllerTest {
 				 .param("commentId", String.valueOf(comment.getId())))
 	
 		 //Then
-		 		 .andExpect(status().isForbidden());
+		 	.andExpect(status().isOk());
 		 
 		 assertEquals(1, commentRepository.findAll().size());
 	 }

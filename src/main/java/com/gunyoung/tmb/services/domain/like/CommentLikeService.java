@@ -9,7 +9,7 @@ public interface CommentLikeService {
 	public CommentLike findByUserIdAndCommentId(Long userId, Long commentId);
 	
 	public CommentLike save(CommentLike commentLike);
-	public CommentLike saveWithUserAndComment(User user, Comment comment);
+	public CommentLike createAndSaveWithUserAndComment(User user, Comment comment);
 	
 	public void delete(CommentLike commentLike);
 	

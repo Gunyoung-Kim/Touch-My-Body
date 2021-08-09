@@ -187,18 +187,6 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	 */
 	@Override
 	public void delete(ExercisePost exercisePost) {
-		User user = exercisePost.getUser();
-		
-		if(user != null) {
-			user.getExercisePosts().remove(exercisePost);
-		}
-		
-		Exercise exercise = exercisePost.getExercise();
-		
-		if(exercise != null) {
-			exercise.getExercisePosts().remove(exercisePost);
-		}
-		
 		exercisePostRepository.delete(exercisePost);
 	}
 	
@@ -308,7 +296,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostIdAndIncreasViewNum(Long id) {
+	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(Long id) {
 		ExercisePost exercisePost = findById(id);
 		if(exercisePost == null)
 			return null;

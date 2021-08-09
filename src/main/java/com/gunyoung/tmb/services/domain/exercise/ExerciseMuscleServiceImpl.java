@@ -1,12 +1,15 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
+import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -69,5 +72,31 @@ public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 	@Override
 	public void delete(ExerciseMuscle exerciseMuscle) {
 		exerciseMuscleRepository.delete(exerciseMuscle);
+	}
+
+	/**
+	 * Exercise, Muscle List, isMain 인자를 이용해 ExerciseMuscle List 생성 후 반환
+	 * @param exercise 생성 하려는 ExerciseMuscle 들의 Exercise
+	 * @param muscleList 생성 하려는 ExerciseMuscle 들의 Muscle 들
+	 * @param isMain 생성 하려는 ExerciseMuscle 들의 isMain (주 자극 근육인지 여부)
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public List<ExerciseMuscle> getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(Exercise exercise, List<Muscle> muscleList,boolean isMain) {
+		List<ExerciseMuscle> exerciseMuscleList = new ArrayList<>();
+		
+		for(Muscle muscle: muscleList) {
+			ExerciseMuscle em = ExerciseMuscle.builder()
+					.exercise(exercise)
+					.muscleName(muscle.getName())
+					.muscle(muscle)
+					.isMain(isMain)
+					.build();
+			
+			exerciseMuscleList.add(em);
+		}
+		
+		return exerciseMuscleList; 
 	}
 }

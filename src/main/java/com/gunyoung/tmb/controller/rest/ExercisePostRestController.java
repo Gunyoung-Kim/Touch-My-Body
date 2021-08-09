@@ -23,7 +23,6 @@ import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
-import com.gunyoung.tmb.error.exceptions.notmatch.UserNotMatchException;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.like.CommentLikeService;
@@ -80,7 +79,7 @@ public class ExercisePostRestController {
 		if(postLikeService.existsByUserIdAndExercisePostId(loginUserId, postId)) 
 			throw new LikeAlreadyExistException(LikeErrorCode.LIKE_ALREADY_EXIST_ERROR.getDescription());
 		
-		postLikeService.saveWithUserAndExercisePost(user, exercisePost);
+		postLikeService.createAndSaveWithUserAndExercisePost(user, exercisePost);
 	}
 	
 	/**
@@ -131,7 +130,7 @@ public class ExercisePostRestController {
 		if(commentLikeService.existsByUserIdAndCommentId(loginUserId, commentId)) 
 			throw new LikeAlreadyExistException(LikeErrorCode.LIKE_ALREADY_EXIST_ERROR.getDescription());
 		
-		commentLikeService.saveWithUserAndComment(user, comment);
+		commentLikeService.createAndSaveWithUserAndComment(user, comment);
 	}
 	
 	/**
@@ -158,26 +157,14 @@ public class ExercisePostRestController {
 	 * 유저가 게시글에 댓글 삭제할때 처리하는 메소드
 	 * @param postId 댓글이 작성된 ExercisePost의 ID
 	 * @param commentId 삭제하려는 대상 Comment의 ID
-	 * @throws CommentNotFoundedException 해당 ID의 Comment 없으면
-	 * @throws UserNotMatchException 세션에 저장된 ID와 댓글 작성자의 ID 일치하지 않으면 
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{postId}/removeComment",method = RequestMethod.DELETE)
 	@LoginIdSessionNotNull
 	public void removeCommentToExercisePost(@PathVariable("postId") Long postId,@RequestParam("commentId") Long commentId) {
-		Comment comment = commentService.findWithUserAndExercisePostById(commentId);
+		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
-		if(comment == null) {
-			throw new CommentNotFoundedException(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
-		User commentWriter = comment.getUser();
-		
-		if(SessionUtil.getLoginUserId(session) != commentWriter.getId()) {
-			throw new UserNotMatchException(UserErrorCode.USER_NOT_MATCH_ERROR.getDescription());
-		}
-		
-		commentService.delete(comment);
+		commentService.checkIsMineAndDelete(loginUserId, commentId);
 	}
 	
 }

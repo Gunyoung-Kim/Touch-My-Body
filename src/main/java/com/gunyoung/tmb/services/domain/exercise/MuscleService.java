@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
+import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 
 public interface MuscleService {
 	public Muscle findById(Long id);
@@ -15,6 +16,8 @@ public interface MuscleService {
 	public Page<Muscle> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize);
 	
 	public Map<String,List<String>> getAllMusclesWithSortingByCategory();
+	
+	public List<Muscle> getMuscleListFromMuscleNameList(List<String> muscleNames) throws MuscleNotFoundedException;
 	
 	public Muscle save(Muscle muscle);
 	

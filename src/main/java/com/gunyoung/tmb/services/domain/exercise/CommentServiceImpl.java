@@ -145,18 +145,6 @@ public class CommentServiceImpl implements CommentService {
 	 */
 	@Override
 	public void delete(Comment comment) {
-		User user = comment.getUser();
-		
-		if(user != null) {
-			user.getComments().remove(comment);
-		}
-		
-		ExercisePost exercisePost = comment.getExercisePost();
-		
-		if(exercisePost != null) {
-			exercisePost.getComments().remove(comment);
-		}
-		
 		commentRepository.delete(comment);
 	}
 	

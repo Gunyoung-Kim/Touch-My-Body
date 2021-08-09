@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
+import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
@@ -176,7 +177,7 @@ public class UserController {
 	 */
 	@RequestMapping(value="/user/profile/mycomments", method=RequestMethod.GET)
 	@LoginIdSessionNotNull
-	public ModelAndView myCommentsView(ModelAndView mav,@RequestParam(value="page", required=false,defaultValue="1") Integer page
+	public ModelAndView myCommentsView(ModelAndPageView mav,@RequestParam(value="page", required=false,defaultValue="1") Integer page
 			,@RequestParam(value="order", defaultValue="desc") String order) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
@@ -212,9 +213,8 @@ public class UserController {
 		}
 		
 		mav.addObject("commentList", commentListForView);
-		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
-		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+	
+		mav.setPageNumbers(page, pageSize, totalPageNum);
 		
 		mav.setViewName("profileCommentList");
 		
@@ -233,7 +233,7 @@ public class UserController {
 	 */
 	@RequestMapping(value="/user/profile/myposts",method=RequestMethod.GET)
 	@LoginIdSessionNotNull
-	public ModelAndView myPostsView(ModelAndView mav, @RequestParam(value="page", required=false,defaultValue="1") Integer page
+	public ModelAndView myPostsView(ModelAndPageView mav, @RequestParam(value="page", required=false,defaultValue="1") Integer page
 			,@RequestParam(value="order", defaultValue="desc") String order ) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
@@ -269,9 +269,8 @@ public class UserController {
 		}
 		
 		mav.addObject("postList", postListForView);
-		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
-		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setPageNumbers(page, pageSize, totalPageNum);
 		
 		mav.setViewName("profilePostList");
 		

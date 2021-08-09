@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
+import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
@@ -71,7 +72,7 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community",method=RequestMethod.GET)
 	public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") int page,
-			@RequestParam(value="keyword",required=false)String keyword, ModelAndView mav) {
+			@RequestParam(value="keyword",required=false)String keyword, ModelAndPageView mav) {
 		int pageSize = PageUtil.COMMUNITY_PAGE_SIZE;
 		
 		Page<PostForCommunityViewDTO> pageResult;
@@ -91,10 +92,9 @@ public class ExercisePostController {
 		
 		mav.addObject("listObject",listObject);
 		mav.addObject("category", "전체");
-		mav.addObject("currentPage",page);
 		mav.addObject("targetNames", targetTypes);
-		mav.addObject("startIndex",(page/pageSize)*pageSize + 1);
-		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize - 1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize + pageSize - 1);
+		
+		mav.setPageNumbers(page, pageSize, totalPageNum);
 		
 		mav.setViewName("community");
 		
@@ -112,7 +112,7 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community/{target}",method = RequestMethod.GET)
 	public ModelAndView exercisePostViewWithTarget(@RequestParam(value="page", required = false,defaultValue="1") int page
-			, @RequestParam(value="keyword",required=false)String keyword, ModelAndView mav, @PathVariable("target") String targetName) {
+			, @RequestParam(value="keyword",required=false)String keyword, ModelAndPageView mav, @PathVariable("target") String targetName) {
 		TargetType type;
 		try {
 			type = TargetType.valueOf(targetName);
@@ -140,9 +140,8 @@ public class ExercisePostController {
 		mav.addObject("listObject",listObject);
 		mav.addObject("targetNames", targetTypes);
 		mav.addObject("category", type.getKoreanName());
-		mav.addObject("currentPage",page);
-		mav.addObject("startIndex",(page/pageSize)*pageSize+1);
-		mav.addObject("lastIndex",(page/pageSize)*pageSize+pageSize-1 > totalPageNum ? totalPageNum : (page/pageSize)*pageSize+pageSize-1);
+		
+		mav.setPageNumbers(page, pageSize, totalPageNum);
 		
 		mav.setViewName("community");
 		
@@ -160,7 +159,7 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community/post/{post_id}" ,method = RequestMethod.GET)
 	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId,ModelAndView mav) {
-		ExercisePostViewDTO postViewDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreasViewNum(postId);
+		ExercisePostViewDTO postViewDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(postId);
 		
 		if(postViewDTO == null) {
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
@@ -204,7 +203,7 @@ public class ExercisePostController {
 	public ModelAndView addExercisePost(@ModelAttribute SaveExercisePostDTO dto, ModelAndView mav) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
-		User user = userService.findfWithExercisePostsById(loginUserId);
+		User user = userService.findWithExercisePostsById(loginUserId);
 		
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());

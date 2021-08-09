@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService{
 	 */
 	@Override
 	@Transactional(readOnly=true)
-	public User findfWithExercisePostsById(Long id) {
+	public User findWithExercisePostsById(Long id) {
 		Optional<User> result = userRepository.findWithExercisePostsById(id);
 		if(result.isEmpty())
 			return null;

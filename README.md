@@ -1,6 +1,6 @@
 # Touch-My-Body
 
-최신 버전 : ver 0.0.5
+최신 버전 : ver 0.0.6
 
 ## 프로젝트 주 기능
 
@@ -20,7 +20,7 @@
 
 - 개발 기간: 2021.06.21 ~ 2021.07.11
 
-- 사용기술 및 개발 환경: Spring Boot, Spring JPA, Spring MVC, Spring Security, JUnit5, Maven, 
+- 사용기술 및 개발 환경: Spring Boot, Spring JPA, Spring MVC, Spring Security, JUnit5, Maven
 
 - 사용 데이터베이스
 
@@ -85,6 +85,8 @@
 2. Service 클래스 
 
    - 통합 테스트 : 서비스 계층 - 영속성 계층 
+
+   - 단위 테스트: 서비스 계층 
 
 ---
 

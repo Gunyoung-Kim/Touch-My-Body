@@ -278,45 +278,6 @@ public class CommentServiceTest {
 		assertEquals(beforeNum-1,commentRepository.count());
 	}
 	
-	@Test
-	@Transactional
-	@DisplayName("Comment 삭제하기, 다른 entity와의 연관성 삭제 -> 정상")
-	public void deleteWithRelationWithOtherEntityTest() {
-		//Given
-		Comment comment = commentRepository.findAll().get(0);
-		
-		User user = getUserInstance();
-		
-		userRepository.save(user);
-		
-		ExercisePost exercisePost = getExercisePostInstance();
-		
-		exercisePostRepository.save(exercisePost);
-		
-		comment.setUser(user);
-		comment.setExercisePost(exercisePost);
-		user.getComments().add(comment);
-		exercisePost.getComments().add(comment);
-		
-		commentRepository.save(comment);
-		
-		int userCommentNum = user.getComments().size();
-		Long userId = user.getId();
-		int exercisePostCommentNum = exercisePost.getComments().size();
-		Long exercisePostId = exercisePost.getId();
-		
-		long commentNum = commentRepository.count();
-		
-		//When
-		commentService.delete(comment);
-		
-		//Then
-		assertEquals(userCommentNum -1,userRepository.findById(userId).get().getComments().size());
-		assertEquals(exercisePostCommentNum -1,exercisePostRepository.findById(exercisePostId).get().getComments().size());
-		assertEquals(commentNum-1, commentRepository.count());
-		
-	}
-	
 	/*
 	 * public void checkIsMineAndDelete(Long userId, Long commentId) {
 	 */

@@ -154,7 +154,7 @@ public class PostLikeServiceTest {
 		
 		
 		//When
-		postLikeService.saveWithUserAndExercisePost(user, exercisePost);
+		postLikeService.createAndSaveWithUserAndExercisePost(user, exercisePost);
 		
 		//Then
 		assertEquals(userPostLikeNum +1,userRepository.findById(userId).get().getPostLikes().size());
@@ -179,43 +179,6 @@ public class PostLikeServiceTest {
 		
 		//Then
 		assertEquals(beforeNum-1, postLikeRepository.count());
-	}
-	
-	@Test
-	@Transactional
-	@DisplayName("PostLike 삭제, 다른 entity와의 연관성 삭제 -> 정상")
-	public void deleteWithRelationWithOtherEntityTest() {
-		//Given
-		PostLike postLike = postLikeRepository.findAll().get(0);
-		User user = getUserInstance();
-		
-		userRepository.save(user);
-		
-		ExercisePost exercisePost = getExercisePostInstance();
-		
-		exercisePostRepository.save(exercisePost);
-		
-		postLike.setUser(user);
-		postLike.setExercisePost(exercisePost);
-		user.getPostLikes().add(postLike);
-		exercisePost.getPostLikes().add(postLike);
-		
-		postLikeRepository.save(postLike);
-		
-		int userPostLikeNum = user.getPostLikes().size();
-		Long userId = user.getId();
-		int exercisePostPostLikeNum = exercisePost.getPostLikes().size();
-		Long exercisePostId = exercisePost.getId();
-		
-		long postLikeNum = postLikeRepository.count();
-		
-		//When
-		postLikeService.delete(postLike);
-		
-		//Then
-		assertEquals(userPostLikeNum -1,userRepository.findById(userId).get().getPostLikes().size());
-		assertEquals(exercisePostPostLikeNum -1,exercisePostRepository.findById(exercisePostId).get().getPostLikes().size());
-		assertEquals(postLikeNum-1, postLikeRepository.count());
 	}
 	
 	/*

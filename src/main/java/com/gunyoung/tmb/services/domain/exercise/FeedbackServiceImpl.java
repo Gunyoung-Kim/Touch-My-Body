@@ -120,17 +120,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	public void delete(Feedback feedback) {
-		User user = feedback.getUser();
-		if(user != null) {
-			user.getFeedbacks().remove(feedback);
-		}
-		
-		Exercise exercise = feedback.getExercise();
-		if(exercise != null) {
-			exercise.getFeedbacks().remove(feedback);
-		}
-		
+	public void delete(Feedback feedback) {	
 		feedbackRepository.delete(feedback);
 	}
 

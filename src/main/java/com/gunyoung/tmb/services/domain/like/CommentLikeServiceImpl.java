@@ -54,7 +54,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	@Override
 	@Transactional(readOnly=true)
 	public CommentLike findByUserIdAndCommentId(Long userId, Long commentId) {
-		Optional<CommentLike> result = commentLikeRepository.findByUserIdAndCommentIdFetch(userId, commentId);
+		Optional<CommentLike> result = commentLikeRepository.findByUserIdAndCommentId(userId, commentId);
 		if(result.isEmpty())
 			return null;
 		return result.get();
@@ -81,7 +81,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	 * @author kimgun-yeong
 	 */
 	@Override
-	public CommentLike saveWithUserAndComment(User user, Comment comment) {
+	public CommentLike createAndSaveWithUserAndComment(User user, Comment comment) {
 		CommentLike commentLike = CommentLike.builder()
 				.user(user)
 				.comment(comment)
@@ -103,16 +103,6 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	@Override
 	@CacheEvict(cacheNames=CacheUtil.COMMENT_LIKE_NAME,allEntries=true)
 	public void delete(CommentLike commentLike) {
-		User user = commentLike.getUser();
-	
-		if(user != null)
-			user.getCommentLikes().remove(commentLike);
-		
-		Comment comment = commentLike.getComment();
-		
-		if(comment != null)
-			comment.getCommentLikes().remove(commentLike);
-		
 		commentLikeRepository.delete(commentLike);
 	}
 

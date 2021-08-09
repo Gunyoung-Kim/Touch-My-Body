@@ -9,7 +9,7 @@ public interface PostLikeService {
 	public PostLike findByUserIdAndExercisePostId(Long userId, Long exercisePostId);
 	
 	public PostLike save(PostLike postLike);
-	public PostLike saveWithUserAndExercisePost(User user, ExercisePost exercisePost);
+	public PostLike createAndSaveWithUserAndExercisePost(User user, ExercisePost exercisePost);
 	
 	public void delete(PostLike postLike);
 	

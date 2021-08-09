@@ -20,9 +20,7 @@ import com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO;
 import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
-import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
-import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.utils.CacheUtil;
@@ -195,7 +193,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 	 * {@link SaveExerciseDTO} 에 담긴 정보로 Exercise save
 	 * @param dto 클라이언트로부터 받은 Exercise save하기 위한 {@link SaveExerciseDTO} 객체
 	 * @throws TargetTypeNotFoundedException dto 객체에 담긴 target이 아무런 TargetType의 이름이 아닐때 
-	 * @throws MuscleNotFoundedException dto 객체에 담긴 muscleName들 중에 해당하는 Muscle없을 때 
 	 * @author kimgun-yeong
 	 */
 	@Override
@@ -206,70 +203,37 @@ public class ExerciseServiceImpl implements ExerciseService {
 		exercise.setMovement(dto.getMovement());
 		
 		// SaveExerciseDTO에 입력된 target에 해당하는 TargetType 있는지 확인
-		boolean isTargetTypeExist = false;
-		for(TargetType type: TargetType.values()) {
-			if(dto.getTarget().equals(type.getKoreanName())) {
-				exercise.setTarget(type);
-				isTargetTypeExist= true;
-				break;
-			}
-		}
 		
-		if(!isTargetTypeExist) {
+		TargetType exerciseTarget = TargetType.getFromKoreanName(dto.getTarget());
+		
+		if(exerciseTarget == null) {
 			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
+		exercise.setTarget(exerciseTarget);
+		
 		// Main Muscle 들 이름으로 Muscle 객체들 가져오기
 		List<String> mainMusclesName = dto.getMainMuscles();
-		List<Muscle> mainMuscles = new ArrayList<>();
+		List<Muscle> mainMuscles = muscleService.getMuscleListFromMuscleNameList(mainMusclesName);
 		
-		for(String muscleName: mainMusclesName) {
-			Muscle muscle = muscleService.findByName(muscleName);
-			
-			if(muscle == null)
-				throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
-			
-			mainMuscles.add(muscle);
-		}
 		
 		// Sub Muscle 들 이름으로 Muscle 객체들 가져오기
 		List<String> subMusclesName = dto.getSubMuscles();
-		List<Muscle> subMuscles = new ArrayList<>();
-		
-		for(String muscleName: subMusclesName) {
-			Muscle muscle = muscleService.findByName(muscleName);
-			
-			if(muscle == null)
-				throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
-			
-			subMuscles.add(muscle);
-		}
+		List<Muscle> subMuscles = muscleService.getMuscleListFromMuscleNameList(subMusclesName);
 		
 		// 생성한 Exercise 객체와 가져온 Muscle 객체로 ExerciseMuscle 객체 생성
 		List<ExerciseMuscle> exerciseMuscles = new ArrayList<>();
 		
-		for(Muscle muscle: mainMuscles) {
-			ExerciseMuscle em = ExerciseMuscle.builder()
-					.isMain(true)
-					.muscleName(muscle.getName())
-					.muscle(muscle)
-					.exercise(exercise)
-					.build();
-			
-			exerciseMuscles.add(em);
-			exercise.getExerciseMuscles().add(em);
-		}
+		List<ExerciseMuscle> mainExerciseMuscleList =  exerciseMuscleService.getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(exercise, mainMuscles, true);
 		
-		for(Muscle muscle: subMuscles) {
-			ExerciseMuscle em = ExerciseMuscle.builder()
-					.isMain(false)
-					.muscleName(muscle.getName())
-					.muscle(muscle)
-					.exercise(exercise)
-					.build();
-			exerciseMuscles.add(em);
-			exercise.getExerciseMuscles().add(em);
-		}
+		exerciseMuscles.addAll(mainExerciseMuscleList);
+		exercise.getExerciseMuscles().addAll(mainExerciseMuscleList);
+		
+		
+		List<ExerciseMuscle> subExerciseMuscleList = exerciseMuscleService.getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(exercise, subMuscles, false);
+		
+		exerciseMuscles.addAll(subExerciseMuscleList);
+		exercise.getExerciseMuscles().addAll(subExerciseMuscleList);
 		
 		//Exercise 객체 저장 
 		save(exercise);
