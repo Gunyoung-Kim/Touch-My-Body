@@ -203,7 +203,7 @@ public class ExercisePostController {
 	public ModelAndView addExercisePost(@ModelAttribute SaveExercisePostDTO dto, ModelAndView mav) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
-		User user = userService.findfWithExercisePostsById(loginUserId);
+		User user = userService.findWithExercisePostsById(loginUserId);
 		
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
