@@ -28,13 +28,6 @@ public class CommentServiceImpl implements CommentService {
 	
 	private final CommentRepository commentRepository;
 
-	/**
-	 * ID로 Comment 찾기
-	 * @param id 찾으려는 Comment의 id
-	 * @return Comment, Null(해당 id의 Comment가 없을때)
-	 * @since 11
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public Comment findById(Long id) {
@@ -44,13 +37,6 @@ public class CommentServiceImpl implements CommentService {
 		return result.get();
 	}
 	
-	/**
-	 * ID로 User와 ExercisePost 페치조인 후 Comment 반환
-	 * @param id 찾으려는 Comment의 id
-	 * @return Comment, Null(해당 id의 Comment가 없을때)
-	 * @since 11
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public Comment findWithUserAndExercisePostById(Long id) {
@@ -60,13 +46,6 @@ public class CommentServiceImpl implements CommentService {
 		return result.get();
 	}
 	
-	/**
-	 * ID로 CommentLikes 페치조인 후 Comment 반환
-	 * @param id 찾으려는 Comment의 id
-	 * @return Comment, Null(해당 id의 Comment가 없을때)
-	 * @since 11
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public Comment findWithCommentLikesById(Long id) {
@@ -76,22 +55,12 @@ public class CommentServiceImpl implements CommentService {
 		return result.get();
 	}
 	
-	/**
-	 * ExercisePost ID를 만족하는 Comment들 반환
-	 * @param 찾으려는 Comment 들의 ExercisePost ID
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public List<Comment> findAllByExercisePostId(Long postId) {
 		return commentRepository.findAllByExercisePostIdCustom(postId);
 	}
 	
-	/**
-	 * User ID를 만족하는 Comment들 생성 오래된순으로 페이지 반환
-	 * @param userId Comment들 작성자의 ID
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly= true)
 	public Page<Comment> findAllByUserIdOrderByCreatedAtASC(Long userId,Integer pageNum, int page_size) {
@@ -99,11 +68,6 @@ public class CommentServiceImpl implements CommentService {
 		return commentRepository.findAllByUserIdOrderByCreatedAtASCCustom(userId,pageRequest);
 	}
 	
-	/**
-	 * User ID를 만족하는 Comment들 생성 최신순으로 페이지 반환
-	 * @param userId Comment들 작성자의 ID
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public Page<Comment> findAllByUserIdOrderByCreatedAtDESC(Long userId,Integer pageNum, int page_size) {
@@ -111,23 +75,11 @@ public class CommentServiceImpl implements CommentService {
 		return commentRepository.findAllByUserIdOrderByCreatedAtDescCustom(userId,pageRequest);
 	}
 
-	/**
-	 * Comment 생성 및 수정
-	 * @param comment 저장하려는 Comment
-	 * @return 저장된 Comment 
-	 * @author kimgun-yeong
-	 */
 	@Override
 	public Comment save(Comment comment) {
 		return commentRepository.save(comment);
 	}
 	
-	/**
-	 * User, ExercisePost 와 연관관계 생성 후 저장 
-	 * @param user 댓글을 추가한 User
-	 * @param exercisePost 댓글이 추가된 ExercisePost
-	 * @author kimgun-yeong
-	 */
 	@Override
 	public Comment saveWithUserAndExercisePost(Comment comment, User user, ExercisePost exercisePost) {
 		comment.setUser(user);
@@ -138,21 +90,11 @@ public class CommentServiceImpl implements CommentService {
 		return save(comment);
 	}
 
-	/**
-	 * Comment 삭제
-	 * @param comment 삭제하려는 Comment
-	 * @author kimgun-yeong
-	 */
 	@Override
 	public void delete(Comment comment) {
 		commentRepository.delete(comment);
 	}
 	
-	/**
-	 * ID를 만족하는 Comment 삭제 
-	 * @param id 삭제하려는 Comment의 ID
-	 * @author kimgun-yeong
-	 */
 	@Override
 	public void deleteById(Long id) {
 		Comment comment = findById(id);
@@ -161,12 +103,6 @@ public class CommentServiceImpl implements CommentService {
 		delete(comment);
 	}
 	
-	/**
-	 * 해당 Comment ID의 Comment 작성자의 ID가 userID와 일치하면 삭제
-	 * @param userId Comment 작성자의 ID와 비교할 User ID
-	 * @param commentId 삭제하려는 Comment의 ID
-	 * @author kimgun-yeong
-	 */
 	@Override
 	public void checkIsMineAndDelete(Long userId, Long commentId) {
 		Optional<Comment> comment = commentRepository.findByUserIdAndCommentId(userId, commentId);
@@ -175,21 +111,12 @@ public class CommentServiceImpl implements CommentService {
 		});
 	}
 	
-	/**
-	 * User ID 만족하는 Comment들 개수 반환
-	 * @param Comment들 작성자의 ID
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public long countByUserId(Long userId) {
 		return commentRepository.countByUserId(userId);
 	}
 
-	/**
-	 * 해당 exercisePost id 를 만족하는 Comment 객체들을 {@link CommentForPostViewDTO}로 변환해서 반환하는 메소드 
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public List<CommentForPostViewDTO> getCommentForPostViewDTOsByExercisePostId(Long postId) {
