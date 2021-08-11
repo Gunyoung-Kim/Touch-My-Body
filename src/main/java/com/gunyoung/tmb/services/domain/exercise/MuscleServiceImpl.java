@@ -119,7 +119,7 @@ public class MuscleServiceImpl implements MuscleService {
 	 * @throws MuscleNotFoundedException Muscle name에 해당하는 Muscle 없을 때
 	 * @author kimgun-yeong
 	 */
-	public List<Muscle> getMuscleListFromMuscleNameList(List<String> muscleNames) throws MuscleNotFoundedException {
+	public List<Muscle> getMuscleListFromMuscleNameList(Iterable<String> muscleNames) throws MuscleNotFoundedException {
 		List<Muscle> muscleList = new ArrayList<>();
 		
 		for(String muscleName: muscleNames) {

@@ -188,7 +188,7 @@ public class MuscleServiceTest {
 	}
 	
 	/*
-	 * public List<Muscle> getMuscleListFromMuscleNameList(List<String> muscleNames) throws MuscleNotFoundedException 
+	 * public List<Muscle> getMuscleListFromMuscleNameList(Iterable<String> muscleNames) throws MuscleNotFoundedException 
 	 */
 	
 	@Test

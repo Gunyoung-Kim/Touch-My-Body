@@ -17,7 +17,7 @@ public interface MuscleService {
 	
 	public Map<String,List<String>> getAllMusclesWithSortingByCategory();
 	
-	public List<Muscle> getMuscleListFromMuscleNameList(List<String> muscleNames) throws MuscleNotFoundedException;
+	public List<Muscle> getMuscleListFromMuscleNameList(Iterable<String> muscleNames) throws MuscleNotFoundedException;
 	
 	public Muscle save(Muscle muscle);
 	
