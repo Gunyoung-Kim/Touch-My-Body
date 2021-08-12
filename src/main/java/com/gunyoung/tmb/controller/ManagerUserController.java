@@ -246,6 +246,6 @@ public class ManagerUserController {
 	 * @author kimgun-yeong
 	 */
 	private List<String> getReachableAuthorityStrings(Collection<? extends GrantedAuthority> authorities) {
-		return SecurityUtil.getAuthorityStrings(roleHierarchy.getReachableGrantedAuthorities(authorities));
+		return SecurityUtil.getAuthorityStringsExceptROLE(roleHierarchy.getReachableGrantedAuthorities(authorities));
 	}
 }

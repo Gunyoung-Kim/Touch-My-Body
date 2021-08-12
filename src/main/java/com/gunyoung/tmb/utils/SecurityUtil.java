@@ -15,9 +15,9 @@ public class SecurityUtil {
 	/**
 	 * Authority들을 ROLE_ 제외한 toString들 반환
 	 * @param authorities
-	 * @return
+	 * @author kimgun-yeong
 	 */
-	public static List<String> getAuthorityStrings(Collection<? extends GrantedAuthority> authorities) {
+	public static List<String> getAuthorityStringsExceptROLE(Collection<? extends GrantedAuthority> authorities) {
 		List<String> result = new ArrayList<>();
 		for(GrantedAuthority a : authorities) {
 			result.add(a.getAuthority().substring(5));
@@ -29,7 +29,7 @@ public class SecurityUtil {
 	/**
 	 * 유저의 RoleType을 통해 Authority 반환하는 메소드
 	 * @param roleType
-	 * @return
+	 * @author kimgun-yeong
 	 */
 	public static Collection<? extends GrantedAuthority> getAuthoritiesByUserRoleType(RoleType roleType) {
 		String roleString = "ROLE_" + roleType.toString();
