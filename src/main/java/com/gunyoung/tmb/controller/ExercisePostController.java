@@ -65,9 +65,7 @@ public class ExercisePostController {
 	
 	/**
 	 * 커뮤니티 메인 화면 반환하는 메소드
-	 * @param mav
 	 * @param keyword ExercisePost 제목 및 내용의 검색 키워드
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community",method=RequestMethod.GET)
@@ -103,12 +101,10 @@ public class ExercisePostController {
 	
 	/**
 	 * 특정 부류 게시글만 반환하는 메소드
-	 * @param page
-	 * @param keyword
-	 * @param mav
-	 * @param targetName
+	 * @param keyword ExercisePost 제목 및 내용의 검색 키워드
+	 * @param targetName 게시글 부류
 	 * @throws TargetTypeNotFoundedException 요청 카테고리가 존재하지 않을 때
-	 * @return
+	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/{target}",method = RequestMethod.GET)
 	public ModelAndView exercisePostViewWithTarget(@RequestParam(value="page", required = false,defaultValue="1") int page
@@ -152,9 +148,7 @@ public class ExercisePostController {
 	/**
 	 * 게시글을 보여주는 뷰 반환하는 메소드
 	 * @param postId 찾고자하는 ExercisePost 의 ID
-	 * @param mav
 	 * @throws ExercisePostNotFoundedException 해당 ID의 ExercisePost 없으면
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}" ,method = RequestMethod.GET)
@@ -177,8 +171,6 @@ public class ExercisePostController {
 	
 	/**
 	 * 게시글 작성하는 화면 반환하는 메소드
-	 * @param mav
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/addpost", method = RequestMethod.GET)
@@ -191,11 +183,8 @@ public class ExercisePostController {
 	/**
 	 * 게시글 추가 처리하는 메소드 <br>
 	 * 정상 처리 시 커뮤니티 메인 화면으로 리다이렉트
-	 * @param dto
-	 * @param mav
 	 * @throws UserNotFoundedException 세션에 저장된 ID에 해당하는 User 없으면
 	 * @throws ExerciseNotFoundedException dto의 exerciseName에 해당하는 Exercise 없으면 
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/addpost", method = RequestMethod.POST)
@@ -229,8 +218,6 @@ public class ExercisePostController {
 	 * 유저가 게시글에 댓글 추가할때 처리하는 메소드 <br>
 	 * 정상 처리시 해당 게시글로 리다이렉트
 	 * @param postId 댓글을 추가하려는 ExercisePost
-	 * @param dto
-	 * @param request
 	 * @throws UserNotFoundedException 세션에 저장된 ID에 해당하는 User 없으면
 	 * @throws ExercisePostNotFoundedException 해당 ID의 ExercisePost 없으면 
 	 * @author kimgun-yeong

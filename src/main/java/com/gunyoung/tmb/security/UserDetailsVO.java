@@ -1,12 +1,13 @@
 package com.gunyoung.tmb.security;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.gunyoung.tmb.domain.user.User;
-import com.gunyoung.tmb.utils.SecurityUtil;
 
 @SuppressWarnings("serial")
 public class UserDetailsVO implements UserDetails{
@@ -27,7 +28,7 @@ public class UserDetailsVO implements UserDetails{
 	public UserDetailsVO(User user) {
 		email = user.getEmail();
 		password = user.getPassword();
-		this.authorities = SecurityUtil.getAuthoritiesByUserRoleType(user.getRole());
+		this.authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString()));
 	}
 	
 	@Override

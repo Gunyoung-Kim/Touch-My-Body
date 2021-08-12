@@ -44,13 +44,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 	
 	private final ExerciseMuscleService exerciseMuscleService;
 
-	/**
-	 * ID로 Exercise 찾기
-	 * @param id 찾으려는 Exercise의 id
-	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
-	 * @since 11
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findById(Long id) {
@@ -60,13 +53,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 		return result.get();
 	}
 	
-	/**
-	 * name으로 Exercise 찾기
-	 * @param name 찾으려는 Exercise의 이름
-	 * @return Exercise, Null(해당 name의 Exercise가 없을때)
-	 * @since 11
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findByName(String name) {
@@ -76,13 +62,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 		return result.get();
 	}
 	
-	/**
-	 * ID 로 Feedbacks 페치 조인 후 반환 
-	 * @param id 찾으려는 Exercise의 id
-	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
-	 * @since 11
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findWithFeedbacksById(Long id) {
@@ -92,13 +71,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 		return result.get();
 	}
 	
-	/**
-	 * ID로 ExercisePosts 페치 조인 후 반환
-	 * @param id 찾으려는 Exercise의 id
-	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
-	 * @since 11 
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findWithExercisePostsByName(String name) {
@@ -108,13 +80,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 		return result.get();
 	}
 	
-	/**
-	 * ID로 ExerciseMuscles 페치 조인 후 반환
-	 * @param id 찾으려는 Exercise의 id
-	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
-	 * @since 11 
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findWithExerciseMusclesById(Long id) {
@@ -124,10 +89,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 		return result.get();
 	}
 	
-	/**
-	 * 모든 Exercise 페이지로 가져오기 
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public Page<Exercise> findAllInPage(Integer pageNumber,int page_size) {
@@ -135,11 +96,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 		return exerciseRepository.findAll(pageRequest);
 	}
 	
-	/**
-	 * name에 키워드를 포함하는 모든 Exercise 페이지로 가져오는 메소드
-	 * @param keyword name 검색 키워드 
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int page_size) {
@@ -147,12 +103,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 		return exerciseRepository.findAllWithNameKeyword(keyword, pageRequest);
 	}
 	
-	
-	/**
-	 * 모든 Exercise들을 target들로 분류해 반환 <br>
-	 * Cache 이용
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	@Cacheable(cacheNames=CacheUtil.EXERCISE_SORT_NAME,key="#root.methodName")
@@ -176,25 +126,12 @@ public class ExerciseServiceImpl implements ExerciseService {
 		return result;
 	}
 
-	/** 
-	 * Exercise 생성 및 수정 <br>
-	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 Cache 삭제 
-	 * @param exercise 저장하려는 Exercise
-	 * @return 저장된 Exercise
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
 	public Exercise save(Exercise exercise) {
 		return exerciseRepository.save(exercise);
 	}
 	
-	/**
-	 * {@link SaveExerciseDTO} 에 담긴 정보로 Exercise save
-	 * @param dto 클라이언트로부터 받은 Exercise save하기 위한 {@link SaveExerciseDTO} 객체
-	 * @throws TargetTypeNotFoundedException dto 객체에 담긴 target이 아무런 TargetType의 이름이 아닐때 
-	 * @author kimgun-yeong
-	 */
 	@Override
 	public Exercise saveWithSaveExerciseDTO(Exercise exercise,SaveExerciseDTO dto) {
 		exercise.setName(dto.getName());
@@ -244,22 +181,12 @@ public class ExerciseServiceImpl implements ExerciseService {
 		return exercise;
 	}
 
-	/**
-	 * Exercise 삭제 <br>
-	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 Cache 삭제 
-	 * @param exercise 삭제하려는 Exercise
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
 	public void delete(Exercise exercise) {
 		exerciseRepository.delete(exercise);
 	}
 	
-	/**
-	 * ID를 만족하는 Exercise 삭제
-	 * @author kimgun-yeong
-	 */
 	@Override
 	public void deleteById(Long id) {
 		Exercise exercise = findById(id);
@@ -267,33 +194,18 @@ public class ExerciseServiceImpl implements ExerciseService {
 			delete(exercise);
 	}
 
-	/**
-	 * 모든 Exercise들 개수 반환
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public long countAll() {
 		return exerciseRepository.count();
 	}
 
-	/**
-	 * 이름 키워드를 만족하는 Exercise 개수 반환
-	 * @param nameKeyword 이름 키워드
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public long countAllWithNameKeyword(String nameKeyword) {
 		return exerciseRepository.countAllWithNameKeyword(nameKeyword);
 	}
 
-	/**
-	 * Exercise Id로 찾은 Exercise로 {@link ExerciseForInfoViewDTO} 생성 및 반환 
-	 * @param exerciseId 찾으려는 Exercise의 ID
-	 * @return {@link ExerciseForInfoViewDTO}, null(해당 id의 Exercise 없을때)
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public ExerciseForInfoViewDTO getExerciseForInfoViewDTOByExerciseId(Long exerciseId) {
@@ -329,11 +241,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 		return dto;
 	}
 
-	/**
-	 * 해당 name의 Exercise 존재하는지 여부 반환
-	 * @param 찾으려는 Exercise의 name
-	 * @author kimgun-yeong
-	 */
 	@Override
 	@Transactional(readOnly=true)
 	public boolean existsByName(String name) {

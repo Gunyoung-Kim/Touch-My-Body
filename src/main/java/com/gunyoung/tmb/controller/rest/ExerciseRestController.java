@@ -28,7 +28,6 @@ public class ExerciseRestController {
 	/**
 	 * 각 부위별 운동 종류 반환하는 메소드 <br>
 	 * Exercise를 target으로 분류해서 반환
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/exercise/getexercises",method=RequestMethod.GET)

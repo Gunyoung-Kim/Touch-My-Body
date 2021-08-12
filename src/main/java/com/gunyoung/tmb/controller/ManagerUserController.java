@@ -1,14 +1,10 @@
 package com.gunyoung.tmb.controller;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,11 +24,11 @@ import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.request.AccessDeniedException;
 import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
+import com.gunyoung.tmb.security.AuthorityService;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.PageUtil;
-import com.gunyoung.tmb.utils.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -51,14 +47,12 @@ public class ManagerUserController {
 	
 	private final ExercisePostService exercisePostService;
 	
-	private final RoleHierarchy roleHierarchy;
+	private final AuthorityService authorityService;
 	
 	/**
 	 * 매니저들의 유저 검색 (for managing) 페이지 반환
-	 * @param mav
 	 * @param page 검색하려는 페이지
 	 * @param keyword User 닉네임 검색 키워드
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage",method= RequestMethod.GET)
@@ -95,10 +89,8 @@ public class ManagerUserController {
 	/**
 	 * 특정 User 관리 화면 반환하는 메소드
 	 * @param userId 관리하려는 대상 User의 Id
-	 * @param mav
 	 * @throws UserNotFoundedException 해당 Id의 User 없으면 
 	 * @throws AccessDeniedException 접속자의 권한이 대상 User의 권한보다 낮다면
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage/{user_id}" , method = RequestMethod.GET)
@@ -108,14 +100,9 @@ public class ManagerUserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 	
-		List<String> myReachableAuthStringList = getReachableAuthorityStrings(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-		List<String> targetReacheableStringList = getReachableAuthorityStrings(SecurityUtil.getAuthoritiesByUserRoleType(user.getRole()));
+		List<String> myReachableAuthStringList = authorityService.getReachableAuthorityStrings(authorityService.getSessionUserAuthorities());
 		
-		/*
-		 *  접속자의 권한이 대상 유저의 권한 보다 낮으면 예외 발생 
-		 *  권한 구조가 일자이기에 가능한 로직, 추후에 일자에서 변경 되면 이 로직도 변경 요망
-		 */
-		if(targetReacheableStringList.size() > myReachableAuthStringList.size()) {
+		if(!authorityService.isSessionUserAuthorityCanAccessToTargetAuthority(user)) {
 			throw new AccessDeniedException(UserErrorCode.ACESS_DENIED_ERROR.getDescription());
 		}
 		
@@ -132,10 +119,8 @@ public class ManagerUserController {
 	 * 특정 유저의 댓글 목록 보여주는 화면 반환하는 메소드
 	 * @param userId 댓글 목록 확인하려는 대상 User의 Id
 	 * @param order 검색의 정렬 조건 (최신순 또는 오래된순)
-	 * @param mav
 	 * @throws UserNotFoundedException 해당 Id의 User 없으면
 	 * @throws SearchCriteriaInvalidException 검색 결과 정렬 방식이 올바르지 못하다면 
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage/{user_id}/comments", method = RequestMethod.GET) 
@@ -187,10 +172,8 @@ public class ManagerUserController {
 	 * 특정 유저의 게시글 목록 보여주는 화면 반환하는 메소드
 	 * @param userId 열람하려는 게시글 목록의 대상 User의 Id 
 	 * @param order 검색의 정렬 조건 (최신순 또는 오래된순)
-	 * @param mav
 	 * @throws UserNotFoundedException 해당 Id의 User 없으면
 	 * @throws SearchCriteriaInvalidException 검색 결과 정렬 방식이 올바르지 못하다면
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage/{user_id}/posts",method=RequestMethod.GET)
@@ -237,15 +220,5 @@ public class ManagerUserController {
 		mav.setViewName("userPostList");
 		
 		return mav;
-	}
-	
-	/**
-	 * 입력된 권한으로 접근 가능한 권한이 목록 (string) 반환하는 메소드
-	 * @param authorities 
-	 * @return
-	 * @author kimgun-yeong
-	 */
-	private List<String> getReachableAuthorityStrings(Collection<? extends GrantedAuthority> authorities) {
-		return SecurityUtil.getAuthorityStrings(roleHierarchy.getReachableGrantedAuthorities(authorities));
 	}
 }
