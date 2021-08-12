@@ -1,14 +1,10 @@
 package com.gunyoung.tmb.controller;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,11 +24,11 @@ import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.request.AccessDeniedException;
 import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
+import com.gunyoung.tmb.security.AuthorityService;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.PageUtil;
-import com.gunyoung.tmb.utils.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -51,7 +47,7 @@ public class ManagerUserController {
 	
 	private final ExercisePostService exercisePostService;
 	
-	private final RoleHierarchy roleHierarchy;
+	private final AuthorityService authorityService;
 	
 	/**
 	 * 매니저들의 유저 검색 (for managing) 페이지 반환
@@ -108,14 +104,9 @@ public class ManagerUserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 	
-		List<String> myReachableAuthStringList = getReachableAuthorityStrings(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-		List<String> targetReacheableStringList = getReachableAuthorityStrings(SecurityUtil.getAuthoritiesByUserRoleType(user.getRole()));
+		List<String> myReachableAuthStringList = authorityService.getReachableAuthorityStrings(authorityService.getSessionUserAuthorities());
 		
-		/*
-		 *  접속자의 권한이 대상 유저의 권한 보다 낮으면 예외 발생 
-		 *  권한 구조가 일자이기에 가능한 로직, 추후에 일자에서 변경 되면 이 로직도 변경 요망
-		 */
-		if(targetReacheableStringList.size() > myReachableAuthStringList.size()) {
+		if(!authorityService.isSessionUserAuthorityCanAccessToTargetAuthority(user)) {
 			throw new AccessDeniedException(UserErrorCode.ACESS_DENIED_ERROR.getDescription());
 		}
 		
@@ -237,15 +228,5 @@ public class ManagerUserController {
 		mav.setViewName("userPostList");
 		
 		return mav;
-	}
-	
-	/**
-	 * 입력된 권한으로 접근 가능한 권한이 목록 (string) 반환하는 메소드
-	 * @param authorities 
-	 * @return
-	 * @author kimgun-yeong
-	 */
-	private List<String> getReachableAuthorityStrings(Collection<? extends GrantedAuthority> authorities) {
-		return SecurityUtil.getAuthorityStringsExceptROLE(roleHierarchy.getReachableGrantedAuthorities(authorities));
 	}
 }
