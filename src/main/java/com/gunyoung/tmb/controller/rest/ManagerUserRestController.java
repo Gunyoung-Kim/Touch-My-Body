@@ -40,10 +40,8 @@ public class ManagerUserRestController {
 	/**
 	 * User의 정보 수정 요청 처리하는 메소드 (아직은 권한만 변경 가능)
 	 * @param userId 정보 수정하려는 대상 User의 Id
-	 * @param dto
 	 * @throws UserNotFoundedException 해당 Id의 User 없으면
 	 * @throws AccessDeniedException 접속자가 대상 User 보다 권한이 낮으면
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage/{userId}", method = RequestMethod.PUT)

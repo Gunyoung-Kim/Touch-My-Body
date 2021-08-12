@@ -35,10 +35,7 @@ public class ExerciseController {
 	
 	/**
 	 * 운동들 리스트 보여주는 화면 반환 <br>
-	 * @param page
 	 * @param keyword 찾고자 하는 운동 이름 키워드
-	 * @param mav
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/exercise",method = RequestMethod.GET)
@@ -74,9 +71,7 @@ public class ExerciseController {
 	/**
 	 * 운동 상세 정보 화면 반환하는 메소드 
 	 * @param exerciseId 찾고자하는 Exercise의 ID
-	 * @param mav
 	 * @throws ExerciseNotFoundedException 해당 id 의 Exercise 없으면
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/exercise/about/{exercise_id}", method = RequestMethod.GET)

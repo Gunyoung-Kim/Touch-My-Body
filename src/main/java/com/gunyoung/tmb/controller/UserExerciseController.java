@@ -40,8 +40,6 @@ public class UserExerciseController {
 	
 	/**
 	 * User의 그간의 운동 기록을 보여주는 캘린더 화면 반환하는 메소드
-	 * @param mav
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/exercise/calendar",method = RequestMethod.GET)
@@ -53,8 +51,6 @@ public class UserExerciseController {
 	
 	/**
 	 * User의 오늘의 운동 기록을 추가하는 화면 반환하는 메소드
-	 * @param mav
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.GET)
@@ -66,8 +62,6 @@ public class UserExerciseController {
 	
 	/**
 	 * User의 오늘의 운동 기록 추가 처리하는 메소드
-	 * @param mav
-	 * @return
 	 * @throws UserNotFoundedException 접속된 세션의 id의 user 가 없을 때
 	 * @throws ExerciseNotFoundedException 해당 이름을 만족하는 Exercise 가 없을 때
 	 * @author kimgun-yeong
