@@ -23,7 +23,6 @@ public class ProfileController {
 	
 	/**
 	 * 적용된 프로필중 server1 이나 server2 있으면 반환
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/profile", method= RequestMethod.GET)

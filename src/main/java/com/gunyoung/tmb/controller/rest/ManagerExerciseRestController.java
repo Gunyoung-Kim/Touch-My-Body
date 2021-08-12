@@ -37,8 +37,6 @@ public class ManagerExerciseRestController {
 	
 	/**
 	 * 매니저의 Exercise 추가 처리하는 메소드
-	 * @param dto
-	 * @param mav
 	 * @throws ExerciseNameDuplicationFoundedException 입력된 이름의 Exercise 이미 존재하면
 	 * @author kimgun-yeong
 	 */
@@ -55,7 +53,6 @@ public class ManagerExerciseRestController {
 	/**
 	 * 특정 Exercise 정보 수정 처리하는 메소드
 	 * @param exerciseId 정보 수정하려는 대상 Exercise
-	 * @param dto
 	 * @throws ExerciseNotFoundedException 해당 Id의 Exercise 없으면
 	 * @throws ExerciseNameDuplicationFoundedException 변경된 이름이 다른 Exercise의 이름과 일치하면
 	 * @author kimgun-yeong
@@ -90,7 +87,6 @@ public class ManagerExerciseRestController {
 	/**
 	 * 클라이언트에게 근육 종류별로 분류해서 전송하는 메소드 <br>
 	 * Muscle을 category로 분류해서 전송
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/getmuscles",method = RequestMethod.GET)

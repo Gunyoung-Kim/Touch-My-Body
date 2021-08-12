@@ -36,11 +36,8 @@ public class ManagerExerciseController {
 	private final ExerciseService exerciseService;
 	
 	/**
-	 * Exercise 리스트 화면 반환하는 메소드 
-	 * @param page
+	 * Exercise 리스트 화면 반환하는 메소드
 	 * @param keyword Exercise Name 검색 키워드
-	 * @param mav
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise",method= RequestMethod.GET)
@@ -76,8 +73,6 @@ public class ManagerExerciseController {
 	
 	/**
 	 * Exercise 추가하는 화면 반환하는 메소드
-	 * @param mav
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/add",method = RequestMethod.GET)
@@ -99,9 +94,7 @@ public class ManagerExerciseController {
 	/**
 	 * Exercise 정보 수정 화면 반환하는 메소드 
 	 * @param exerciseId 정보 수정하려는 대상 Exercise
-	 * @param mav
 	 * @throws ExerciseNotFoundedException 해당 Id 의 Exercise 없으면
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/modify/{exerciseId}", method = RequestMethod.GET) 

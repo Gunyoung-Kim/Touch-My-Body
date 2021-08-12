@@ -38,7 +38,6 @@ public class UserExcerciseRestController {
 	/**
 	 * 접속자의 특정 날짜의 운동 기록들 반환하는 메소드
 	 * @param date year,month,date 포함하는 dto
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/exercise/calendar/records",method=RequestMethod.GET)
@@ -55,9 +54,8 @@ public class UserExcerciseRestController {
 	
 	/**
 	 * 접속자의 특정 달에 각 일에 운동 했는지 여부 반환하는 메소드 
-	 * @param year
-	 * @param month
-	 * @return
+	 * @param year 검색하려는 년도
+	 * @param month 검색하려는 월
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/user/exercise/calendar/isdone",method=RequestMethod.GET)

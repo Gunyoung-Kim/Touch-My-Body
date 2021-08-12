@@ -23,25 +23,27 @@ public interface AuthorityService {
 	 */
 	public boolean isSessionUserAuthorityCanAccessToTargetAuthority(User target);
 	
+	/**
+	 * SecurityContext에 저장된 세션 유저의 Authority 반환
+	 * @author kimgun-yeong
+	 */
 	public Collection<? extends GrantedAuthority> getSessionUserAuthorities();
 	
 	/**
-	 * 입력된 권한으로 접근 가능한 권한이 목록 (string) 반환하는 메소드
-	 * @param authorities 
+	 * 입력된 권한들로 접근 가능한 권한이 목록 (string) 반환하는 메소드
 	 * @author kimgun-yeong
 	 */
 	public List<String> getReachableAuthorityStrings(Collection<? extends GrantedAuthority> authorities);
 	
 	/**
 	 * Authority들을 ROLE_ 제외한 toString들 반환
-	 * @param authorities
 	 * @author kimgun-yeong
 	 */
 	public List<String> getAuthorityStringsExceptROLE(Collection<? extends GrantedAuthority> authorities);
 	
 	/**
 	 * 유저의 RoleType을 통해 Authority 반환하는 메소드
-	 * @param roleType
+	 * @param roleType User의 RoleType
 	 * @author kimgun-yeong
 	 */
 	public Collection<? extends GrantedAuthority> getAuthoritiesByUserRoleType(RoleType roleType);

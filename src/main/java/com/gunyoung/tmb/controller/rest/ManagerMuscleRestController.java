@@ -30,10 +30,8 @@ public class ManagerMuscleRestController {
 	/**
 	 * Muscle 정보 수정 요청 처리하는 메소드
 	 * @param muscleId 정보 수정하려는 대상 Muscle의 Id
-	 * @param dto
 	 * @throws MuscleNotFoundedException 해당 Id의 Muscle 없으면
 	 * @throws MuscleNameDuplicationFoundedException 수정된 이름이 이미 존재하는 Muscle의 이름과 일치한다면
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.PUT)

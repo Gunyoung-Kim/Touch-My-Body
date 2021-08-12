@@ -18,6 +18,11 @@ import com.gunyoung.tmb.enums.RoleType;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * {@link AuthorityService} 구현 클래스
+ * @author kimgun-yeong
+ *
+ */
 @Service("authorityService")
 @RequiredArgsConstructor
 public class AuthorityServiceImpl implements AuthorityService {
