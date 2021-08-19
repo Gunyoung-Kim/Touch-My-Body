@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
@@ -26,6 +25,9 @@ import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.util.UserExerciseTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**
@@ -55,7 +57,7 @@ public class UserExerciseControllerTest {
 	
 	@BeforeEach
 	void setup() {
-		user = getUserInstance(RoleType.USER);
+		user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 	}
 	
@@ -63,62 +65,7 @@ public class UserExerciseControllerTest {
 	void tearDown() {
 		userRepository.deleteAll();
 	}
-	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private User getUserInstance(RoleType role) {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234!")
-				.firstName("first")
-				.lastName("last")
-				.nickName("nickName")
-				.role(role)
-				.build();
-		
-		return user;
-	}
-	
-	private Exercise getExerciseInstance(String name, TargetType target) {
-		Exercise exercise = Exercise.builder()
-				.name(name)
-				.description("description")
-				.caution("caution")
-				.movement("movement")
-				.target(target)
-				.build();
-		
-		return exercise;
-	}
-	
-	private Long getNonExistUserId() {
-		Long nonExistUserId = Long.valueOf(1);
-		
-		for(User u : userRepository.findAll()) {
-			nonExistUserId = Math.max(nonExistUserId, u.getId());
-		}
-		nonExistUserId++;
-		
-		return nonExistUserId;
-	}
-	
-	private MultiValueMap<String, String> getSaveUserExerciseDTOMap(String exerciseName) {
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("laps", "1");
-		map.add("sets", "1");
-		map.add("weight", "1");
-		map.add("description", "des");
-		map.add("date", "2021-05-05");
-		map.add("exerciseName", exerciseName);
-		return map;
-	}
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
+
 	/*
 	 * @RequestMapping(value="/user/exercise/calendar",method = RequestMethod.GET)
 	 * public ModelAndView calendarView(ModelAndView mav)
@@ -169,12 +116,12 @@ public class UserExerciseControllerTest {
 	@DisplayName("운동 기록 추가 처리 -> 접속된 세션의 Id의 User 없을 때")
 	public void addUserExerciseUserNonExist() throws Exception {
 		//Given
-		Long nonExistUserId = getNonExistUserId();
+		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
-		Exercise exercise = getExerciseInstance("exercise",TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
-		MultiValueMap<String, String> paramMap = getSaveUserExerciseDTOMap(exercise.getName());
+		MultiValueMap<String, String> paramMap = UserExerciseTest.getSaveUserExerciseDTOMap(exercise.getName());
 		
 		//When
 		mockMvc.perform(post("/user/exercise/calendar/addrecord")
@@ -191,7 +138,7 @@ public class UserExerciseControllerTest {
 	@DisplayName("운동 기록 추가 처리 -> 해당 이름을 만족하는 Exercise 없을 때")
 	public void addUserExerciseNonExist() throws Exception {
 		//Given
-		MultiValueMap<String, String> paramMap = getSaveUserExerciseDTOMap("nonExistExerciseName");
+		MultiValueMap<String, String> paramMap = UserExerciseTest.getSaveUserExerciseDTOMap("nonExistExerciseName");
 		
 		//When
 		mockMvc.perform(post("/user/exercise/calendar/addrecord")
@@ -208,10 +155,10 @@ public class UserExerciseControllerTest {
 	@DisplayName("운동 기록 추가 처리 -> 정상")
 	public void addUserExerciseTest() throws Exception {
 		//Given
-		Exercise exercise = getExerciseInstance("exercise",TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
-		MultiValueMap<String, String> paramMap = getSaveUserExerciseDTOMap(exercise.getName());
+		MultiValueMap<String, String> paramMap = UserExerciseTest.getSaveUserExerciseDTOMap(exercise.getName());
 		
 		//When
 		mockMvc.perform(post("/user/exercise/calendar/addrecord")

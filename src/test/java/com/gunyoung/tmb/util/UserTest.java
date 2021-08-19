@@ -1,5 +1,64 @@
 package com.gunyoung.tmb.util;
 
-public class UserTest {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
+import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.enums.RoleType;
+
+/**
+ * Test 클래스 전용 User 엔티티 관련 유틸리티 클래스
+ * @author kimgun-yeong
+ *
+ */
+public class UserTest {
+	
+	/**
+	 * 테스트용 User 인스턴스 반환 <br>
+	 * role 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static User getUserInstance(RoleType role) {
+		User user = User.builder()
+				.email("test@test.com")
+				.password("abcd1234!")
+				.firstName("first")
+				.lastName("last")
+				.nickName("nickName")
+				.role(role)
+				.build();
+		
+		return user;
+	}
+	
+	/**
+	 * Repository를 통해 존재하지 않는 User ID 반환 
+	 * @author kimgun-yeong
+	 */
+	public static Long getNonExistUserId(JpaRepository<User, Long> userRepository) {
+		Long nonExistUserId = Long.valueOf(1);
+		
+		for(User u : userRepository.findAll()) {
+			nonExistUserId = Math.max(nonExistUserId, u.getId());
+		}
+		nonExistUserId++;
+		
+		return nonExistUserId;
+	}
+	
+	/**
+	 * {@link com.gunyoung.tmb.dto.reqeust.UserJoinDTO} 에 바인딩 될 수 있는 MultiValueMap 반환 <br>
+	 * email, nickName value 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static MultiValueMap<String, String> getUserJoinDTOMap(String email, String nickName) {
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("email", email);
+		map.add("password", "abcd1234!");
+		map.add("firstName", "first");
+		map.add("lastName", "lastName");
+		map.add("nickName", nickName);
+		return map;
+	}
 }

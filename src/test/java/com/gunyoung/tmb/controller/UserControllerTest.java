@@ -21,7 +21,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.Comment;
@@ -33,6 +32,10 @@ import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.util.CommentTest;
+import com.gunyoung.tmb.util.ControllerTest;
+import com.gunyoung.tmb.util.ExercisePostTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.PageUtil;
 import com.gunyoung.tmb.utils.SessionUtil;
 
@@ -63,7 +66,7 @@ public class UserControllerTest {
 	
 	@BeforeEach
 	void setup() {
-		user = getUserInstance(RoleType.USER);
+		user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 	}
 	
@@ -71,69 +74,6 @@ public class UserControllerTest {
 	void tearDown() {
 		userRepository.deleteAll();
 	}
-	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private User getUserInstance(RoleType role) {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234!")
-				.firstName("first")
-				.lastName("last")
-				.nickName("nickName")
-				.role(role)
-				.build();
-		
-		return user;
-	}
-	
-	private Comment getCommentInstance() {
-		Comment comment = Comment.builder()
-				.contents("contents")
-				.isAnonymous(false)
-				.writerIp("127.0.0.1")
-				.build();
-		return comment;
-	}
-	
-	private ExercisePost getExercisePostInstance() {
-		ExercisePost ep = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
-		return ep;
-	}
-	
-	private Long getNonExistUserId() {
-		Long nonExistUserId = Long.valueOf(1);
-		
-		for(User u : userRepository.findAll()) {
-			nonExistUserId = Math.max(nonExistUserId, u.getId());
-		}
-		nonExistUserId++;
-		
-		return nonExistUserId;
-	}
-	
-	private MultiValueMap<String, String> getUserJoinDTOMap(String email, String nickName) {
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("email", email);
-		map.add("password", "abcd1234!");
-		map.add("firstName", "first");
-		map.add("lastName", "lastName");
-		map.add("nickName", nickName);
-		return map;
-	}
-	
-	private Map<String, Object> getResponseModel(MvcResult mvcResult) {
-		return mvcResult.getModelAndView().getModel();
-	}
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
 	
 	/*
 	 * @RequestMapping(value="/",method=RequestMethod.GET)
@@ -199,7 +139,7 @@ public class UserControllerTest {
 	public void joinEmailDuplication() throws Exception {
 		//Given
 		String newNickName = "nonExistNickName";
-		MultiValueMap<String, String> paramMap = getUserJoinDTOMap(user.getEmail(),newNickName);
+		MultiValueMap<String, String> paramMap = UserTest.getUserJoinDTOMap(user.getEmail(),newNickName);
 		
 		//When
 		mockMvc.perform(post("/join")
@@ -217,7 +157,7 @@ public class UserControllerTest {
 	public void joinNickNameDuplication() throws Exception {
 		//Given
 		String newEmail = "nonexist@test.net";
-		MultiValueMap<String, String> paramMap = getUserJoinDTOMap(newEmail,user.getNickName());
+		MultiValueMap<String, String> paramMap = UserTest.getUserJoinDTOMap(newEmail,user.getNickName());
 		
 		//When
 		mockMvc.perform(post("/join")
@@ -236,7 +176,7 @@ public class UserControllerTest {
 		//Given
 		String newNickName = "second";
 		String newEmail = "nonexist@test.net";
-		MultiValueMap<String, String> paramMap = getUserJoinDTOMap(newEmail,newNickName);
+		MultiValueMap<String, String> paramMap = UserTest.getUserJoinDTOMap(newEmail,newNickName);
 		
 		//When
 		mockMvc.perform(post("/join")
@@ -260,7 +200,7 @@ public class UserControllerTest {
 	@DisplayName("내 프로필 화면 반환하기 -> 세션에 저장된 ID의 User 없을 때")
 	public void profileViewNonExist() throws Exception {
 		//Given
-		Long nonExistUserId = getNonExistUserId();
+		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
 		//When
 		mockMvc.perform(get("/user/profile")
@@ -299,7 +239,7 @@ public class UserControllerTest {
 	@DisplayName("접속자 본인이 작성한 댓글 목록 화면 반환 -> 세션에 저장된 Id에 해당하는 User 없을때")
 	public void myCommentsViewUserNonExist() throws Exception {
 		//Given
-		Long nonExistUserId = getNonExistUserId();
+		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
 		//When
 		mockMvc.perform(get("/user/profile/mycomments")
@@ -335,7 +275,7 @@ public class UserControllerTest {
 		List<Comment> commentList = new LinkedList<>();
 		
 		for(int i= 0 ; i<commentNum ; i++) {
-			Comment comment = getCommentInstance();
+			Comment comment = CommentTest.getCommentInstance();
 			comment.setUser(user);
 			commentList.add(comment);
 		}
@@ -349,7 +289,7 @@ public class UserControllerTest {
 		//Then
 				.andExpect(status().isOk())
 				.andReturn();
-		Map<String, Object> model = getResponseModel(result);
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
 		List<CommentForManageViewDTO> listObject = (List<CommentForManageViewDTO>) model.get("commentList");
@@ -369,7 +309,7 @@ public class UserControllerTest {
 	@DisplayName("접속자 본인이 작성한 게시글 목록 화면 반환 -> 세션에 저장된 ID의 User 없을 때")
 	public void myPostsViewUserNonExist() throws Exception {
 		//Given
-		Long nonExistUserId = getNonExistUserId();
+		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
 		//When
 		mockMvc.perform(get("/user/profile/myposts")
@@ -405,7 +345,7 @@ public class UserControllerTest {
 		List<ExercisePost> exercisePostList = new LinkedList<>();
 		
 		for(int i= 0 ; i<exercisePostNum ; i++) {
-			ExercisePost exercisePost = getExercisePostInstance();
+			ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 			exercisePost.setUser(user);
 			exercisePostList.add(exercisePost);
 		}
@@ -420,7 +360,7 @@ public class UserControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		Map<String, Object> model = getResponseModel(result);
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
 		 
 		 @SuppressWarnings("unchecked")
 		List<ExercisePostForManageViewDTO> listObject = (List<ExercisePostForManageViewDTO>) model.get("postList");

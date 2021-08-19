@@ -20,8 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
@@ -33,6 +31,11 @@ import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.util.CommentTest;
+import com.gunyoung.tmb.util.ControllerTest;
+import com.gunyoung.tmb.util.ExercisePostTest;
+import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.PageUtil;
 import com.gunyoung.tmb.utils.SessionUtil;
 
@@ -66,7 +69,7 @@ public class ExercisePostControllerTest {
 	
 	@BeforeEach
 	void setup() {
-		user = getUserInstance(RoleType.USER);
+		user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 	}
 	
@@ -74,90 +77,6 @@ public class ExercisePostControllerTest {
 	void tearDown() {
 		userRepository.deleteAll();
 	}
-	
-	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private User getUserInstance(RoleType role) {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234!")
-				.firstName("first")
-				.lastName("last")
-				.nickName("nickName")
-				.role(role)
-				.build();
-		
-		return user;
-	}
-	
-	private Exercise getExerciseInstance(String name, TargetType target) {
-		Exercise exercise = Exercise.builder()
-				.name(name)
-				.description("description")
-				.caution("caution")
-				.movement("movement")
-				.target(target)
-				.build();
-		
-		return exercise;
-	}
-	
-	private ExercisePost getExercisePostInstance() {
-		ExercisePost ep = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
-		return ep;
-	}
-	
-	private Map<String, Object> getResponseModel(MvcResult mvcResult) {
-		return mvcResult.getModelAndView().getModel();
-	}
-	
-	private MultiValueMap<String, String> getSaveExercisePostDTOMap(String exerciseName) {
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("title", "title");
-		map.add("contents", "contents");
-		map.add("exerciseName", exerciseName);
-		
-		return map;
-	}
-	
-	private MultiValueMap<String, String> getSaveCommentDTOMap() {
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("contents", "contents");
-		map.add("isAnonymous", "false");
-		return map;
-	}
-	
-	private Long getNonExistUserId() {
-		Long nonExistUserId = Long.valueOf(1);
-		
-		for(User u : userRepository.findAll()) {
-			nonExistUserId = Math.max(nonExistUserId, u.getId());
-		}
-		nonExistUserId++;
-		
-		return nonExistUserId;
-	}
-	
-	private Long getNonExistExercisePostId() {
-		Long nonExistExercisePostId = Long.valueOf(1);
-		
-		for(ExercisePost u : exercisePostRepository.findAll()) {
-			nonExistExercisePostId = Math.max(nonExistExercisePostId, u.getId());
-		}
-		nonExistExercisePostId++;
-		
-		return nonExistExercisePostId;
-	}
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
 	
 	/*
 	 * @RequestMapping(value="/community",method=RequestMethod.GET)
@@ -171,7 +90,7 @@ public class ExercisePostControllerTest {
 	public void exercisePostViewTest() throws Exception {
 		//Given
 		TargetType forAllTarget = TargetType.ARM;
-		Exercise exercise = getExerciseInstance("exercise",forAllTarget);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",forAllTarget);
 		
 		exerciseRepository.save(exercise);
 		
@@ -179,7 +98,7 @@ public class ExercisePostControllerTest {
 		List<ExercisePost> epList = new LinkedList<>();
 		
 		for(int i=0; i< totalEpNum ; i++) {
-			ExercisePost ep = getExercisePostInstance();
+			ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 			ep.setExercise(exercise);
 			ep.setUser(user);
 			epList.add(ep);
@@ -195,7 +114,7 @@ public class ExercisePostControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		Map<String, Object> resultMap = getResponseModel(result);
+		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
 		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO> )resultMap.get("listObject");
@@ -233,7 +152,7 @@ public class ExercisePostControllerTest {
 		//Given
 		TargetType forAllTarget = TargetType.ARM;
 		TargetType forNoneTarget = TargetType.BACK;
-		Exercise exercise = getExerciseInstance("exercise",forAllTarget);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",forAllTarget);
 		
 		exerciseRepository.save(exercise);
 		
@@ -241,7 +160,7 @@ public class ExercisePostControllerTest {
 		List<ExercisePost> epList = new LinkedList<>();
 		
 		for(int i=0; i< totalEpNum ; i++) {
-			ExercisePost ep = getExercisePostInstance();
+			ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 			ep.setExercise(exercise);
 			ep.setUser(user);
 			epList.add(ep);
@@ -257,7 +176,7 @@ public class ExercisePostControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		Map<String, Object> resultMap = getResponseModel(result);
+		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
 		
 		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO>)resultMap.get("listObject");
 		assertEquals(Math.min(totalEpNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.size());
@@ -269,7 +188,7 @@ public class ExercisePostControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		resultMap = getResponseModel(result);
+		resultMap = ControllerTest.getResponseModel(result);
 		
 		listObject = (List<PostForCommunityViewDTO>)resultMap.get("listObject");
 		assertEquals(0, listObject.size());
@@ -306,11 +225,11 @@ public class ExercisePostControllerTest {
 	@DisplayName("특정 게시글 화면 -> 정상")
 	public void exercisePostDetailViewTest() throws Exception {
 		//Given
-		Exercise exercise = getExerciseInstance("exercise",TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		
 		exerciseRepository.save(exercise);
 		
-		ExercisePost ep = getExercisePostInstance();
+		ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		ep.setUser(user);
 		ep.setExercise(exercise);
 		
@@ -353,16 +272,16 @@ public class ExercisePostControllerTest {
 	@DisplayName("게시글 추가 처리 -> 세션에 저장된ID에 해당하는 User 없을 때")
 	public void addExercisePostUserNonExist() throws Exception {
 		//Given
-		Long nonExistUserId = getNonExistUserId();
+		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
 		String exerciseName = "exercise";
-		Exercise exercise = getExerciseInstance(exerciseName,TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance(exerciseName,TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
 		//When
 		mockMvc.perform(post("/community/post/addpost")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, nonExistUserId)
-				.params(getSaveExercisePostDTOMap(exerciseName)))
+				.params(ExercisePostTest.getSaveExercisePostDTOMap(exerciseName)))
 				
 		//Then
 				.andExpect(status().isNoContent());
@@ -376,7 +295,7 @@ public class ExercisePostControllerTest {
 	public void addExercisePostNonExist() throws Exception {
 		//Given
 		String exerciseName = "exercise";
-		Exercise exercise = getExerciseInstance(exerciseName,TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance(exerciseName,TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
 		String nonExistExerciseName = "nonExist";
@@ -384,7 +303,7 @@ public class ExercisePostControllerTest {
 		//When
 		mockMvc.perform(post("/community/post/addpost")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
-				.params(getSaveExercisePostDTOMap(nonExistExerciseName)))
+				.params(ExercisePostTest.getSaveExercisePostDTOMap(nonExistExerciseName)))
 		
 		//Then
 				.andExpect(status().isNoContent());
@@ -398,13 +317,13 @@ public class ExercisePostControllerTest {
 	public void addExercisePostTest() throws Exception {
 		//Given
 		String exerciseName = "exercise";
-		Exercise exercise = getExerciseInstance(exerciseName,TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance(exerciseName,TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
 		//When
 		mockMvc.perform(post("/community/post/addpost")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
-				.params(getSaveExercisePostDTOMap(exerciseName)))
+				.params(ExercisePostTest.getSaveExercisePostDTOMap(exerciseName)))
 		
 		//Then
 				.andExpect(redirectedUrl("/community"));
@@ -424,12 +343,12 @@ public class ExercisePostControllerTest {
 	@DisplayName("게시글에 댓글 추가 처리 -> 세션에 저장된 ID의 유저 없을 때")
 	public void addCommentToExercisePostuserNonExist() throws Exception {
 		//Given
-		Long nonExistUserId = getNonExistUserId();
+		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
-		Exercise exercise = getExerciseInstance("exercise",TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
-		ExercisePost ep = getExercisePostInstance();
+		ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		ep.setUser(user);
 		ep.setExercise(exercise);
 		exercisePostRepository.save(ep);
@@ -437,7 +356,7 @@ public class ExercisePostControllerTest {
 		//When
 		mockMvc.perform(post("/community/post/" + ep.getId() + "/addComment")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, nonExistUserId)
-				.params(getSaveCommentDTOMap())
+				.params(CommentTest.getSaveCommentDTOMap())
 				.param("isAnonymous", "false"))
 		
 		//Then
@@ -451,20 +370,20 @@ public class ExercisePostControllerTest {
 	@DisplayName("게시글에 댓글 추가 처리 -> 해당 ID의 ExercisePost 없을때")
 	public void addCommentToExercisePostNonExist() throws Exception {
 		//Given
-		Exercise exercise = getExerciseInstance("exercise",TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
-		ExercisePost ep = getExercisePostInstance();
+		ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		ep.setUser(user);
 		ep.setExercise(exercise);
 		exercisePostRepository.save(ep);
 		
-		Long nonExistExercisePostId = getNonExistExercisePostId();
+		Long nonExistExercisePostId = ExercisePostTest.getNonExistExercisePostId(exercisePostRepository);
 		
 		//When
 		mockMvc.perform(post("/community/post/" + nonExistExercisePostId + "/addComment")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
-				.params(getSaveCommentDTOMap())
+				.params(CommentTest.getSaveCommentDTOMap())
 				.param("isAnonymous", "false"))
 		
 		//Then
@@ -477,10 +396,10 @@ public class ExercisePostControllerTest {
 	@DisplayName("게시글에 댓글 추가 처리 -> 정상")
 	public void addCommentToExercisePostTest() throws Exception {
 		//Given
-		Exercise exercise = getExerciseInstance("exercise",TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
-		ExercisePost ep = getExercisePostInstance();
+		ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		ep.setUser(user);
 		ep.setExercise(exercise);
 		exercisePostRepository.save(ep);
@@ -488,7 +407,7 @@ public class ExercisePostControllerTest {
 		//When
 		mockMvc.perform(post("/community/post/" + ep.getId() + "/addComment")
 				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
-				.params(getSaveCommentDTOMap())
+				.params(CommentTest.getSaveCommentDTOMap())
 				.param("isAnonymous", "false"))
 		
 		//Then

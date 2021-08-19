@@ -22,6 +22,8 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.ExerciseForTableDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
+import com.gunyoung.tmb.util.ControllerTest;
+import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.utils.PageUtil;
 
 /**
@@ -41,41 +43,6 @@ public class ManagerExerciseControllerTest {
 	@Autowired
 	private ExerciseRepository exerciseRepository;
 	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private Exercise getExerciseInstance(String name, TargetType target) {
-		Exercise exercise = Exercise.builder()
-				.name(name)
-				.description("description")
-				.caution("caution")
-				.movement("movement")
-				.target(target)
-				.build();
-		
-		return exercise;
-	}
-	
-	private Long getNonExistExerciseId() {
-		Long nonExistExerciseId = Long.valueOf(1);
-		
-		for(Exercise u : exerciseRepository.findAll()) {
-			nonExistExerciseId = Math.max(nonExistExerciseId, u.getId());
-		}
-		nonExistExerciseId++;
-		
-		return nonExistExerciseId;
-	}
-	
-	private Map<String, Object> getResponseModel(MvcResult mvcResult) {
-		return mvcResult.getModelAndView().getModel();
-	}
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
 	/*
 	 * @RequestMapping(value="/manager/exercise",method= RequestMethod.GET)
 	 * public ModelAndView exerciseViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav)
@@ -91,7 +58,7 @@ public class ManagerExerciseControllerTest {
 		List<Exercise> exerciseList = new LinkedList<>();
 		
 		for(int i=1;i<=exerciseNum; i++) {
-			Exercise exercise = getExerciseInstance("exericse" + i , TargetType.ARM);
+			Exercise exercise = ExerciseTest.getExerciseInstance("exericse" + i , TargetType.ARM);
 			exerciseList.add(exercise);
 		}
 		
@@ -103,7 +70,7 @@ public class ManagerExerciseControllerTest {
 		//Then
 				.andExpect(status().isOk())
 				.andReturn();
-		Map<String, Object> model = getResponseModel(result);
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
 		List<ExerciseForTableDTO> listObject = (List<ExerciseForTableDTO>) model.get("listObject");
@@ -141,7 +108,7 @@ public class ManagerExerciseControllerTest {
 	@DisplayName("Exercise 수정 화면 반환 -> 해당 ID의 Exercise 없을 때")
 	public void modifyExerciseViewNonExist() throws Exception {
 		//Given
-		Long nonExistExerciseId = getNonExistExerciseId();
+		Long nonExistExerciseId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
 		//When
 		mockMvc.perform(get("/manager/exercise/modify/" + nonExistExerciseId))
@@ -156,7 +123,7 @@ public class ManagerExerciseControllerTest {
 	@DisplayName("Exercise 수정 화면 반환 -> 정상")
 	public void modifyExerciseViewTest() throws Exception {
 		//Given
-		Exercise exercise = getExerciseInstance("exercise",TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
 		//When
