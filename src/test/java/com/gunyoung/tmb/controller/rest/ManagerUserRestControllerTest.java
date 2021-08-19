@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.Comment;
@@ -23,6 +22,9 @@ import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.util.CommentTest;
+import com.gunyoung.tmb.util.ExercisePostTest;
+import com.gunyoung.tmb.util.UserTest;
 
 /**
  * {@link ManagerUserRestController} 에 대한 테스트 클래스
@@ -47,51 +49,6 @@ public class ManagerUserRestControllerTest {
 	@Autowired
 	private ExercisePostRepository exercisePostRepository;
 	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private User getUserInstance(RoleType role) {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234!")
-				.firstName("first")
-				.lastName("last")
-				.nickName("nickName")
-				.role(role)
-				.build();
-		
-		return user;
-	}
-	
-	private Comment getCommentInstance() {
-		Comment comment = Comment.builder()
-				.contents("contents")
-				.isAnonymous(false)
-				.writerIp("127.0.0.1")
-				.build();
-		return comment;
-	}
-	
-	private ExercisePost getExercisePostInstance() {
-		ExercisePost ep = ExercisePost.builder()
-				.contents("contents")
-				.title("title")
-				.build();
-		return ep;
-	}
-	
-	private MultiValueMap<String,String> getUserProfileForManagerDTOMap(RoleType role) {
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("role", role.toString());
-		return map;
-	}
-	
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
 	/*
 	 * @RequestMapping(value="/manager/usermanage/{user_id}", method = RequestMethod.PUT)
 	 * public void manageUserProfile(@PathVariable("user_id") Long userId,@ModelAttribute UserProfileForManagerDTO dto)
@@ -103,10 +60,10 @@ public class ManagerUserRestControllerTest {
 	@DisplayName("유저의 정보(권한) 수정 -> 해당 ID의 USER 없을 때")
 	public void manageUserProfileNonExist() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
-		MultiValueMap<String,String> paramMap = getUserProfileForManagerDTOMap(RoleType.MANAGER);
+		MultiValueMap<String,String> paramMap = UserTest.getUserProfileForManagerDTOMap(RoleType.MANAGER);
 		
 		//When
 		mockMvc.perform(put("/manager/usermanage/" + user.getId()+1)
@@ -125,10 +82,10 @@ public class ManagerUserRestControllerTest {
 	@DisplayName("유저의 정보(권한) 수정 -> 접속자가 대상 User보다 권한이 낮을 때")
 	public void manageUserProfileAccessDenied() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.ADMIN);
+		User user = UserTest.getUserInstance(RoleType.ADMIN);
 		userRepository.save(user);
 		
-		MultiValueMap<String,String> paramMap = getUserProfileForManagerDTOMap(RoleType.MANAGER);
+		MultiValueMap<String,String> paramMap = UserTest.getUserProfileForManagerDTOMap(RoleType.MANAGER);
 		
 		//When
 		mockMvc.perform(put("/manager/usermanage/" + user.getId())
@@ -146,10 +103,10 @@ public class ManagerUserRestControllerTest {
 	@DisplayName("유저의 정보(권한) 수정 -> 정상")
 	public void manageUserProfileTest() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
-		MultiValueMap<String,String> paramMap = getUserProfileForManagerDTOMap(RoleType.MANAGER);
+		MultiValueMap<String,String> paramMap = UserTest.getUserProfileForManagerDTOMap(RoleType.MANAGER);
 		
 		//When
 		mockMvc.perform(put("/manager/usermanage/" + user.getId())
@@ -172,10 +129,10 @@ public class ManagerUserRestControllerTest {
 	@DisplayName("특정 유저의 댓글 삭제하기 -> 정상")
 	public void removeCommentByManagerTest() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
-		Comment comment = getCommentInstance();
+		Comment comment = CommentTest.getCommentInstance();
 		comment.setUser(user);
 		commentRepository.save(comment);
 		
@@ -199,10 +156,10 @@ public class ManagerUserRestControllerTest {
 	@DisplayName("특정 유저의 게시글 삭제 -> 정상")
 	public void removePostByManager() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
-		ExercisePost ep = getExercisePostInstance();
+		ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		ep.setUser(user);
 		exercisePostRepository.save(ep);
 		

@@ -24,6 +24,11 @@ import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.PostLikeRepository;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.util.CommentLikeTest;
+import com.gunyoung.tmb.util.CommentTest;
+import com.gunyoung.tmb.util.ExercisePostTest;
+import com.gunyoung.tmb.util.PostLikeTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**
@@ -55,58 +60,6 @@ public class ExercisePostRestControllerTest {
 	@Autowired
 	private CommentLikeRepository commentLikeRepository;
 	
-	
-	/**
-	 *  --------- 테스트 진행과정에 있어 필요한 인스턴스 반환 메소드들 --------------------- 
-	 */
-	
-	private User getUserInstance(RoleType role) {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234!")
-				.firstName("first")
-				.lastName("last")
-				.nickName("nickName")
-				.role(role)
-				.build();
-		
-		return user;
-	}
-	
-	private ExercisePost getExercisePostInstance() {
-		ExercisePost ep = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
-		return ep;
-	}
-	
-	private PostLike getPostLikeInstance() {
-		PostLike pl = PostLike.builder()
-				.build();
-		return pl;
-	}
-	
-	private Comment getCommentInstance() {
-		Comment c = Comment.builder()
-				.contents("contents")
-				.isAnonymous(false)
-				.writerIp("127.0.0.1")
-				.build();
-		return c;
-	}
-	
-	private CommentLike getCommentLikeInstance() {
-		CommentLike cl = CommentLike.builder()
-				.build();
-		return cl;
-	}
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
-	
 	/*
 	 * @RequestMapping(value="/community/post/{post_id}/addLike",method = RequestMethod.POST)
 	 * @LoginIdSessionNotNull
@@ -124,10 +77,10 @@ public class ExercisePostRestControllerTest {
 	@DisplayName("좋아요 추가 -> 세션에 저장된 ID로 유저 찾을 수 없음")
 	public void addLikeToExercisePostUserNonExist() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
-		ExercisePost ep = getExercisePostInstance();
+		ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		ep.setUser(user);
 		
 		exercisePostRepository.save(ep);
@@ -147,10 +100,10 @@ public class ExercisePostRestControllerTest {
 	@DisplayName("좋아요 추가 -> 해당 ID의 ExercisePost 없음")
 	public void addLikeToExercisePostEPNonExist() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
-		ExercisePost ep = getExercisePostInstance();
+		ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		ep.setUser(user);
 		
 		exercisePostRepository.save(ep);
@@ -170,15 +123,15 @@ public class ExercisePostRestControllerTest {
 	@DisplayName("좋아요 추가 -> 해당 ExercisePost에 User의 PostLike가 이미 존재")
 	public void addLikeToExercisePostAlredyExist() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
-		ExercisePost ep = getExercisePostInstance();
+		ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		ep.setUser(user);
 		
 		exercisePostRepository.save(ep);
 		
-		PostLike pl = getPostLikeInstance();
+		PostLike pl = PostLikeTest.getPostLikeInstance();
 		pl.setExercisePost(ep);
 		pl.setUser(user);
 		
@@ -199,10 +152,10 @@ public class ExercisePostRestControllerTest {
 	@DisplayName("좋아요 추가 -> 정상")
 	public void addLikeToExercisePostTest() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 				
-		ExercisePost ep = getExercisePostInstance();
+		ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		ep.setUser(user);
 				
 		exercisePostRepository.save(ep);
@@ -230,10 +183,10 @@ public class ExercisePostRestControllerTest {
 	 @DisplayName("좋아요 취소 -> 해당 ID의 PostLike 없음")
 	 public void removeLikeToExercisePostNonExist() throws Exception {
 		 //Given
-		 User user = getUserInstance(RoleType.USER);
+		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
 					
-		 ExercisePost ep = getExercisePostInstance();
+		 ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		 ep.setUser(user);
 					
 		 exercisePostRepository.save(ep);
@@ -251,15 +204,15 @@ public class ExercisePostRestControllerTest {
 	 @DisplayName("좋아요 취소 -> 정상")
 	 public void removeLikeToExercisePostTest() throws Exception {
 		 //Given
-		 User user = getUserInstance(RoleType.USER);
+		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
 			
-		 ExercisePost ep = getExercisePostInstance();
+		 ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		 ep.setUser(user);
 			
 		 exercisePostRepository.save(ep);
 			
-		 PostLike pl = getPostLikeInstance();
+		 PostLike pl = PostLikeTest.getPostLikeInstance();
 		 pl.setExercisePost(ep);
 		 pl.setUser(user);
 			
@@ -294,15 +247,15 @@ public class ExercisePostRestControllerTest {
 	 @DisplayName("댓글에 좋아요 추가 -> 세션의 저장된 ID의 유저 없음")
 	 public void addLikeToCommentUserNonExist() throws Exception {
 		 //Given
-		 User user = getUserInstance(RoleType.USER);
+		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
 			
-		 ExercisePost ep = getExercisePostInstance();
+		 ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		 ep.setUser(user);
 			
 		 exercisePostRepository.save(ep);
 		 
-		 Comment comment = getCommentInstance();
+		 Comment comment = CommentTest.getCommentInstance();
 		 comment.setUser(user);
 		 comment.setExercisePost(ep);
 		 
@@ -324,15 +277,15 @@ public class ExercisePostRestControllerTest {
 	 @DisplayName("댓글에 좋아요 추가 -> 해당 ID의 Comment 없을때")
 	 public void addLikeToCommentNonExist() throws Exception {
 		 //Given
-		 User user = getUserInstance(RoleType.USER);
+		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
 			
-		 ExercisePost ep = getExercisePostInstance();
+		 ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		 ep.setUser(user);
 			
 		 exercisePostRepository.save(ep);
 		 
-		 Comment comment = getCommentInstance();
+		 Comment comment = CommentTest.getCommentInstance();
 		 comment.setUser(user);
 		 comment.setExercisePost(ep);
 		 
@@ -354,21 +307,21 @@ public class ExercisePostRestControllerTest {
 	 @DisplayName("댓글에 좋아요 추가 -> 해당 유저가 이미 댓글에 좋아요 추가했을때")
 	 public void addLikeToCommentAlreadyExist() throws Exception {
 		 //Given
-		 User user = getUserInstance(RoleType.USER);
+		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
 			
-		 ExercisePost ep = getExercisePostInstance();
+		 ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		 ep.setUser(user);
 			
 		 exercisePostRepository.save(ep);
 		 
-		 Comment comment = getCommentInstance();
+		 Comment comment = CommentTest.getCommentInstance();
 		 comment.setUser(user);
 		 comment.setExercisePost(ep);
 		 
 		 commentRepository.save(comment);
 		 
-		 CommentLike cl = getCommentLikeInstance();
+		 CommentLike cl = CommentLikeTest.getCommentLikeInstance();
 		 cl.setUser(user);
 		 cl.setComment(comment);
 		 commentLikeRepository.save(cl);
@@ -389,15 +342,15 @@ public class ExercisePostRestControllerTest {
 	 @DisplayName("댓글에 좋아요 추가 -> 정상")
 	 public void addLikeToCommentTest() throws Exception {
 		 //Given
-		 User user = getUserInstance(RoleType.USER);
+		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
 			
-		 ExercisePost ep = getExercisePostInstance();
+		 ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		 ep.setUser(user);
 			
 		 exercisePostRepository.save(ep);
 		 
-		 Comment comment = getCommentInstance();
+		 Comment comment = CommentTest.getCommentInstance();
 		 comment.setUser(user);
 		 comment.setExercisePost(ep);
 		 
@@ -427,15 +380,15 @@ public class ExercisePostRestControllerTest {
 	 @DisplayName("댓글 좋아요 취소 -> 해당 조건 만족하는 commentLike 없을때")
 	 public void removeLikeToCommentNonExist() throws Exception {
 		 //Given
-		 User user = getUserInstance(RoleType.USER);
+		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
 		 
-		 ExercisePost ep = getExercisePostInstance();
+		 ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		 ep.setUser(user);
 			
 		 exercisePostRepository.save(ep);
 		 
-		 Comment comment = getCommentInstance();
+		 Comment comment = CommentTest.getCommentInstance();
 		 comment.setUser(user);
 		 comment.setExercisePost(ep);
 		 
@@ -455,21 +408,21 @@ public class ExercisePostRestControllerTest {
 	 @DisplayName("댓글 좋아요 취소 -> 정상")
 	 public void removeLikeToCommentTest() throws Exception {
 		 //Given
-		 User user = getUserInstance(RoleType.USER);
+		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
 			
-		 ExercisePost ep = getExercisePostInstance();
+		 ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		 ep.setUser(user);
 			
 		 exercisePostRepository.save(ep);
 		 
-		 Comment comment = getCommentInstance();
+		 Comment comment = CommentTest.getCommentInstance();
 		 comment.setUser(user);
 		 comment.setExercisePost(ep);
 		 
 		 commentRepository.save(comment);
 		 
-		 CommentLike cl = getCommentLikeInstance();
+		 CommentLike cl = CommentLikeTest.getCommentLikeInstance();
 		 cl.setUser(user);
 		 cl.setComment(comment);
 		 commentLikeRepository.save(cl);
@@ -498,15 +451,15 @@ public class ExercisePostRestControllerTest {
 	 @DisplayName("댓글 삭제 -> 해당 ID의 Comment 없을 때")
 	 public void removeCommentToExercisePostNonExist() throws Exception {
 		 //Given
-		 User user = getUserInstance(RoleType.USER);
+		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
 			
-		 ExercisePost ep = getExercisePostInstance();
+		 ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		 ep.setUser(user);
 			
 		 exercisePostRepository.save(ep);
 		 
-		 Comment comment = getCommentInstance();
+		 Comment comment = CommentTest.getCommentInstance();
 		 comment.setUser(user);
 		 comment.setExercisePost(ep);
 		 
@@ -528,15 +481,15 @@ public class ExercisePostRestControllerTest {
 	 @DisplayName("댓글 삭제 -> 세션에 저장된 ID와 댓글 작성자의 ID 일치 하지 않으면")
 	 public void removeCommentToExercisePostNotMatch() throws Exception {
 		 //Given
-		 User user = getUserInstance(RoleType.USER);
+		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
 			
-		 ExercisePost ep = getExercisePostInstance();
+		 ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		 ep.setUser(user);
 			
 		 exercisePostRepository.save(ep);
 		 
-		 Comment comment = getCommentInstance();
+		 Comment comment = CommentTest.getCommentInstance();
 		 comment.setUser(user);
 		 comment.setExercisePost(ep);
 		 
@@ -558,15 +511,15 @@ public class ExercisePostRestControllerTest {
 	 @DisplayName("댓글 삭제 -> 정상")
 	 public void removeCommentToExercisePostTest() throws Exception {
 		 //Given
-		 User user = getUserInstance(RoleType.USER);
+		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
 			
-		 ExercisePost ep = getExercisePostInstance();
+		 ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		 ep.setUser(user);
 			
 		 exercisePostRepository.save(ep);
 		 
-		 Comment comment = getCommentInstance();
+		 Comment comment = CommentTest.getCommentInstance();
 		 comment.setUser(user);
 		 comment.setExercisePost(ep);
 		 

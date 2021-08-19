@@ -22,6 +22,9 @@ import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.util.CommentTest;
+import com.gunyoung.tmb.util.ExercisePostTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**
@@ -47,45 +50,6 @@ public class UserRestControllerTest {
 	@Autowired
 	private ExercisePostRepository exercisePostRepository;
 	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private User getUserInstance(RoleType role) {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234!")
-				.firstName("first")
-				.lastName("last")
-				.nickName("nickName")
-				.role(role)
-				.build();
-		
-		return user;
-	}
-	
-	private Comment getCommentInstance() {
-		Comment comment = Comment.builder()
-				.contents("contents")
-				.isAnonymous(false)
-				.writerIp("127.0.0.1")
-				.build();
-		return comment;
-	}
-	
-	private ExercisePost getExercisePostInstance() {
-		ExercisePost ep = ExercisePost.builder()
-				.contents("contents")
-				.title("title")
-				.build();
-		return ep;
-	}
-	
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
 	/*
 	 * @RequestMapping(value="join/emailverification",method=RequestMethod.GET)
 	 * public boolean emailVerification(@RequestParam("email") String email)
@@ -96,7 +60,7 @@ public class UserRestControllerTest {
 	@DisplayName("email 중복 여부 확인 -> true and false")
 	public void emailVerificationTest() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
 		String existEmail = user.getEmail();
@@ -133,7 +97,7 @@ public class UserRestControllerTest {
 	@DisplayName("nickName 중복 여부 확인 -> true and false")
 	public void nickNameVerificationTest() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
 		String existNickName = user.getNickName();
@@ -171,11 +135,11 @@ public class UserRestControllerTest {
 	@DisplayName("자신이 작성한 특정 댓글 삭제 -> 내 댓글 아님")
 	public void removeMyCommentsNotMine() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		
 		userRepository.save(user);
 		
-		Comment comment = getCommentInstance();
+		Comment comment = CommentTest.getCommentInstance();
 		commentRepository.save(comment);
 		
 		//When
@@ -195,11 +159,11 @@ public class UserRestControllerTest {
 	@DisplayName("자신이 작성한 특정댓글 삭제 -> 정상")
 	public void removeMyCommentsTest() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		
 		userRepository.save(user);
 		
-		Comment comment = getCommentInstance();
+		Comment comment = CommentTest.getCommentInstance();
 		comment.setUser(user);
 		commentRepository.save(comment);
 		
@@ -225,11 +189,11 @@ public class UserRestControllerTest {
 	@DisplayName("자신이 작성한 특정 댓글 삭제 -> 내 댓글 아님")
 	public void removeMyPostsNotMine() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		
 		userRepository.save(user);
 		
-		ExercisePost exercisePost = getExercisePostInstance();
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		
 		exercisePostRepository.save(exercisePost);
 		
@@ -250,11 +214,11 @@ public class UserRestControllerTest {
 	@DisplayName("자신이 작성한 특정댓글 삭제 -> 정상")
 	public void removeMyPostsTest() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		
 		userRepository.save(user);
 		
-		ExercisePost exercisePost = getExercisePostInstance();
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		exercisePost.setUser(user);
 		exercisePostRepository.save(exercisePost);
 		

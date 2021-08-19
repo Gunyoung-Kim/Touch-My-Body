@@ -61,4 +61,15 @@ public class UserTest {
 		map.add("nickName", nickName);
 		return map;
 	}
+	
+	/**
+	 * {@link com.gunyoung.tmb.dto.reqeust.UserProfileForManagerDTO} 에 바인딩 될 수 있는 MultiValueMap 반환 <br>
+	 * role 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static MultiValueMap<String,String> getUserProfileForManagerDTOMap(RoleType role) {
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+		map.add("role", role.toString());
+		return map;
+	}
 }

@@ -19,7 +19,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -30,6 +29,8 @@ import com.gunyoung.tmb.dto.response.MuscleInfoBySortDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
+import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.util.MuscleTest;
 
 /**
  * {@link ManagerExerciseRestController} 에 대한 테스트 클래스 
@@ -53,48 +54,6 @@ public class ManagerExerciseRestControllerTest {
 	
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
-	/**
-	 *  --------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private Exercise getExerciseInstance() {
-		Exercise exercise = Exercise.builder()
-				.name("exercise")
-				.description("description")
-				.caution("caution")
-				.movement("movement")
-				.target(TargetType.BACK)
-				.build();
-		
-		return exercise;
-	}
-	
-	private Muscle getMuscleInstance(String name,TargetType type) {
-		Muscle muscle = Muscle.builder()
-				.category(type)
-				.name(name)
-				.build();
-		
-		return muscle;
-	}
-	
-	private MultiValueMap<String,String> getSaveExerciseDTOMap(String name) {
-		MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
-		map.add("name", name);
-		map.add("description", "d");
-		map.add("caution", "c");
-		map.add("movement", "m");
-		map.add("target", "가슴");
-		
-		return map;
-	}
-	
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
-	
 	/*
 	 * @RequestMapping(value="/manager/exercise/add" ,method = RequestMethod.POST)
 	 * public void addExercise(@ModelAttribute SaveExerciseDTO dto,ModelAndView mav)
@@ -106,11 +65,11 @@ public class ManagerExerciseRestControllerTest {
 	@DisplayName("Exercise 추가 -> 이름 중복")
 	public void addExerciseDuplicated() throws Exception {
 		//Given
-		Exercise exercise = getExerciseInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		
 		exerciseRepository.save(exercise);
 		
-		MultiValueMap<String,String> paramMap = getSaveExerciseDTOMap(exercise.getName());
+		MultiValueMap<String,String> paramMap = ExerciseTest.getSaveExerciseDTOMap(exercise.getName());
 		
 		//When
 		mockMvc.perform(post("/manager/exercise/add")
@@ -127,7 +86,7 @@ public class ManagerExerciseRestControllerTest {
 	@DisplayName("Exercise 추가 -> 정상")
 	public void addExerciseTest() throws Exception {
 		//Given
-		MultiValueMap<String,String> paramMap = getSaveExerciseDTOMap("exercise");
+		MultiValueMap<String,String> paramMap = ExerciseTest.getSaveExerciseDTOMap("exercise");
 		
 		//When
 		mockMvc.perform(post("/manager/exercise/add")
@@ -149,12 +108,12 @@ public class ManagerExerciseRestControllerTest {
 	@DisplayName("Exercise 수정 -> 해당 ID의 Exercise 없을때")
 	public void modifyExerciseNonExist() throws Exception {
 		//Given
-		Exercise exercise = getExerciseInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		String existingName = exercise.getName();
 		
 		exerciseRepository.save(exercise);
 		
-		MultiValueMap<String,String> paramMap = getSaveExerciseDTOMap("modifiedName");
+		MultiValueMap<String,String> paramMap = ExerciseTest.getSaveExerciseDTOMap("modifiedName");
 		
 		//When
 		mockMvc.perform(put("/manager/exercise/modify/"+ exercise.getId()+1)
@@ -172,18 +131,18 @@ public class ManagerExerciseRestControllerTest {
 	@DisplayName("Exercise 수정 -> 변경된 이름의 다른 운동이 존재할때")
 	public void modifyExerciseAlreadyExist() throws Exception {
 		//Given
-		Exercise exercise = getExerciseInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		String existingName = exercise.getName();
 		
 		exerciseRepository.save(exercise);
 		
-		Exercise anotherExercise = getExerciseInstance();
+		Exercise anotherExercise = ExerciseTest.getExerciseInstance();
 		String targetName = "second";
 		anotherExercise.setName(targetName);
 		
 		exerciseRepository.save(anotherExercise);
 		
-		MultiValueMap<String,String> paramMap = getSaveExerciseDTOMap(existingName);
+		MultiValueMap<String,String> paramMap = ExerciseTest.getSaveExerciseDTOMap(existingName);
 		
 		//When
 		mockMvc.perform(put("/manager/exercise/modify/"+ anotherExercise.getId())
@@ -201,12 +160,12 @@ public class ManagerExerciseRestControllerTest {
 	@DisplayName("Exercise 수정 -> 정상")
 	public void modifyExerciseTest() throws Exception {
 		//Given
-		Exercise exercise = getExerciseInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		String changedName = "modifiedName";
 		
 		exerciseRepository.save(exercise);
 		
-		MultiValueMap<String,String> paramMap = getSaveExerciseDTOMap(changedName);
+		MultiValueMap<String,String> paramMap = ExerciseTest.getSaveExerciseDTOMap(changedName);
 		
 		//When
 		mockMvc.perform(put("/manager/exercise/modify/"+ exercise.getId())
@@ -229,7 +188,7 @@ public class ManagerExerciseRestControllerTest {
 	@DisplayName("Exercise 삭제 -> 정상")
 	public void deleteExerciseTest() throws Exception {
 		//Given
-		Exercise exercise = getExerciseInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
 		//When
@@ -256,7 +215,7 @@ public class ManagerExerciseRestControllerTest {
 		List<Muscle> muscleList = new LinkedList<>();
 		TargetType[] targetTypes = TargetType.values();
 		for(TargetType t :targetTypes) {
-			Muscle m = getMuscleInstance(t.getEnglishName(),t);
+			Muscle m = MuscleTest.getMuscleInstance(t.getEnglishName(),t);
 			muscleList.add(m);
 		}
 		

@@ -23,6 +23,7 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.ExerciseInfoBySortDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
+import com.gunyoung.tmb.util.ExerciseTest;
 
 /**
  * {@link ExerciseRestController} 에 대한 테스트 클래스
@@ -43,26 +44,6 @@ public class ExerciseRestControllerTest {
 	
 	private ObjectMapper objectMapper = new ObjectMapper();
 	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private Exercise getExerciseInstance(String name, TargetType target) {
-		Exercise exercise = Exercise.builder()
-				.name(name)
-				.description("description")
-				.caution("caution")
-				.movement("movement")
-				.target(target)
-				.build();
-		
-		return exercise;
-	}
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
 	/*
 	 * @RequestMapping(value="/user/exercise/getexercises",method=RequestMethod.GET)
 	 * public List<ExerciseInfoBySortDTO> getExercisesByNameAndTarget()
@@ -77,7 +58,7 @@ public class ExerciseRestControllerTest {
 		List<Exercise> exerciseList = new LinkedList<>();
 		TargetType[] targetTypes = TargetType.values();
 		for(TargetType tt : targetTypes) {
-			exerciseList.add(getExerciseInstance(tt.getKoreanName(),tt));
+			exerciseList.add(ExerciseTest.getExerciseInstance(tt.getKoreanName(),tt));
 		}
 		
 		exerciseRepository.saveAll(exerciseList);
