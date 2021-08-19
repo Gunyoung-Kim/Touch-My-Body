@@ -15,6 +15,14 @@ import com.gunyoung.tmb.enums.RoleType;
 public class UserTest {
 	
 	/**
+	 * 테스트용 User 인스턴스 반환
+	 * @author kimgun-yeong
+	 */
+	public static User getUserInstance() {
+		return getUserInstance(RoleType.USER);
+	}
+	
+	/**
 	 * 테스트용 User 인스턴스 반환 <br>
 	 * role 커스터마이징 가능
 	 * @author kimgun-yeong
