@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.gunyoung.tmb.domain.BaseEntity;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.user.User;
 
@@ -30,7 +29,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentLike extends BaseEntity{
+public class CommentLike extends Like{
 	
 	/**
 	 * id 
