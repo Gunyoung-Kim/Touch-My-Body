@@ -1,4 +1,4 @@
-# Touch-My-Body
+# Touch-My-Body.   (서버 비용 문제로 인한 일시 중단 ~2021.8.21)
 
 최신 버전 : ver 0.0.7
 
