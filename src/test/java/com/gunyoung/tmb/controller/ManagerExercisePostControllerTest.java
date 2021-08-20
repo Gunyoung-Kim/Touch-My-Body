@@ -104,8 +104,8 @@ public class ManagerExercisePostControllerTest {
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
-	@DisplayName("커뮤니티 매니징 메인 화면 반환 -> 정상, 키워드 없음")
-	public void manageCommunityViewTestNoKeyword() throws Exception {
+	@DisplayName("커뮤니티 매니징 메인 화면 반환 -> 정상, 어떤 ExercisePost도 만족하지 않는 키워드")
+	public void manageCommunityViewTestKeywordForNothing() throws Exception {
 		//Given
 		String keywordForNothing = "nothing!!";
 		User user = UserTest.getUserInstance(RoleType.USER);
@@ -121,12 +121,47 @@ public class ManagerExercisePostControllerTest {
 			ep.setUser(user);
 			ep.setExercise(exercise);
 			exercisePostRepository.save(ep);
-		
 		}
 		
 		//When
 		MvcResult result = mockMvc.perform(get("/manager/community")
 				.param("keyword", keywordForNothing))
+				
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
+		
+		@SuppressWarnings("unchecked")
+		Page<PostForCommunityViewDTO> resultList = (Page<PostForCommunityViewDTO>) model.get("listObject");
+		
+		assertEquals(0, resultList.getContent().size());
+	}
+	
+	@WithMockUser(roles= {"MANAGER"})
+	@Test
+	@Transactional
+	@DisplayName("커뮤니티 매니징 메인 화면 반환 -> 정상, 키워드 없음")
+	public void manageCommunityViewTestNoKeyword() throws Exception {
+		//Given
+		User user = UserTest.getUserInstance(RoleType.USER);
+		userRepository.save(user);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance("exericse",TargetType.ARM);
+		exerciseRepository.save(exercise);
+		
+		ExercisePostTest.addNewExercisePostsInDBByNum(10, exercisePostRepository);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		for(ExercisePost ep: exercisePostList) {
+			ep.setUser(user);
+			ep.setExercise(exercise);
+			exercisePostRepository.save(ep);
+		}
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/manager/community"))
 				
 		//Then
 				.andExpect(status().isOk())

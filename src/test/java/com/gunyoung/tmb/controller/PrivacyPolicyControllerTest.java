@@ -49,10 +49,36 @@ public class PrivacyPolicyControllerTest {
 	 */
 	
 	@Test
-	@DisplayName("특정 버전의 개인정보 처리방침 화면 반환 -> 올바르지 못한 버전")
-	public void privacyPolicyWithVersionInValidVersion() throws Exception {
+	@DisplayName("특정 버전의 개인정보 처리방침 화면 반환 -> 버전이 최신버전보다 높음")
+	public void privacyPolicyWithVersionOverVersion() throws Exception {
 		//Given
 		int invalidVersion = PrivacyPolicyController.LATEST_POLICY_VERSION + 10;
+		
+		//When
+		mockMvc.perform(get("/privacypolicy/" + invalidVersion))
+		
+		//Then
+				.andExpect(status().isNoContent());
+	}
+	
+	@Test
+	@DisplayName("특정 버전의 개인정보 처리방침 화면 반환 -> 버전이 0")
+	public void privacyPolicyWithVersionZeroVersion() throws Exception {
+		//Given
+		int invalidVersion = 0;
+		
+		//When
+		mockMvc.perform(get("/privacypolicy/" + invalidVersion))
+		
+		//Then
+				.andExpect(status().isNoContent());
+	}
+	
+	@Test
+	@DisplayName("특정 버전의 개인정보 처리방침 화면 반환 -> 버전이 음수")
+	public void privacyPolicyWithVersionMinusVersion() throws Exception {
+		//Given
+		int invalidVersion = -1;
 		
 		//When
 		mockMvc.perform(get("/privacypolicy/" + invalidVersion))

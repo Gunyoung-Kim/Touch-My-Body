@@ -1,6 +1,7 @@
 package com.gunyoung.tmb.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -98,15 +99,40 @@ public class UserControllerTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("로그인 화면 반환 -> 정상, 로그인 후 리다이렉트 주소 세션에 저장 x")
+	@DisplayName("로그인 화면 반환 -> 정상, Referer에 아무것도 없음,로그인 후 리다이렉트 주소 세션에 저장 x")
 	public void loginViewTestNotReferer() throws Exception {
 		//Given
 		
 		//When
-		mockMvc.perform(get("/login"))
-		
+		HttpSession session = mockMvc.perform(get("/login"))
+	
 		//Then
-				.andExpect(status().isOk());
+				.andExpect(status().isOk())
+				.andReturn()
+				.getRequest()
+				.getSession();
+		
+		assertNull(SessionUtil.getAfterLoginRedirectedUrl(session));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("로그인 화면 반환 -> 정상, Referer에 /login, 로그인 후 리다이렉트 주소 세션에 저장 x")
+	public void loginViewTestRefererIsLogin() throws Exception {
+		//Given
+		String referer = "/login";
+		
+		//When
+		HttpSession session = mockMvc.perform(get("/login")
+				.header("Referer", referer))
+	
+		//Then
+				.andExpect(status().isOk())
+				.andReturn()
+				.getRequest()
+				.getSession();
+		
+		assertNull(SessionUtil.getAfterLoginRedirectedUrl(session));
 	}
 	
 	@Test
