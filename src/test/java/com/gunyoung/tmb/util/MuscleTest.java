@@ -1,5 +1,8 @@
 package com.gunyoung.tmb.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -14,12 +17,23 @@ import com.gunyoung.tmb.enums.TargetType;
  */
 public class MuscleTest {
 	
+	public final static String DEFAULT_NAME = "muscle";
+	
 	/**
 	 * 테스트용 Muscle 인스턴스 반환
 	 * @author kimgun-yeong
 	 */
 	public static Muscle getMuscleInstance() {
-		return getMuscleInstance("name", TargetType.ARM);
+		return getMuscleInstance(DEFAULT_NAME, TargetType.ARM);
+	}
+	
+	/**
+	 * 테스트용 Muscle 인스턴스 반환 <br>
+	 * name 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static Muscle getMuscleInstance(String name) {
+		return getMuscleInstance(name, TargetType.ARM);
 	}
 	
 	/**
@@ -37,7 +51,8 @@ public class MuscleTest {
 	}
 	
 	/**
-	 * Repository를 통해 존재하지 않는 Muscle ID 반환
+	 * Repository를 통해 존재하지 않는 Muscle ID 반환 <br>
+	 * 모든 Muscle의 이름 다르게 저장
 	 * @author kimgun-yeong
 	 */
 	public static Long getNonExistMuscleId(JpaRepository<Muscle, Long> muscleRepository) {
@@ -49,6 +64,19 @@ public class MuscleTest {
 		
 		nonExistMuscleId++;
 		return nonExistMuscleId;
+	}
+	
+	/**
+	 * Repository를 사용해 DB에 인자로 전해진 num 만큼 Muscle 생성 후 저장
+	 * @author kimgun-yeong
+	 */
+	public static List<Muscle> addNewMusclesInDBByNum(int num, JpaRepository<Muscle, Long> muscleRepository) {
+		List<Muscle> newMuscles = new ArrayList<>();
+		for(int i=0;i < num;i++) {
+			Muscle newMuscle = getMuscleInstance(DEFAULT_NAME + i);
+			newMuscles.add(newMuscle);
+		}
+		return muscleRepository.saveAll(newMuscles);
 	}
 	
 	/**

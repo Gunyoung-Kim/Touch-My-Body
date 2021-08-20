@@ -18,12 +18,23 @@ import com.gunyoung.tmb.enums.TargetType;
  */
 public class ExerciseTest {
 	
+	public static final String DEFAULT_NAME = "exercise";
+	
 	/**
 	 * 테스트용 Exercise 인스턴스 반환 
 	 * @author kimgun-yeong
 	 */
 	public static Exercise getExerciseInstance() {
-		return getExerciseInstance("exercise", TargetType.BACK);
+		return getExerciseInstance(DEFAULT_NAME, TargetType.BACK);
+	}
+	
+	/**
+	 * 테스트용 Exercise 인스턴스 반환 <br>
+	 * name 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static Exercise getExerciseInstance(String name) {
+		return getExerciseInstance(name, TargetType.BACK);
 	}
 	
 	/**
@@ -59,13 +70,14 @@ public class ExerciseTest {
 	}
 	
 	/**
-	 * Repository를 사용해 DB에 인자로 전해진 num 만큼 Exercise 생성 후 저장
+	 * Repository를 사용해 DB에 인자로 전해진 num 만큼 Exercise 생성 후 저장 <br>
+	 * 모든 Exercise 이름 다르게 저장 
 	 * @author kimgun-yeong
 	 */
 	public static List<Exercise> addNewExercisesInDBByNum(int num, JpaRepository<Exercise, Long> exerciseRepository) {
 		List<Exercise> newExercises = new ArrayList<>();
 		for(int i=0;i < num;i++) {
-			Exercise newExercise = getExerciseInstance();
+			Exercise newExercise = getExerciseInstance(DEFAULT_NAME + i);
 			newExercises.add(newExercise);
 		}
 		return exerciseRepository.saveAll(newExercises);
