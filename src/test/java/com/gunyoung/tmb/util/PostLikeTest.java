@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.util;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.gunyoung.tmb.domain.like.PostLike;
 
 /**
@@ -18,4 +20,20 @@ public class PostLikeTest {
 				.build();
 		return pl;
 	}
+	
+	/**
+	 * Repository를 통해 존재하지 않는 PostLike ID 반환
+	 * @author kimgun-yeong
+	 */
+	public static Long getNonExistPostLikeId(JpaRepository<PostLike, Long> postLikeRepository) {
+		Long nonExistPostLikeId = Long.valueOf(1);
+		
+		for(PostLike u : postLikeRepository.findAll()) {
+			nonExistPostLikeId = Math.max(nonExistPostLikeId, u.getId());
+		}
+		nonExistPostLikeId++;
+		
+		return nonExistPostLikeId;
+	}
+	
 }

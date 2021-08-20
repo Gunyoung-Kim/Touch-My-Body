@@ -14,6 +14,9 @@ import com.gunyoung.tmb.enums.RoleType;
  */
 public class UserTest {
 	
+	public final static String DEFAULT_EMAIL = "test@test.com";
+	public final static String DEFAULT_NICKNAME = "nickName";
+	
 	/**
 	 * 테스트용 User 인스턴스 반환
 	 * @author kimgun-yeong
@@ -24,16 +27,29 @@ public class UserTest {
 	
 	/**
 	 * 테스트용 User 인스턴스 반환 <br>
+	 * email, nickName 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static User getUserInstance(String email, String nickName) {
+		User user = getUserInstance();
+		user.setEmail(email);
+		user.setNickName(nickName);
+		
+		return user;
+	}
+	
+	/**
+	 * 테스트용 User 인스턴스 반환 <br>
 	 * role 커스터마이징 가능
 	 * @author kimgun-yeong
 	 */
 	public static User getUserInstance(RoleType role) {
 		User user = User.builder()
-				.email("test@test.com")
+				.email(DEFAULT_EMAIL)
 				.password("abcd1234!")
 				.firstName("first")
 				.lastName("last")
-				.nickName("nickName")
+				.nickName(DEFAULT_NICKNAME)
 				.role(role)
 				.build();
 		
