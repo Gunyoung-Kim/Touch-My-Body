@@ -42,16 +42,14 @@ public interface PostLikeService {
 	public PostLike createAndSaveWithUserAndExercisePost(User user, ExercisePost exercisePost);
 	
 	/**
-	 * PostLike 삭제 <br>
-	 * {@code CacheUtil.POST_LIKE_NAME} 관련 캐쉬 삭제
+	 * PostLike 삭제
 	 * @param postLike 삭제하려는 PostLike
 	 * @author kimgun-yeong
 	 */
 	public void delete(PostLike postLike);
 	
 	/**
-	 * User Id, ExercisePost Id로 PostLike 존재 여부 반환 <br>
-	 * {@code CacheUtil.POST_LIKE_NAME} 관련 캐쉬 삭제
+	 * User Id, ExercisePost Id로 PostLike 존재 여부 반환
 	 * @param userId 찾으려는 PostLike를 추가한 User Id
 	 * @param exercisePostId 찾으려는 PostLike의 대상 게시물 Id
 	 * @author kimgun-yeong

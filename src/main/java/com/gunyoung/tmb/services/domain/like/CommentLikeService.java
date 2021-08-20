@@ -26,8 +26,7 @@ public interface CommentLikeService {
 	public CommentLike findByUserIdAndCommentId(Long userId, Long commentId);
 	
 	/**
-	 * CommentLike 생성 및 수정 <br>
-	 * {@code CacheUtil.COMMENT_LIKE_NAME} 관련 캐쉬 삭제
+	 * CommentLike 생성 및 수정
 	 * @param commentLike save할 CommentLike 객체
 	 * @return save 된 CommentLike 객체
 	 * @author kimgun-yeong
@@ -45,7 +44,6 @@ public interface CommentLikeService {
 	
 	/**
 	 * CommentLike 삭제 <br>
-	 * {@code CacheUtil.COMMENT_LIKE_NAME} 관련 캐쉬 삭제
 	 * @param commentLike delete할 commentLike 객체
 	 * @author kimgun-yeong
 	 */

@@ -2,7 +2,6 @@ package com.gunyoung.tmb.services.domain.like;
 
 import java.util.Optional;
 
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +45,6 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.COMMENT_LIKE_NAME, allEntries = true)
 	public CommentLike save(CommentLike commentLike) {
 		return commentLikeRepository.save(commentLike);
 	}
@@ -65,7 +63,6 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	}
 	
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.COMMENT_LIKE_NAME,allEntries=true)
 	public void delete(CommentLike commentLike) {
 		commentLikeRepository.delete(commentLike);
 	}

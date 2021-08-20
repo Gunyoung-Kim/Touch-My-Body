@@ -2,6 +2,7 @@ package com.gunyoung.tmb.controller.rest;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +29,7 @@ import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.like.CommentLikeService;
 import com.gunyoung.tmb.services.domain.like.PostLikeService;
 import com.gunyoung.tmb.services.domain.user.UserService;
+import com.gunyoung.tmb.utils.CacheUtil;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -54,7 +56,8 @@ public class ExercisePostRestController {
 	private final CommentLikeService commentLikeService;
 	
 	/**
-	 * 유저가 게시글에 좋아요 추가했을때 처리하는 메소드
+	 * 유저가 게시글에 좋아요 추가했을때 처리하는 메소드 <br>
+	 * {@code CacheUtil.POST_LIKE_NAME} 관련 캐쉬 삭제
 	 * @param postId 게시글 추가하려는 대상 ExercisePost의 Id
 	 * @throws UserNotFoundedException 세션에 저장된 Id에 해당하는 User 없으면
 	 * @throws ExercisePostNotFoundedException 해당 Id의 ExercisePost 없으면
@@ -62,6 +65,7 @@ public class ExercisePostRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{postId}/addLike",method = RequestMethod.POST)
+	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME,allEntries=true)
 	@LoginIdSessionNotNull
 	public void addLikeToExercisePost(@PathVariable("postId") Long postId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
@@ -83,12 +87,14 @@ public class ExercisePostRestController {
 	}
 	
 	/**
-	 * 유저가 게시글에 좋아요 취소했을때 처리하는 메소드
+	 * 유저가 게시글에 좋아요 취소했을때 처리하는 메소드 <br>
+	 * {@code CacheUtil.POST_LIKE_NAME} 관련 캐쉬 삭제
 	 * @param postId 게시글 취소하려는 ExercisePost의 Id
 	 * @throws LikeNotFoundedException 세션의 저장된 UserId와 postId를 만족하는 PostLike 없으면
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{postId}/removelike",method = RequestMethod.DELETE)
+	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME,allEntries=true)
 	@LoginIdSessionNotNull
 	public void removeLikeToExercisePost(@PathVariable("postId") Long postId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
@@ -102,7 +108,8 @@ public class ExercisePostRestController {
 	}
 	
 	/**
-	 * 유저가 댓글에 좋아요 추가 요청 처리하는 메소드 
+	 * 유저가 댓글에 좋아요 추가 요청 처리하는 메소드 <br>
+	 * {@code CacheUtil.COMMENT_LIKE_NAME} 관련 캐쉬 삭제
 	 * @param postId 댓글이 속해있는 ExercisePost의 Id
 	 * @param commentId 좋아요 추가하려는 대상 Comment의 Id
 	 * @throws UserNotFoundedException 세션에 저장된 Id의 User 없으면
@@ -111,6 +118,7 @@ public class ExercisePostRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{postId}/comment/addlike",method = RequestMethod.POST)
+	@CacheEvict(cacheNames=CacheUtil.COMMENT_LIKE_NAME, allEntries = true)
 	@LoginIdSessionNotNull
 	public void addLikeToComment(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId) {
 		// 세션에 저장된 현재 접속자의 id 가져와서 이를 통해 User 객체 가져옴
@@ -134,13 +142,15 @@ public class ExercisePostRestController {
 	}
 	
 	/**
-	 * 유저가 댓글에 좋아요 취소 요청 처리하는 메소드
+	 * 유저가 댓글에 좋아요 취소 요청 처리하는 메소드 <br>
+	 * {@code CacheUtil.COMMENT_LIKE_NAME} 관련 캐쉬 삭제
 	 * @param postId 댓글이 소속된 ExercisePost id
 	 * @param commentId 좋아요를 취소하고자 하는 댓글
 	 * @throws LikeNotFoundedException 해당 유저가 해당 댓글에 좋아요 추가하지 않았었으면
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{postId}/comment/removelike",method = RequestMethod.DELETE)
+	@CacheEvict(cacheNames=CacheUtil.COMMENT_LIKE_NAME, allEntries = true)
 	@LoginIdSessionNotNull
 	public void removeLikeToComment(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId) { 
 		Long loginUserId = SessionUtil.getLoginUserId(session);	

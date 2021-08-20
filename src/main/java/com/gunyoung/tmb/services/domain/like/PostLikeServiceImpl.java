@@ -2,7 +2,6 @@ package com.gunyoung.tmb.services.domain.like;
 
 import java.util.Optional;
 
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +46,6 @@ public class PostLikeServiceImpl implements PostLikeService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME,allEntries=true)
 	public PostLike save(PostLike postLike) {
 		return postLikeRepository.save(postLike);
 	}
@@ -66,7 +64,6 @@ public class PostLikeServiceImpl implements PostLikeService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME,allEntries=true)
 	public void delete(PostLike postLike) {
 		postLikeRepository.delete(postLike);
 	}
