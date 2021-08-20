@@ -30,6 +30,12 @@ import com.gunyoung.tmb.util.ExercisePostTest;
 import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.PageUtil;
 
+/**
+ * CommentService에 대한 테스트 클래스 <br>
+ * Spring의 JpaRepository의 정상 작동을 가정으로 두고 테스트 진행
+ * @author kimgun-yeong
+ *
+ */
 @SpringBootTest
 public class CommentServiceTest {
 	
