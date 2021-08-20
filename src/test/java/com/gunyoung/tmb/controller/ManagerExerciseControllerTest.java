@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -51,18 +50,11 @@ public class ManagerExerciseControllerTest {
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
-	@DisplayName("Exercise 리스트 화면 반환 -> 정상")
-	public void exerciseViewForManagerTest() throws Exception {
+	@DisplayName("Exercise 리스트 화면 반환 -> 정상, 키워드 없음")
+	public void exerciseViewForManagerTestNoKeyword() throws Exception {
 		//Given
-		int exerciseNum = 10;
-		List<Exercise> exerciseList = new LinkedList<>();
-		
-		for(int i=1;i<=exerciseNum; i++) {
-			Exercise exercise = ExerciseTest.getExerciseInstance("exericse" + i , TargetType.ARM);
-			exerciseList.add(exercise);
-		}
-		
-		exerciseRepository.saveAll(exerciseList);
+		int givenExerciseNum = 10;
+		ExerciseTest.addNewExercisesInDBByNum(givenExerciseNum, exerciseRepository);
 		
 		//When
 		MvcResult result = mockMvc.perform(get("/manager/exercise"))
@@ -75,7 +67,58 @@ public class ManagerExerciseControllerTest {
 		@SuppressWarnings("unchecked")
 		List<ExerciseForTableDTO> listObject = (List<ExerciseForTableDTO>) model.get("listObject");
 		
-		assertEquals(Math.min(PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE, exerciseNum),listObject.size());
+		assertEquals(Math.min(PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE, givenExerciseNum), listObject.size());
+	}
+	
+	@WithMockUser(roles= {"MANAGER"})
+	@Test
+	@Transactional
+	@DisplayName("Exercise 리스트 화면 반환 -> 정상, 어느 Muscle도 만족하지 않는 키워드")
+	public void exerciseViewForManagerTestKeywordForNothing() throws Exception {
+		//Given
+		String keywordForNothing = "nothing!!";
+		
+		int givenExerciseNum = 10;
+		ExerciseTest.addNewExercisesInDBByNum(givenExerciseNum, exerciseRepository);
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/manager/exercise")
+				.param("keyword", keywordForNothing))
+		
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
+		
+		@SuppressWarnings("unchecked")
+		List<ExerciseForTableDTO> listObject = (List<ExerciseForTableDTO>) model.get("listObject");
+		
+		assertEquals(0, listObject.size());
+	}
+	
+	@WithMockUser(roles= {"MANAGER"})
+	@Test
+	@Transactional
+	@DisplayName("Exercise 리스트 화면 반환 -> 정상, 모든 Muscle이 만족하는 키워드")
+	public void exerciseViewForManagerTest() throws Exception {
+		//Given
+		String keywordForAllExercise = ExerciseTest.DEFAULT_NAME;
+		int givenExerciseNum = 10;
+		ExerciseTest.addNewExercisesInDBByNum(givenExerciseNum, exerciseRepository);
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/manager/exercise")
+				.param("keyword", keywordForAllExercise))
+		
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
+		
+		@SuppressWarnings("unchecked")
+		List<ExerciseForTableDTO> listObject = (List<ExerciseForTableDTO>) model.get("listObject");
+		
+		assertEquals(Math.min(PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE, givenExerciseNum), listObject.size());
 	}
 	
 	/*

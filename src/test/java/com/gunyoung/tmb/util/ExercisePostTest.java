@@ -18,13 +18,15 @@ import com.gunyoung.tmb.domain.user.User;
  */
 public class ExercisePostTest {
 	
+	public static final String DEFAULT_TITLE = "title";
+	
 	/**
 	 * 테스트용 ExercisePost 인스턴스 반환
 	 * @author kimgun-yeong
 	 */
 	public static ExercisePost getExercisePostInstance() {
 		ExercisePost ep = ExercisePost.builder()
-				.title("title")
+				.title(DEFAULT_TITLE)
 				.contents("contents")
 				.build();
 		return ep;
@@ -81,7 +83,7 @@ public class ExercisePostTest {
 	 */
 	public static MultiValueMap<String, String> getSaveExercisePostDTOMap(String exerciseName) {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("title", "title");
+		map.add("title", DEFAULT_TITLE);
 		map.add("contents", "contents");
 		map.add("exerciseName", exerciseName);
 		

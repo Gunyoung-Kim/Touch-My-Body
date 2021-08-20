@@ -6,9 +6,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +24,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
-import com.gunyoung.tmb.domain.exercise.Comment;
-import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForManageViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostForManageViewDTO;
@@ -99,8 +98,8 @@ public class UserControllerTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("로그인 화면 반환 -> 정상")
-	public void loginTest() throws Exception {
+	@DisplayName("로그인 화면 반환 -> 정상, 로그인 후 리다이렉트 주소 세션에 저장 x")
+	public void loginViewTestNotReferer() throws Exception {
 		//Given
 		
 		//When
@@ -108,6 +107,26 @@ public class UserControllerTest {
 		
 		//Then
 				.andExpect(status().isOk());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("로그인 화면 반환 -> 정상, 로그인 후 리다이렉트 주소 세션에 저장")
+	public void loginViewTestSaveReferer() throws Exception {
+		//Given
+		String afterLoginRedirectedUrl = "/";
+		
+		//When
+		HttpSession session = mockMvc.perform(get("/login")
+				.header("Referer", afterLoginRedirectedUrl))
+		
+		//Then
+				.andExpect(status().isOk())
+				.andReturn()
+				.getRequest()
+				.getSession();
+		
+		assertEquals(afterLoginRedirectedUrl, SessionUtil.getAfterLoginRedirectedUrl(session));
 	}
 	
 	/*
@@ -268,19 +287,11 @@ public class UserControllerTest {
 	@WithMockUser
 	@Test
 	@Transactional
-	@DisplayName("접속자 본인이 작성한 댓글 목록 화면 반환 -> 정상")
-	public void myCommentsViewTest() throws Exception {
+	@DisplayName("접속자 본인이 작성한 댓글 목록 화면 반환 -> 정상, 정렬 최신순")
+	public void myCommentsViewTestSortDesc() throws Exception {
 		//Given
-		int commentNum = 10;
-		List<Comment> commentList = new LinkedList<>();
-		
-		for(int i= 0 ; i<commentNum ; i++) {
-			Comment comment = CommentTest.getCommentInstance();
-			comment.setUser(user);
-			commentList.add(comment);
-		}
-		
-		commentRepository.saveAll(commentList);
+		int givenCommentNum = 10;
+		CommentTest.addCommentsInDBWithSettingUser(givenCommentNum, user, commentRepository);
 		
 		//When
 		MvcResult result = mockMvc.perform(get("/user/profile/mycomments")
@@ -293,7 +304,31 @@ public class UserControllerTest {
 		
 		@SuppressWarnings("unchecked")
 		List<CommentForManageViewDTO> listObject = (List<CommentForManageViewDTO>) model.get("commentList");
-		assertEquals(Math.min(commentNum, PageUtil.COMMENT_FOR_PROFILE_PAGE_SIZE),listObject.size());
+		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_PROFILE_PAGE_SIZE),listObject.size());
+	}
+
+	@WithMockUser
+	@Test
+	@Transactional
+	@DisplayName("접속자 본인이 작성한 댓글 목록 화면 반환 -> 정상, 정렬 오래된순")
+	public void myCommentsViewTestSortAsc() throws Exception {
+		//Given
+		int givenCommentNum = 10;
+		CommentTest.addCommentsInDBWithSettingUser(givenCommentNum, user, commentRepository);
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/user/profile/mycomments")
+				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
+				.param("order", "asc"))
+		
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
+		
+		@SuppressWarnings("unchecked")
+		List<CommentForManageViewDTO> listObject = (List<CommentForManageViewDTO>) model.get("commentList");
+		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_PROFILE_PAGE_SIZE),listObject.size());
 	}
 	
 	/*
@@ -338,19 +373,11 @@ public class UserControllerTest {
 	@WithMockUser
 	@Test
 	@Transactional
-	@DisplayName("접속자 본인이 작성한 게시글 목록 화면 반환 -> 정상")
-	public void myPostsViewTest() throws Exception {
+	@DisplayName("접속자 본인이 작성한 게시글 목록 화면 반환 -> 정상, 정렬 최신순으로")
+	public void myPostsViewTestSortDesc() throws Exception {
 		//Given
-		int exercisePostNum = 10;
-		List<ExercisePost> exercisePostList = new LinkedList<>();
-		
-		for(int i= 0 ; i<exercisePostNum ; i++) {
-			ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
-			exercisePost.setUser(user);
-			exercisePostList.add(exercisePost);
-		}
-		
-		exercisePostRepository.saveAll(exercisePostList);
+		int givenExercisePostNum = 10;
+		ExercisePostTest.addNewExercisePostsInDBWithSettingUser(givenExercisePostNum, user, exercisePostRepository);
 		
 		//When
 		MvcResult result = mockMvc.perform(get("/user/profile/myposts")
@@ -363,8 +390,32 @@ public class UserControllerTest {
 		Map<String, Object> model = ControllerTest.getResponseModel(result);
 		 
 		 @SuppressWarnings("unchecked")
-		List<ExercisePostForManageViewDTO> listObject = (List<ExercisePostForManageViewDTO>) model.get("postList");
+		List<ExercisePostForManageViewDTO> listObject = (List<ExercisePostForManageViewDTO>) model.get("postList"); 
+		assertEquals(Math.min(givenExercisePostNum, PageUtil.POST_FOR_PROFILE_PAGE_SIZE),listObject.size());
+	}
+	
+	@WithMockUser
+	@Test
+	@Transactional
+	@DisplayName("접속자 본인이 작성한 게시글 목록 화면 반환 -> 정상, 정렬 오래된순")
+	public void myPostsViewTestSortAsc() throws Exception {
+		//Given
+		int givenExercisePostNum = 10;
+		ExercisePostTest.addNewExercisePostsInDBWithSettingUser(givenExercisePostNum, user, exercisePostRepository);
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/user/profile/myposts")
+				.sessionAttr(SessionUtil.LOGIN_USER_ID, user.getId())
+				.param("order", "asc"))
+		
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
 		 
-		 assertEquals(Math.min(exercisePostNum, PageUtil.POST_FOR_PROFILE_PAGE_SIZE),listObject.size());
+		 @SuppressWarnings("unchecked")
+		List<ExercisePostForManageViewDTO> listObject = (List<ExercisePostForManageViewDTO>) model.get("postList"); 
+		assertEquals(Math.min(givenExercisePostNum, PageUtil.POST_FOR_PROFILE_PAGE_SIZE),listObject.size());
 	}
 }

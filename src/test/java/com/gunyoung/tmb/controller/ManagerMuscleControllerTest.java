@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,17 +53,11 @@ public class ManagerMuscleControllerTest {
 	@WithMockUser(roles = {"MANAGER"})
 	@Test
 	@Transactional
-	@DisplayName("Muscle 리스트 화면 반환 -> 정상")
-	public void muscleViewForManagerTest() throws Exception {
+	@DisplayName("Muscle 리스트 화면 반환 -> 정상, 키워드 없음")
+	public void muscleViewForManagerTestNoKeyword() throws Exception {
 		//Given
-		int muscleNum = 10;
-		
-		List<Muscle> muscleList = new LinkedList<>();
-		for(int i=1;i<=muscleNum; i++) {
-			Muscle muscle = MuscleTest.getMuscleInstance();
-			muscleList.add(muscle);
-		}
-		muscleRepository.saveAll(muscleList);
+		int givenMuscleNum = 10;
+		MuscleTest.addNewMusclesInDBByNum(givenMuscleNum, muscleRepository);
 		
 		//When
 		MvcResult result = mockMvc.perform(get("/manager/muscle"))
@@ -78,7 +71,59 @@ public class ManagerMuscleControllerTest {
 		@SuppressWarnings("unchecked")
 		List<MuscleForTableDTO> resultList = (List<MuscleForTableDTO>) model.get("listObject");
 		
-		assertEquals(Math.min(muscleNum, PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE),resultList.size());
+		assertEquals(Math.min(givenMuscleNum, PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE),resultList.size());
+	}
+	
+	@WithMockUser(roles = {"MANAGER"})
+	@Test
+	@Transactional
+	@DisplayName("Muscle 리스트 화면 반환 -> 정상, 모든 Muscle이 만족하지 않는 키워드")
+	public void muscleViewForManagerTestKeywordForNothing() throws Exception {
+		//Given
+		String keywordForNothing = "noting!!";
+		int givenMuscleNum = 10;
+		MuscleTest.addNewMusclesInDBByNum(givenMuscleNum, muscleRepository);
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/manager/muscle")
+				.param("keyword", keywordForNothing))
+		
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
+		
+		@SuppressWarnings("unchecked")
+		List<MuscleForTableDTO> resultList = (List<MuscleForTableDTO>) model.get("listObject");
+		
+		assertEquals(0, resultList.size());
+	}
+	
+	@WithMockUser(roles = {"MANAGER"})
+	@Test
+	@Transactional
+	@DisplayName("Muscle 리스트 화면 반환 -> 정상, 모든 Muscle이 만족하는 키워드")
+	public void muscleViewForManagerTestKeywordForAll() throws Exception {
+		//Given
+		String keywordForAllMuscle = MuscleTest.DEFAULT_NAME;
+		int givenMuscleNum = 10;
+		MuscleTest.addNewMusclesInDBByNum(givenMuscleNum, muscleRepository);
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/manager/muscle")
+				.param("keyword", keywordForAllMuscle))
+		
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
+		
+		@SuppressWarnings("unchecked")
+		List<MuscleForTableDTO> resultList = (List<MuscleForTableDTO>) model.get("listObject");
+		
+		assertEquals(Math.min(givenMuscleNum, PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE),resultList.size());
 	}
 	
 	/*

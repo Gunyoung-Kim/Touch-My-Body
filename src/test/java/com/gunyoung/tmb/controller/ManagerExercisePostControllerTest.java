@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -66,30 +65,29 @@ public class ManagerExercisePostControllerTest {
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
-	@DisplayName("커뮤니티 매니징 메인 화면 반환 -> 정상")
-	public void manageCommunityViewTest() throws Exception {
+	@DisplayName("커뮤니티 매니징 메인 화면 반환 -> 정상, 모든 ExercisePost가 만족하는 키워드")
+	public void manageCommunityViewTestKeywordForAll() throws Exception {
 		//Given
+		String keywordForAllExercisePost = ExercisePostTest.DEFAULT_TITLE;
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
 		Exercise exercise = ExerciseTest.getExerciseInstance("exericse",TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
-		int exercisePostNum = 10;
-		List<ExercisePost> epList = new LinkedList<>();
+		ExercisePostTest.addNewExercisePostsInDBByNum(10, exercisePostRepository);
 		
-		for(int i=1; i<= exercisePostNum; i++) {
-			ExercisePost ep = ExercisePostTest.getExercisePostInstance();
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		long givenExercisePostNum = exercisePostList.size();
+		for(ExercisePost ep: exercisePostList) {
 			ep.setUser(user);
 			ep.setExercise(exercise);
-			epList.add(ep);
-		
+			exercisePostRepository.save(ep);
 		}
-		exercisePostRepository.saveAll(epList);
 		
 		//When
 		MvcResult result = mockMvc.perform(get("/manager/community")
-				.param("keyword", "title"))
+				.param("keyword", keywordForAllExercisePost))
 				
 		//Then
 				.andExpect(status().isOk())
@@ -100,6 +98,45 @@ public class ManagerExercisePostControllerTest {
 		@SuppressWarnings("unchecked")
 		Page<PostForCommunityViewDTO> resultList = (Page<PostForCommunityViewDTO>) model.get("listObject");
 		
-		assertEquals(Math.min(PageUtil.POST_FOR_MANAGE_PAGE_SIZE, exercisePostNum), resultList.getContent().size());
+		assertEquals(Math.min(PageUtil.POST_FOR_MANAGE_PAGE_SIZE, givenExercisePostNum), resultList.getContent().size());
+	}
+	
+	@WithMockUser(roles= {"MANAGER"})
+	@Test
+	@Transactional
+	@DisplayName("커뮤니티 매니징 메인 화면 반환 -> 정상, 키워드 없음")
+	public void manageCommunityViewTestNoKeyword() throws Exception {
+		//Given
+		String keywordForNothing = "nothing!!";
+		User user = UserTest.getUserInstance(RoleType.USER);
+		userRepository.save(user);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance("exericse",TargetType.ARM);
+		exerciseRepository.save(exercise);
+		
+		ExercisePostTest.addNewExercisePostsInDBByNum(10, exercisePostRepository);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		for(ExercisePost ep: exercisePostList) {
+			ep.setUser(user);
+			ep.setExercise(exercise);
+			exercisePostRepository.save(ep);
+		
+		}
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/manager/community")
+				.param("keyword", keywordForNothing))
+				
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
+		
+		@SuppressWarnings("unchecked")
+		Page<PostForCommunityViewDTO> resultList = (Page<PostForCommunityViewDTO>) model.get("listObject");
+		
+		assertEquals(0, resultList.getContent().size());
 	}
 }
