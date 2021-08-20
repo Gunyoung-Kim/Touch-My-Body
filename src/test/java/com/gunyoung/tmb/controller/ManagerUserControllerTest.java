@@ -30,6 +30,10 @@ import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.util.CommentTest;
+import com.gunyoung.tmb.util.ControllerTest;
+import com.gunyoung.tmb.util.ExercisePostTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.PageUtil;
 
 /**
@@ -59,7 +63,7 @@ public class ManagerUserControllerTest {
 	
 	@BeforeEach
 	void setup() {
-		user = getUserInstance(RoleType.USER);
+		user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 	}
 	
@@ -67,60 +71,7 @@ public class ManagerUserControllerTest {
 	void tearDown() {
 		userRepository.deleteAll();
 	}
-	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private User getUserInstance(RoleType role) {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234!")
-				.firstName("first")
-				.lastName("last")
-				.nickName("nickName")
-				.role(role)
-				.build();
-		
-		return user;
-	}
-	
-	private Comment getCommentInstance() {
-		Comment comment = Comment.builder()
-				.contents("contents")
-				.isAnonymous(false)
-				.writerIp("127.0.0.1")
-				.build();
-		return comment;
-	}
-	
-	private ExercisePost getExercisePostInstance() {
-		ExercisePost ep = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
-		return ep;
-	}
-	
-	private Long getNonExistUserId() {
-		Long nonExistUserId = Long.valueOf(1);
-		
-		for(User u : userRepository.findAll()) {
-			nonExistUserId = Math.max(nonExistUserId, u.getId());
-		}
-		nonExistUserId++;
-		
-		return nonExistUserId;
-	}
-	
-	private Map<String, Object> getResponseModel(MvcResult mvcResult) {
-		return mvcResult.getModelAndView().getModel();
-	}
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
+
 	/*
 	 * @RequestMapping(value="/manager/usermanage",method= RequestMethod.GET)
 	 * public ModelAndView userManageView(@RequestParam(value="page", required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav)
@@ -142,7 +93,7 @@ public class ManagerUserControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		Map<String, Object> model = getResponseModel(result);
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
 		List<UserManageListDTO> resultList = (List<UserManageListDTO>) model.get("listObject");
@@ -161,7 +112,7 @@ public class ManagerUserControllerTest {
 	@DisplayName("특정 User 관리 화면 반환 -> 해당 ID의 User 없을 때")
 	public void manageUserProfileViewNonExist() throws Exception {
 		//Given
-		Long nonExistUserId = getNonExistUserId();
+		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
 		//When
 		mockMvc.perform(get("/manager/usermanage/" + nonExistUserId))
@@ -176,7 +127,7 @@ public class ManagerUserControllerTest {
 	@DisplayName("특정 User 관리 화면 반환 -> 접속자의 권한이 대상 User의 권한보다 낮을 때")
 	public void manageUserProfileViewAccessDenied() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.ADMIN);
+		User user = UserTest.getUserInstance(RoleType.ADMIN);
 		user.setEmail("second@test.com");
 		userRepository.save(user);
 		
@@ -215,7 +166,7 @@ public class ManagerUserControllerTest {
 	@DisplayName("특정 유저의 작성 댓글 화면 -> 해당 Id의 유저 없을 때")
 	public void manageUserCommentsUserNonExist() throws Exception {
 		//Given
-		Long nonExistUserId = getNonExistUserId();
+		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
 		//When
 		mockMvc.perform(get("/manager/usermanage/" + nonExistUserId +"/comments"))
@@ -249,7 +200,7 @@ public class ManagerUserControllerTest {
 		List<Comment> commentList = new LinkedList<>();
 		
 		for(int i= 0 ; i<commentNum ; i++) {
-			Comment comment = getCommentInstance();
+			Comment comment = CommentTest.getCommentInstance();
 			comment.setUser(user);
 			commentList.add(comment);
 		}
@@ -263,7 +214,7 @@ public class ManagerUserControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		 Map<String, Object> model = getResponseModel(result);
+		 Map<String, Object> model = ControllerTest.getResponseModel(result);
 		 
 		 @SuppressWarnings("unchecked")
 		List<CommentForManageViewDTO> listObject = (List<CommentForManageViewDTO>) model.get("commentList");
@@ -282,7 +233,7 @@ public class ManagerUserControllerTest {
 	@DisplayName("특정 유저의 작성 게시글 화면 -> 해당 ID의 User 없을 때")
 	public void managerUserPostsUserNonExist() throws Exception {
 		//Given
-		Long nonExistUserId = getNonExistUserId();
+		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
 		//When
 		mockMvc.perform(get("/manager/usermanage/" + nonExistUserId +"/posts"))
@@ -316,7 +267,7 @@ public class ManagerUserControllerTest {
 		List<ExercisePost> exercisePostList = new LinkedList<>();
 		
 		for(int i= 0 ; i<exercisePostNum ; i++) {
-			ExercisePost exercisePost = getExercisePostInstance();
+			ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 			exercisePost.setUser(user);
 			exercisePostList.add(exercisePost);
 		}
@@ -330,7 +281,7 @@ public class ManagerUserControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		 Map<String, Object> model = getResponseModel(result);
+		 Map<String, Object> model = ControllerTest.getResponseModel(result);
 		 
 		 @SuppressWarnings("unchecked")
 		List<ExercisePostForManageViewDTO> listObject = (List<ExercisePostForManageViewDTO>) model.get("postList");

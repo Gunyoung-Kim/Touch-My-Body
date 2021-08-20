@@ -326,7 +326,7 @@ public class UserServiceUnitTest {
 	}
 	
 	/*
-	 * public Page<User> findAllByNickNameOrName(String keyword,Integer pageNumber)
+	 * public Page<User> findAllByNickNameOrNameInPage(String keyword,Integer pageNumber)
 	 */
 	
 	@Test
@@ -337,7 +337,7 @@ public class UserServiceUnitTest {
 		int pageNum = 1;
 		
 		//When
-		userService.findAllByNickNameOrName(keyword, pageNum);
+		userService.findAllByNickNameOrNameInPage(keyword, pageNum);
 		
 		//Then
 		then(userRepository).should(times(1)).findAllByNickNameOrName(anyString(), any(PageRequest.class));

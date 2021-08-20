@@ -1,6 +1,10 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,17 +21,23 @@ import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
-import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
+import com.gunyoung.tmb.util.CommentTest;
+import com.gunyoung.tmb.util.ExercisePostTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.PageUtil;
 
+/**
+ * CommentService에 대한 테스트 클래스 <br>
+ * Spring의 JpaRepository의 정상 작동을 가정으로 두고 테스트 진행
+ * @author kimgun-yeong
+ *
+ */
 @SpringBootTest
 public class CommentServiceTest {
-
-	private static final int INIT_COMMENT_NUM = 30;
 	
 	@Autowired
 	CommentRepository commentRepository;
@@ -41,17 +51,12 @@ public class CommentServiceTest {
 	@Autowired
 	ExercisePostRepository exercisePostRepository;
 	
+	private Comment comment;
+	
 	@BeforeEach
 	void setup() {
-		List<Comment> list = new ArrayList<>();
-		for(int i=1;i<=INIT_COMMENT_NUM;i++) {
-			Comment comment = Comment.builder()
-									 .writerIp("171.0.0.1")
-									 .contents(i+"comment")
-									 .build();
-			list.add(comment);
-		}
-		commentRepository.saveAll(list);
+		comment = CommentTest.getCommentInstance();
+		commentRepository.save(comment);
 	}
 	
 	@AfterEach
@@ -66,31 +71,26 @@ public class CommentServiceTest {
 	@DisplayName("id로 Comment 찾기 -> 해당 id의 comment 없음")
 	public void findByIdNonExist() {
 		//Given
-		long maxId = -1;
-		List<Comment> list = commentRepository.findAll();
-		
-		for(Comment c: list) {
-			maxId = Math.max(maxId, c.getId());
-		}
+		Long nonExistCommentId = CommentTest.getNonExistCommentId(commentRepository);
 		
 		//When
-		Comment result = commentService.findById(maxId+ 1000);
+		Comment result = commentService.findById(nonExistCommentId);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
 	@DisplayName("id로 Comment 찾기 -> 정상")
 	public void findByIdTest() {
 		//Given
-		Long existId = commentRepository.findAll().get(0).getId();
+		Long existCommentId = comment.getId();
 		
 		//When
-		Comment result = commentService.findById(existId);
+		Comment result = commentService.findById(existCommentId);
 		
 		//Then
-		assertEquals(result != null, true);
+		assertNotNull(result);
 	}
 	
 	/*
@@ -101,13 +101,12 @@ public class CommentServiceTest {
 	@DisplayName("ExercisePost id로 Comment들 찾기 ->정상")
 	public void findByExercisePostIdTest() {
 		//Given
-		ExercisePost exercisePost = getExercisePostInstance();
-		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		exercisePostRepository.save(exercisePost);
-		
 		Long exercisePostId = exercisePost.getId();
 		
 		List<Comment> comments = commentRepository.findAll();
+		int givenCommentNum = comments.size();
 		for(Comment c: comments) {
 			c.setExercisePost(exercisePost);
 		}
@@ -118,7 +117,7 @@ public class CommentServiceTest {
 		List<Comment> result = commentService.findAllByExercisePostId(exercisePostId);
 		
 		//Then
-		assertEquals(result.size(),INIT_COMMENT_NUM);
+		assertEquals(givenCommentNum, result.size());
 	}
 	
 	/*
@@ -126,19 +125,17 @@ public class CommentServiceTest {
 	 */
 	@Test
 	@Transactional
-	@DisplayName("User ID로 Comment 찾기 오래된순서대로 ->정상")
-	public void findAllByUserIdOrderByCreatedAtASCTest() {
+	@DisplayName("User ID로 Comment 찾기 오래된순서대로 ->정상, 개수 확인")
+	public void findAllByUserIdOrderByCreatedAtASCTestCheckCount() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
 		List<Comment> comments = commentRepository.findAll();
-		
+		int givenCommentNum = comments.size();
 		for(Comment c: comments) {
 			c.setUser(user);
 		}
-		
 		commentRepository.saveAll(comments);
 		
 		//When
@@ -146,8 +143,37 @@ public class CommentServiceTest {
 		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtASC(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
 		
 		//Then
-		assertEquals(result.size(),Math.min(INIT_COMMENT_NUM, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE));
-		assertEquals(result.get(0).getCreatedAt().isBefore(result.get(1).getCreatedAt()),true);
+		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE), result.size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID로 Comment 찾기 오래된순서대로 ->정상, 정렬 순서 확인")
+	public void findAllByUserIdOrderByCreatedAtASCTestCheckSorting() {
+		//Given
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		List<Comment> newComments = new ArrayList<>();
+		for(int i=0;i<2;i++) {
+			Comment newComment = CommentTest.getCommentInstance();
+			newComments.add(newComment);
+		}
+		commentRepository.saveAll(newComments);
+		
+		
+		List<Comment> comments = commentRepository.findAll();
+		for(Comment c: comments) {
+			c.setUser(user);
+		}
+		commentRepository.saveAll(comments);
+		
+		//When
+		
+		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtASC(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
+		
+		//Then
+		assertTrue(result.get(0).getCreatedAt().isBefore(result.get(1).getCreatedAt()));
 	}
 	
 	/*
@@ -155,15 +181,43 @@ public class CommentServiceTest {
 	 */
 	@Test
 	@Transactional
-	@DisplayName("User ID로 Comment 찾기 최신순서대로 ->정상")
-	public void findAllByUserIdOrderByCreatedAtDESCTest() {
+	@DisplayName("User ID로 Comment 찾기 최신순서대로 ->정상 , 개수 확인")
+	public void findAllByUserIdOrderByCreatedAtDESCTestCheckCount() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
 		List<Comment> comments = commentRepository.findAll();
+		long givenCommentNum = comments.size();
+		for(Comment c: comments) {
+			c.setUser(user);
+		}
+		commentRepository.saveAll(comments);
 		
+		//When
+		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtDESC(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
+		
+		//Then
+		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE), result.size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID로 Comment 찾기 최신순서대로 ->정상")
+	public void findAllByUserIdOrderByCreatedAtDESCTest() {
+		//Given
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		List<Comment> newComments = new ArrayList<>();
+		for(int i=0;i<2;i++) {
+			Comment newComment = CommentTest.getCommentInstance();
+			newComments.add(newComment);
+		}
+		commentRepository.saveAll(newComments);
+		
+		
+		List<Comment> comments = commentRepository.findAll();
 		for(Comment c: comments) {
 			c.setUser(user);
 		}
@@ -174,8 +228,7 @@ public class CommentServiceTest {
 		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtDESC(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
 		
 		//Then
-		assertEquals(result.size(),Math.min(INIT_COMMENT_NUM, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE));
-		assertEquals(result.get(0).getCreatedAt().isAfter(result.get(1).getCreatedAt()),true);
+		assertTrue(result.get(0).getCreatedAt().isAfter(result.get(1).getCreatedAt()));
 	}
 	
 	/*
@@ -187,15 +240,14 @@ public class CommentServiceTest {
 	@DisplayName("Comment 수정하기 -> 정상")
 	public void mergeTest() {
 		//Given
-		Comment existComment = commentRepository.findAll().get(0);
-		Long id = existComment.getId();
-		existComment.setContents("changed Contents");
+		Long commentId = comment.getId();
+		comment.setContents("changed Contents");
 		
 		//When
-		commentService.save(existComment);
+		commentService.save(comment);
 		
 		//Then
-		Comment result = commentRepository.findById(id).get();
+		Comment result = commentRepository.findById(commentId).get();
 		assertEquals(result.getContents(),"changed Contents");
 	}
 	
@@ -204,17 +256,14 @@ public class CommentServiceTest {
 	@DisplayName("Comment 추가하기 -> 정상")
 	public void saveTest() {
 		//Given
-		Comment newComment = Comment.builder()
-									.contents("new Contents")
-									.writerIp("0.0.0.1")
-									.build();
-		Long beforeNum = commentRepository.count();
+		Comment newComment = CommentTest.getCommentInstance();
+		Long givenCommentNum = commentRepository.count();
 		
 		//When
 		commentService.save(newComment);
 		
 		//Then
-		assertEquals(beforeNum+1,commentRepository.count());
+		assertEquals(givenCommentNum+1, commentRepository.count());
 	}
 	
 	/*
@@ -226,37 +275,21 @@ public class CommentServiceTest {
 	@DisplayName("User, ExercisePost의 Comment 추가 -> 정상")
 	public void saveWithUserAndExercisePostTest() {
 		//Given
-		Comment comment = Comment.builder()
-				 .writerIp("171.0.0.1")
-				 .contents("contents")
-				 .isAnonymous(true)
-				 .build();
+		Comment comment = CommentTest.getCommentInstance();
 		
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		ExercisePost exercisePost = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
-		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		exercisePostRepository.save(exercisePost);
 		
-		int userCommentNum = user.getComments().size();
-		Long userId = user.getId();
-		int exercisePostCommentNum = exercisePost.getComments().size();
-		Long exercisePostId = exercisePost.getId();
-		
-		long commentNum = commentRepository.count();
+		long givenCommentNum = commentRepository.count();
 		
 		//When
 		commentService.saveWithUserAndExercisePost(comment,user, exercisePost);
 		
 		//Then
-		assertEquals(userCommentNum +1,userRepository.findById(userId).get().getComments().size());
-		assertEquals(exercisePostCommentNum +1,exercisePostRepository.findById(exercisePostId).get().getComments().size());
-		assertEquals(commentNum +1 , commentRepository.count());
+		assertEquals(givenCommentNum + 1 , commentRepository.count());
 	}
 	
 	/*
@@ -268,14 +301,13 @@ public class CommentServiceTest {
 	@DisplayName("Comment 삭제하기 -> 정상")
 	public void deleteTest() {
 		//Given
-		Comment existComment = commentRepository.findAll().get(0);
-		Long beforeNum = commentRepository.count();
+		Long givenCommentNum = commentRepository.count();
 		
 		//When
-		commentService.delete(existComment);
+		commentService.delete(comment);
 		
 		//Then
-		assertEquals(beforeNum-1,commentRepository.count());
+		assertEquals(givenCommentNum-1,commentRepository.count());
 	}
 	
 	/*
@@ -287,14 +319,10 @@ public class CommentServiceTest {
 	@DisplayName("User ID, Comment ID로 User의 Comment인지 확인 후 맞다면 삭제 -> User의 Comment 아님")
 	public void checkIsMineAndDeleteNotMine() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		Comment comment = commentRepository.findAll().get(0);
-		
 		comment.setUser(user);
-		
 		commentRepository.save(comment);
 		
 		Long otherUserId = user.getId() + 1;
@@ -304,7 +332,7 @@ public class CommentServiceTest {
 		commentService.checkIsMineAndDelete(otherUserId, commentId);
 		
 		//Then
-		assertEquals(true,commentRepository.existsById(commentId));
+		assertTrue(commentRepository.existsById(commentId));
 	}
 	
 	@Test
@@ -312,14 +340,10 @@ public class CommentServiceTest {
 	@DisplayName("User ID, Comment ID로 User의 Comment인지 확인 후 맞다면 삭제 -> 정상")
 	public void checkIsMineAndDeleteTest() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
-		
-		Comment comment = commentRepository.findAll().get(0);
-		
+	
 		comment.setUser(user);
-		
 		commentRepository.save(comment);
 		
 		Long userId = user.getId();
@@ -329,7 +353,7 @@ public class CommentServiceTest {
 		commentService.checkIsMineAndDelete(userId, commentId);
 		
 		//Then
-		assertEquals(false,commentRepository.existsById(commentId));
+		assertFalse(commentRepository.existsById(commentId));
 	}
 	
 	/*
@@ -340,27 +364,25 @@ public class CommentServiceTest {
 	@DisplayName("User ID를 만족하는 Comment 들 개수 가져오기 -> 정상")
 	public void countByUserIdTest() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
 		List<Comment> comments = commentRepository.findAll();
-		
+		long givenCommentNum = comments.size();
 		for(Comment c: comments) {
 			c.setUser(user);
 		}
-		
 		commentRepository.saveAll(comments);
 		
-		Long allUserId = user.getId();
+		Long userId = user.getId();
 		
 		//When
 		
-		long result = commentService.countByUserId(allUserId);
+		long result = commentService.countByUserId(userId);
 		
 		//Then
 		
-		assertEquals(result,INIT_COMMENT_NUM);
+		assertEquals(givenCommentNum, result);
 	}
 	
 	/*
@@ -372,49 +394,25 @@ public class CommentServiceTest {
 	@DisplayName("해당 exercisePost id 를 만족하는 Comment 객체들을 CommentForPostViewDTO로 변환해서 반환 -> 정상")
 	public void getCommentForCommentForPostViewDTOsByExercisePostIdTest() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		ExercisePost exercisePost = getExercisePostInstance();
-		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		exercisePostRepository.save(exercisePost);
-		
 		Long exercisePostId = exercisePost.getId();
 		
 		List<Comment> comments = commentRepository.findAll();
+		long givenCommentNum = comments.size();
 		for(Comment c: comments) {
 			c.setExercisePost(exercisePost);
 			c.setUser(user);
 		}
-		
 		commentRepository.saveAll(comments);
 		
 		//When
 		List<CommentForPostViewDTO> result = commentService.getCommentForPostViewDTOsByExercisePostId(exercisePostId);
 		
 		//Then
-		assertEquals(result.size(),INIT_COMMENT_NUM);
-	}
-	
-	private User getUserInstance() {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("first")
-				.lastName("last")
-				.role(RoleType.USER)
-				.nickName("nickName")
-				.build();
-		return user;
-	}
-	
-	private ExercisePost getExercisePostInstance() {
-		ExercisePost exercisePost = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
-		
-		return exercisePost;
+		assertEquals(givenCommentNum, result.size());
 	}
 }

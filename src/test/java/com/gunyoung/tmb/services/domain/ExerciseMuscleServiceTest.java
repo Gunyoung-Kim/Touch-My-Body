@@ -1,9 +1,8 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,11 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
+import com.gunyoung.tmb.util.ExerciseMuscleTest;
 
+/**
+ * ExerciseMuscleService에 대한 테스트 클래스 <br>
+ * Spring의 JpaRepository의 정상 작동을 가정으로 두고 테스트 진행
+ * @author kimgun-yeong
+ *
+ */
 @SpringBootTest
 public class ExerciseMuscleServiceTest {
-
-	private static final int INIT_EXERCISE_MUSCLE_NUM = 30;
 	
 	@Autowired
 	ExerciseMuscleRepository exerciseMuscleRepository;
@@ -28,17 +32,12 @@ public class ExerciseMuscleServiceTest {
 	@Autowired
 	ExerciseMuscleService exerciseMuscleService;
 	
+	private ExerciseMuscle exerciseMuscle;
+	
 	@BeforeEach
 	void setup() {
-		List<ExerciseMuscle> list = new ArrayList<>();
-		for(int i=1;i<=INIT_EXERCISE_MUSCLE_NUM;i++) {
-			ExerciseMuscle exerciseMuscle = ExerciseMuscle.builder()
-									 .muscleName("muscleName")
-									 .isMain(true)
-									 .build();
-			list.add(exerciseMuscle);
-		}
-		exerciseMuscleRepository.saveAll(list);
+		exerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance();
+		exerciseMuscleRepository.save(exerciseMuscle);
 	}
 	
 	@AfterEach
@@ -54,18 +53,13 @@ public class ExerciseMuscleServiceTest {
 	@DisplayName("id로 ExerciseMuscle 찾기 -> 해당 id의 exerciseMuscle 없음")
 	public void findByIdNonExist() {
 		//Given
-		long maxId = -1;
-		List<ExerciseMuscle> list = exerciseMuscleRepository.findAll();
-		
-		for(ExerciseMuscle c: list) {
-			maxId = Math.max(maxId, c.getId());
-		}
+		long nonExistExerciseMuscleId = ExerciseMuscleTest.getNonExistExerciseMuscleId(exerciseMuscleRepository);
 		
 		//When
-		ExerciseMuscle result = exerciseMuscleService.findById(maxId+ 1000);
+		ExerciseMuscle result = exerciseMuscleService.findById(nonExistExerciseMuscleId);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
@@ -73,15 +67,13 @@ public class ExerciseMuscleServiceTest {
 	@DisplayName("id로 ExerciseMuscle 찾기 -> 정상")
 	public void findByIdTest() {
 		//Given
-		ExerciseMuscle exerciseMuscle = exerciseMuscleRepository.findAll().get(0);
-		Long id = exerciseMuscle.getId();
+		Long exerciseMuscleId = exerciseMuscle.getId();
 		
 		//When
-		ExerciseMuscle result = exerciseMuscleService.findById(id);
+		ExerciseMuscle result = exerciseMuscleService.findById(exerciseMuscleId);
 		
 		//Then
-		
-		assertEquals(result != null, true);
+		assertNotNull(result);
 		
 	}
 	
@@ -94,16 +86,16 @@ public class ExerciseMuscleServiceTest {
 	@DisplayName("ExerciseMuscle 수정하기 -> 정상")
 	public void mergeTest() {
 		//Given
-		ExerciseMuscle existExerciseMuscle = exerciseMuscleRepository.findAll().get(0);
-		Long id = existExerciseMuscle.getId();
-		existExerciseMuscle.setMain(false);
+		Long exerciseMuscleId = exerciseMuscle.getId();
+		boolean givenExerciseMuscleIsMain = exerciseMuscle.isMain();
+		exerciseMuscle.setMain(!givenExerciseMuscleIsMain);
 		
 		//When
-		exerciseMuscleService.save(existExerciseMuscle);
+		exerciseMuscleService.save(exerciseMuscle);
 		
 		//Then
-		ExerciseMuscle result = exerciseMuscleRepository.findById(id).get();
-		assertEquals(result.isMain(),false);
+		ExerciseMuscle result = exerciseMuscleRepository.findById(exerciseMuscleId).get();
+		assertEquals(!givenExerciseMuscleIsMain, result.isMain());
 	}
 	
 	@Test
@@ -111,17 +103,14 @@ public class ExerciseMuscleServiceTest {
 	@DisplayName("ExerciseMuscle 추가하기 -> 정상")
 	public void saveTest() {
 		//Given
-		ExerciseMuscle newExerciseMuscle = ExerciseMuscle.builder()
-									.muscleName("muscleName")
-									.isMain(true)
-									.build();
-		Long beforeNum = exerciseMuscleRepository.count();
+		ExerciseMuscle newExerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance();
+		Long givenExerciseMuscleNum = exerciseMuscleRepository.count();
 		
 		//When
 		exerciseMuscleService.save(newExerciseMuscle);
 		
 		//Then
-		assertEquals(beforeNum+1,exerciseMuscleRepository.count());
+		assertEquals(givenExerciseMuscleNum + 1, exerciseMuscleRepository.count());
 	}
 	
 	/*
@@ -134,12 +123,12 @@ public class ExerciseMuscleServiceTest {
 	public void deleteTest() {
 		//Given
 		ExerciseMuscle existExerciseMuscle = exerciseMuscleRepository.findAll().get(0);
-		Long beforeNum = exerciseMuscleRepository.count();
+		Long givenExerciseMuscleNum = exerciseMuscleRepository.count();
 		
 		//When
 		exerciseMuscleService.delete(existExerciseMuscle);
 		
 		//Then
-		assertEquals(beforeNum-1,exerciseMuscleRepository.count());
+		assertEquals(givenExerciseMuscleNum - 1, exerciseMuscleRepository.count());
 	}
 }

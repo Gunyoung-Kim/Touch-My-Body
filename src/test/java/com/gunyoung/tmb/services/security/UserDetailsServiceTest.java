@@ -1,14 +1,14 @@
 package com.gunyoung.tmb.services.security;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.BDDMockito.given;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.gunyoung.tmb.domain.user.User;
@@ -17,28 +17,20 @@ import com.gunyoung.tmb.security.UserDetailsServiceImpl;
 import com.gunyoung.tmb.services.domain.user.UserService;
 
 /**
- * UserDetailsService 빈 테스트 클래스
- * 테스트 범위: UserDetailsServiceImpl 단 하나의 레이어
+ * {@link UserDetailsServiceImpl} 에 대한 테스트 클래스 <br>
+ * 테스트 범위: (단위 테스트) UserDetailsServiceImpl only
+ * {@link org.mockito.BDDMockito}를 활용한 서비스 계층에 대한 단위 테스트
  * @author kimgun-yeong
  *
  */
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class UserDetailsServiceTest {
 	
+	@InjectMocks
 	UserDetailsServiceImpl userDetailsService;
 	
-	UserService userServiceMock;
-	
-	@BeforeEach
-	void setup() {
-		userServiceMock = mock(UserService.class);
-		userDetailsService = new UserDetailsServiceImpl(userServiceMock);
-	}
-	
-	@AfterEach
-	void tearDown() {
-		
-	}
+	@Mock
+	UserService userService;
 	
 	/**
 	 *   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException
@@ -51,14 +43,14 @@ public class UserDetailsServiceTest {
 		String adminEmail = "admin@test.com";
 		User user = getUserWithRole(adminEmail,RoleType.ADMIN);
 
-		when(userServiceMock.findByEmail(adminEmail)).thenReturn(user);
+		given(userService.findByEmail(adminEmail)).willReturn(user);
 		
 		//When
 		UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
 		
 		//Then
-		assertEquals(userDetails.getAuthorities().stream()
-				.anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMIN")),true);
+		assertTrue(userDetails.getAuthorities().stream()
+				.anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMIN")));
 	}
 	
 	@Test
@@ -69,14 +61,14 @@ public class UserDetailsServiceTest {
 		User user = getUserWithRole(managerEmail,RoleType.MANAGER);
 		
 		
-		when(userServiceMock.findByEmail(managerEmail)).thenReturn(user);
+		given(userService.findByEmail(managerEmail)).willReturn(user);
 		
 		//When
 		UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
 		
 		//Then
-		assertEquals(userDetails.getAuthorities().stream()
-				.anyMatch(ga -> ga.getAuthority().equals("ROLE_MANAGER")),true);
+		assertTrue(userDetails.getAuthorities().stream()
+				.anyMatch(ga -> ga.getAuthority().equals("ROLE_MANAGER")));
 	}
 	
 	@Test
@@ -86,14 +78,14 @@ public class UserDetailsServiceTest {
 		String userEmail ="user@test.com";
 		User user = getUserWithRole(userEmail,RoleType.USER);
 		
-		when(userServiceMock.findByEmail(userEmail)).thenReturn(user);
+		given(userService.findByEmail(userEmail)).willReturn(user);
 		
 		//When
 		UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
 		
 		//Then
-		assertEquals(userDetails.getAuthorities().stream()
-				.anyMatch(ga -> ga.getAuthority().equals("ROLE_USER")),true);
+		assertTrue(userDetails.getAuthorities().stream()
+				.anyMatch(ga -> ga.getAuthority().equals("ROLE_USER")));
 	}
 	
 	private User getUserWithRole(String username,RoleType role) {

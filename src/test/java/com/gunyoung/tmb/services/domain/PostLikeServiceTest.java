@@ -1,8 +1,10 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,11 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
-import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.PostLikeRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.like.PostLikeService;
+import com.gunyoung.tmb.util.ExercisePostTest;
+import com.gunyoung.tmb.util.PostLikeTest;
+import com.gunyoung.tmb.util.UserTest;
 
 /**
  * PostLikeService 클래스에 대한 테스트 클래스 <br>
@@ -29,8 +33,6 @@ import com.gunyoung.tmb.services.domain.like.PostLikeService;
  */
 @SpringBootTest
 public class PostLikeServiceTest {
-	
-	private static final int INIT_POST_LIKE_NUM = 30;
 	
 	@Autowired
 	PostLikeRepository postLikeRepository;
@@ -44,13 +46,12 @@ public class PostLikeServiceTest {
 	@Autowired
 	ExercisePostRepository exercisePostRepository;
 	
+	private PostLike postLike;
+	
 	@BeforeEach
 	void setup() {
-		for(int i=1;i<=INIT_POST_LIKE_NUM;i++) {
-			PostLike postLike = PostLike.builder().build();
-			
-			postLikeRepository.save(postLike);
-		}
+		postLike = PostLikeTest.getPostLikeInstance();
+		postLikeRepository.save(postLike);
 	}
 	
 	@AfterEach
@@ -65,31 +66,26 @@ public class PostLikeServiceTest {
 	@DisplayName("id로 PostLike 찾기 -> 해당 id의 PostLike없음")
 	public void findByIdNonExist() {
 		//Given
-		long maxId = -1;
-		List<PostLike> list = postLikeRepository.findAll();
-		
-		for(PostLike pl: list) {
-			maxId = Math.max(maxId, pl.getId());
-		}
+		long nonExistId = PostLikeTest.getNonExistPostLikeId(postLikeRepository);
 		
 		//When
-		PostLike result = postLikeService.findById(maxId+1000);
+		PostLike result = postLikeService.findById(nonExistId);
 		
 		//Then
-		assertEquals(result, null);
+		assertNull(result);
 	}
 	
 	@Test
 	@DisplayName("id로 PostLike 찾기 -> 정상")
 	public void findByIdTest() {
 		//Given
-		Long existId = postLikeRepository.findAll().get(0).getId();
+		Long existId = postLike.getId();
 		
 		//When
 		PostLike result = postLikeService.findById(existId);
 		
 		//Then
-		assertEquals(result != null, true);
+		assertNotNull(result);
 	}
 	
 	/*
@@ -103,10 +99,8 @@ public class PostLikeServiceTest {
 	@DisplayName("PostLike 수정 -> 정상")
 	public void mergerTest() {
 		//Given
-		PostLike postLike = postLikeRepository.findAll().get(0);
 		
 		//When
-		
 		postLikeService.save(postLike);
 		
 		//Then
@@ -118,14 +112,14 @@ public class PostLikeServiceTest {
 	@DisplayName("PostLike 추가 -> 정상")
 	public void saveTest() {
 		//Given
-		PostLike postLike = PostLike.builder().build();
-		Long beforeNum = postLikeRepository.count();
+		PostLike newPostLike = PostLikeTest.getPostLikeInstance();
+		Long givenPostLikeNum = postLikeRepository.count();
 		
 		//When
-		postLikeService.save(postLike);
+		postLikeService.save(newPostLike);
 		
 		//Then
-		assertEquals(beforeNum+1, postLikeRepository.count());
+		assertEquals(givenPostLikeNum + 1, postLikeRepository.count());
 	}
 	
 	/*
@@ -134,32 +128,58 @@ public class PostLikeServiceTest {
 
 	@Test
 	@Transactional
-	@DisplayName("User, ExercisePost의 PostLike 추가 -> 정상")
-	public void saveWithUserAndExercisePostTest() {
+	@DisplayName("User, ExercisePost의 PostLike 추가 -> 정상, PostLike 개수 확인")
+	public void saveWithUserAndExercisePostTestCheckCount() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		ExercisePost exercisePost = getExercisePostInstance();
-		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		exercisePostRepository.save(exercisePost);
 		
-		int userPostLikeNum = user.getPostLikes().size();
-		Long userId = user.getId();
-		int exercisePostPostLikeNum = exercisePost.getPostLikes().size();
-		Long exercisePostId = exercisePost.getId();
-		
-		long postLikeNum = postLikeRepository.count();
-		
+		long givenPostLikeNum = postLikeRepository.count();
 		
 		//When
 		postLikeService.createAndSaveWithUserAndExercisePost(user, exercisePost);
 		
 		//Then
-		assertEquals(userPostLikeNum +1,userRepository.findById(userId).get().getPostLikes().size());
-		assertEquals(exercisePostPostLikeNum +1,exercisePostRepository.findById(exercisePostId).get().getPostLikes().size());
-		assertEquals(postLikeNum +1 , postLikeRepository.count());
+		assertEquals(givenPostLikeNum +1 , postLikeRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User, ExercisePost의 PostLike 추가 -> 정상, User와의 연관관계 확인")
+	public void saveWithUserAndExercisePostTestCheckWithUser() {
+		//Given
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		exercisePostRepository.save(exercisePost);
+		
+		//When
+		PostLike result = postLikeService.createAndSaveWithUserAndExercisePost(user, exercisePost);
+		
+		//Then
+		assertEquals(user.getId(), result.getUser().getId());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User, ExercisePost의 PostLike 추가 -> 정상, ExercisePost와의 연관관계 확인")
+	public void saveWithUserAndExercisePostTestCheckWithExercisePost() {
+		//Given
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		exercisePostRepository.save(exercisePost);
+		
+		//When
+		PostLike result = postLikeService.createAndSaveWithUserAndExercisePost(user, exercisePost);
+		
+		//Then
+		assertEquals(exercisePost.getId(), result.getExercisePost().getId());
 	}
 	
 	/* 
@@ -171,14 +191,13 @@ public class PostLikeServiceTest {
 	@DisplayName("PostLike 삭제 ->  정상")
 	public void deleteTest() {
 		//Given
-		PostLike postLike = postLikeRepository.findAll().get(0);
-		Long beforeNum = postLikeRepository.count();
+		Long givenPostLikeNum = postLikeRepository.count();
 		
 		//When
 		postLikeService.delete(postLike);
 		
 		//Then
-		assertEquals(beforeNum-1, postLikeRepository.count());
+		assertEquals(givenPostLikeNum - 1, postLikeRepository.count());
 	}
 	
 	/*
@@ -190,14 +209,19 @@ public class PostLikeServiceTest {
 	@DisplayName("유저 Id와 게시글 Id로 PostLike 찾기 -> 해당 PostLike 없음")
 	public void findByUserIdAndExercisePostIdNonExist() {
 		//Given
-		Long nonExistUserId = Long.valueOf(100);
-		Long nonExistExercisePostId = Long.valueOf(100);
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		Long userId = user.getId();
+		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		exercisePostRepository.save(exercisePost);
+		Long exercisePostId = exercisePost.getId();
 		
 		//when
-		PostLike result = postLikeService.findByUserIdAndExercisePostId(nonExistUserId, nonExistExercisePostId);
+		PostLike result = postLikeService.findByUserIdAndExercisePostId(userId, exercisePostId);
 		
 		//Then
-		assertEquals(result, null);
+		assertNull(result);
 		
 	}
 	
@@ -206,19 +230,14 @@ public class PostLikeServiceTest {
 	@DisplayName("유저 Id와 게시글 Id로 PostLike 찾기 -> 정상")
 	public void test() {
 		//Given
-		PostLike postLike = postLikeRepository.findAll().get(0);
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		ExercisePost exercisePost = getExercisePostInstance();
-		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		exercisePostRepository.save(exercisePost);
 		
 		postLike.setUser(user);
 		postLike.setExercisePost(exercisePost);
-		user.getPostLikes().add(postLike);
-		exercisePost.getPostLikes().add(postLike);
 		
 		postLikeRepository.save(postLike);
 		
@@ -226,8 +245,7 @@ public class PostLikeServiceTest {
 		PostLike result = postLikeService.findByUserIdAndExercisePostId(user.getId(), exercisePost.getId());
 		
 		//Then
-		assertEquals(result != null, true);
-	
+		assertNotNull(result);
 	}
 	
 	/*
@@ -236,58 +254,44 @@ public class PostLikeServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("유저 ID와 게시글 ID로 존재여부 확인 ->정상")
-	public void  existsByUserIdAndExercisePostIdTest() {
+	@DisplayName("유저 ID와 게시글 ID로 존재여부 확인 ->정상 , true")
+	public void  existsByUserIdAndExercisePostIdTestTrue() {
 		//Given
-		User user = getUserInstance();
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
-		ExercisePost exercisePost = getExercisePostInstance();
+		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		exercisePostRepository.save(exercisePost);
 		
-		ExercisePost exercisePostNotHost =  getExercisePostInstance();
-		exercisePostRepository.save(exercisePostNotHost);
-		
-		List<PostLike> postLikes = postLikeRepository.findAll();
-		
-		PostLike existPostLike = postLikes.get(0);
-		
-		existPostLike.setUser(user);
-		existPostLike.setExercisePost(exercisePost);
-		
-		postLikeRepository.save(existPostLike);
+		postLike.setUser(user);
+		postLike.setExercisePost(exercisePost);
+		postLikeRepository.save(postLike);
 		
 		//When
-		boolean trueResult = postLikeService.existsByUserIdAndExercisePostId(user.getId(), exercisePost.getId());
-		boolean falseResult = postLikeService.existsByUserIdAndExercisePostId(user.getId(), exercisePostNotHost.getId());
+		boolean result = postLikeService.existsByUserIdAndExercisePostId(user.getId(), exercisePost.getId());
 	
 		//Then
-		assertEquals(trueResult, true);
-		assertEquals(falseResult,false);
-	}
+		assertTrue(result);
+	}	
 	
+	@Test
+	@Transactional
+	@DisplayName("유저 ID와 게시글 ID로 존재여부 확인 ->정상 , false")
+	public void  existsByUserIdAndExercisePostIdTestFalse() {
+		//Given
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		ExercisePost exercisePostNotHost =  ExercisePostTest.getExercisePostInstance();
+		exercisePostRepository.save(exercisePostNotHost);
+		
+		postLike.setUser(user);
+		postLikeRepository.save(postLike);
+		
+		//When
+		boolean result = postLikeService.existsByUserIdAndExercisePostId(user.getId(), exercisePostNotHost.getId());
 	
-	/*
-	 * 
-	 */
-	
-	private User getUserInstance() {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("first")
-				.lastName("last")
-				.role(RoleType.USER)
-				.nickName("nickName")
-				.build();
-		return user;
-	}
-	
-	private ExercisePost getExercisePostInstance() {
-		ExercisePost exercisePost = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
-		return exercisePost;
-	}
-	
+		//Then
+		assertFalse(result);
+	}	
 }

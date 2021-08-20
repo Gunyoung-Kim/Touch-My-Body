@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.repos.FeedbackRepository;
+import com.gunyoung.tmb.util.FeedbackTest;
 
 /**
  * {@link ManagerFeedbackRestController} 에 대한 테스트 클래스
@@ -32,27 +33,7 @@ public class ManagerFeedbackRestControllerTest {
 	
 	@Autowired
 	private FeedbackRepository feedbackRepository;
-	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private Feedback getFeedbackInstance() {
-		Feedback feedback = Feedback.builder()
-				.contents("content")
-				.isReflected(false)
-				.title("title")
-				.build();
-		
-		return feedback;
-	}
-	
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
-	
+
 	/*
 	 * @RequestMapping(value="/manager/exercise/feedback/reflect/{feedbackId}", method = RequestMethod.PATCH)
 	 * public void reflectFeedback(@PathVariable("feedbackId") Long feedbackId)
@@ -64,7 +45,7 @@ public class ManagerFeedbackRestControllerTest {
 	@DisplayName("매니저의 피드백 반영 처리 -> 해당 ID의 Feedback 없을 때")
 	public void reflectFeedbackNonExist() throws Exception {
 		//Given
-		Feedback feedback = getFeedbackInstance();
+		Feedback feedback = FeedbackTest.getFeedbackInstance();
 		
 		feedbackRepository.save(feedback);
 		
@@ -83,7 +64,7 @@ public class ManagerFeedbackRestControllerTest {
 	@DisplayName("매니저의 피드백 반영 처리 -> 정상")
 	public void reflectFeedbackTest() throws Exception {
 		//Given
-		Feedback feedback = getFeedbackInstance();
+		Feedback feedback = FeedbackTest.getFeedbackInstance();
 		
 		feedbackRepository.save(feedback);
 		

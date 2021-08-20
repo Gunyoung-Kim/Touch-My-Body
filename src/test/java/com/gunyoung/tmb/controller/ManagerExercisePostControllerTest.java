@@ -28,6 +28,10 @@ import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.util.ControllerTest;
+import com.gunyoung.tmb.util.ExercisePostTest;
+import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.PageUtil;
 
 /**
@@ -53,51 +57,6 @@ public class ManagerExercisePostControllerTest {
 	@Autowired
 	private ExercisePostRepository exercisePostRepository;
 	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private User getUserInstance(RoleType role) {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234!")
-				.firstName("first")
-				.lastName("last")
-				.nickName("nickName")
-				.role(role)
-				.build();
-		
-		return user;
-	}
-	
-	private Exercise getExerciseInstance(String name, TargetType target) {
-		Exercise exercise = Exercise.builder()
-				.name(name)
-				.description("description")
-				.caution("caution")
-				.movement("movement")
-				.target(target)
-				.build();
-		
-		return exercise;
-	}
-	
-	private ExercisePost getExercisePostInstance() {
-		ExercisePost ep = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
-		return ep;
-	}
-	
-	private Map<String, Object> getResponseModel(MvcResult mvcResult) {
-		return mvcResult.getModelAndView().getModel();
-	}
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
 	/*
 	 * @RequestMapping(value="/manager/community", method = RequestMethod.GET)
 	 * public ModelAndView manageCommunityView(@RequestParam(value="page", defaultValue="1") int page,
@@ -110,17 +69,17 @@ public class ManagerExercisePostControllerTest {
 	@DisplayName("커뮤니티 매니징 메인 화면 반환 -> 정상")
 	public void manageCommunityViewTest() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
-		Exercise exercise = getExerciseInstance("exericse",TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exericse",TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
 		int exercisePostNum = 10;
 		List<ExercisePost> epList = new LinkedList<>();
 		
 		for(int i=1; i<= exercisePostNum; i++) {
-			ExercisePost ep = getExercisePostInstance();
+			ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 			ep.setUser(user);
 			ep.setExercise(exercise);
 			epList.add(ep);
@@ -136,7 +95,7 @@ public class ManagerExercisePostControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		Map<String, Object> model = getResponseModel(result);
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
 		Page<PostForCommunityViewDTO> resultList = (Page<PostForCommunityViewDTO>) model.get("listObject");

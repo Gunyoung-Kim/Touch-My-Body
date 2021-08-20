@@ -1,8 +1,11 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -19,18 +22,25 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
-import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
+import com.gunyoung.tmb.util.ExercisePostTest;
+import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.util.TargetTypeTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.PageUtil;
 
+/**
+ * ExercisePostService에 대한 테스트 클래스 <br>
+ * Spring의 JpaRepository의 정상 작동을 가정으로 두고 테스트 진행
+ * @author kimgun-yeong
+ *
+ */
 @SpringBootTest
 public class ExercisePostServiceTest {
-
-	private static final int INIT_EXERCISE_POST_NUM = 30;
 	
 	@Autowired
 	ExercisePostRepository exercisePostRepository;
@@ -44,18 +54,12 @@ public class ExercisePostServiceTest {
 	@Autowired
 	ExercisePostService exercisePostService;
 	
+	private ExercisePost exercisePost;
+	
 	@BeforeEach
 	void setup() {
-		List<ExercisePost> list = new ArrayList<>();
-		for(int i=1;i<=INIT_EXERCISE_POST_NUM;i++) {
-			ExercisePost exercisePost = ExercisePost.builder()
-									 .title("title" +i)
-									 .contents("contents"+i)
-									 .build();
-									 
-			list.add(exercisePost);
-		}
-		exercisePostRepository.saveAll(list);
+		exercisePost = ExercisePostTest.getExercisePostInstance();
+		exercisePostRepository.save(exercisePost);
 	}
 	
 	@AfterEach
@@ -71,18 +75,13 @@ public class ExercisePostServiceTest {
 	@DisplayName("id로 ExercisePost 찾기 -> 해당 id의 exercisePost 없음")
 	public void findByIdNonExist() {
 		//Given
-		long maxId = -1;
-		List<ExercisePost> list = exercisePostRepository.findAll();
-		
-		for(ExercisePost c: list) {
-			maxId = Math.max(maxId, c.getId());
-		}
+		long nonExistExercisePostId = ExercisePostTest.getNonExistExercisePostId(exercisePostRepository);
 		
 		//When
-		ExercisePost result = exercisePostService.findById(maxId+ 1000);
+		ExercisePost result = exercisePostService.findById(nonExistExercisePostId+ 1000);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
@@ -90,16 +89,13 @@ public class ExercisePostServiceTest {
 	@DisplayName("id로 ExercisePost 찾기 -> 정상")
 	public void findByIdTest() {
 		//Given
-		ExercisePost exercisePost = exercisePostRepository.findAll().get(0);
-		Long id = exercisePost.getId();
+		Long exercisePostId = exercisePost.getId();
 		
 		//When
-		ExercisePost result = exercisePostService.findById(id);
+		ExercisePost result = exercisePostService.findById(exercisePostId);
 		
 		//Then
-		
-		assertEquals(result != null, true);
-		
+		assertNotNull(result);
 	}
 	
 	/*
@@ -107,27 +103,47 @@ public class ExercisePostServiceTest {
 	 */
 	@Test
 	@Transactional
-	@DisplayName("User ID로 ExercisePost들 오래된 순으로 찾기 ->정상")
-	public void findAllByUserIdOrderByCreatedAtASCCustomTest() {
+	@DisplayName("User ID로 ExercisePost들 오래된 순으로 찾기 ->정상, 개수 확인")
+	public void findAllByUserIdOrderByCreatedAtASCCustomTestCheckCount() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
 		List<ExercisePost> exercisePosts = exercisePostRepository.findAll();
-		
+		int givenExercisePostNum = exercisePosts.size();
 		for(ExercisePost ep: exercisePosts) {
 			ep.setUser(user);
 		}
-		
 		exercisePostRepository.saveAll(exercisePosts);
 		
 		//When
 		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
 		
 		//Then
-		assertEquals(result.size(),Math.min(INIT_EXERCISE_POST_NUM, PageUtil.POST_FOR_MANAGE_PAGE_SIZE));
-		assertEquals(result.get(0).getCreatedAt().isBefore(result.get(1).getCreatedAt()),true);
+		assertEquals(Math.min(givenExercisePostNum, PageUtil.POST_FOR_MANAGE_PAGE_SIZE),result.size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID로 ExercisePost들 오래된 순으로 찾기 ->정상, 정렬 순서 확인")
+	public void findAllByUserIdOrderByCreatedAtASCCustomTestCheckSorting() {
+		//Given
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		ExercisePostTest.addNewExercisePostsInDBByNum(5, exercisePostRepository);
+		
+		List<ExercisePost> exercisePosts = exercisePostRepository.findAll();
+		for(ExercisePost ep: exercisePosts) {
+			ep.setUser(user);
+		}
+		exercisePostRepository.saveAll(exercisePosts);
+		
+		//When
+		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
+		
+		//Then
+		assertTrue(result.get(0).getCreatedAt().isBefore(result.get(1).getCreatedAt()));
 	}
 	
 	/*
@@ -135,63 +151,79 @@ public class ExercisePostServiceTest {
 	 */
 	@Test
 	@Transactional
-	@DisplayName("User ID로 ExercisePost들 최신 순으로 찾기 ->정상")
-	public void findAllByUserIdOrderByCreatedAtDescTest() {
+	@DisplayName("User ID로 ExercisePost들 최신 순으로 찾기 ->정상, 개수 확인")
+	public void findAllByUserIdOrderByCreatedAtDescTestCheckCount() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
 		List<ExercisePost> exercisePosts = exercisePostRepository.findAll();
-		
+		long givenExercisePostNum = exercisePosts.size();
 		for(ExercisePost ep: exercisePosts) {
 			ep.setUser(user);
 		}
-		
 		exercisePostRepository.saveAll(exercisePosts);
 		
 		//When
 		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
 		
 		//Then
-		assertEquals(result.size(),Math.min(INIT_EXERCISE_POST_NUM, PageUtil.POST_FOR_MANAGE_PAGE_SIZE));
-		assertEquals(result.get(0).getCreatedAt().isAfter(result.get(1).getCreatedAt()),true);
+		assertEquals(result.size(),Math.min(givenExercisePostNum, PageUtil.POST_FOR_MANAGE_PAGE_SIZE));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID로 ExercisePost들 최신 순으로 찾기 ->정상, 정렬 확인")
+	public void findAllByUserIdOrderByCreatedAtDescTestCheckSorting() {
+		//Given
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		ExercisePostTest.addNewExercisePostsInDBByNum(5, exercisePostRepository);
+		
+		List<ExercisePost> exercisePosts = exercisePostRepository.findAll();
+		for(ExercisePost ep: exercisePosts) {
+			ep.setUser(user);
+		}
+		exercisePostRepository.saveAll(exercisePosts);
+		
+		//When
+		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
+		
+		//Then
+		assertTrue(result.get(0).getCreatedAt().isAfter(result.get(1).getCreatedAt()));
 	}
 	
 	/*
 	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Integer pageNumber)
 	 */
+	
 	@Test
 	@Transactional
 	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 가져오기 -> 정상")
 	public void findAllForPostForCommunityViewDTOByPageTest() {
 		//Given
-		User user = getUserInstance();
-	
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		Exercise exercise = getExerciseInstance();
-		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
 		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
-		
+		long givenExercisePostNum = exercisePostList.size();
 		for(ExercisePost ep: exercisePostList) {
 			ep.setExercise(exercise);
 			ep.setUser(user);
 		}
-		
-		// User, Exercise 의 setExercisePost는 해당 테스트에 필요없는 작업이라 배제
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		
 		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOByPage(1,PageUtil.COMMUNITY_PAGE_SIZE);
 		
 		//Then
 		
 		//Math.Min은 인자에 있는 값들이 추후에 변경될수 있는점 고려
-		assertEquals(result.getContent().size(),Math.min(PageUtil.COMMUNITY_PAGE_SIZE,INIT_EXERCISE_POST_NUM));
+		assertEquals(Math.min(PageUtil.COMMUNITY_PAGE_SIZE,givenExercisePostNum), result.getContent().size());
 	}
 	
 	/*
@@ -201,43 +233,66 @@ public class ExercisePostServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 키워드로 가져오기 -> 정상")
-	public void findAllForPostForCommunityViewDTOWithKeywordByPageTest() {
+	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 키워드로 가져오기 -> 정상, 키워드가 모든 ExercisePost 만족")
+	public void findAllForPostForCommunityViewDTOWithKeywordByPageTestKeywordForAll() {
 		//Given
-		User user = getUserInstance();
-	
+		String contentsForAllExercisePost = ExercisePostTest.getExercisePostInstance().getContents();
+		String keywordForAllExercisePostInDB = contentsForAllExercisePost.substring(0,contentsForAllExercisePost.length() -2);
+		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		Exercise exercise = getExerciseInstance();
+		ExercisePostTest.addNewExercisePostsInDBByNum(5, exercisePostRepository);
 		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
 		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
-		
+		long givenExercisePostNum = exercisePostList.size();
 		for(ExercisePost ep: exercisePostList) {
 			ep.setExercise(exercise);
 			ep.setUser(user);
 		}
-		
-		// User, Exercise 의 setExercisePost는 해당 테스트에 필요없는 작업이라 배제
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		
-		// 내용 검색
-		Page<PostForCommunityViewDTO> result1 = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage("ontent",1,PageUtil.COMMUNITY_PAGE_SIZE);
-		
-		//제목 검색
-		Page<PostForCommunityViewDTO> result2 = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage("itle", 1,PageUtil.COMMUNITY_PAGE_SIZE);
-		
-		Page<PostForCommunityViewDTO> result3 = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage("none!!!", 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keywordForAllExercisePostInDB,1,PageUtil.COMMUNITY_PAGE_SIZE);
 		
 		//Then
 		
 		//Math.Min은 인자에 있는 값들이 추후에 변경될수 있는점 고려
-		assertEquals(result1.getContent().size(),Math.min(PageUtil.COMMUNITY_PAGE_SIZE,INIT_EXERCISE_POST_NUM));
-		assertEquals(result2.getContent().size(),Math.min(PageUtil.COMMUNITY_PAGE_SIZE,INIT_EXERCISE_POST_NUM));
-		assertEquals(result3.getContent().size(),0);
+		assertEquals(Math.min(PageUtil.COMMUNITY_PAGE_SIZE,givenExercisePostNum), result.getContent().size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 키워드로 가져오기 -> 정상, 키워드가 하나도 만족하지 않음")
+	public void findAllForPostForCommunityViewDTOWithKeywordByPageTest() {
+		//Given
+		String keywordForNothing = "nonExist!!!!";
+		
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		ExercisePostTest.addNewExercisePostsInDBByNum(5, exercisePostRepository);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		for(ExercisePost ep: exercisePostList) {
+			ep.setExercise(exercise);
+			ep.setUser(user);
+		}
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		//When
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keywordForNothing, 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		
+		//Then
+		
+		//Math.Min은 인자에 있는 값들이 추후에 변경될수 있는점 고려
+		assertEquals(0, result.getContent().size());
 	}
 	
 	/*
@@ -249,91 +304,131 @@ public class ExercisePostServiceTest {
 	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 특정 target만 가져오기 -> 정상")
 	public void  findAllForPostForCommunityViewDTOWithTargetByPage() {
 		//Given
-		User user = getUserInstance();
-	
+		TargetType targetTypeForAllExercisePost = ExerciseTest.getExerciseInstance().getTarget();
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		Exercise exercise = getExerciseInstance();
+		ExercisePostTest.addNewExercisePostsInDBByNum(5, exercisePostRepository);
 		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
 		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
-		
+		long givenExercisePostNum = exercisePostList.size();
 		for(ExercisePost ep: exercisePostList) {
 			ep.setExercise(exercise);
 			ep.setUser(user);
 		}
-		
-		// User, Exercise 의 setExercisePost는 해당 테스트에 필요없는 작업이라 배제
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		
-		Page<PostForCommunityViewDTO> result1 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(TargetType.ARM, 1,PageUtil.COMMUNITY_PAGE_SIZE);
-		Page<PostForCommunityViewDTO> result2 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(TargetType.CHEST, 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(targetTypeForAllExercisePost, 1,PageUtil.COMMUNITY_PAGE_SIZE);
 		
 		//Then
-		assertEquals(result1.getContent().size(),0);
-		assertEquals(result2.getContent().size(),Math.min(PageUtil.COMMUNITY_PAGE_SIZE,INIT_EXERCISE_POST_NUM));
+		assertEquals(Math.min(PageUtil.COMMUNITY_PAGE_SIZE, givenExercisePostNum), result.getContent().size());
 	}
 	
 	/*
 	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType target,
 			String keyword, Integer pageNumber)
 	 */
+	
 	@Test
 	@Transactional
-	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 키워드로 객체들 특정 target만 가져오기 -> 정상")
-	public void findAllForPostForCommunityViewDTOWithTargetAndKeywordByPageTest() {
+	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 키워드로 객체들 특정 target만 가져오기 -> 정상, 모두 target만 일치, 키워드는 모두 불일치")
+	public void findAllForPostForCommunityViewDTOWithTargetAndKeywordByPageTestAllTargetNoneKeyword() {
 		//Given
-		User user = getUserInstance();
-	
+		String keywordForNothing = "nonExist!!!!";
+		TargetType targetTypeForAllExercisePost = ExerciseTest.getExerciseInstance().getTarget();
+		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		Exercise exercise = getExerciseInstance();
+		ExercisePostTest.addNewExercisePostsInDBByNum(5, exercisePostRepository);
 		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
 		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
-		
 		for(ExercisePost ep: exercisePostList) {
 			ep.setExercise(exercise);
 			ep.setUser(user);
 		}
-		
-		// User, Exercise 의 setExercisePost는 해당 테스트에 필요없는 작업이라 배제
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		
-		Page<PostForCommunityViewDTO> result1 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType.CHEST, "none!!!", 1,PageUtil.COMMUNITY_PAGE_SIZE);
-		Page<PostForCommunityViewDTO> result2 = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType.CHEST, "title",1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(targetTypeForAllExercisePost, keywordForNothing, 1,PageUtil.COMMUNITY_PAGE_SIZE);
 		
 		//Then
-		assertEquals(result1.getContent().size(),0);
-		assertEquals(result2.getContent().size(),Math.min(PageUtil.COMMUNITY_PAGE_SIZE,INIT_EXERCISE_POST_NUM));
+		assertEquals(0, result.getContent().size());
 	}
 	
+	@Test
+	@Transactional
+	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 키워드로 객체들 특정 target만 가져오기 -> 정상, 모두 target 일치, 키워드 모두 일치")
+	public void findAllForPostForCommunityViewDTOWithTargetAndKeywordByPageTestAllTargetAllKeyword() {
+		//Given
+		String contentsForAllExercisePost = ExercisePostTest.getExercisePostInstance().getContents();
+		String keywordForAllExercisePostInDB = contentsForAllExercisePost.substring(0,contentsForAllExercisePost.length() -2);
+		TargetType targetTypeForAllExercisePost = ExerciseTest.getExerciseInstance().getTarget();
+		
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		ExercisePostTest.addNewExercisePostsInDBByNum(5, exercisePostRepository);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		long givenExercisePostNum = exercisePostList.size();
+		for(ExercisePost ep: exercisePostList) {
+			ep.setExercise(exercise);
+			ep.setUser(user);
+		}
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		//When
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(targetTypeForAllExercisePost, keywordForAllExercisePostInDB, 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		
+		//Then
+		assertEquals(givenExercisePostNum, result.getContent().size());
+	}
 	
 	/*
 	 *  public ExercisePost save(ExercisePost exercisePost)
 	 */
 	
 	@Test
-	@Transactional
-	@DisplayName("ExercisePost 수정하기 -> 정상")
-	public void mergeTest() {
+	@DisplayName("ExercisePost 수정하기 -> 정상, 변화 확인")
+	public void mergeTestCheckChanged() {
 		//Given
-		ExercisePost existExercisePost = exercisePostRepository.findAll().get(0);
-		Long id = existExercisePost.getId();
-		existExercisePost.setTitle("Changed Title");
+		String changeTitle = "Changed Title";
+		Long exercisePostId = exercisePost.getId();
+		exercisePost.setTitle(changeTitle);
 		
 		//When
-		exercisePostService.save(existExercisePost);
+		exercisePostService.save(exercisePost);
 		
 		//Then
-		ExercisePost result = exercisePostRepository.findById(id).get();
-		assertEquals(result.getTitle(),"Changed Title");
+		ExercisePost result = exercisePostRepository.findById(exercisePostId).get();
+		assertEquals(changeTitle, result.getTitle());
+	}
+	
+	@Test
+	@DisplayName("ExercisePost 수정하기 -> 정상, 개수 확인")
+	public void mergeTestCheckCount() {
+		//Given
+		String changeTitle = "Changed Title";
+		exercisePost.setTitle(changeTitle);
+		
+		long givenExercisePostNum = exercisePostRepository.count();
+		
+		//When
+		exercisePostService.save(exercisePost);
+		
+		//Then
+		assertEquals(givenExercisePostNum, exercisePostRepository.count());
 	}
 	
 	@Test
@@ -341,52 +436,81 @@ public class ExercisePostServiceTest {
 	@DisplayName("ExercisePost 추가하기 -> 정상")
 	public void saveTest() {
 		//Given
-		ExercisePost newExercisePost = ExercisePost.builder()
-									.title("New Title")
-									.contents("New contents")
-									.build();
-		Long beforeNum = exercisePostRepository.count();
+		ExercisePost newExercisePost = ExercisePostTest.getExercisePostInstance();
+		Long givenExercisePostNum = exercisePostRepository.count();
 		
 		//When
 		exercisePostService.save(newExercisePost);
 		
 		//Then
-		assertEquals(beforeNum+1,exercisePostRepository.count());
+		assertEquals(givenExercisePostNum + 1, exercisePostRepository.count());
 	}
 	
 	/*
 	 * public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exericse)
 	 */
+	
 	@Test
 	@Transactional
-	@DisplayName("User, Exercise와 연결 짓고 저장하기 ->정상")
-	public void saveWithUserAndExerciseTest() {
+	@DisplayName("User, Exercise와 연결 짓고 저장하기 ->정상, 개수 확인")
+	public void saveWithUserAndExerciseTestCheckCount() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		Exercise exercise = getExerciseInstance();
-		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
-		ExercisePost exercisePost = ExercisePost.builder()
-				.title("new Title")
-				.contents("new contents")
-				.build();
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		
-		long exercisePostNum = exercisePostRepository.count();
-		int userExercisePostsNum = user.getExercisePosts().size();
-		int exerciseExercisePostsNum = exercise.getExercisePosts().size();
+		long givenExercisePostNum = exercisePostRepository.count();
 		
 		//When
 		
 		exercisePostService.saveWithUserAndExercise(exercisePost, user, exercise);
 		
 		//Then
-		assertEquals(exercisePostNum +1, exercisePostRepository.count());
-		assertEquals(userExercisePostsNum +1, userRepository.findById(user.getId()).get().getExercisePosts().size());
-		assertEquals(exerciseExercisePostsNum +1, exerciseRepository.findById(exercise.getId()).get().getExercisePosts().size());
+		assertEquals(givenExercisePostNum +1, exercisePostRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User, Exercise와 연결 짓고 저장하기 ->정상, User와의 연관관계 확인")
+	public void saveWithUserAndExerciseTestCheckWithUser() {
+		//Given
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		
+		//When
+		ExercisePost result = exercisePostService.saveWithUserAndExercise(exercisePost, user, exercise);
+	
+		//Then
+		assertEquals(user, result.getUser());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User, Exercise와 연결 짓고 저장하기 ->정상, Exercise와의 연관관계 확인")
+	public void saveWithUserAndExerciseTestCheckWithExercise() {
+		//Given
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		
+		//When
+		ExercisePost result = exercisePostService.saveWithUserAndExercise(exercisePost, user, exercise);
+	
+		//Then
+		assertEquals(exercise, result.getExercise());
 	}
 	
 	/*
@@ -398,14 +522,13 @@ public class ExercisePostServiceTest {
 	@DisplayName("ExercisePost 삭제하기 -> 정상")
 	public void deleteTest() {
 		//Given
-		ExercisePost existExercisePost = exercisePostRepository.findAll().get(0);
-		Long beforeNum = exercisePostRepository.count();
+		Long givenExercisePostNum = exercisePostRepository.count();
 		
 		//When
-		exercisePostService.delete(existExercisePost);
+		exercisePostService.delete(exercisePost);
 		
 		//Then
-		assertEquals(beforeNum-1,exercisePostRepository.count());
+		assertEquals(givenExercisePostNum - 1, exercisePostRepository.count());
 	}
 	
 	/*
@@ -417,24 +540,20 @@ public class ExercisePostServiceTest {
 	@DisplayName("User ID, ExercisePost ID로 찾고 존재하면 삭제 -> 존재하지 않음")
 	public void checkIsMineAndDeleteNotMine() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		ExercisePost ep = exercisePostRepository.findAll().get(0);
-		ep.setUser(user);
-		
-		exercisePostRepository.save(ep);
+		exercisePost.setUser(user);
+		exercisePostRepository.save(exercisePost);
 		
 		Long otherUserId = user.getId() + 1;
-		Long exercisePostId = ep.getId();
+		Long exercisePostId = exercisePost.getId();
 		
 		//When
 		exercisePostService.checkIsMineAndDelete(otherUserId, exercisePostId);
 		
 		//Then
-		
-		assertEquals(true, exercisePostRepository.existsById(exercisePostId));
+		assertTrue(exercisePostRepository.existsById(exercisePostId));
 	}
 	
 	@Test
@@ -442,23 +561,20 @@ public class ExercisePostServiceTest {
 	@DisplayName("User ID, ExercisePost ID로 찾고 존재하면 삭제 -> 정상 삭제")
 	public void checkIsMineAndDeleteTest() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		ExercisePost ep = exercisePostRepository.findAll().get(0);
-		ep.setUser(user);
-		
-		exercisePostRepository.save(ep);
+		exercisePost.setUser(user);
+		exercisePostRepository.save(exercisePost);
 		
 		Long userId = user.getId();
-		Long exercisePostId = ep.getId();
+		Long exercisePostId = exercisePost.getId();
 		
 		//When
 		exercisePostService.checkIsMineAndDelete(userId, exercisePostId);
 		
 		//Then
-		assertEquals(false, exercisePostRepository.existsById(exercisePostId));
+		assertFalse(exercisePostRepository.existsById(exercisePostId));
 	}
 	
 	
@@ -470,24 +586,23 @@ public class ExercisePostServiceTest {
 	@DisplayName("User ID 만족하는 ExercisePost 개수 반환 -> 정상")
 	public void countWithUserIdTest() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		ExercisePostTest.addNewExercisePostsInDBByNum(5, exercisePostRepository);
 		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		long givenExercisePostNum = exercisePostList.size();
 		for(ExercisePost ep: exercisePostList) {
 			ep.setUser(user);
 		}
-		
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		
 		long result = exercisePostService.countWithUserId(user.getId());
 		
 		//Then
-		assertEquals(result, INIT_EXERCISE_POST_NUM);
+		assertEquals(givenExercisePostNum, result);
 	}
 	
 	/*
@@ -496,22 +611,34 @@ public class ExercisePostServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("키워드(제목, 내용)를 만족하는 게시글 개수 반환 -> 정상")
-	public void countWithTitleAndContentsKeywordTest() {
+	@DisplayName("키워드(제목, 내용)를 만족하는 게시글 개수 반환 -> 정상, 모두 반환")
+	public void countWithTitleAndContentsKeywordTestEvery() {
 		//Given
-		String keywordEveryHas = "title";
-		String keywordOnlyOneHas = String.valueOf(INIT_EXERCISE_POST_NUM);
+		String keywordEveryHas = ExercisePostTest.getExercisePostInstance().getTitle();
+		
+		ExercisePostTest.addNewExercisePostsInDBByNum(10, exercisePostRepository);
+		
+		long givenExercisePostNum = exercisePostRepository.count();
+		
+		//When
+		long result = exercisePostService.countWithTitleAndContentsKeyword(keywordEveryHas);
+		
+		//Then 
+		assertEquals(givenExercisePostNum, result);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("키워드(제목, 내용)를 만족하는 게시글 개수 반환 -> 정상, 0개 반환")
+	public void countWithTitleAndContentsKeywordTestNone() {
+		//Given
 		String keywordNoOneHas = "none!!!!";
 		
 		//When
-		long resultEvery = exercisePostService.countWithTitleAndContentsKeyword(keywordEveryHas);
-		long resultOnlyOne = exercisePostService.countWithTitleAndContentsKeyword(keywordOnlyOneHas);
-		long resultNoOne = exercisePostService.countWithTitleAndContentsKeyword(keywordNoOneHas);
+		long result = exercisePostService.countWithTitleAndContentsKeyword(keywordNoOneHas);
 		
 		//Then 
-		assertEquals(resultEvery,INIT_EXERCISE_POST_NUM);
-		assertEquals(resultOnlyOne,1);
-		assertEquals(resultNoOne,0);
+		assertEquals(0, result);
 	}
 	
 	/*
@@ -520,68 +647,110 @@ public class ExercisePostServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("해당 부위에 해당하는 Post만 개수 반환 -> 정상")
-	public void countWithTargetTest() {
+	@DisplayName("해당 부위에 해당하는 Post만 개수 반환 -> 정상, 모든 ExercisePost 개수")
+	public void countWithTargetTestAll() {
 		//Given
-		Exercise exercise = getExerciseInstance();
-		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
-		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		ExercisePostTest.addNewExercisePostsInDBByNum(5, exercisePostRepository);
 		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		long givenExercisePostNum = exercisePostList.size();
 		for(ExercisePost ep: exercisePostList) {
 			ep.setExercise(exercise);
 		}
-		
-		// Exercise 의 setExercisePost는 해당 테스트에 필요없는 작업이라 배제
 		exercisePostRepository.saveAll(exercisePostList);
 		
-		TargetType allType = TargetType.CHEST;
-		TargetType nonType = TargetType.CORE;
+		TargetType typeForAllExercisePostsExercise = exercise.getTarget();
 		
 		//When
-		long resultEvery = exercisePostService.countWithTarget(allType);
-		long resultNone = exercisePostService.countWithTarget(nonType);
+		long result = exercisePostService.countWithTarget(typeForAllExercisePostsExercise);
 		
 		//Then
-		assertEquals(resultEvery,INIT_EXERCISE_POST_NUM);
-		assertEquals(resultNone,0);
+		assertEquals(givenExercisePostNum, result);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("해당 부위에 해당하는 Post만 개수 반환 -> 정상, 만족하는 ExercisePost 없음")
+	public void countWithTargetTestNone() {
+		//Given
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		
+		ExercisePostTest.addNewExercisePostsInDBByNum(5, exercisePostRepository);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		for(ExercisePost ep: exercisePostList) {
+			ep.setExercise(exercise);
+		}
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		TargetType typeForNoneExercisePostsExercise = TargetTypeTest.getAnotherTargetType(exercise.getTarget());
+		
+		//When
+		long result = exercisePostService.countWithTarget(typeForNoneExercisePostsExercise);
+		
+		//Then
+		assertEquals(0, result);
 	}
 	
 	/*
 	 *  public long countWithTargetAndKeyword(TargetType target, String keyword)
 	 */
+	
 	@Test
 	@Transactional
-	@DisplayName("해당 부위에 해당하고 이름과 제목에 키워드 포함하는 게시글 개수 반환 ->정상")
-	public void countWithTargetAndKeywordTest() {
+	@DisplayName("해당 부위에 해당하고 이름과 제목에 키워드 포함하는 게시글 개수 반환 ->정상, 키워드 모두 불만족, target은 모두 만족")
+	public void countWithTargetAndKeywordTestAllTargetNonekeyword() {
 		//Given
+		String keywordForNothing = "nothing!!!";
 		
-		Exercise exercise = getExerciseInstance();
-		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
+		TargetType typeForAllExercisePostsExercise = exercise.getTarget();
 		
 		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
-		
 		for(ExercisePost ep: exercisePostList) {
 			ep.setExercise(exercise);
 		}
-		
-		// Exercise 의 setExercisePost는 해당 테스트에 필요없는 작업이라 배제
 		exercisePostRepository.saveAll(exercisePostList);
 		
-		TargetType type = TargetType.CHEST;
-		String everyKeyword = "title";
-		String noneKeyword = "none!!!";
-		
 		//When
-		long resultEvery = exercisePostService.countWithTargetAndKeyword(type, everyKeyword);
-		long resultNone = exercisePostService.countWithTargetAndKeyword(type, noneKeyword);
+		long resultNone = exercisePostService.countWithTargetAndKeyword(typeForAllExercisePostsExercise, keywordForNothing);
 		
 		//Then
-		assertEquals(resultEvery,INIT_EXERCISE_POST_NUM);
-		assertEquals(resultNone,0);
+		assertEquals(0, resultNone);
 		
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("해당 부위에 해당하고 이름과 제목에 키워드 포함하는 게시글 개수 반환 ->정상 , 키워드 target 모두 만족")
+	public void countWithTargetAndKeywordTestAll() {
+		//Given
+		String contentsForAllExercisePost = ExercisePostTest.getExercisePostInstance().getContents();
+		String keywordForAllExercisePostInDB = contentsForAllExercisePost.substring(0,contentsForAllExercisePost.length() -2);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		TargetType typeForAllExercisePostsExercise = exercise.getTarget();
+		
+		ExercisePostTest.addNewExercisePostsInDBByNum(5, exercisePostRepository);
+		
+		List<ExercisePost> exercisePostList = exercisePostRepository.findAll();
+		long givenExercisePostNum = exercisePostList.size();
+		for(ExercisePost ep: exercisePostList) {
+			ep.setExercise(exercise);
+		}
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		//When
+		long result = exercisePostService.countWithTargetAndKeyword(typeForAllExercisePostsExercise, keywordForAllExercisePostInDB);
+		
+		//Then
+		assertEquals(givenExercisePostNum, result);
 	}
 	
 	/*
@@ -593,20 +762,13 @@ public class ExercisePostServiceTest {
 	@DisplayName("ExercisePost id로 ExercisePost 가져와서 이를 통해 ExercisePostViewDTO 생성 및 반환 -> 해당 id의 ExercisePost 없음")
 	public void getExercisePostViewDTOWithExercisePostIdNonExist() {
 		//Given
-		Long nonExistId = Long.valueOf(1);
-		
-		for(ExercisePost ep: exercisePostRepository.findAll()) {
-			nonExistId = Math.max(nonExistId, ep.getId());
-		}
-		nonExistId++;
+		Long nonExistId = ExercisePostTest.getNonExistExercisePostId(exercisePostRepository);
 		
 		//When
-		
 		ExercisePostViewDTO result = exercisePostService.getExercisePostViewDTOWithExercisePostId(nonExistId);
 		
 		//Then
-		assertEquals(result,null);
-		
+		assertNull(result);
 	}
 	
 	@Test
@@ -614,49 +776,23 @@ public class ExercisePostServiceTest {
 	@DisplayName("ExercisePost id로 ExercisePost 가져와서 이를 통해 ExercisePostViewDTO 생성 및 반환 ->  정상")
 	public void getExercisePostViewDTOWithExercisePostIdTest() {
 		//Given
-		ExercisePost exercisePost = exercisePostRepository.findAll().get(0);
-		Long existId = exercisePost.getId();
+		Long exercisePostId = exercisePost.getId();
 		
-		User user = getUserInstance();
-	
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		Exercise exercise = getExerciseInstance();
-		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
 		exercisePost.setUser(user);
 		exercisePost.setExercise(exercise);
-		
 		exercisePostRepository.save(exercisePost);
+		
 		//When
-		ExercisePostViewDTO result = exercisePostService.getExercisePostViewDTOWithExercisePostId(existId);
+		ExercisePostViewDTO result = exercisePostService.getExercisePostViewDTOWithExercisePostId(exercisePostId);
 		
 		//Then
-		assertEquals(result != null, true);
+		assertNotNull(result);
 		
-	}
-	
-	private User getUserInstance() {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("test")
-				.lastName("test")
-				.nickName("test")
-				.role(RoleType.USER)
-				.build();
-		return user;
-	}
-	
-	private Exercise getExerciseInstance() {
-		Exercise exercise = Exercise.builder()
-			    .name("Exercies")
-			    .description("Description")
-			    .caution("Caution")
-			    .movement("Movement")
-			    .target(TargetType.CHEST)
-			    .build();
-		return exercise;
 	}
 }

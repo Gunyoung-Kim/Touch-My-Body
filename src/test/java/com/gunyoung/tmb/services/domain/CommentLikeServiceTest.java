@@ -1,8 +1,10 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,11 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.user.User;
-import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.like.CommentLikeService;
+import com.gunyoung.tmb.util.CommentLikeTest;
+import com.gunyoung.tmb.util.CommentTest;
+import com.gunyoung.tmb.util.UserTest;
 
 /**
  * CommentLikeService에 대한 테스트 클래스 <br>
@@ -29,8 +33,6 @@ import com.gunyoung.tmb.services.domain.like.CommentLikeService;
  */
 @SpringBootTest
 public class CommentLikeServiceTest {
-	
-	private static final int INIT_COMMENT_LIKE_NUM = 30; 
 	
 	@Autowired
 	CommentLikeRepository commentLikeRepository;
@@ -44,15 +46,13 @@ public class CommentLikeServiceTest {
 	@Autowired
 	CommentLikeService commentLikeService;
 	
+	private CommentLike commentLike;
+	
 	
 	@BeforeEach
 	void setup() {
-		for(int i=1;i<=INIT_COMMENT_LIKE_NUM;i++) {
-			CommentLike commentLike = CommentLike.builder()
-												 .build();
-			
-			commentLikeRepository.save(commentLike);
-		}
+		commentLike = CommentLikeTest.getCommentLikeInstance();
+		commentLikeRepository.save(commentLike);
 	}
 	
 	@AfterEach
@@ -69,18 +69,13 @@ public class CommentLikeServiceTest {
 	@DisplayName("id로 commentLike 찾기 -> 해당 id의 commentLike 없음")
 	public void findByIdNonExist() {
 		//Given
-		long maxId = -1;
-		List<CommentLike> list = commentLikeRepository.findAll();
-		
-		for(CommentLike cl: list) {
-			maxId = Math.max(maxId, cl.getId());
-		}
+		Long nonExistCommentLikeId = CommentLikeTest.getNonExistCommentLikeId(commentLikeRepository);
 		
 		//When
-		CommentLike result = commentLikeService.findById(maxId+1000);
+		CommentLike result = commentLikeService.findById(nonExistCommentLikeId);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
@@ -88,13 +83,13 @@ public class CommentLikeServiceTest {
 	@DisplayName("id로 commentLike 찾기 -> 정상")
 	public void findByIdTest() {
 		//Given
-		Long existId = commentLikeRepository.findAll().get(0).getId();
+		Long existCommentLikeId = commentLike.getId();
 		
 		//When
-		CommentLike result = commentLikeService.findById(existId);
+		CommentLike result = commentLikeService.findById(existCommentLikeId);
 		
 		//Then
-		assertEquals(result != null, true);
+		assertNotNull(result);
 	}
 	
 	/*
@@ -105,19 +100,17 @@ public class CommentLikeServiceTest {
 	@DisplayName("유저 id와 댓글 id로 찾기 -> 해당 조건 만족의 CommentLike 없음")
 	public void findByUserIdAndCommentIdNonExist() {
 		//Given
-		User user = getUserInstance();
-	
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		Comment comment = getCommentInstance();
-		
+		Comment comment = CommentTest.getCommentInstance();
 		commentRepository.save(comment);
 		
 		//When
 		CommentLike result = commentLikeService.findByUserIdAndCommentId(user.getId(), comment.getId());
 		
 		//Then
-		assertEquals(result, null);
+		assertNull(result);
 	}
 	
 	@Test
@@ -125,29 +118,25 @@ public class CommentLikeServiceTest {
 	@DisplayName("유저 id와 댓글 id로 찾기 -> 정상")
 	public void findByUserIdAndCommentIdTest() {
 		//Given
-		CommentLike existCommentLike = commentLikeRepository.findAll().get(0);
-		
-		User user = getUserInstance();
+		User user = UserTest.getUserInstance();
 	
 		userRepository.save(user);
 		
-		Comment comment = getCommentInstance();
-		
+		Comment comment = CommentTest.getCommentInstance();
 		commentRepository.save(comment);
 		
 		// commentLike쪽에서만 객체적 연결해도 해당 테스트에는 무관
-		existCommentLike.setUser(user);
-		existCommentLike.setComment(comment);
+		commentLike.setUser(user);
+		commentLike.setComment(comment);
 		
-		commentLikeRepository.save(existCommentLike);
+		commentLikeRepository.save(commentLike);
 		
 		//When
 		
 		CommentLike result = commentLikeService.findByUserIdAndCommentId(user.getId(), comment.getId());
 		
 		//Then
-		assertEquals(result != null,true);
-		assertEquals(result.getId(),existCommentLike.getId());
+		assertNotNull(result);
 	}
 	
 	/*
@@ -161,12 +150,9 @@ public class CommentLikeServiceTest {
 	@DisplayName("commentLike 수정하기 -> 정상")
 	public void mergerTest() {
 		//Given
-		CommentLike commentLike = commentLikeRepository.findAll().get(0);
 		
 		//When
-		
 		commentLikeService.save(commentLike);
-		
 		//Then
 		
 	}
@@ -176,14 +162,14 @@ public class CommentLikeServiceTest {
 	@DisplayName("commentLike 추가하기 -> 정상")
 	public void saveTest() {
 		//Given
-		CommentLike commentLike = CommentLike.builder().build();
-		Long beforeNum = commentLikeRepository.count();
+		CommentLike newCommentLike = CommentLikeTest.getCommentLikeInstance();
+		Long givenCommentLikeNum = commentLikeRepository.count();
 		
 		//When
-		commentLikeService.save(commentLike);
+		commentLikeService.save(newCommentLike);
 		
 		//Then
-		assertEquals(beforeNum+1, commentLikeRepository.count());
+		assertEquals(givenCommentLikeNum+1, commentLikeRepository.count());
 	}
 	
 	/* 
@@ -192,32 +178,58 @@ public class CommentLikeServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("User와 Comment로 CommentLike 생성 후 저장 -> 정상")
-	public void  createAndSaveWithUserAndCommentTest() {
+	@DisplayName("User와 Comment로 CommentLike 생성 후 저장 -> 정상, 개수 추가 확인")
+	public void  createAndSaveWithUserAndCommentTestCheckCount() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		Comment comment = getCommentInstance();
-		
+		Comment comment = CommentTest.getCommentInstance();
 		commentRepository.save(comment);
 		
-		long commentLikeNum = commentLikeRepository.count();
-		
-		int userCommentLikeNum = user.getCommentLikes().size();
-		long userId = user.getId();
-		int commentCommentLikeNum = comment.getCommentLikes().size();
-		long commentId = comment.getId();
+		long givenCommentLikeNum = commentLikeRepository.count();
 		
 		//When
 		commentLikeService.createAndSaveWithUserAndComment(user, comment);
 		
 		//Then
-		assertEquals(commentLikeNum+1, commentLikeRepository.count());
-		assertEquals(userCommentLikeNum +1 , userRepository.findById(userId).get().getCommentLikes().size());
-		assertEquals(commentCommentLikeNum +1 , commentRepository.findById(commentId).get().getCommentLikes().size());
+		assertEquals(givenCommentLikeNum+1, commentLikeRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User와 Comment로 CommentLike 생성 후 저장 -> 정상, User와 연관 관계 추가 확인")
+	public void  createAndSaveWithUserAndCommentTestCheckUser() {
+		//Given
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
 		
+		Comment comment = CommentTest.getCommentInstance();
+		commentRepository.save(comment);
+		
+		//When
+		CommentLike result = commentLikeService.createAndSaveWithUserAndComment(user, comment);
+		
+		//Then
+		assertEquals(user, result.getUser());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User와 Comment로 CommentLike 생성 후 저장 -> 정상, Comment와 연관 관계 추가 확인")
+	public void  createAndSaveWithUserAndCommentTestCheckComment() {
+		//Given
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		Comment comment = CommentTest.getCommentInstance();
+		commentRepository.save(comment);
+		
+		//When
+		CommentLike result = commentLikeService.createAndSaveWithUserAndComment(user, comment);
+		
+		//Then
+		assertEquals(comment, result.getComment());
 	}
 	
 	/*
@@ -229,14 +241,13 @@ public class CommentLikeServiceTest {
 	@DisplayName("commentLike 삭제 -> 정상")
 	public void deleteTest() {
 		//Given
-		CommentLike commentLike = commentLikeRepository.findAll().get(0);
-		Long beforeNum = commentLikeRepository.count();
+		Long givenCommentLikeNum = commentLikeRepository.count();
 		
 		//When
 		commentLikeService.delete(commentLike);
 		
 		//Then
-		assertEquals(beforeNum-1, commentLikeRepository.count());
+		assertEquals(givenCommentLikeNum-1, commentLikeRepository.count());
 	}
 	
 	/*
@@ -244,18 +255,18 @@ public class CommentLikeServiceTest {
 	 */
 	@Test
 	@Transactional
-	@DisplayName("User ID, Comment ID로 존재여부 확인 ->정상")
-	public void existsByUserIdAndCommentIdTest() {
+	@DisplayName("User ID, Comment ID로 존재여부 확인 ->정상 , True")
+	public void existsByUserIdAndCommentIdTestTrue() {
 		//Given
-		User user = getUserInstance();
-		User userNotHost = getUserInstance();
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		User userNotHost = UserTest.getUserInstance();
 		userNotHost.setEmail("notHost@test.com");
 		userNotHost.setNickName("notHost");
-		
-		userRepository.save(user);
 		userRepository.save(userNotHost);
 		
-		Comment comment = getCommentInstance();
+		Comment comment = CommentTest.getCommentInstance();
 		commentRepository.save(comment);
 		
 		CommentLike commentLike = CommentLike.builder()
@@ -267,34 +278,37 @@ public class CommentLikeServiceTest {
 		
 		//When
 		boolean trueResult = commentLikeService.existsByUserIdAndCommentId(user.getId(), comment.getId());
-		boolean falseResult = commentLikeService.existsByUserIdAndCommentId(userNotHost.getId(), comment.getId());
 		
 		//Then
-		assertEquals(trueResult,true);
-		assertEquals(falseResult,false);
+		assertTrue(trueResult);
 	}
 	
-	/*
-	 * 
-	 */
-	
-	private User getUserInstance() {
-		User user = User.builder()
-		.email("test@test.com")
-		.password("abcd1234")
-		.firstName("first")
-		.lastName("last")
-		.role(RoleType.USER)
-		.nickName("nickName")
-		.build();
-		return user;
-	}
-	
-	private Comment getCommentInstance() {
-		Comment comment = Comment.builder()
-				.contents("new comment")
-				.writerIp("172.0.0.1")
+	@Test
+	@Transactional
+	@DisplayName("User ID, Comment ID로 존재여부 확인 ->정상, False")
+	public void existsByUserIdAndCommentIdTestFalse() {
+		//Given
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		User userNotHost = UserTest.getUserInstance();
+		userNotHost.setEmail("notHost@test.com");
+		userNotHost.setNickName("notHost");
+		userRepository.save(userNotHost);
+		
+		Comment comment = CommentTest.getCommentInstance();
+		commentRepository.save(comment);
+		
+		CommentLike commentLike = CommentLike.builder()
+				.comment(comment)
+				.user(user)
 				.build();
-		return comment;
+		
+		commentLikeRepository.save(commentLike);
+		
+		//When
+		boolean falseResult = commentLikeService.existsByUserIdAndCommentId(userNotHost.getId(), comment.getId());
+		
+		assertFalse(falseResult);
 	}
 }

@@ -22,6 +22,8 @@ import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForTableDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
+import com.gunyoung.tmb.util.ControllerTest;
+import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.utils.PageUtil;
 
 /**
@@ -41,30 +43,6 @@ public class ExerciseControllerTest {
 	@Autowired
 	private ExerciseRepository exerciseRepository;
 	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private Exercise getExerciseInstance(String name, TargetType target) {
-		Exercise exercise = Exercise.builder()
-				.name(name)
-				.description("description")
-				.caution("caution")
-				.movement("movement")
-				.target(target)
-				.build();
-		
-		return exercise;
-	}
-	
-	private Map<String, Object> getResponseModel(MvcResult mvcResult) {
-		return mvcResult.getModelAndView().getModel();
-	}
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
 	/*
 	 * @RequestMapping(value="/exercise",method = RequestMethod.GET)
 	 * public ModelAndView exerciseInfoMainView(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav)
@@ -77,7 +55,7 @@ public class ExerciseControllerTest {
 		List<Exercise> exerciseList = new LinkedList<>();
 		TargetType[] targetTypes = TargetType.values();
 		for(TargetType tt : targetTypes) {
-			exerciseList.add(getExerciseInstance(tt.getKoreanName(),tt));
+			exerciseList.add(ExerciseTest.getExerciseInstance(tt.getKoreanName(),tt));
 		}
 		
 		exerciseRepository.saveAll(exerciseList);
@@ -90,7 +68,7 @@ public class ExerciseControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		Map<String, Object> modelMap = getResponseModel(result);
+		Map<String, Object> modelMap = ControllerTest.getResponseModel(result);
 		@SuppressWarnings("unchecked")
 		List<ExerciseForTableDTO> resultList = (List<ExerciseForTableDTO>) modelMap.get("listObject");
 		
@@ -107,7 +85,7 @@ public class ExerciseControllerTest {
 	@DisplayName("특정 Exercise 상세 정보 화면 반환 -> 해당 ID의 Exercise 없을 때")
 	public void exerciseInfoMainViewNonExist() throws Exception {
 		//Given
-		Exercise exercise = getExerciseInstance("exericse",TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exericse",TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
 		//When
@@ -124,7 +102,7 @@ public class ExerciseControllerTest {
 		//Given
 		String name = "exercise";
 		TargetType target = TargetType.ARM;
-		Exercise exercise = getExerciseInstance(name,target);
+		Exercise exercise = ExerciseTest.getExerciseInstance(name,target);
 		exerciseRepository.save(exercise);
 		
 		//When
@@ -134,7 +112,7 @@ public class ExerciseControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		Map<String, Object> modelMap = getResponseModel(result);
+		Map<String, Object> modelMap = ControllerTest.getResponseModel(result);
 		
 		ExerciseForInfoViewDTO dto = (ExerciseForInfoViewDTO) modelMap.get("exerciseInfo");
 		assertEquals(name, dto.getName());

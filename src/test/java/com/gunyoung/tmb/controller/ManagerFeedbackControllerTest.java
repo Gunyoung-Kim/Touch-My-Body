@@ -28,6 +28,10 @@ import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.util.ControllerTest;
+import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.util.FeedbackTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.PageUtil;
 
 /**
@@ -53,74 +57,6 @@ public class ManagerFeedbackControllerTest {
 	@Autowired
 	private FeedbackRepository feedbackRepository;
 	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private User getUserInstance(RoleType role) {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234!")
-				.firstName("first")
-				.lastName("last")
-				.nickName("nickName")
-				.role(role)
-				.build();
-		
-		return user;
-	}
-	
-	private Feedback getFeedbackInstance() {
-		Feedback feedback = Feedback.builder()
-				.contents("contents")
-				.title("title")
-				.build();
-		
-		return feedback;
-	}
-	
-	private Exercise getExerciseInstance(String name, TargetType target) {
-		Exercise exercise = Exercise.builder()
-				.name(name)
-				.description("description")
-				.caution("caution")
-				.movement("movement")
-				.target(target)
-				.build();
-		
-		return exercise;
-	}
-	
-	private Long getNonExistExerciseId() {
-		Long nonExistExerciseId = Long.valueOf(1);
-		
-		for(Exercise u : exerciseRepository.findAll()) {
-			nonExistExerciseId = Math.max(nonExistExerciseId, u.getId());
-		}
-		nonExistExerciseId++;
-		
-		return nonExistExerciseId;
-	}
-	
-	private Long getNonExistFeedbackId() {
-		Long nonExistFeedbackId = Long.valueOf(1);
-		
-		for(Feedback u : feedbackRepository.findAll()) {
-			nonExistFeedbackId = Math.max(nonExistFeedbackId, u.getId());
-		}
-		nonExistFeedbackId++;
-		
-		return nonExistFeedbackId;
-	}
-	
-	private Map<String, Object> getResponseModel(MvcResult mvcResult) {
-		return mvcResult.getModelAndView().getModel();
-	}
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
 	/*
 	 * @RequestMapping(value="/manager/exercise/feedback/{exerciseId}" ,method= RequestMethod.GET) 
 	 * public ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId,@RequestParam(value="page", defaultValue="1") int page
@@ -133,7 +69,7 @@ public class ManagerFeedbackControllerTest {
 	@DisplayName("특정 운동 정보에 대한 피드백들 리스트 화면 반환 -> 해당 ID의 Exercise 없을때")
 	public void feedbackListViewNonExist() throws Exception {
 		//Given
-		Long nonExistExerciseId = getNonExistExerciseId();
+		Long nonExistExerciseId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
 		//When
 		mockMvc.perform(get("/manager/exercise/feedback/" + nonExistExerciseId))
@@ -148,17 +84,17 @@ public class ManagerFeedbackControllerTest {
 	@DisplayName("특정 운동 정보에 대한 피드백들 리스트 화면 반환 -> 정상")
 	public void feedbackListViewTest() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
-		Exercise exercise = getExerciseInstance("exercise", TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exercise", TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
 		int feedbackNum = 10;
 		List<Feedback> feedbackList = new LinkedList<>();
 		
 		for(int i=1; i <= feedbackNum; i++) {
-			Feedback feedback = getFeedbackInstance();
+			Feedback feedback = FeedbackTest.getFeedbackInstance();
 			feedback.setUser(user);
 			feedback.setExercise(exercise);
 			feedbackList.add(feedback);
@@ -173,7 +109,7 @@ public class ManagerFeedbackControllerTest {
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		Map<String, Object> model = getResponseModel(result);
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
 		Page<FeedbackManageListDTO> listObject = (Page<FeedbackManageListDTO>) model.get("listObject");
@@ -192,7 +128,7 @@ public class ManagerFeedbackControllerTest {
 	@DisplayName("특정 Feedback 상세화면 반환 -> 해당 ID의 Feedback 없을 때")
 	public void feedbackViewNonExist() throws Exception {
 		//Given
-		Long nonExistFeedbackId = getNonExistFeedbackId();
+		Long nonExistFeedbackId = FeedbackTest.getNonExistFeedbackId(feedbackRepository);
 		
 		//When
 		mockMvc.perform(get("/manager/exercise/feedback/detail/"+ nonExistFeedbackId))
@@ -207,13 +143,13 @@ public class ManagerFeedbackControllerTest {
 	@DisplayName("특정 Feedback 상세화면 반환 -> 정상")
 	public void feedbackViewTest() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
-		Exercise exercise = getExerciseInstance("exercise", TargetType.ARM);
+		Exercise exercise = ExerciseTest.getExerciseInstance("exercise", TargetType.ARM);
 		exerciseRepository.save(exercise);
 		
-		Feedback feedback = getFeedbackInstance();
+		Feedback feedback = FeedbackTest.getFeedbackInstance();
 		feedback.setUser(user);
 		feedback.setExercise(exercise);
 		

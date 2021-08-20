@@ -1,0 +1,51 @@
+
+language: java
+jdk:
+  - openjdk11
+
+branches:
+  only: 
+    - master
+
+cache:
+  directories:
+    - '$HOME/.m2/'
+
+script: "./mvnw clean package"
+
+before_deploy:
+  - zip -r info *
+  - mkdir -p deploy
+  - mv info.zip deploy/info.zip
+
+deploy:
+  - provider: s3 
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: touchmybody-gunyoung-deploy
+    local_dir: deploy
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: public_read
+    wait_until_deploy: true
+    on:
+      repo: Gunyoung-Kim/Touch-My-Body
+      branch: master
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: touchmybody-gunyoung-deploy
+    key: info.zip
+    bundle_type: zip
+    application: TouchMyBody
+    deployment_group: TouchMyBody-group
+    region: ap-northeast-2
+    wait_until_deployed: true
+    on:
+      repo: Gunyoung-Kim/TouchMyBody
+      branch: master
+
+notifications:
+  email:
+    recipients:
+       - gun025bba@daum.net 

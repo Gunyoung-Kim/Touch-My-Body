@@ -1,6 +1,8 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -20,12 +22,18 @@ import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
+import com.gunyoung.tmb.util.MuscleTest;
+import com.gunyoung.tmb.util.TargetTypeTest;
 import com.gunyoung.tmb.utils.PageUtil;
 
+/**
+ * MuscleService에 대한 테스트 클래스 <br>
+ * Spring의 JpaRepository의 정상 작동을 가정으로 두고 테스트 진행
+ * @author kimgun-yeong
+ *
+ */
 @SpringBootTest
 public class MuscleServiceTest {
-
-	private static final int INIT_MUSCLE_NUM = 30;
 	
 	@Autowired
 	MuscleRepository muscleRepository;
@@ -33,18 +41,12 @@ public class MuscleServiceTest {
 	@Autowired
 	MuscleService muscleService;
 	
+	private Muscle muscle;
+	
 	@BeforeEach
 	void setup() {
-		List<Muscle> list = new ArrayList<>();
-		for(int i=1;i<=INIT_MUSCLE_NUM;i++) {
-			Muscle muscle = Muscle.builder()
-									 .name("name" +i)
-									 .category(TargetType.ARM)
-									 .build();
-									 
-			list.add(muscle);
-		}
-		muscleRepository.saveAll(list);
+		muscle = MuscleTest.getMuscleInstance();
+		muscleRepository.save(muscle);
 	}
 	
 	@AfterEach
@@ -60,18 +62,13 @@ public class MuscleServiceTest {
 	@DisplayName("id로 Muscle 찾기 -> 해당 id의 muscle 없음")
 	public void findByIdNonExist() {
 		//Given
-		long maxId = -1;
-		List<Muscle> list = muscleRepository.findAll();
-		
-		for(Muscle c: list) {
-			maxId = Math.max(maxId, c.getId());
-		}
+		long nonExistId = MuscleTest.getNonExistMuscleId(muscleRepository);
 		
 		//When
-		Muscle result = muscleService.findById(maxId+ 1000);
+		Muscle result = muscleService.findById(nonExistId);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
@@ -79,15 +76,13 @@ public class MuscleServiceTest {
 	@DisplayName("id로 Muscle 찾기 -> 정상")
 	public void findByIdTest() {
 		//Given
-		Muscle muscle = muscleRepository.findAll().get(0);
-		Long id = muscle.getId();
+		Long existMuscleId = muscle.getId();
 		
 		//When
-		Muscle result = muscleService.findById(id);
+		Muscle result = muscleService.findById(existMuscleId);
 		
 		//Then
-		
-		assertEquals(result != null, true);
+		assertNotNull(result);
 		
 	}
 	
@@ -105,20 +100,20 @@ public class MuscleServiceTest {
 		Muscle result = muscleService.findByName(nonExistName);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
 	@DisplayName("이름으로 Muscle 찾기 -> 정상")
 	public void findNyNameTest() {
 		//Given
-		String existName = "name1";
+		String existName = muscle.getName();
 		
 		//When
 		Muscle result = muscleService.findByName(existName);
 		
 		//Then
-		assertEquals(result != null, true);
+		assertNotNull(result);
 	}
 	
 	/*
@@ -131,36 +126,74 @@ public class MuscleServiceTest {
 		//Given
 		int pageSize = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
 		
+		MuscleTest.addNewMusclesInDBByNum(10, muscleRepository);
+		
+		long givenMuscleTest = muscleRepository.count();
+		
 		//When
 		List<Muscle> result = muscleService.findAllInPage(1, pageSize).getContent();
 		
 		//Then
-		assertEquals(result.size(),Math.min(pageSize, INIT_MUSCLE_NUM));
+		assertEquals(Math.min(pageSize, givenMuscleTest), result.size());
 	}
 	
 	/*
 	 * public Page<Muscle> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize)
 	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("키워드 이름에 포함하는 근육정보들 페이지 처리해서 가져오기 ->정상, 모든 Muscle이 만족하는 키워드")
+	public void findAllWithNameKeywordInPageTestAll() {
+		//Given
+		int pageSize = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
+		String keywordForAllMuscle = MuscleTest.getMuscleInstance().getName();
+		
+		MuscleTest.addNewMusclesInDBByNum(10, muscleRepository);
+		
+		long givenMuscleNum = muscleRepository.count();
+		
+		//When
+		List<Muscle> result = muscleService.findAllWithNameKeywordInPage(keywordForAllMuscle, 1, pageSize).getContent();
+		
+		//Then
+		assertEquals(Math.min(pageSize, givenMuscleNum), result.size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("키워드 이름에 포함하는 근육정보들 페이지 처리해서 가져오기 ->정상, 단 하나의 Muscle이 만족하는 키워드")
+	public void findAllWithNameKeywordInPageTestOnlyOne() {
+		//Given
+		int pageSize = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
+		String keywordForOnlyOne = "I am only one";
+		Muscle onlyOneMuscle = MuscleTest.getMuscleInstance(keywordForOnlyOne, TargetType.ARM);
+		muscleRepository.save(onlyOneMuscle);
+		
+		MuscleTest.addNewMusclesInDBByNum(10, muscleRepository);
+		
+		//When
+		List<Muscle> result = muscleService.findAllWithNameKeywordInPage(keywordForOnlyOne, 1, pageSize).getContent();
+		
+		//Then
+		assertEquals(1, result.size());
+	}
+	
 	@Test
 	@Transactional
 	@DisplayName("키워드 이름에 포함하는 근육정보들 페이지 처리해서 가져오기 ->정상")
 	public void findAllWithNameKeywordInPageTest() {
 		//Given
-		String allKeyword = "name";
-		String noneKeyword = "none!!!";
-		String oneKeyword = String.valueOf(INIT_MUSCLE_NUM);
-		
 		int pageSize = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
+		String keywordForNothing = "none!!!";
+		
+		MuscleTest.addNewMusclesInDBByNum(10, muscleRepository);
 		
 		//When
-		List<Muscle> allResult = muscleService.findAllWithNameKeywordInPage(allKeyword, 1, pageSize).getContent();
-		List<Muscle> noneResult = muscleService.findAllWithNameKeywordInPage(noneKeyword, 1, pageSize).getContent();
-		List<Muscle> oneResult = muscleService.findAllWithNameKeywordInPage(oneKeyword, 1, pageSize).getContent();
+		List<Muscle> result = muscleService.findAllWithNameKeywordInPage(keywordForNothing, 1, pageSize).getContent();
 		
 		//Then
-		assertEquals(allResult.size(),Math.min(pageSize, INIT_MUSCLE_NUM));
-		assertEquals(noneResult.size(),0);
-		assertEquals(oneResult.size(),1);
+		assertEquals(0, result.size());
 	}
 	
 	/*
@@ -169,22 +202,18 @@ public class MuscleServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("카테고리로 분류해서 Muscle들 반환 -> 정상")
+	@DisplayName("카테고리로 분류해서 Muscle들 반환 -> 정상, 단 하나의 Muscle 만 만족하는 TargetType으로 확인")
 	public void getAllMusclesWithSortingByCategoryTest() {
 		//Given
-		Muscle muscle = Muscle.builder()
-				 .name("new")
-				 .category(TargetType.BACK)
-				 .build();
-		muscleRepository.save(muscle);
+		TargetType targetTypeForOnlyOneMuscle = TargetTypeTest.getAnotherTargetType(MuscleTest.getMuscleInstance().getCategory());
+		Muscle onlyOneCategoryMuscle = MuscleTest.getMuscleInstance("onlyOne", targetTypeForOnlyOneMuscle);
+		muscleRepository.save(onlyOneCategoryMuscle);
 		
 		//When
 		Map<String, List<String>> result = muscleService.getAllMusclesWithSortingByCategory();
 		
 		//Then
-		assertEquals(result.size(),2);
-		assertEquals(result.get(TargetType.ARM.getKoreanName()).size(),INIT_MUSCLE_NUM);
-		assertEquals(result.get(TargetType.BACK.getKoreanName()).size(),1);
+		assertEquals(1, result.get(targetTypeForOnlyOneMuscle.getKoreanName()).size());
 	}
 	
 	/*
@@ -193,17 +222,18 @@ public class MuscleServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("Muscle 이름 리스트로 부터 Muscle 리스트 반환하기 -> 해당 이름의 Muscle 없을 때")
+	@DisplayName("Muscle 이름 리스트로 부터 Muscle 리스트 반환하기 -> 리스트중에 해당 이름의 Muscle 없는 경우가 있는 케이스")
 	public void getMuscleListFromMuscleNameListNonExist() {
 		//Given
 		String nonExistName = "nonExist";
 		
-		List<Muscle> muscleList = muscleRepository.findAll();
-		
 		List<String> muscleNameList = new ArrayList<>();
 		muscleNameList.add(nonExistName);
 		
-		for(int i=0;i<muscleList.size()/2;i++) {
+		MuscleTest.addNewMusclesInDBByNum(10, muscleRepository);
+		
+		List<Muscle> muscleList = muscleRepository.findAll();
+		for(int i=0;i<muscleList.size();i++) {
 			muscleNameList.add(muscleList.get(i).getName());
 		}
 		
@@ -220,10 +250,12 @@ public class MuscleServiceTest {
 	@DisplayName("Muscle 이름 리스트로 부터 Muscle 리스트 반환하기 -> 정상")
 	public void getMuscleListFromMuscleNameListTest() {
 		//Given
-		List<Muscle> muscleList = muscleRepository.findAll();
-		
 		List<String> muscleNameList = new ArrayList<>();
 		
+		MuscleTest.addNewMusclesInDBByNum(10, muscleRepository);
+		
+		List<Muscle> muscleList = muscleRepository.findAll();
+		long givenMuscleNum = muscleList.size();
 		for(int i=0;i<muscleList.size();i++) {
 			muscleNameList.add(muscleList.get(i).getName());
 		}
@@ -232,7 +264,7 @@ public class MuscleServiceTest {
 		List<Muscle> result = muscleService.getMuscleListFromMuscleNameList(muscleNameList);
 		
 		//Then
-		assertEquals(muscleList.size(), result.size());
+		assertEquals(givenMuscleNum, result.size());
 	}
 	
 	/*
@@ -240,38 +272,49 @@ public class MuscleServiceTest {
 	 */
 	
 	@Test
-	@Transactional
-	@DisplayName("Muscle 수정하기 -> 정상")
-	public void mergeTest() {
+	@DisplayName("Muscle 수정하기 -> 정상, 변화 확인")
+	public void mergeTestCheckChange() {
 		//Given
-		Muscle existMuscle = muscleRepository.findAll().get(0);
-		Long id = existMuscle.getId();
-		existMuscle.setName("Changed Name");
+		String changeName = "Changed Name";
+		Long muscleId = muscle.getId();
+		muscle.setName(changeName);
 		
 		//When
-		muscleService.save(existMuscle);
+		muscleService.save(muscle);
 		
 		//Then
-		Muscle result = muscleRepository.findById(id).get();
-		assertEquals(result.getName(),"Changed Name");
+		Muscle result = muscleRepository.findById(muscleId).get();
+		assertEquals(changeName, result.getName());
 	}
 	
 	@Test
-	@Transactional
+	@DisplayName("Muscle 수정하기 -> 정상, 개수 동일 확인")
+	public void mergeTestCheckCount() {
+		//Given
+		String changeName = "Changed Name";
+		muscle.setName(changeName);
+		
+		long givenMuscleNum = muscleRepository.count();
+		
+		//When
+		muscleService.save(muscle);
+		
+		//Then
+		assertEquals(givenMuscleNum,  muscleRepository.count());
+	}
+	
+	@Test
 	@DisplayName("Muscle 추가하기 -> 정상")
 	public void saveTest() {
 		//Given
-		Muscle newMuscle = Muscle.builder()
-									.name("new Name")
-									.category(TargetType.BACK)
-									.build();
-		Long beforeNum = muscleRepository.count();
+		Muscle newMuscle = MuscleTest.getMuscleInstance("newMuscle");
+		Long givenMuscleNum = muscleRepository.count();
 		
 		//When
 		muscleService.save(newMuscle);
 		
 		//Then
-		assertEquals(beforeNum+1,muscleRepository.count());
+		assertEquals(givenMuscleNum + 1, muscleRepository.count());
 	}
 	
 	/*
@@ -279,18 +322,16 @@ public class MuscleServiceTest {
 	 */
 	
 	@Test
-	@Transactional
 	@DisplayName("Muscle 삭제하기 -> 정상")
 	public void deleteTest() {
 		//Given
-		Muscle existMuscle = muscleRepository.findAll().get(0);
-		Long beforeNum = muscleRepository.count();
+		Long givenMuscleNum = muscleRepository.count();
 		
 		//When
-		muscleService.delete(existMuscle);
+		muscleService.delete(muscle);
 		
 		//Then
-		assertEquals(beforeNum-1,muscleRepository.count());
+		assertEquals(givenMuscleNum - 1, muscleRepository.count());
 	}
 	
 	/*
@@ -298,21 +339,51 @@ public class MuscleServiceTest {
 	 */
 	
 	@Test
-	@DisplayName("키워드를 이름에 포함하는 Muscle 개수 세기 -> 정상")
-	public void countAllWithNameKeywordTest() {
+	@DisplayName("키워드를 이름에 포함하는 Muscle 개수 세기 -> 정상, 모든 Muscle 이 만족하는 키워드")
+	public void countAllWithNameKeywordTestAll() {
 		//Given
-		String allKeyword = "name";
-		String noneKeyword = "none!!!";
-		String oneKeyword = String.valueOf(INIT_MUSCLE_NUM);
+		String keywordForAllMuscle = MuscleTest.DEFAULT_NAME;
+		
+		MuscleTest.addNewMusclesInDBByNum(10, muscleRepository);
+		
+		long givenMuscleNum = muscleRepository.count();
 		
 		//When
-		long resultAll = muscleService.countAllWithNameKeyword(allKeyword);
-		long resultZero = muscleService.countAllWithNameKeyword(noneKeyword);
-		long resultOne = muscleService.countAllWithNameKeyword(oneKeyword);
+		long result = muscleService.countAllWithNameKeyword(keywordForAllMuscle);
 		
 		//Then
-		assertEquals(resultAll,INIT_MUSCLE_NUM);
-		assertEquals(resultZero,0);
-		assertEquals(resultOne,1);
+		assertEquals(givenMuscleNum, result);
+	}
+	
+	@Test
+	@DisplayName("키워드를 이름에 포함하는 Muscle 개수 세기 -> 정상, 단 하나의 Muscle만 만족하는 키워드")
+	public void countAllWithNameKeywordTestOnlyOne() {
+		//Given
+		String keywordForOnlyOneMuscle = "i am only one";
+		Muscle onlyOneMuscle = MuscleTest.getMuscleInstance(keywordForOnlyOneMuscle);
+		muscleRepository.save(onlyOneMuscle);
+		
+		MuscleTest.addNewMusclesInDBByNum(10, muscleRepository);
+		
+		//When
+		long result = muscleService.countAllWithNameKeyword(keywordForOnlyOneMuscle);
+		
+		//Then
+		assertEquals(1, result);
+	}
+	
+	@Test
+	@DisplayName("키워드를 이름에 포함하는 Muscle 개수 세기 -> 정상, 어느 Muscle 도 만족하지 않는 키워드")
+	public void countAllWithNameKeywordTestNothing() {
+		//Given
+		String keywordForNothing = "nothing.!!";
+		
+		MuscleTest.addNewMusclesInDBByNum(10, muscleRepository);
+		
+		//When
+		long result = muscleService.countAllWithNameKeyword(keywordForNothing);
+		
+		//Then
+		assertEquals(0, result);
 	}
 }

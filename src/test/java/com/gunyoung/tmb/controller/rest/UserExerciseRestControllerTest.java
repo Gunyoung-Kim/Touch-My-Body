@@ -26,10 +26,12 @@ import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.response.UserExerciseIsDoneDTO;
 import com.gunyoung.tmb.dto.response.UserExerciseWithDateDTO;
 import com.gunyoung.tmb.enums.RoleType;
-import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.util.UserExerciseTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**
@@ -56,49 +58,7 @@ public class UserExerciseRestControllerTest {
 	private ExerciseRepository exerciseRepository;
 	
 	private ObjectMapper objectMapper = new ObjectMapper();
-	
-	/**
-	 *  --------------- 테스트 진행과정에 있어 필요한 리소스 반환 메소드들 --------------------- 
-	 */
-	
-	private User getUserInstance(RoleType role) {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234!")
-				.firstName("first")
-				.lastName("last")
-				.nickName("nickName")
-				.role(role)
-				.build();
-		return user;
-	}
-	
-	private Exercise getExerciseInstance() {
-		Exercise exercise = Exercise.builder()
-				.name("exercise")
-				.description("description")
-				.caution("caution")
-				.movement("movement")
-				.target(TargetType.BACK)
-				.build();
-		return exercise;
-	}
-	
-	private UserExercise getUserExerciseInstance(Calendar date) {
-		UserExercise ue = UserExercise.builder()
-				.date(date)
-				.description("description")
-				.laps(1)
-				.sets(1)
-				.weight(1)
-				.build();
-		return ue;
-	}
-	
-	/**
-	 *  ---------------------------- 본 테스트 코드 ---------------------------------
-	 */
-	
+
 	/*
 	 * @RequestMapping(value="/user/exercise/calendar/records",method=RequestMethod.GET)
 	 * @LoginIdSessionNotNull
@@ -115,13 +75,13 @@ public class UserExerciseRestControllerTest {
 		int month = Calendar.JANUARY;
 		int date = 16;
 		
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
-		Exercise exercise = getExerciseInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
-		UserExercise ue = getUserExerciseInstance(new GregorianCalendar(year,month,date));
+		UserExercise ue = UserExerciseTest.getUserExerciseInstance(new GregorianCalendar(year,month,date));
 		ue.setUser(user);
 		ue.setExercise(exercise);
 		
@@ -153,7 +113,7 @@ public class UserExerciseRestControllerTest {
 	@DisplayName("접속자의 특정 년월 운동 여부 반환 -> 정상")
 	public void getIsDoneListTest() throws Exception {
 		//Given
-		User user = getUserInstance(RoleType.USER);
+		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
 		
 		int year = 1999;
@@ -162,10 +122,10 @@ public class UserExerciseRestControllerTest {
 		int endDay = 15;
 		
 		for(int i=startDay;i<=endDay;i++) {
-			Exercise exercise = getExerciseInstance();
+			Exercise exercise = ExerciseTest.getExerciseInstance();
 			exerciseRepository.save(exercise);
 			
-			UserExercise ue = getUserExerciseInstance(new GregorianCalendar(year,Calendar.JANUARY,i));
+			UserExercise ue = UserExerciseTest.getUserExerciseInstance(new GregorianCalendar(year,Calendar.JANUARY,i));
 			ue.setUser(user);
 			ue.setExercise(exercise);
 			

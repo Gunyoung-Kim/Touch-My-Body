@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
+import com.gunyoung.tmb.util.ExercisePostTest;
 
 /**
  * {@link ManagerExercisePostRestController} 에 대한 테스트 클래스 <br>
@@ -33,14 +34,6 @@ public class ManagerExercisePostRestControllerTest {
 	@Autowired
 	private ExercisePostRepository exercisePostRepository;
 	
-	private ExercisePost getExercisePostInstance() {
-		ExercisePost ep = ExercisePost.builder()
-				.title("title")
-				.contents("contents")
-				.build();
-		return ep;
-	}
-	
 	/*
 	 * @RequestMapping(value="/manager/community/remove/post", method = RequestMethod.DELETE)
 	 * public void removeExercisePostByManager(@RequestParam("postId") Long postId)
@@ -51,7 +44,7 @@ public class ManagerExercisePostRestControllerTest {
 	@DisplayName("매니저의 게시글 삭제 -> 정상")
 	public void removeExercisePostByManagerTest() throws Exception {
 		//Given
-		ExercisePost ep = getExercisePostInstance();
+		ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		
 		exercisePostRepository.save(ep);
 		
