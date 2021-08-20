@@ -1,4 +1,4 @@
-# Touch-My-Body
+# Touch-My-Body [![Build Status](https://app.travis-ci.com/Gunyoung-Kim/Touch-My-Body.svg?branch=master)](https://app.travis-ci.com/Gunyoung-Kim/Touch-My-Body)
 
 최신 버전 : ver 0.0.8
 
