@@ -1,10 +1,14 @@
 package com.gunyoung.tmb.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
+import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.enums.TargetType;
 
 /**
@@ -52,6 +56,36 @@ public class ExerciseTest {
 		nonExistExerciseId++;
 		
 		return nonExistExerciseId;
+	}
+	
+	/**
+	 * Repository를 사용해 DB에 인자로 전해진 num 만큼 Exercise 생성 후 저장
+	 * @author kimgun-yeong
+	 */
+	public static List<Exercise> addNewExercisesInDBByNum(int num, JpaRepository<Exercise, Long> exerciseRepository) {
+		List<Exercise> newExercises = new ArrayList<>();
+		for(int i=0;i < num;i++) {
+			Exercise newExercise = getExerciseInstance();
+			newExercises.add(newExercise);
+		}
+		return exerciseRepository.saveAll(newExercises);
+	}
+	
+	/**
+	 * 테스트용 {@link com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO} 인스턴스 반환 <br>
+	 * name 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static SaveExerciseDTO getSaveExerciseDTOInstance(String name) {
+		SaveExerciseDTO dto = SaveExerciseDTO.builder()
+				.name(name)
+				.description("description")
+				.caution("caution")
+				.movement("movement")
+				.target(TargetType.BACK.getKoreanName())
+				.build();
+		
+		return dto;
 	}
 	
 	/**

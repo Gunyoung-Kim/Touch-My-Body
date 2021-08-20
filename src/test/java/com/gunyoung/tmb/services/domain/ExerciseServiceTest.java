@@ -1,9 +1,10 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +28,19 @@ import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
+import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.util.MuscleTest;
+import com.gunyoung.tmb.util.TargetTypeTest;
 import com.gunyoung.tmb.utils.PageUtil;
 
+/**
+ * ExerciseService에 대한 테스트 클래스 <br>
+ * Spring의 JpaRepository의 정상 작동을 가정으로 두고 테스트 진행
+ * @author kimgun-yeong
+ *
+ */
 @SpringBootTest
 public class ExerciseServiceTest {
-
-	private static final int INIT_EXERCISE_NUM = 30;
 	
 	@Autowired
 	ExerciseRepository exerciseRepository;
@@ -46,20 +54,12 @@ public class ExerciseServiceTest {
 	@Autowired
 	ExerciseService exerciseService;
 	
+	private Exercise exercise;
+	
 	@BeforeEach
 	void setup() {
-		List<Exercise> list = new ArrayList<>();
-		for(int i=1;i<=INIT_EXERCISE_NUM;i++) {
-			Exercise exercise = Exercise.builder()
-									    .name("Exercise" +i)
-									    .description("Description" + i)
-									    .caution("Caution" + i)
-									    .movement("Movement" + i)
-									    .target(TargetType.CHEST)
-									    .build();
-			list.add(exercise);
-		}
-		exerciseRepository.saveAll(list);
+		exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
 	}
 	
 	@AfterEach
@@ -74,31 +74,26 @@ public class ExerciseServiceTest {
 	@DisplayName("id로 Exercise 찾기 -> 해당 id의 Exercise 없음")
 	public void findByIdNonExist() {
 		//Given
-		long maxId = -1;
-		List<Exercise> list = exerciseRepository.findAll();
-		
-		for(Exercise c: list) {
-			maxId = Math.max(maxId, c.getId());
-		}
+		long nonExistExerciseId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
 		//When
-		Exercise result = exerciseService.findById(maxId+ 1000);
+		Exercise result = exerciseService.findById(nonExistExerciseId);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
 	@DisplayName("id로 Exercise 찾기 -> 정상")
 	public void findByIdTest() {
 		//Given
-		Long existId = exerciseRepository.findAll().get(0).getId();
+		Long existExerciseId = exercise.getId();
 		
 		//When
-		Exercise result = exerciseService.findById(existId);
+		Exercise result = exerciseService.findById(existExerciseId);
 		
 		//Then
-		assertEquals(result != null, true);
+		assertNotNull(result);
 	}
 	
 	/*
@@ -115,20 +110,20 @@ public class ExerciseServiceTest {
 		Exercise result = exerciseService.findByName(nonExistName);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
 	@DisplayName("name으로 Exercise 찾기 -> 정상")
 	public void findByNameTest() {
 		//Given
-		String existName = "Exercise1";
+		String existName = exercise.getName();
 		
 		//When
 		Exercise result = exerciseService.findByName(existName);
 		
 		//Then
-		assertEquals(result != null, true);
+		assertNotNull(result);
 	}
 	
 	/*
@@ -142,11 +137,15 @@ public class ExerciseServiceTest {
 		//Given
 		Integer pageNumber = 1;
 		
+		ExerciseTest.addNewExercisesInDBByNum(10, exerciseRepository);
+		
+		long givenExerciseNum = exerciseRepository.count();
+		
 		//When
 		Page<Exercise> result =exerciseService.findAllInPage(pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
 		
 		//Then
-		assertEquals(result.getContent().size(),Math.min(INIT_EXERCISE_NUM, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE));
+		assertEquals(Math.min(givenExerciseNum, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE), result.getContent().size());
 	}
 	
 	/*
@@ -155,24 +154,59 @@ public class ExerciseServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName(" 이름에 키워드를 포함하는 모든 운동 페이지로 가져오기 -> 정상")
-	public void findAllWithNameKeywordInPage() {
+	@DisplayName(" 이름에 키워드를 포함하는 모든 운동 페이지로 가져오기 -> 정상, 모든 Exercise 만족 키워드")
+	public void findAllWithNameKeywordInPageAll() {
 		//Given
 		Integer pageNumber = 1;
-		String allContainsKeyword = "Exercise";
-		String noContainsKeyword = "none!!!!";
-		String onlyOneContainsKeyword = String.valueOf(INIT_EXERCISE_NUM);
+		String keywordForAllExercise = ExerciseTest.getExerciseInstance().getName();
+		
+		ExerciseTest.addNewExercisesInDBByNum(5, exerciseRepository);
+		
+		long givenExerciseNum = exerciseRepository.count();
 		
 		//When
-		
-		Page<Exercise> allResult = exerciseService.findAllWithNameKeywordInPage(allContainsKeyword, pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
-		Page<Exercise> noResult = exerciseService.findAllWithNameKeywordInPage(noContainsKeyword, pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
-		Page<Exercise> oneResult = exerciseService.findAllWithNameKeywordInPage(onlyOneContainsKeyword, pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
+		Page<Exercise> result = exerciseService.findAllWithNameKeywordInPage(keywordForAllExercise, pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
 		
 		//Then
-		assertEquals(allResult.getContent().size(),Math.min(INIT_EXERCISE_NUM, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE));
-		assertEquals(noResult.getContent().size(),0);
-		assertEquals(oneResult.getContent().size(),1);
+		assertEquals(Math.min(givenExerciseNum, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE), result.getContent().size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName(" 이름에 키워드를 포함하는 모든 운동 페이지로 가져오기 -> 정상, 오직 하나의 Exercise 만족 키워드")
+	public void findAllWithNameKeywordInPageOnlyOne() {
+		//Given
+		Integer pageNumber = 1;
+		String keywordOnlyOneContains = "I am Only one Exercise";
+		
+		ExerciseTest.addNewExercisesInDBByNum(5, exerciseRepository);
+		
+		Exercise exerciseForOnlyOne = ExerciseTest.getExerciseInstance();
+		exerciseForOnlyOne.setName(keywordOnlyOneContains);
+		exerciseRepository.save(exerciseForOnlyOne);
+		
+		//When
+		Page<Exercise> result = exerciseService.findAllWithNameKeywordInPage(keywordOnlyOneContains, pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
+		
+		//Then
+		assertEquals(1, result.getContent().size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName(" 이름에 키워드를 포함하는 모든 운동 페이지로 가져오기 -> 정상, 키워드 만족하는 Exercise 없음")
+	public void findAllWithNameKeywordInPageNothing() {
+		//Given
+		Integer pageNumber = 1;
+		String noContainsKeyword = "none!!!!";
+		
+		ExerciseTest.addNewExercisesInDBByNum(5, exerciseRepository);
+		
+		//When
+		Page<Exercise> noResult = exerciseService.findAllWithNameKeywordInPage(noContainsKeyword, pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
+		
+		//Then
+		assertEquals(0, noResult.getContent().size());
 	}
 	
 	/*
@@ -181,48 +215,56 @@ public class ExerciseServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("모든 운동 이름과 주 타겟으로 분류해서 가져오기 -> 정상")
+	@DisplayName("모든 운동 이름과 주 타겟으로 분류해서 가져오기 -> 정상, 단 하나의 Exercise만 만족하는 target 확인")
 	public void getAllExercisesNamewithSortingTest() {
 		//Given
-		Exercise exercise = Exercise.builder()
-			    .name("ArmExercies")
-			    .description("Description")
-			    .caution("Caution")
-			    .movement("Movement")
-			    .target(TargetType.ARM)
-			    .build();
-		exerciseRepository.save(exercise);
+		TargetType targetTypeForOnlyOne = TargetTypeTest.getAnotherTargetType(exercise.getTarget());
+		Exercise exerciseAnotherTarget = ExerciseTest.getExerciseInstance("only one", targetTypeForOnlyOne);
+		exerciseRepository.save(exerciseAnotherTarget);
+		
+		ExerciseTest.addNewExercisesInDBByNum(5, exerciseRepository);
 		
 		//When
 		Map<String,List<String>> result = exerciseService.getAllExercisesNamewithSorting();
 		
 		//Then
-		assertEquals(result.size(),2);
-		assertEquals(result.get(TargetType.ARM.getKoreanName()).size(),1);
-		assertEquals(result.get(TargetType.CHEST.getKoreanName()).size(),INIT_EXERCISE_NUM);
+		assertEquals(1, result.get(targetTypeForOnlyOne.getKoreanName()).size());
 	}
-	
-	
 	
 	/*
 	 *  public Exercise save(Exercise Exercise)
 	 */
 	
 	@Test
-	@Transactional
-	@DisplayName("Exercise 수정하기 -> 정상")
-	public void mergeTest() {
+	@DisplayName("Exercise 수정하기 -> 정상, 변화 확인")
+	public void mergeTestCheckChange() {
 		//Given
-		Exercise existExercise = exerciseRepository.findAll().get(0);
-		Long id = existExercise.getId();
-		existExercise.setDescription("Changed Description");
+		String changeDescription = "Changed Description";
+		Long exerciseId = exercise.getId();
+		exercise.setDescription(changeDescription);
 		
 		//When
-		exerciseService.save(existExercise);
+		exerciseService.save(exercise);
 		
 		//Then
-		Exercise result = exerciseRepository.getById(id);
-		assertEquals(result.getDescription(),"Changed Description");
+		Exercise result = exerciseRepository.findById(exerciseId).get();
+		assertEquals(changeDescription, result.getDescription());
+	}
+	
+	@Test
+	@DisplayName("Exercise 수정하기 -> 정상, 개수 변화 없음 확인")
+	public void mergeTestCheckCount() {
+		//Given
+		String changeDescription = "Changed Description";
+		exercise.setDescription(changeDescription);
+		
+		long givenExerciseNum = exerciseRepository.count();
+		
+		//When
+		exerciseService.save(exercise);
+		
+		//Then
+		assertEquals(givenExerciseNum, exerciseRepository.count());
 	}
 	
 	@Test
@@ -230,20 +272,14 @@ public class ExerciseServiceTest {
 	@DisplayName("Exercise 추가하기 -> 정상")
 	public void saveTest() {
 		//Given
-		Exercise newExercise = Exercise.builder()
-								 	   .name("New Exercies")
-								 	   .description("New Description")
-								 	   .caution("New Caution")
-									   .movement("New Movement")
-									   .target(TargetType.CHEST)
-									   .build();
-		Long beforeNum = exerciseRepository.count();
+		Exercise newExercise = ExerciseTest.getExerciseInstance("newExercise", TargetType.ARM);
+		Long givenExerciseNum = exerciseRepository.count();
 		
 		//When
 		exerciseService.save(newExercise);
 		
 		//Then
-		assertEquals(beforeNum+1,exerciseRepository.count());
+		assertEquals(givenExerciseNum + 1,exerciseRepository.count());
 	}
 	
 	/*
@@ -252,101 +288,183 @@ public class ExerciseServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음")
-	public void saveWithSaveExerciseDTOMuscleNotFounded() {
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음, MuscleNotFoundedException throw 확인")
+	public void saveWithSaveExerciseDTOMuscleNotFoundedCheckMuscleNotFoundedException() {
 		//Given
 		String nonExistMuscleName =  "none";
 		
-		SaveExerciseDTO dto = SaveExerciseDTO.builder()
-				.name("newName")
-				.description("newDes")
-				.caution("newCau")
-				.movement("newMove")
-				.target(TargetType.BACK.getKoreanName())
-				.build();
-		
+		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance("newExericse");
 		dto.getMainMuscles().add(nonExistMuscleName);
-		long exerciseNum =  exerciseRepository.count();
-		long exerciseMuscleNum = exerciseMuscleRepository.count();
 		
-		Exercise exercise = new Exercise();
+		Exercise exercise = Exercise.builder().build();
+		
 		//When,Then
 		assertThrows(MuscleNotFoundedException.class, () -> {
 			exerciseService.saveWithSaveExerciseDTO(exercise,dto);
 		});
-		
-		
-		assertEquals(exerciseNum, exerciseRepository.count());
-		assertEquals(exerciseMuscleNum,exerciseMuscleRepository.count());
 	}
 	
 	@Test
 	@Transactional
-	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 TargetType 없음")
-	public void saveWithSaveExerciseDTOTargetTypeNotFounded() {
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음, Exercise 개수 변화 없음 확인")
+	public void saveWithSaveExerciseDTOMuscleNotFoundedCheckExerciseNum() {
+		//Given
+		String nonExistMuscleName =  "none";
+		
+		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance("newExericse");
+		dto.getMainMuscles().add(nonExistMuscleName);
+		
+		long givenExerciseNum =  exerciseRepository.count();
+		
+		Exercise exercise = Exercise.builder().build();
+		
+		//When
+		assertThrows(MuscleNotFoundedException.class, () -> {
+			exerciseService.saveWithSaveExerciseDTO(exercise,dto);
+		});
+		
+		//Then
+		assertEquals(givenExerciseNum, exerciseRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음, Exercise 개수 변화 없음 확인")
+	public void saveWithSaveExerciseDTOMuscleNotFoundedCheckExerciseMuscleNum() {
+		//Given
+		String nonExistMuscleName =  "none";
+		
+		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance("newExericse");
+		dto.getMainMuscles().add(nonExistMuscleName);
+		
+		long givenExerciseMuscleNum = exerciseMuscleRepository.count();
+		
+		Exercise exercise = Exercise.builder().build();
+		
+		//When
+		assertThrows(MuscleNotFoundedException.class, () -> {
+			exerciseService.saveWithSaveExerciseDTO(exercise,dto);
+		});
+		
+		//Then
+		assertEquals(givenExerciseMuscleNum, exerciseMuscleRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 TargetType 없음, TargetTypeNotFoundedException throw 확인")
+	public void saveWithSaveExerciseDTOTargetTypeNotFoundedCheckTargetTypeNotFoundedException() {
 		//Given
 		String existMuscleName = "new Muscle";
-		Muscle muscle = Muscle.builder()
-				.name(existMuscleName)
-				.category(TargetType.ARM)
-				.build();
+		Muscle muscle = MuscleTest.getMuscleInstance(existMuscleName, TargetType.ARM);
 		muscleRepository.save(muscle);
 		
-		
-		SaveExerciseDTO dto = SaveExerciseDTO.builder()
-				.name("newName")
-				.description("newDes")
-				.caution("newCau")
-				.movement("newMove")
-				.target("none")
-				.build();
+		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance("newExercise");
+		dto.setTarget("none");
 		dto.getMainMuscles().add(existMuscleName);
 		
-		long exerciseNum =  exerciseRepository.count();
-		long exerciseMuscleNum = exerciseMuscleRepository.count();
-		Exercise exercise = new Exercise();
+		Exercise exercise = Exercise.builder().build();
+		
+		//When, Then
+		assertThrows(TargetTypeNotFoundedException.class, () -> {
+			exerciseService.saveWithSaveExerciseDTO(exercise,dto);
+		});
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 TargetType 없음, Exercise 개수 변화 없음 확인")
+	public void saveWithSaveExerciseDTOTargetTypeNotFoundedCheckExerciseNum() {
+		//Given
+		String existMuscleName = "new Muscle";
+		Muscle muscle = MuscleTest.getMuscleInstance(existMuscleName, TargetType.ARM);
+		muscleRepository.save(muscle);
+		
+		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance("newExercise");
+		dto.setTarget("none");
+		dto.getMainMuscles().add(existMuscleName);
+		
+		long givenExerciseNum =  exerciseRepository.count();
+		
+		Exercise exercise = Exercise.builder().build();
+		
 		//When
 		assertThrows(TargetTypeNotFoundedException.class, () -> {
 			exerciseService.saveWithSaveExerciseDTO(exercise,dto);
 		});
 		
 		//Then
-		
-		assertEquals(exerciseNum, exerciseRepository.count());
-		assertEquals(exerciseMuscleNum,exerciseMuscleRepository.count());
+		assertEquals(givenExerciseNum, exerciseRepository.count());
 	}
 	
 	@Test
 	@Transactional
-	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 정상")
-	public void saveWithSaveExerciseDTOTest() {
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 TargetType 없음, ExerciseMuscle 개수 변화 없음 확인")
+	public void saveWithSaveExerciseDTOTargetTypeNotFounded() {
 		//Given
 		String existMuscleName = "new Muscle";
-		Muscle muscle = Muscle.builder()
-				.name(existMuscleName)
-				.category(TargetType.ARM)
-				.build();
+		Muscle muscle = MuscleTest.getMuscleInstance(existMuscleName, TargetType.ARM);
 		muscleRepository.save(muscle);
 		
-		SaveExerciseDTO dto = SaveExerciseDTO.builder()
-				.name("newName")
-				.description("newDes")
-				.caution("newCau")
-				.movement("newMove")
-				.target(TargetType.BACK.getKoreanName())
-				.build();
+		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance("newExercise");
+		dto.setTarget("none");
 		dto.getMainMuscles().add(existMuscleName);
 		
-		long exerciseNum =  exerciseRepository.count();
-		long exerciseMuscleNum = exerciseMuscleRepository.count();
-		Exercise exercise = new Exercise();
+		long givenExerciseMuscleNum = exerciseMuscleRepository.count();
+		
+		Exercise exercise = Exercise.builder().build();
+		
 		//When
-		Exercise result = exerciseService.saveWithSaveExerciseDTO(exercise,dto);
+		assertThrows(TargetTypeNotFoundedException.class, () -> {
+			exerciseService.saveWithSaveExerciseDTO(exercise,dto);
+		});
 		
 		//Then
-		assertEquals(exerciseNum+1, exerciseRepository.count());
-		assertEquals(result.getExerciseMuscles().size(),1);
-		assertEquals(exerciseMuscleNum+1,exerciseMuscleRepository.count());
+		assertEquals(givenExerciseMuscleNum, exerciseMuscleRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 정상, Exercise 개수 추가 확인")
+	public void saveWithSaveExerciseDTOTestCheckExerciseNum() {
+		//Given
+		String existMuscleName = "new Muscle";
+		Muscle muscle = MuscleTest.getMuscleInstance(existMuscleName, TargetType.ARM);
+		muscleRepository.save(muscle);
+		
+		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance("newExercise");
+		dto.getMainMuscles().add(existMuscleName);
+		
+		long givenExerciseNum =  exerciseRepository.count();
+		Exercise exercise = Exercise.builder().build();
+		
+		//When
+		exerciseService.saveWithSaveExerciseDTO(exercise,dto);
+		
+		//Then
+		assertEquals(givenExerciseNum + 1, exerciseRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 정상, ExerciseMuscle 추가 확인")
+	public void saveWithSaveExerciseDTOTestCheckExerciseMuscleNum() {
+		//Given
+		String existMuscleName = "new Muscle";
+		Muscle muscle = MuscleTest.getMuscleInstance(existMuscleName, TargetType.ARM);
+		muscleRepository.save(muscle);
+		
+		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance("newExercise");
+		dto.getMainMuscles().add(existMuscleName);
+		
+		long givenExerciseMuscleNum = exerciseMuscleRepository.count();
+		Exercise exercise = Exercise.builder().build();
+		
+		//When
+		exerciseService.saveWithSaveExerciseDTO(exercise,dto);
+		
+		//Then
+		assertEquals(givenExerciseMuscleNum + 1, exerciseMuscleRepository.count());
 	}
 	
 	/*
@@ -358,14 +476,13 @@ public class ExerciseServiceTest {
 	@DisplayName("Exercise 삭제하기 -> 정상")
 	public void deleteTest() {
 		//Given
-		Exercise existExercise = exerciseRepository.findAll().get(0);
-		Long beforeNum = exerciseRepository.count();
+		Long givenExerciseNum = exerciseRepository.count();
 		
 		//When
-		exerciseService.delete(existExercise);
+		exerciseService.delete(exercise);
 		
 		//Then
-		assertEquals(beforeNum-1,exerciseRepository.count());
+		assertEquals(givenExerciseNum - 1, exerciseRepository.count());
 	}
 	
 	/*
@@ -376,34 +493,66 @@ public class ExerciseServiceTest {
 	@DisplayName("모든 Exercise 개수 세기 ->정상")
 	public void countAllTest() {
 		//Given
+		ExerciseTest.addNewExercisesInDBByNum(10, exerciseRepository);
+		long givenExerciseNum = exerciseRepository.count();
 		
 		//When
 		long result = exerciseService.countAll();
 		
 		//Then
-		assertEquals(result,INIT_EXERCISE_NUM);
+		assertEquals(givenExerciseNum, result);
 	}
 	
 	/*
 	 * public long countAllWithNameKeyword(String nameKeyword)
 	 */
 	@Test
-	@DisplayName("이름 키워드를 만족하는 Exercise 개수 세기 -> 정상")
-	public void countAllWithNameKeywordTest() {
+	@DisplayName("이름 키워드를 만족하는 Exercise 개수 세기 -> 정상, 모든 Exercise가 만족하는 키워드")
+	public void countAllWithNameKeywordTestAll() {
 		//Given
-		String allContainsKeyword = "Exercise";
-		String noContainsKeyword = "none!!!!";
-		String onlyOneContainsKeyword = String.valueOf(INIT_EXERCISE_NUM);
+		String allContainsKeyword = ExerciseTest.getExerciseInstance().getName();
+		
+		ExerciseTest.addNewExercisesInDBByNum(10, exerciseRepository);
+		
+		long givenExerciseNum = exerciseRepository.count();
 		
 		//When
-		long resultAll = exerciseService.countAllWithNameKeyword(allContainsKeyword);
-		long resultNone = exerciseService.countAllWithNameKeyword(noContainsKeyword);
-		long resultOne = exerciseService.countAllWithNameKeyword(onlyOneContainsKeyword);
+		long result = exerciseService.countAllWithNameKeyword(allContainsKeyword);
 		
 		//Then
-		assertEquals(resultAll,INIT_EXERCISE_NUM);
-		assertEquals(resultNone,0);
-		assertEquals(resultOne,1);
+		assertEquals(givenExerciseNum, result);
+	}
+	
+	@Test
+	@DisplayName("이름 키워드를 만족하는 Exercise 개수 세기 -> 정상, 오직 하나의 Exercise가 만족하는 키워드")
+	public void countAllWithNameKeywordTestOnlyOne() {
+		//Given
+		String onlyOneContainsKeyword = "I am only one";
+		Exercise onlyOneExercise = ExerciseTest.getExerciseInstance(onlyOneContainsKeyword, TargetType.ARM);
+		exerciseRepository.save(onlyOneExercise);
+		
+		ExerciseTest.addNewExercisesInDBByNum(10, exerciseRepository);
+		
+		//When
+		long result = exerciseService.countAllWithNameKeyword(onlyOneContainsKeyword);
+		
+		//Then
+		assertEquals(1, result);
+	}
+	
+	@Test
+	@DisplayName("이름 키워드를 만족하는 Exercise 개수 세기 -> 정상, 모든 Exercise가 만족하지 않는 키워드")
+	public void countAllWithNameKeywordTestNothing() {
+		//Given
+		String noContainsKeyword = "none!!!!";
+		
+		ExerciseTest.addNewExercisesInDBByNum(10, exerciseRepository);
+		
+		//When
+		long result = exerciseService.countAllWithNameKeyword(noContainsKeyword);
+		
+		//Then
+		assertEquals(0, result);
 	}
 	
 	/*
@@ -415,18 +564,13 @@ public class ExerciseServiceTest {
 	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 해당 exercise 없음")
 	public void getExerciseForInfoViewDTOByExerciseIdNonExist() {
 		//Given
-		Long nonExistId = Long.valueOf(1);
-		
-		for(Exercise e: exerciseRepository.findAll()) {
-			nonExistId = Math.max(nonExistId, e.getId());
-		}
-		nonExistId++;
+		Long nonExistId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
 		//When
 		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistId);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
@@ -434,13 +578,12 @@ public class ExerciseServiceTest {
 	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 정상")
 	public void getExerciseForInfoViewDTOByExerciseIdTest() {
 		//Given
-		Exercise existExercise = exerciseRepository.findAll().get(0);
-		Long existId = existExercise.getId();
+		Long existId = exercise.getId();
 		
 		//When
 		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(existId);
 		
 		//Then
-		assertEquals(result != null,true);
+		assertNotNull(result);
 	}
 }
