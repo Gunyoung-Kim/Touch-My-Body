@@ -1,6 +1,9 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -21,6 +24,8 @@ import com.gunyoung.tmb.dto.response.UserExerciseIsDoneDTO;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
+import com.gunyoung.tmb.util.UserExerciseTest;
+import com.gunyoung.tmb.util.UserTest;
 
 /**
  * UserExerciseService 클래스에 대한 테스트 클래스 <br>
@@ -31,7 +36,6 @@ import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 @SpringBootTest
 public class UserExerciseServiceTest {
 	
-	private static final int INIT_USER_EXERCISE_NUM = 30;
 	private static final Calendar DEFAULT_CALENDAR = new GregorianCalendar(1999,Calendar.JANUARY,16);
 	
 	@Autowired
@@ -43,20 +47,12 @@ public class UserExerciseServiceTest {
 	@Autowired
 	UserExerciseService userExerciseService;
 	
+	private UserExercise userExercise;
 	
 	@BeforeEach
 	void setup() {
-		for(int i=1;i<=INIT_USER_EXERCISE_NUM;i++) {
-			UserExercise userExercise = UserExercise.builder()
-													.laps(i)
-													.sets(i)
-													.weight(i)
-													.description(i+"번째 description")
-													.date(DEFAULT_CALENDAR)
-													.build();
-			
-			userExerciseRepository.save(userExercise);
-		}
+		userExercise = UserExerciseTest.getUserExerciseInstance(DEFAULT_CALENDAR);
+		userExerciseRepository.save(userExercise);
 	}
 	
 	@AfterEach
@@ -71,31 +67,26 @@ public class UserExerciseServiceTest {
 	@DisplayName("Id로 해당 UserExercise 찾기 -> 해당 Id 존재하지 않음")
 	public void findByIdNonExist() {
 		//Given
-		long maxId = -1;
-		List<UserExercise> list = userExerciseRepository.findAll();
-		
-		for(UserExercise ue: list) {
-			maxId = Math.max(maxId, ue.getId());
-		}
+		long nonExistId = UserExerciseTest.getNonExistUserExerciseId(userExerciseRepository);
 		
 		//When
-		UserExercise result = userExerciseService.findById(maxId+100);
+		UserExercise result = userExerciseService.findById(nonExistId+100);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
 	@DisplayName("Id로 해당 UserExercise 찾기 ->  정상")
 	public void findByIdTest() {
 		//Given
-		 Long existId = userExerciseRepository.findAll().get(0).getId();
+		 Long existId = userExercise.getId();
 		
 		//When
 		 UserExercise result = userExerciseService.findById(existId);
 		 
 		//Then
-		 assertEquals(result != null,true);
+		 assertNotNull(result);
 	}
 	
 	/*
@@ -107,18 +98,17 @@ public class UserExerciseServiceTest {
 	@DisplayName("유저Id와 날짜로 운동 기록 찾기 ->정상")
 	public void findByUserIdAndDateTest() {
 		//Given
-		User user = getUserInstance();
-	
+		User user = UserTest.getUserInstance();
 		user = userRepository.save(user);
 		Long userId = user.getId();
 		
-		List<UserExercise> list = userExerciseRepository.findAll();
+		UserExerciseTest.addNewUserExercisesInDBByNum(10, userExerciseRepository);
 		
-		for(int i=0;i<INIT_USER_EXERCISE_NUM/3;i++) {
-			UserExercise ue = list.get(i);
-			
+		List<UserExercise> userExerciseList = userExerciseRepository.findAll();
+		long givenUserExerciseNum = userExerciseList.size();
+		
+		for(UserExercise ue: userExerciseList) {
 			ue.setUser(user);
-			
 			userExerciseRepository.save(ue);
 		}
 		
@@ -126,7 +116,7 @@ public class UserExerciseServiceTest {
 		List<UserExercise> resultList = userExerciseService.findByUserIdAndDate(userId, DEFAULT_CALENDAR);
 		
 		//Then
-		assertEquals(resultList.size(),INIT_USER_EXERCISE_NUM/3);
+		assertEquals(givenUserExerciseNum, resultList.size());
 	}
 	
 	/*
@@ -135,50 +125,85 @@ public class UserExerciseServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("유저 id, 년, 월로 날짜에 운동 했는지 여부 -> 정상")
-	public void findIsDoneDTOByUserIdAndYearAndMonth() {
+	@DisplayName("유저 id, 년, 월로 날짜에 운동 했는지 여부 -> 정상, isDone 확인")
+	public void findIsDoneDTOByUserIdAndYearAndMonthCheckIsDone() {
 		//Given
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		user = userRepository.save(user);
 		Long userId = user.getId();
 		
-		UserExercise ue = userExerciseRepository.findAll().get(0);
-		
-		ue.setUser(user);
-		
-		userExerciseRepository.save(ue);
+		userExercise.setUser(user);
+		userExerciseRepository.save(userExercise);
 		
 		int existYear = DEFAULT_CALENDAR.get(Calendar.YEAR);
 		int existMonth = DEFAULT_CALENDAR.get(Calendar.MONTH);
 		int existDay = DEFAULT_CALENDAR.get(Calendar.DATE);
+		
 		//When
 		List<UserExerciseIsDoneDTO> result = userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId,existYear,existMonth);
 		
 		//Then
 		assertEquals(result.get(existDay-1).isDone(),true);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저 id, 년, 월로 날짜에 운동 했는지 여부 -> 정상, date 확인")
+	public void findIsDoneDTOByUserIdAndYearAndMonthCheckDate() {
+		//Given
+		User user = UserTest.getUserInstance();
+		user = userRepository.save(user);
+		Long userId = user.getId();
+		
+		userExercise.setUser(user);
+		userExerciseRepository.save(userExercise);
+		
+		int existYear = DEFAULT_CALENDAR.get(Calendar.YEAR);
+		int existMonth = DEFAULT_CALENDAR.get(Calendar.MONTH);
+		int existDay = DEFAULT_CALENDAR.get(Calendar.DATE);
+		
+		//When
+		List<UserExerciseIsDoneDTO> result = userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId,existYear,existMonth);
+		
+		//Then
 		assertEquals(result.get(existDay-1).getDate(),existDay);
-
 	}
 	
 	/*
 	 *   public UserExercise save(UserExercise userExercise)
 	 */
+	
 	@Test
 	@Transactional
-	@DisplayName("UserExercise 정보 수정 -> 정상")
-	public void mergeTest() {
+	@DisplayName("UserExercise 정보 수정 -> 정상, 변화 확인")
+	public void mergeTestCheckChange() {
 		//Given
-		UserExercise userExercise = userExerciseRepository.findAll().get(0);
-		Long id = userExercise.getId();
-		userExercise.setDescription("Changed");
+		String changeDescription = "Changed Description"; 
+		Long userExerciseId = userExercise.getId();
+		userExercise.setDescription(changeDescription);
 		
 		//When
 		userExerciseService.save(userExercise);
 		
 		//Then
-		Optional<UserExercise> result = userExerciseRepository.findById(id);
-		assertEquals(result.get().getDescription(),"Changed");
+		Optional<UserExercise> result = userExerciseRepository.findById(userExerciseId);
+		assertEquals(changeDescription, result.get().getDescription());
+	}
+	
+	@Test
+	@DisplayName("UserExercise 정보 수정 -> 정상, 개수 동일 확인")
+	public void mergeTestCheckCount() {
+		//Given
+		String changeDescription = "Changed Description"; 
+		userExercise.setDescription(changeDescription);
+		
+		long givenUserExerciseNum = userExerciseRepository.count();
+		
+		//When
+		userExerciseService.save(userExercise);
+		
+		//Then
+		assertEquals(givenUserExerciseNum, userExerciseRepository.count());
 	}
 	
 	@Test
@@ -186,20 +211,14 @@ public class UserExerciseServiceTest {
 	@DisplayName("UserExercise 추가 -> 정상")
 	public void saveTest() {
 		//Given
-		UserExercise userExercise = UserExercise.builder()
-												.laps(1)
-												.sets(1)
-												.weight(1)
-												.date(DEFAULT_CALENDAR)
-												.description("new")
-												.build();
-		Long countBefore = userExerciseRepository.count();
+		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance(DEFAULT_CALENDAR);
+		Long givenUserExerciseNum = userExerciseRepository.count();
 		
 		//When
 		userExerciseService.save(userExercise);
 		
 		//Then
-		assertEquals(countBefore+1,userExerciseRepository.count());
+		assertEquals(givenUserExerciseNum + 1, userExerciseRepository.count());
 	}
 	
 	/*
@@ -211,27 +230,13 @@ public class UserExerciseServiceTest {
 	@DisplayName("UserExercise 삭제 -> 정상")
 	public void deleteTest() {
 		//Given
-		UserExercise userExercise  = userExerciseRepository.findAll().get(0);
-		Long id = userExercise.getId();
+		Long userExerciseId = userExercise.getId();
 		
 		//When
 		userExerciseService.delete(userExercise);
 		
 		//Then
-		Optional<UserExercise> result = userExerciseRepository.findById(id);
-		
-		assertEquals(result.isEmpty(),true);
+		Optional<UserExercise> result = userExerciseRepository.findById(userExerciseId);
+		assertTrue(result.isEmpty());
 	}
-	
-	private User getUserInstance() {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("test")
-				.lastName("test")
-				.nickName("test")
-				.build();
-		return user;
-	}
-	
 }
