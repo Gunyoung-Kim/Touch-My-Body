@@ -46,15 +46,12 @@ public class LogAspect {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		
 		Map<String, String[]> paramMap = request.getParameterMap();
-		
 		String params = "";
-		
 		if(paramMap.isEmpty() == false) {
 			params = "[ " + paramMapToString(paramMap) + "]";
 		}
 		
 		long timeBeforeProceed = System.currentTimeMillis();
-		
 		try {
 			return pjp.proceed(pjp.getArgs());
 		} finally {
@@ -81,6 +78,9 @@ public class LogAspect {
 			sb.append(", ");
 		});
 		
-		return sb.toString();
+		String paramString = sb.toString();
+		paramString = paramString.substring(0, paramString.length()-2);
+		
+		return paramString;
 	}
 }
