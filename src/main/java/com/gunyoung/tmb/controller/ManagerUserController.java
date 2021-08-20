@@ -64,7 +64,7 @@ public class ManagerUserController {
 		long totalPageNum;
 		
 		if(keyword != null) {
-			pageResult = userService.findAllByNickNameOrName(keyword, page);
+			pageResult = userService.findAllByNickNameOrNameInPage(keyword, page);
 			totalPageNum = userService.countAllByNickNameOrName(keyword)/pageSize +1;
 		} else {
 			pageResult = new PageImpl<User>(new ArrayList<>());

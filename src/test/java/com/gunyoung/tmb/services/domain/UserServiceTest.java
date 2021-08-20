@@ -122,12 +122,12 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *  public Page<User> findAllByNickNameOrName(String keyword)
+	 *  public Page<User> findAllByNickNameOrNameInPage(String keyword)
 	 */
 	
 	@Test
 	@DisplayName("키워드로 유저 페이지 찾기 -> 정상, 모든 유저가 만족하는 키워드")
-	public void findAllByNickNameOrNameAll() {
+	public void findAllByNickNameOrNameInPageAll() {
 		//Given
 		String keywordForAllUser = UserTest.DEFAULT_NICKNAME;
 		
@@ -136,7 +136,7 @@ public class UserServiceTest {
 		long givenUserNum = userRepository.count();
 				
 		//When
-		int result = userService.findAllByNickNameOrName(keywordForAllUser, 1).getContent().size();
+		int result = userService.findAllByNickNameOrNameInPage(keywordForAllUser, 1).getContent().size();
 		
 		//Then
 		assertEquals(Math.min(PageUtil.BY_NICKNAME_NAME_PAGE_SIZE, givenUserNum), result);
@@ -144,7 +144,7 @@ public class UserServiceTest {
 	
 	@Test
 	@DisplayName("키워드로 유저 페이지 찾기 -> 정상, 오직 한 유저만 만족하는 키워드")
-	public void findAllByNickNameOrNameOnlyOne() {
+	public void findAllByNickNameOrNameInPageOnlyOne() {
 		//Given
 		String keywordForOnlyOne = "onlyone";
 		User onlyOneUser = UserTest.getUserInstance("onlyone@test.com", keywordForOnlyOne);
@@ -153,7 +153,7 @@ public class UserServiceTest {
 		UserTest.addNewUsersInDBByNum(10, userRepository);
 				
 		//When
-		int result = userService.findAllByNickNameOrName(keywordForOnlyOne, 1).getContent().size();
+		int result = userService.findAllByNickNameOrNameInPage(keywordForOnlyOne, 1).getContent().size();
 		
 		//Then
 		assertEquals(1, result);
@@ -161,14 +161,14 @@ public class UserServiceTest {
 	
 	@Test
 	@DisplayName("키워드로 유저 페이지 찾기 -> 정상, 어떠한 유저도 만족하지 않는 키워드")
-	public void findAllByNickNameOrName() {
+	public void findAllByNickNameOrNameInPageNothing() {
 		//Given
 		String keywordForNothing = "noone@test.com";
 		
 		UserTest.addNewUsersInDBByNum(10, userRepository);
 				
 		//When
-		int result = userService.findAllByNickNameOrName(keywordForNothing, 1).getContent().size();
+		int result = userService.findAllByNickNameOrNameInPage(keywordForNothing, 1).getContent().size();
 		
 		//Then
 		assertEquals(0, result);

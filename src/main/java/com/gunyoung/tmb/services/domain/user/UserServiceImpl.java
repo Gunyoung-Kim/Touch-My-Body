@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<User> findAllByNickNameOrName(String keyword,Integer pageNumber) {
+	public Page<User> findAllByNickNameOrNameInPage(String keyword,Integer pageNumber) {
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageUtil.BY_NICKNAME_NAME_PAGE_SIZE);
 		return userRepository.findAllByNickNameOrName(keyword, pageRequest);
 	}

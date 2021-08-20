@@ -86,7 +86,7 @@ public interface UserService {
 	 * @return
 	 * @author kimgun-yeong
 	 */
-	public Page<User> findAllByNickNameOrName(String keyword,Integer pageNumber);
+	public Page<User> findAllByNickNameOrNameInPage(String keyword,Integer pageNumber);
 	
 	/**
 	 * User 생성 및 수정 <br>
