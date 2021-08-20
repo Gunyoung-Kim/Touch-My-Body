@@ -78,8 +78,7 @@ public interface ExerciseService {
 	public Map<String, List<String>> getAllExercisesNamewithSorting();
 	
 	/** 
-	 * Exercise 생성 및 수정 <br>
-	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 Cache 삭제 
+	 * Exercise 생성 및 수정
 	 * @param exercise 저장하려는 Exercise
 	 * @return 저장된 Exercise
 	 * @author kimgun-yeong
@@ -95,8 +94,7 @@ public interface ExerciseService {
 	public Exercise saveWithSaveExerciseDTO(Exercise exercise, SaveExerciseDTO dto);
 	
 	/**
-	 * Exercise 삭제 <br>
-	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 Cache 삭제 
+	 * Exercise 삭제
 	 * @param exercise 삭제하려는 Exercise
 	 * @author kimgun-yeong
 	 */

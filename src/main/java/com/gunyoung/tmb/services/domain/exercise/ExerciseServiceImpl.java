@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -127,7 +126,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
 	public Exercise save(Exercise exercise) {
 		return exerciseRepository.save(exercise);
 	}
@@ -182,7 +180,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
 	public void delete(Exercise exercise) {
 		exerciseRepository.delete(exercise);
 	}

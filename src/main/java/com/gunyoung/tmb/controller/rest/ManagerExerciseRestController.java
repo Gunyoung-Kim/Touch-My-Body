@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoun
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
+import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,11 +38,13 @@ public class ManagerExerciseRestController {
 	private final MuscleService muscleService;
 	
 	/**
-	 * 매니저의 Exercise 추가 처리하는 메소드
+	 * 매니저의 Exercise 추가 처리하는 메소드 <br>
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 Cache 삭제 
 	 * @throws ExerciseNameDuplicationFoundedException 입력된 이름의 Exercise 이미 존재하면
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/add" ,method = RequestMethod.POST)
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
 	public void addExercise(@ModelAttribute SaveExerciseDTO dto) {
 		if(exerciseService.existsByName(dto.getName())) {
 			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getDescription());
@@ -51,13 +55,15 @@ public class ManagerExerciseRestController {
 	}
 	
 	/**
-	 * 특정 Exercise 정보 수정 처리하는 메소드
+	 * 특정 Exercise 정보 수정 처리하는 메소드 <br>
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 Cache 삭제 
 	 * @param exerciseId 정보 수정하려는 대상 Exercise
 	 * @throws ExerciseNotFoundedException 해당 Id의 Exercise 없으면
 	 * @throws ExerciseNameDuplicationFoundedException 변경된 이름이 다른 Exercise의 이름과 일치하면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/exercise/modify/{exerciseId}",method=RequestMethod.PUT) 
+	@RequestMapping(value="/manager/exercise/modify/{exerciseId}",method=RequestMethod.PUT)
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
 	public void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute SaveExerciseDTO dto) {
 		Exercise exercise = exerciseService.findById(exerciseId);
 		
@@ -73,16 +79,16 @@ public class ManagerExerciseRestController {
 	}
 	
 	/**
-	 * 특정 Exercise 삭제 요청 처리하는 메소드
+	 * 특정 Exercise 삭제 요청 처리하는 메소드 <br>
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 Cache 삭제 
 	 * @param exerciseId 삭제하려는 대상 Exercise의 Id
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/remove" ,method = RequestMethod.DELETE) 
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
 	public void deleteExercise(@RequestParam("exerciseId") Long exerciseId) {
 		exerciseService.deleteById(exerciseId);
 	}
-	
-	
 	
 	/**
 	 * 클라이언트에게 근육 종류별로 분류해서 전송하는 메소드 <br>
