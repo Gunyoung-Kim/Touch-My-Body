@@ -31,6 +31,19 @@ public class UserTest {
 	
 	/**
 	 * 테스트용 User 인스턴스 반환 <br>
+	 * email, role 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static User getUserInstance(String email,RoleType role) {
+		User user = getUserInstance(role);
+		user.setEmail(email);
+		
+		return user;
+	}
+	
+	
+	/**
+	 * 테스트용 User 인스턴스 반환 <br>
 	 * email, nickName 커스터마이징 가능
 	 * @author kimgun-yeong
 	 */

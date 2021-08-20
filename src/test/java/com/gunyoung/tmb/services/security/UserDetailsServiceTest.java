@@ -15,6 +15,7 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.security.UserDetailsServiceImpl;
 import com.gunyoung.tmb.services.domain.user.UserService;
+import com.gunyoung.tmb.util.UserTest;
 
 /**
  * {@link UserDetailsServiceImpl} 에 대한 테스트 클래스 <br>
@@ -41,7 +42,7 @@ public class UserDetailsServiceTest {
 	public void loadUserByUsernameForAdminTest() {
 		//Given
 		String adminEmail = "admin@test.com";
-		User user = getUserWithRole(adminEmail,RoleType.ADMIN);
+		User user = UserTest.getUserInstance(adminEmail,RoleType.ADMIN);
 
 		given(userService.findByEmail(adminEmail)).willReturn(user);
 		
@@ -58,8 +59,7 @@ public class UserDetailsServiceTest {
 	public void loadUserByUsernameForManagerTest() {
 		//Given
 		String managerEmail = "manager@test.com";
-		User user = getUserWithRole(managerEmail,RoleType.MANAGER);
-		
+		User user = UserTest.getUserInstance(managerEmail,RoleType.MANAGER);
 		
 		given(userService.findByEmail(managerEmail)).willReturn(user);
 		
@@ -76,7 +76,7 @@ public class UserDetailsServiceTest {
 	public void loadUserByUsernameForUserTest() {
 		//Given
 		String userEmail ="user@test.com";
-		User user = getUserWithRole(userEmail,RoleType.USER);
+		User user = UserTest.getUserInstance(userEmail,RoleType.USER);
 		
 		given(userService.findByEmail(userEmail)).willReturn(user);
 		
@@ -87,15 +87,4 @@ public class UserDetailsServiceTest {
 		assertTrue(userDetails.getAuthorities().stream()
 				.anyMatch(ga -> ga.getAuthority().equals("ROLE_USER")));
 	}
-	
-	private User getUserWithRole(String username,RoleType role) {
-		User user = User.builder()
-				.email(username)
-				.password("abcd1234!")
-				.role(role)
-				.build();
-		
-		return user;
-	}
-	
 }
