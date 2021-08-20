@@ -1,6 +1,6 @@
 # Touch-My-Body
 
-최신 버전 : ver 0.0.7
+최신 버전 : ver 0.0.8
 
 ## 프로젝트 주 기능
 
@@ -36,7 +36,9 @@
 
 ## 코드 배포 구조
 
-![tmb_deploy_stc1](https://user-images.githubusercontent.com/60494603/125197187-a7e9f980-e297-11eb-8e5f-242cd46a5d3d.png)
+- 2021.08.21 : CI/CD 툴 Jenkins -> TravisCI (사유: 비용문제)
+
+![tmb_deploy_stc2](https://user-images.githubusercontent.com/60494603/130201236-12b61f5d-89e8-4bd4-b9b4-39ec743982cd.png)
 
 ---
 
