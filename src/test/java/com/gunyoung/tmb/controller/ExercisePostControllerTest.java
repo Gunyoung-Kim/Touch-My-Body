@@ -86,31 +86,30 @@ public class ExercisePostControllerTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("커뮤니티 메인 화면 반환 -> 정상")
-	public void exercisePostViewTest() throws Exception {
+	@DisplayName("커뮤니티 메인 화면 반환 -> 정상, 모든 ExercisePost 만족하는 키워드 포함")
+	public void exercisePostViewTesKeywordForAllExercisePost() throws Exception {
 		//Given
-		TargetType forAllTarget = TargetType.ARM;
-		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",forAllTarget);
-		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
-		int totalEpNum = 10;
-		List<ExercisePost> epList = new LinkedList<>();
+		int givenExercisePostNum = 10;
+		List<ExercisePost> exercisePostList = new LinkedList<>();
 		
-		for(int i=0; i< totalEpNum ; i++) {
+		for(int i=0; i< givenExercisePostNum ; i++) {
 			ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 			ep.setExercise(exercise);
 			ep.setUser(user);
-			epList.add(ep);
+			exercisePostList.add(ep);
 		}
-		exercisePostRepository.saveAll(epList);
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		String keywordForallExercisePost = ExercisePostTest.getExercisePostInstance().getTitle();
 		
 		//When
 		MvcResult result = mockMvc.perform(get("/community")
-				.param("keyword", "title"))
+				.param("keyword", keywordForallExercisePost))
 		
 		//Then
-		
 				.andExpect(status().isOk())
 				.andReturn();
 		
@@ -119,7 +118,41 @@ public class ExercisePostControllerTest {
 		@SuppressWarnings("unchecked")
 		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO> )resultMap.get("listObject");
 		
-		assertEquals(Math.min(totalEpNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.size());
+		assertEquals(Math.min(givenExercisePostNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("커뮤니티 메인 화면 반환 -> 정상, 키워드 없음")
+	public void exercisePostViewTestKeywordNull() throws Exception {
+		//Given
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		
+		int givenExercisePostNum = 10;
+		List<ExercisePost> exercisePostList = new LinkedList<>();
+		
+		for(int i=0; i< givenExercisePostNum ; i++) {
+			ExercisePost ep = ExercisePostTest.getExercisePostInstance();
+			ep.setExercise(exercise);
+			ep.setUser(user);
+			exercisePostList.add(ep);
+		}
+		exercisePostRepository.saveAll(exercisePostList);
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/community"))
+		
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
+		
+		@SuppressWarnings("unchecked")
+		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO> )resultMap.get("listObject");
+		
+		assertEquals(Math.min(givenExercisePostNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.size());
 	}
 	
 	
@@ -143,55 +176,122 @@ public class ExercisePostControllerTest {
 				.andExpect(status().isNoContent());
 	}
 	
-	
-	@SuppressWarnings("unchecked") // for Type Casting of Model
 	@Test
 	@Transactional
-	@DisplayName("특정 카테고리 게시글만 반환 -> 정상")
-	public void exercisePostViewWithTargetTest() throws Exception {
+	@DisplayName("특정 카테고리 게시글만 반환 -> 정상, 키워드는 없음, 모든 ExercisePost가 만족하는 TargetType")
+	public void exercisePostViewWithTargetTestNoKeywordTargetTypeForAll() throws Exception {
 		//Given
 		TargetType forAllTarget = TargetType.ARM;
-		TargetType forNoneTarget = TargetType.BACK;
 		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",forAllTarget);
-		
 		exerciseRepository.save(exercise);
 		
-		int totalEpNum = 10;
-		List<ExercisePost> epList = new LinkedList<>();
+		int givenExercisePostNum = 10;
+		saveExercisePostListWithSettingUserAndExercise(givenExercisePostNum, user, exercise);
 		
-		for(int i=0; i< totalEpNum ; i++) {
-			ExercisePost ep = ExercisePostTest.getExercisePostInstance();
-			ep.setExercise(exercise);
-			ep.setUser(user);
-			epList.add(ep);
-		}
-		
-		exercisePostRepository.saveAll(epList);
-		
-		
-		//When 1 (for all)
+		//When
 		MvcResult result = mockMvc.perform(get("/community/" + forAllTarget.toString()))
 		
-		//Then 1 (for all)
+		//Then
 				.andExpect(status().isOk())
 				.andReturn();
 		
 		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
 		
+		@SuppressWarnings("unchecked")
 		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO>)resultMap.get("listObject");
-		assertEquals(Math.min(totalEpNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.size());
+		assertEquals(Math.min(givenExercisePostNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("특정 카테고리 게시글만 반환 -> 정상, 키워드는 없음, 어떤 ExercisePost도 만족하지 않는 TargetType") 
+	public void exercisePostViewWithTargetTestNoKeywordTargetTypeForNothing() throws Exception {
+		//Given
+		TargetType forNoneTarget = TargetType.BACK;
 		
-		//When 2 (for none)
-		result = mockMvc.perform(get("/community/" + forNoneTarget.toString()))
+		TargetType forAllTarget = TargetType.ARM;
+		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",forAllTarget);
+		exerciseRepository.save(exercise);
 		
+		int givenExercisePostNum = 10;
+		saveExercisePostListWithSettingUserAndExercise(givenExercisePostNum, user, exercise);
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/community/" + forNoneTarget.toString()))
+				
 		//Then 2 (for none)
 				.andExpect(status().isOk())
 				.andReturn();
+				
+		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
 		
-		resultMap = ControllerTest.getResponseModel(result);
-		
-		listObject = (List<PostForCommunityViewDTO>)resultMap.get("listObject");
+		@SuppressWarnings("unchecked")
+		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO>)resultMap.get("listObject");
 		assertEquals(0, listObject.size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("특정 카테고리 게시글만 반환 -> 정상, 모든 ExercisePost가 만족하는 키워드, 모든 ExercisePost가 만족하는 TargetType")
+	public void exercisePostViewWithTargetTestKeywordForAllTargetTypeForAll() throws Exception {
+		//Given
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		
+		int givenExercisePostNum = 10;
+		saveExercisePostListWithSettingUserAndExercise(givenExercisePostNum, user, exercise);
+		
+		TargetType targetTypeForAll = exercise.getTarget();
+		String keywordForAllExercisePost = ExercisePostTest.getExercisePostInstance().getTitle();
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/community/" + targetTypeForAll.toString())
+				.param("keyword", keywordForAllExercisePost))
+				.andExpect(status().isOk())
+				.andReturn();
+		//Then
+		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
+		
+		@SuppressWarnings("unchecked")
+		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO>)resultMap.get("listObject");
+		assertEquals(Math.min(givenExercisePostNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("특정 카테고리 게시글만 반환 -> 정상, 모든 ExercisePost가 만족하는 키워드, 모든 ExercisePost가 만족하는 TargetType")
+	public void exercisePostViewWithTargetTestKeywordForNothingTargetTypeForAll() throws Exception {
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		
+		int givenExercisePostNum = 10;
+		saveExercisePostListWithSettingUserAndExercise(givenExercisePostNum, user, exercise);
+		
+		TargetType targetTypeForAll = exercise.getTarget();
+		String keywordForNothing = "nothing!!!";
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/community/" + targetTypeForAll.toString())
+				.param("keyword", keywordForNothing))
+				.andExpect(status().isOk())
+				.andReturn();
+		//Then
+		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
+		
+		@SuppressWarnings("unchecked")
+		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO>)resultMap.get("listObject");
+		assertEquals(0, listObject.size());
+	}
+	
+	private void saveExercisePostListWithSettingUserAndExercise(int exercisePostNum, User user, Exercise exercise) {
+		List<ExercisePost> exercisePostList = new LinkedList<>();
+		for(int i=0; i< exercisePostNum ; i++) {
+			ExercisePost ep = ExercisePostTest.getExercisePostInstance();
+			ep.setExercise(exercise);
+			ep.setUser(user);
+			exercisePostList.add(ep);
+		}
+		exercisePostRepository.saveAll(exercisePostList);
 	}
 	
 	/*
