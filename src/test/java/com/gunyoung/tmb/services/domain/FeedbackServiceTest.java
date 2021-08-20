@@ -1,8 +1,9 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -16,18 +17,23 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
-import com.gunyoung.tmb.enums.RoleType;
-import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
+import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.util.FeedbackTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.PageUtil;
 
+/**
+ * FeedbackService에 대한 테스트 클래스 <br>
+ * Spring의 JpaRepository의 정상 작동을 가정으로 두고 테스트 진행
+ * @author kimgun-yeong
+ *
+ */
 @SpringBootTest
 public class FeedbackServiceTest {
-
-	private static final int INIT_FEEDBACK_NUM = 30;
 	
 	@Autowired
 	FeedbackRepository feedbackRepository;
@@ -41,18 +47,12 @@ public class FeedbackServiceTest {
 	@Autowired
 	FeedbackService feedbackService;
 	
+	private Feedback feedback;
+	
 	@BeforeEach
 	void setup() {
-		List<Feedback> list = new ArrayList<>();
-		for(int i=1;i<=INIT_FEEDBACK_NUM;i++) {
-			Feedback feedback = Feedback.builder()
-									 .title("title" +i)
-									 .contents("content" +i)
-									 .build();
-									 
-			list.add(feedback);
-		}
-		feedbackRepository.saveAll(list);
+		feedback = FeedbackTest.getFeedbackInstance();
+		feedbackRepository.save(feedback);
 	}
 	
 	@AfterEach
@@ -68,18 +68,13 @@ public class FeedbackServiceTest {
 	@DisplayName("id로 Feedback 찾기 -> 해당 id의 feedback 없음")
 	public void findByIdNonExist() {
 		//Given
-		long maxId = -1;
-		List<Feedback> list = feedbackRepository.findAll();
-		
-		for(Feedback c: list) {
-			maxId = Math.max(maxId, c.getId());
-		}
+		long nonExistFeedbackId = FeedbackTest.getNonExistFeedbackId(feedbackRepository);
 		
 		//When
-		Feedback result = feedbackService.findById(maxId+ 1000);
+		Feedback result = feedbackService.findById(nonExistFeedbackId);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
@@ -87,15 +82,13 @@ public class FeedbackServiceTest {
 	@DisplayName("id로 Feedback 찾기 -> 정상")
 	public void findByIdTest() {
 		//Given
-		Feedback feedback = feedbackRepository.findAll().get(0);
-		Long id = feedback.getId();
+		Long existFeedbackId = feedback.getId();
 		
 		//When
-		Feedback result = feedbackService.findById(id);
+		Feedback result = feedbackService.findById(existFeedbackId);
 		
 		//Then
-		
-		assertEquals(result != null, true);
+		assertNotNull(result);
 		
 	}
 	
@@ -108,23 +101,23 @@ public class FeedbackServiceTest {
 	public void findAllByExerciseIdByPageTest() {
 		//Given
 		int pageSize = PageUtil.FEEDBACK_FOR_MANAGE_PAGE_SIZE;
-		Exercise exercise = getExerciseInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
-		List<Feedback> feedbacks = feedbackRepository.findAll();
+		FeedbackTest.addNewFeedbacksInDBByNum(10, feedbackRepository);
 		
+		List<Feedback> feedbacks = feedbackRepository.findAll();
+		long givenFeedbackNum = feedbacks.size();
 		for(Feedback f: feedbacks) {
 			f.setExercise(exercise);
 		}
-		
 		feedbackRepository.saveAll(feedbacks);
 		
 		//When
-		System.out.println(exercise.getId());
 		List<Feedback> result = feedbackService.findAllByExerciseIdByPage(exercise.getId(), 1, pageSize).getContent();
 		
 		//Then
-		assertEquals(result.size(),Math.min(INIT_FEEDBACK_NUM, pageSize));
+		assertEquals(Math.min(givenFeedbackNum, pageSize), result.size());
 	}
 	
 	/*
@@ -132,38 +125,50 @@ public class FeedbackServiceTest {
 	 */
 	
 	@Test
-	@Transactional
-	@DisplayName("Feedback 수정하기 -> 정상")
-	public void mergeTest() {
+	@DisplayName("Feedback 수정하기 -> 정상, 변화 확인")
+	public void mergeTestCheckChange() {
 		//Given
-		Feedback existFeedback = feedbackRepository.findAll().get(0);
-		Long id = existFeedback.getId();
-		existFeedback.setTitle("Changed Title");
+		String changeTitle = "Changed Title";
+		Long feedbackId = feedback.getId();
+		feedback.setTitle(changeTitle);
 		
 		//When
-		feedbackService.save(existFeedback);
+		feedbackService.save(feedback);
 		
 		//Then
-		Feedback result = feedbackRepository.findById(id).get();
-		assertEquals(result.getTitle(),"Changed Title");
+		Feedback result = feedbackRepository.findById(feedbackId).get();
+		assertEquals(changeTitle, result.getTitle());
+	}
+	
+	@Test
+	@DisplayName("Feedback 수정하기 -> 정상, 개수 변화 없음 확인")
+	public void mergeTestCheckCount() {
+		//Given
+		String changeTitle = "Changed Title";
+		feedback.setTitle(changeTitle);
+		
+		long givenFeedbackNum = feedbackRepository.count();
+		
+		//When
+		feedbackService.save(feedback);
+		
+		//Then
+		assertEquals(givenFeedbackNum, feedbackRepository.count());
 	}
 	
 	@Test
 	@Transactional
 	@DisplayName("Feedback 추가하기 -> 정상")
-	public void saveTest() {
+	public void addTest() {
 		//Given
-		Feedback newFeedback = Feedback.builder()
-									.title("New Title")
-									.contents("New contents")
-									.build();
-		Long beforeNum = feedbackRepository.count();
+		Feedback newFeedback = FeedbackTest.getFeedbackInstance();
+		Long givenFeedbackNum = feedbackRepository.count();
 		
 		//When
 		feedbackService.save(newFeedback);
 		
 		//Then
-		assertEquals(beforeNum+1,feedbackRepository.count());
+		assertEquals(givenFeedbackNum + 1, feedbackRepository.count());
 	}
 	
 	/*
@@ -171,36 +176,64 @@ public class FeedbackServiceTest {
 	 */
 	@Test
 	@Transactional
-	@DisplayName("User와 Exercise로 Feedback 추가하기 -> 정상")
-	public void saveWithUserAndExerciseTest() {
+	@DisplayName("User와 Exercise로 Feedback 추가하기 -> 정상, Feedback 개수 추가 확인")
+	public void saveWithUserAndExerciseTestCheckCount() {
 		//Given
-		Feedback feedback = Feedback.builder()
-				 .title("title")
-				 .contents("content")
-				 .build();
+		Feedback feedback = FeedbackTest.getFeedbackInstance();
 		
-		User user = getUserInstance();
-		
+		User user = UserTest.getUserInstance();
 		userRepository.save(user);
 		
-		Exercise exercise = getExerciseInstance();
-		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
-		int userFeedbackNum = user.getFeedbacks().size();
-		int exerciseFeedbackNum = exercise.getFeedbacks().size();
+		long givenFeedbackNum = feedbackRepository.count();
 		
-		long feedbackNum = feedbackRepository.count();
+		//When
+		feedbackService.saveWithUserAndExercise(feedback,user, exercise);
+		
+		//Then
+		assertEquals(givenFeedbackNum + 1, feedbackRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User와 Exercise로 Feedback 추가하기 -> 정상, User와의 연관관계 확인")
+	public void saveWithUserAndExerciseTestCheckWithUser() {
+		//Given
+		Feedback feedback = FeedbackTest.getFeedbackInstance();
+		
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
 		
 		//When
 		Feedback result = feedbackService.saveWithUserAndExercise(feedback,user, exercise);
 		
 		//Then
-		assertEquals(result.getUser().getId(),user.getId());
-		assertEquals(result.getExercise().getId(),exercise.getId());
-		assertEquals(userFeedbackNum+1,userRepository.findById(user.getId()).get().getFeedbacks().size());
-		assertEquals(exerciseFeedbackNum+1,exerciseRepository.findById(exercise.getId()).get().getFeedbacks().size());
-		assertEquals(feedbackNum+1, feedbackRepository.count());
+		assertEquals(user.getId(), result.getUser().getId());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User와 Exercise로 Feedback 추가하기 -> 정상, Exercise와의 연관관계 확인")
+	public void saveWithUserAndExerciseTestCheckWithExercise() {
+		//Given
+		Feedback feedback = FeedbackTest.getFeedbackInstance();
+		
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		
+		//When
+		Feedback result = feedbackService.saveWithUserAndExercise(feedback,user, exercise);
+		
+		//Then
+		assertEquals(exercise.getId(), result.getExercise().getId());
 	}
 	
 	/*
@@ -212,36 +245,12 @@ public class FeedbackServiceTest {
 	@DisplayName("Feedback 삭제하기 -> 정상")
 	public void deleteTest() {
 		//Given
-		Feedback existFeedback = feedbackRepository.findAll().get(0);
-		Long beforeNum = feedbackRepository.count();
+		Long givenFeedbackNum = feedbackRepository.count();
 		
 		//When
-		feedbackService.delete(existFeedback);
+		feedbackService.delete(feedback);
 		
 		//Then
-		assertEquals(beforeNum-1,feedbackRepository.count());
-	}
-	
-	private User getUserInstance() {
-		User user = User.builder()
-				.email("test@test.com")
-				.password("abcd1234")
-				.firstName("test")
-				.lastName("test")
-				.nickName("test")
-				.role(RoleType.USER)
-				.build();
-		return user;
-	}
-	
-	private Exercise getExerciseInstance() {
-		Exercise exercise = Exercise.builder()
-			    .name("Exercies")
-			    .description("Description")
-			    .caution("Caution")
-			    .movement("Movement")
-			    .target(TargetType.CHEST)
-			    .build();
-		return exercise;
-	}
+		assertEquals(givenFeedbackNum - 1, feedbackRepository.count());
+	}	
 }

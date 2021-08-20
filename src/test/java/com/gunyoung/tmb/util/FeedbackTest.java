@@ -1,5 +1,8 @@
 package com.gunyoung.tmb.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -38,6 +41,19 @@ public class FeedbackTest {
 		nonExistFeedbackId++;
 		
 		return nonExistFeedbackId;
+	}
+	
+	/**
+	 * Repository를 사용해 DB에 인자로 전해진 num 만큼 Feedback 생성 후 저장
+	 * @author kimgun-yeong
+	 */
+	public static List<Feedback> addNewFeedbacksInDBByNum(int num, JpaRepository<Feedback, Long> feedbackRepository) {
+		List<Feedback> newFeedbacks = new ArrayList<>();
+		for(int i=0;i < num;i++) {
+			Feedback newFeedback = getFeedbackInstance();
+			newFeedbacks.add(newFeedback);
+		}
+		return feedbackRepository.saveAll(newFeedbacks);
 	}
 	
 	/**
