@@ -21,6 +21,14 @@ public class UserExerciseTest {
 	public static final Calendar DEFAULT_CALENDAR = new GregorianCalendar(1999,Calendar.JANUARY,16);
 	
 	/**
+	 * 테스트용 UserExercise 인스턴스 반환
+	 * @author kimgun-yeong
+	 */
+	public static UserExercise getUserExerciseInstance() {
+		return getUserExerciseInstance(DEFAULT_CALENDAR);
+	}
+	
+	/**
 	 * 테스트용 UserExercise 인스턴스 반환 <br>
 	 * date 커스터마이징 가능
 	 * @author kimgun-yeong

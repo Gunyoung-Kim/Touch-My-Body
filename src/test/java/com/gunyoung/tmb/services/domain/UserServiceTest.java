@@ -1,10 +1,10 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.persistence.EntityManager;
 
@@ -23,6 +23,8 @@ import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.user.UserService;
+import com.gunyoung.tmb.util.UserExerciseTest;
+import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.utils.PageUtil;
 
 /**
@@ -33,8 +35,6 @@ import com.gunyoung.tmb.utils.PageUtil;
  */
 @SpringBootTest
 public class UserServiceTest {
-	
-	private static final int INIT_USER_NUM = 30;
 	
 	@Autowired
 	UserService userService;
@@ -48,20 +48,12 @@ public class UserServiceTest {
 	@Autowired
 	EntityManager em;
 	
+	private User user;
+	
 	@BeforeEach
 	void setup() {
-		for(int i=1;i<=INIT_USER_NUM;i++) {
-			User user = User.builder()
-							.email(i+"_user@test.com")
-							.password("abcd1234!")
-							.firstName(i+"번째")
-							.lastName("사람")
-							.nickName("User"+i)
-							.role(RoleType.USER)
-							.build();
-			
-			userRepository.save(user);
-		}
+		user = UserTest.getUserInstance();
+		userRepository.save(user);
 	}
 	
 	@AfterEach
@@ -77,32 +69,26 @@ public class UserServiceTest {
 	@DisplayName("Id로 유저 찾기 -> 해당하는 Id의 유저 없음")
 	public void findByIdNonExist() {
 		//Given
-		List<User> userList = userRepository.findAll();
-		long maxId = -1;
-		
-		for(User user: userList) {
-			maxId = Math.max(maxId, user.getId());
-		}
+		long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
 		//When
-		User result = userService.findById(maxId + 10);
+		User result = userService.findById(nonExistUserId);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
 	@DisplayName("Id로 유저 찾기 -> 정상")
 	public void findByIdTest() {
 		//Given
-		Long existId = userRepository.findAll().get(0).getId();
+		Long existId = user.getId();
 		
 		//When
 		User result = userService.findById(existId);
 		
 		//Then
-		assertEquals(result != null, true);
-		assertEquals(result.getId(),existId);
+		assertNotNull(result);
 	}
 	
 	/*
@@ -113,27 +99,26 @@ public class UserServiceTest {
 	@DisplayName("Email로 유저 찾기 -> 해당 email의 유저 없음")
 	public void findByEmailNonExist() {
 		//Given
-		String email = "nonexist@test.com";
+		String nonExistEmail = "nonexist@test.com";
 		
 		//When
-		User result = userService.findByEmail(email);
+		User result = userService.findByEmail(nonExistEmail);
 		
 		//Then
-		assertEquals(result,null);
+		assertNull(result);
 	}
 	
 	@Test
 	@DisplayName("Email로 유저 찾기 -> 정상")
 	public void findByEmailTest() {
 		//Given
-		String email = "1_user@test.com";
+		String existEmail = user.getEmail();
 		
 		//When
-		User result = userService.findByEmail(email);
+		User result = userService.findByEmail(existEmail);
 		
 		//Then
-		assertEquals(result != null , true);
-		assertEquals(result.getNickName(),"User1");
+		assertNotNull(result);
 	}
 	
 	/*
@@ -141,22 +126,52 @@ public class UserServiceTest {
 	 */
 	
 	@Test
-	@DisplayName("키워드로 유저 페이지 찾기 -> 정상")
-	public void findAllByNickNameOrName() {
+	@DisplayName("키워드로 유저 페이지 찾기 -> 정상, 모든 유저가 만족하는 키워드")
+	public void findAllByNickNameOrNameAll() {
 		//Given
-		String nickNameKeyword = "User"+INIT_USER_NUM;
-		String firstNameKeyword = INIT_USER_NUM+"번";
-		String lastNameKeyword = "사람";
+		String keywordForAllUser = UserTest.DEFAULT_NICKNAME;
+		
+		UserTest.addNewUsersInDBByNum(10, userRepository);
+		
+		long givenUserNum = userRepository.count();
 				
 		//When
-		int nickResult = userService.findAllByNickNameOrName(nickNameKeyword, 1).getContent().size();
-		int firstResult = userService.findAllByNickNameOrName(firstNameKeyword, 1).getContent().size();
-		int lastResult = userService.findAllByNickNameOrName(lastNameKeyword, 1).getContent().size();
+		int result = userService.findAllByNickNameOrName(keywordForAllUser, 1).getContent().size();
 		
 		//Then
-		assertEquals(nickResult,1);
-		assertEquals(firstResult,1);
-		assertEquals(lastResult,PageUtil.BY_NICKNAME_NAME_PAGE_SIZE);
+		assertEquals(Math.min(PageUtil.BY_NICKNAME_NAME_PAGE_SIZE, givenUserNum), result);
+	}
+	
+	@Test
+	@DisplayName("키워드로 유저 페이지 찾기 -> 정상, 오직 한 유저만 만족하는 키워드")
+	public void findAllByNickNameOrNameOnlyOne() {
+		//Given
+		String keywordForOnlyOne = "onlyone";
+		User onlyOneUser = UserTest.getUserInstance("onlyone@test.com", keywordForOnlyOne);
+		userRepository.save(onlyOneUser);
+		
+		UserTest.addNewUsersInDBByNum(10, userRepository);
+				
+		//When
+		int result = userService.findAllByNickNameOrName(keywordForOnlyOne, 1).getContent().size();
+		
+		//Then
+		assertEquals(1, result);
+	}
+	
+	@Test
+	@DisplayName("키워드로 유저 페이지 찾기 -> 정상, 어떠한 유저도 만족하지 않는 키워드")
+	public void findAllByNickNameOrName() {
+		//Given
+		String keywordForNothing = "noone@test.com";
+		
+		UserTest.addNewUsersInDBByNum(10, userRepository);
+				
+		//When
+		int result = userService.findAllByNickNameOrName(keywordForNothing, 1).getContent().size();
+		
+		//Then
+		assertEquals(0, result);
 	}
 	
 	/*
@@ -164,125 +179,143 @@ public class UserServiceTest {
 	 */
 	
 	@Test
-	@Transactional
-	@DisplayName("유저 필드 값 수정하기 -> 정상")
-	public void mergeTest() {
+	@DisplayName("유저 필드 값 수정하기 -> 정상, 변화 확인")
+	public void mergeTestCheckChange() {
 		//Given
-		String existEmail = "1_user@test.com";
 		String changeEmail = "changed@test.com";
-		User user = userRepository.findByEmail(existEmail).get();
 		user.setEmail(changeEmail);
-		
-		//When
-		User result = userService.save(user);
-		
-		//Then
-		
-		User changedUser = userRepository.findByEmail(changeEmail).get();
-		assertEquals(result != null, true);
-		assertEquals(changedUser.getEmail(),changeEmail);
-	}
-	
-	@Test
-	@Transactional
-	@DisplayName("새로운 유저 저장 -> 정상")
-	public void saveTest() {
-		//Given
-		User user = User.builder()
-						.email("new@test.com")
-						.password("abcd1234!")
-						.firstName("new")
-						.lastName("new")
-						.nickName("new man")
-						.build();
 		
 		//When
 		userService.save(user);
 		
 		//Then
-		User newUser = userRepository.findByEmail("new@test.com").get();
-		assertEquals(newUser != null,true);
+		User result = userRepository.findById(user.getId()).get();
+		assertEquals(changeEmail, result.getEmail());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저 필드 값 수정하기 -> 정상, 개수 동일 확인")
+	public void mergeTestCheckCount() {
+		//Given
+		String changeEmail = "changed@test.com";
+		user.setEmail(changeEmail);
+		
+		long givenUserNum = userRepository.count();
+		
+		//When
+		userService.save(user);
+		
+		//Then
+		assertEquals(givenUserNum, userRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("새로운 유저 저장 -> 정상")
+	public void addTest() {
+		//Given
+		User newUser = UserTest.getUserInstance("newUser@test.com", "newby");
+		
+		long givenUserNum = userRepository.count();
+		
+		//When
+		userService.save(newUser);
+		
+		//Then
+		assertEquals(givenUserNum + 1, userRepository.count());
 	}
 	
 	/*
 	 *  public User saveByJoinDTO(UserJoinDTO dto,RoleType role)
 	 */
 	@Test
-	@Transactional
 	@DisplayName("새로운 유저 저장 by UserJoinDTO -> 정상")
 	public void saveByJoinDTOTest() {
 		//Given
-		UserJoinDTO dto = UserJoinDTO.builder()
-				.email("new@test.com")
-				.password("abcd1234!")
-				.firstName("new")
-				.lastName("new")
-				.nickName("new man")
-				.build();
+		String newUserEmail = "newUser@test.com";
+		UserJoinDTO dto = UserTest.getUserJoinDTOInstance("newUser@test.com", "newby");
 		
 		//When
 		userService.saveByJoinDTO(dto, RoleType.USER);
 		
 		//Then
-		User newUser = userRepository.findByEmail("new@test.com").get();
-		assertEquals(newUser != null,true);
+		assertTrue(userRepository.existsByEmail(newUserEmail));
 	}
 	
 	/*
 	 *   public void deleteUser(User user)
 	 */
 	@Test
-	@Transactional
 	@DisplayName("유저 삭제 -> 정상")
 	public void deleteUser() {
 		//Given
-		User user = userRepository.findByEmail("1_user@test.com").get();
+		Long userId = user.getId();
 
 		//When
 		userService.deleteUser(user);
 		
 		//Then
-		Optional<User> result = userRepository.findByEmail("1_user@test.com");
-		
-		assertEquals(result.isEmpty(),true);
+		assertFalse(userRepository.existsById(userId));
 	}
 	
 	/*
 	 *   public boolean existsByEmail(String email)
 	 */
 	@Test
-	@DisplayName("Email로 유저 존재 확인 하기 -> 정상")
-	public void existsByEmailTest() {
+	@DisplayName("Email로 유저 존재 확인 하기 -> 정상, True")
+	public void existsByEmailTestTrue() {
 		//Given
-		String nonExistEmail = "nonexist@test.com";
-		String existEmail = "1_user@test.com";
+		String existEmail = user.getEmail();
 		
 		//When
-		boolean resultNonExist = userService.existsByEmail(nonExistEmail);
-		boolean resultExist = userService.existsByEmail(existEmail);
+		boolean result = userService.existsByEmail(existEmail);
 		
 		//Then
-		assertEquals(resultNonExist,false);
-		assertEquals(resultExist,true);
+		assertTrue(result);
+	}
+	
+	@Test
+	@DisplayName("Email로 유저 존재 확인 하기 -> 정상, False")
+	public void existsByEmailTestFalse() {
+		//Given
+		String nonExistEmail = "nonexist@test.com";
+		
+		//When
+		boolean result = userService.existsByEmail(nonExistEmail);
+		
+		//Then
+		assertFalse(result);
 	}
 	
 	/*
 	 *   public boolean existsByNickName(String nickName)
 	 */
+	
 	@Test
-	@DisplayName("NickName으로 유저 존재확인하기 ->정상")
-	public void existsByNickNameTest() {
+	@DisplayName("NickName으로 유저 존재확인하기 ->정상, True")
+	public void existsByNickNameTestTrue() {
 		//Given
-		String nonExistNickName = "None";
-		String existNickName = "User1";
+		String existNickName = user.getNickName();
 		
 		//When
-		boolean resultNonExist = userService.existsByNickName(nonExistNickName);
-		boolean resultExist = userService.existsByNickName(existNickName);
+		boolean result = userService.existsByNickName(existNickName);
 		
 		//Then
-		assertEquals(resultNonExist,false);
-		assertEquals(resultExist,true);
+		assertTrue(result);
+	}
+	
+	@Test
+	@DisplayName("NickName으로 유저 존재확인하기 ->정상, False")
+	public void existsByNickNameTestFalse() {
+		//Given
+		String nonExitNickName = "nonExist";
+		
+		//When
+		boolean result = userService.existsByNickName(nonExitNickName);
+		
+		//Then
+		assertFalse(result);
 	}
 	
 	/*
@@ -292,83 +325,123 @@ public class UserServiceTest {
 	@DisplayName("모든 유저 수 구하기 -> 정상")
 	public void countAllTest() {
 		//Given
+		UserTest.addNewUsersInDBByNum(10, userRepository);
+		
+		long givenUserNum = userRepository.count();
 		
 		//When
 		long result = userService.countAll();
 		
 		//Then
-		assertEquals(result,INIT_USER_NUM);
+		assertEquals(givenUserNum, result);
 	}
 	
 	/*
 	 *  public long countAllByNickNameOrName(String keyword)
 	 */
 	@Test
-	@DisplayName("닉네임이나 네임이 키워드를 만족하는 모든 User 수 구하기-> 정상")
-	public void countAllByNickNameOrNameTest() {
+	@DisplayName("닉네임이나 네임이 키워드를 만족하는 모든 User 수 구하기-> 정상, 모든 유저가 만족하는 키워드")
+	public void countAllByNickNameOrNameTestAll() {
 		//Given
-		String nickNameKeyword = "User"+INIT_USER_NUM;
-		String firstNameKeyword = INIT_USER_NUM+"번";
-		String lastNameKeyword = "사람";
+		String nickNameForAllUser = UserTest.DEFAULT_NICKNAME;
+		
+		UserTest.addNewUsersInDBByNum(10, userRepository);
+		
+		long givenUserNum = userRepository.count();
 		
 		//When
-		long nickResult = userService.countAllByNickNameOrName(nickNameKeyword);
-		long firstResult = userService.countAllByNickNameOrName(firstNameKeyword);
-		long lastResult = userService.countAllByNickNameOrName(lastNameKeyword);
+		long result = userService.countAllByNickNameOrName(nickNameForAllUser);
 		
 		//Then
-		assertEquals(nickResult,1);
-		assertEquals(firstResult,1);
-		assertEquals(lastResult,INIT_USER_NUM);
+		assertEquals(givenUserNum, result);
 	}
 	
+	@Test
+	@DisplayName("닉네임이나 네임이 키워드를 만족하는 모든 User 수 구하기-> 정상, 오직 한 유저만 만족하는 키워드")
+	public void countAllByNickNameOrNameTestOnlyOne() {
+		//Given
+		String nickNameForOnlyOne = "onlyone";
+		User onlyOneUser = UserTest.getUserInstance("onlyone@test.com", nickNameForOnlyOne);
+		userRepository.save(onlyOneUser);
+		
+		UserTest.addNewUsersInDBByNum(10, userRepository);
+		
+		//When
+		long result = userService.countAllByNickNameOrName(nickNameForOnlyOne);
+		
+		//Then
+		assertEquals(1, result);
+	}
+	
+	@Test
+	@DisplayName("닉네임이나 네임이 키워드를 만족하는 모든 User 수 구하기-> 정상, 어느 유저도 만족하지 않는 키워드")
+	public void countAllByNickNameOrNameTest() {
+		//Given
+		String nickNameForNothing = "noOne";
+		
+		UserTest.addNewUsersInDBByNum(10, userRepository);
+		
+		//When
+		long result = userService.countAllByNickNameOrName(nickNameForNothing);
+		
+		//Then
+		assertEquals(0, result);
+	}
+	
+	
 	/**
-	 * public User addUserExercise(User user, UserExercise userExercise)
-	 * public void deleteUserExercise(User user, UserExercise userExercise) 
+	 * public User addUserExercise(User user, UserExercise userExercise) 
 	 */
 	
 	@Test
 	@Transactional
-	@DisplayName("유저의 운동 기록 추가, 기록 삭제 -> 정상")
-	public void addUserExerciseTest() {
+	@DisplayName("유저의 운동 기록 추가, 기록 삭제 -> 정상, 개수 추가 확인")
+	public void addUserExerciseTestCheckCount() {
 		//Given
-		User user = userRepository.findAll().get(0);
-		Long userId = user.getId();
-		int userExerciseListNum = user.getUserExercises().size();
+		long givenUserExerciseNum = userExerciseRepository.count();
 		
-		long userExerciseNum = userExerciseRepository.count();
-		
-		UserExercise userExercise = UserExercise.builder()
-												.laps(1)
-												.sets(1)
-												.weight(1)
-												.date(Calendar.getInstance())
-												.description("test")
-												.build();
+		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
 		
 		//When
-		User result = userService.addUserExercise(user, userExercise);
+		userService.addUserExercise(user, userExercise);
 		
 		//Then
-		assertEquals(result.getUserExercises().size(),userExerciseListNum+1);
-		assertEquals(userExerciseRepository.count(),userExerciseNum+1);
-		assertEquals(userExercise.getUser().getId(),userId);
-		assertEquals(userRepository.getById(userId).getUserExercises().size(),userExerciseListNum+1);
+		assertEquals(givenUserExerciseNum + 1, userExerciseRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저의 운동 기록 추가, 기록 삭제 -> 정상, User와 연관 관계 확인")
+	public void addUserExerciseTestCheckWithUser() {
+		//Given		
+		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
 		
-		/*
-		 * delete
-		 */
+		//When
+		userService.addUserExercise(user, userExercise);
 		
-		//Given 
-		Long targetUserExerciseId = userExercise.getId();
+		//Then
+		assertEquals(user.getId(), userExercise.getUser().getId());
+	}
+	
+	/*
+	 * public void deleteUserExercise(User user, UserExercise userExercise)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("유저의 운동 기록 삭제 -> 정상")
+	public void deleteUserExerciseTest() {
+		//Given
+		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
+		userExercise.setUser(user);
+		userExerciseRepository.save(userExercise);
+		Long userExerciseId = userExercise.getId();
 		
 		//When
 		userService.deleteUserExercise(user, userExercise);
 		
 		//Then
-		assertEquals(userRepository.findById(targetUserExerciseId).isEmpty(), true);
-		assertEquals(user.getUserExercises().size(),userExerciseListNum);
+		assertFalse(userExerciseRepository.existsById(userExerciseId));
 	}
-	
 	
 }

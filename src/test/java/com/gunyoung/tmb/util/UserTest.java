@@ -1,10 +1,14 @@
 package com.gunyoung.tmb.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
 
 /**
@@ -69,6 +73,37 @@ public class UserTest {
 		nonExistUserId++;
 		
 		return nonExistUserId;
+	}
+	
+	/**
+	 * Repository를 사용해 DB에 인자로 전해진 num 만큼 User 생성 후 저장 <br>
+	 * 모든 User 이름 다르게 저장 
+	 * @author kimgun-yeong
+	 */
+	public static List<User> addNewUsersInDBByNum(int num, JpaRepository<User, Long> userRepository) {
+		List<User> newUsers = new ArrayList<>();
+		for(int i=0;i < num;i++) {
+			User newUser = getUserInstance(DEFAULT_EMAIL + i, DEFAULT_NICKNAME + i);
+			newUsers.add(newUser);
+		}
+		return userRepository.saveAll(newUsers);
+	}
+	
+	/**
+	 * 테스트 용 {@link com.gunyoung.tmb.dto.reqeust.UserJoinDTO} 인스턴스 반환 <br>
+	 * email, nickName 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static UserJoinDTO getUserJoinDTOInstance(String email, String nickName) {
+		UserJoinDTO dto = UserJoinDTO.builder()
+				.email(email)
+				.password("abcd1234!")
+				.firstName("new")
+				.lastName("new")
+				.nickName(nickName)
+				.build();
+		
+		return dto;
 	}
 	
 	/**
