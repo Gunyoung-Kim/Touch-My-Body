@@ -1,6 +1,7 @@
 package com.gunyoung.tmb.util;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.user.User;
 
 /**
  * Test 클래스 전용 ExercisePost 엔티티 관련 유틸리티 클래스
@@ -54,6 +56,22 @@ public class ExercisePostTest {
 			newExercisePosts.add(newExercisePost);
 		}
 		return exercisePostRepository.saveAll(newExercisePosts);
+	}
+	
+	/**
+	 * Repository를 사용해 DB에 인자로 전해진 num 만큼 ExercisePost 생성 후 User와 연관관계 설정 후 저장
+	 * @author kimgun-yeong
+	 */
+	public static List<ExercisePost> addNewExercisePostsInDBWithSettingUser(int num, User user,JpaRepository<ExercisePost, Long> exercisePostRepository) {
+		List<ExercisePost> exercisePostList = new LinkedList<>();
+		
+		for(int i= 0 ; i<num ; i++) {
+			ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+			exercisePost.setUser(user);
+			exercisePostList.add(exercisePost);
+		}
+		
+		return exercisePostRepository.saveAll(exercisePostList);
 	}
 	
 	/**
