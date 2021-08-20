@@ -14,9 +14,9 @@ cache:
 script: "./mvnw clean package"
 
 before_deploy:
-  - zip -r info *
+  - zip -r touchmybody *
   - mkdir -p deploy
-  - mv info.zip deploy/info.zip
+  - mv touchmybody.zip deploy/touchmybody.zip
 
 deploy:
   - provider: s3 
@@ -35,7 +35,7 @@ deploy:
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
     bucket: touchmybody-gunyoung-deploy
-    key: info.zip
+    key: touchmybody.zip
     bundle_type: zip
     application: TouchMyBody
     deployment_group: TouchMyBody-group
