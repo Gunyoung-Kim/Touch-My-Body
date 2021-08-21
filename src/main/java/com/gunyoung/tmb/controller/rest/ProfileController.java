@@ -19,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProfileController {
 	
+	public static final String DEFAULT_PROFILE = "default";
+	
 	private final Environment env;
 	
 	/**
@@ -30,7 +32,7 @@ public class ProfileController {
 		List<String> profiles = Arrays.asList(env.getActiveProfiles());
 		List<String> forNonStopProfiles = Arrays.asList("server1","server2");
 		
-		String defaultProfile = profiles.isEmpty() ? "default" : profiles.get(0);
+		String defaultProfile = profiles.isEmpty() ? DEFAULT_PROFILE : profiles.get(0);
 		
 		return Arrays.stream(env.getActiveProfiles())
 				.filter(forNonStopProfiles::contains)

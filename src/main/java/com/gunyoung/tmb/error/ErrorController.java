@@ -32,6 +32,7 @@ import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.PrivacyPolicyNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.nonexist.RoleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.SessionAttributesNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
@@ -137,6 +138,12 @@ public class ErrorController {
 	@ExceptionHandler(PrivacyPolicyNotFoundedException.class)
 	public ErrorMsg privacyPolicyNotFounded(PrivacyPolicyNotFoundedException e) {
 		return new ErrorMsg(PrivacyPolicyErrorCode.PRIVACY_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
+	}
+	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ExceptionHandler(RoleNotFoundedException.class)
+	public ErrorMsg roleNotFounded(RoleNotFoundedException e) {
+		return new ErrorMsg(UserErrorCode.ROLE_NOT_FOUNDED_ERROR.getCode(), e.getMessage());
 	}
 	
 	/*
