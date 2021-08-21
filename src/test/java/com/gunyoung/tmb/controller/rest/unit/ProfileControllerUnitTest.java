@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.controller.rest;
+package com.gunyoung.tmb.controller.rest.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
+
+import com.gunyoung.tmb.controller.rest.ProfileController;
 
 /**
  * {@link ProfileController} 에 대한 테스트 클래스 <br>
