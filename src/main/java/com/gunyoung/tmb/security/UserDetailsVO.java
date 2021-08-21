@@ -9,7 +9,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.gunyoung.tmb.domain.user.User;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 @SuppressWarnings("serial")
+@NoArgsConstructor
+@Getter
 public class UserDetailsVO implements UserDetails{
 	
 	// Spring Security에서 사용하는 username
@@ -20,10 +25,6 @@ public class UserDetailsVO implements UserDetails{
 	
 	//유저의 권환 
 	private Collection<? extends GrantedAuthority> authorities;
-	
-	public UserDetailsVO() {
-		
-	}
 	
 	public UserDetailsVO(User user) {
 		email = user.getEmail();

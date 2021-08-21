@@ -1,5 +1,6 @@
-package com.gunyoung.tmb.services.security;
+package com.gunyoung.tmb.security.unit;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 
@@ -10,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.enums.RoleType;
@@ -25,7 +27,7 @@ import com.gunyoung.tmb.util.UserTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class UserDetailsServiceTest {
+public class UserDetailsServiceUnitTest {
 	
 	@InjectMocks
 	UserDetailsServiceImpl userDetailsService;
@@ -36,6 +38,19 @@ public class UserDetailsServiceTest {
 	/**
 	 *   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException
 	 */
+	
+	@Test
+	@DisplayName("DB에서 가져온 User 정보로 UserDetails 반환 -> Userservice에서 가져온 User가 없을 때")
+	public void loadUserByUsernameNonExist() {
+		//Given
+		String nonExistEmail = "nonExist@test.com";
+		given(userService.findByEmail(nonExistEmail)).willReturn(null);
+		
+		//When, Then
+		assertThrows(UsernameNotFoundException.class, () -> {
+			userDetailsService.loadUserByUsername(nonExistEmail);
+		});
+	}
 	
 	@Test
 	@DisplayName("관리자 권한의 UserDetails 반환 -> 정상")
