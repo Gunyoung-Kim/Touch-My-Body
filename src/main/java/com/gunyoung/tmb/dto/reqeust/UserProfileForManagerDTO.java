@@ -30,20 +30,16 @@ public class UserProfileForManagerDTO {
 	public static User mergeUserWithUserProfileForManagerDTO(User user, UserProfileForManagerDTO dto) throws RoleNotFoundedException {
 		RoleType newRole = null;
 		String inputRole = dto.getRole();
-		
 		for(RoleType t: RoleType.values()) {
 			if(t.toString().equals(inputRole)) {
 				newRole = RoleType.valueOf(inputRole);
 			}
 		}
-		
 		if(newRole == null) {
 			throw new RoleNotFoundedException(UserErrorCode.ROLE_NOT_FOUNDED_ERROR.getDescription());
 		}
-		
 		user.setRole(newRole);
+		
 		return user;
 	}
-	
-	
 }

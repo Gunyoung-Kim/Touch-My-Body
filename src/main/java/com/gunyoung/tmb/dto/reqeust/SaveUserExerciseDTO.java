@@ -44,17 +44,18 @@ public class SaveUserExerciseDTO {
 	
 	private String exerciseName;
 	
+	/**
+	 * SaveUserExerciseDTO에 담긴 정보를 통해 UserExercise 생성 후 반환
+	 * @author kimgun-yeong
+	 */
 	public static UserExercise toUserExercise(SaveUserExerciseDTO dto) {
-		
-		
-		
 		UserExercise userExercise = UserExercise.builder()
-												.laps(dto.getLaps())
-												.sets(dto.getSets())
-												.weight(dto.getWeight())
-												.date(dto.getDate())
-												.description(dto.getDescription())
-												.build();
+				.laps(dto.getLaps())
+				.sets(dto.getSets())
+				.weight(dto.getWeight())
+				.date(dto.getDate())
+				.description(dto.getDescription())
+				.build();
 		
 		return userExercise;
 	}

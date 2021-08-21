@@ -35,8 +35,7 @@ public class SaveExerciseDTO {
 	
 	/**
 	 * Exercise 객체를 통해 SaveExerciseDTO 객체 생성 및 반환하는 메소드 
-	 * @param exercise
-	 * @return
+	 *	@author kimgun-yeong
 	 */
 	public static SaveExerciseDTO of(Exercise exercise) {
 		SaveExerciseDTO dto = SaveExerciseDTO.builder()
