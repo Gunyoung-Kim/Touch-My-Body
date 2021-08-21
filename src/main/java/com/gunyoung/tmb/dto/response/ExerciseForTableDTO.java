@@ -21,6 +21,10 @@ public class ExerciseForTableDTO {
 	private String name;
 	private String target;
 	
+	/**
+	 * Exercise 인스턴스를 통해 ExerciseForTableDTO 객체 생성 후 반환
+	 * @author kimgun-yeong
+	 */
 	public static ExerciseForTableDTO of(Exercise exercise) {
 		ExerciseForTableDTO dto = ExerciseForTableDTO.builder()
 				.id(exercise.getId())

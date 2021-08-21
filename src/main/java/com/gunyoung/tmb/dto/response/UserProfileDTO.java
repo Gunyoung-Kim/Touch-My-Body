@@ -25,8 +25,7 @@ public class UserProfileDTO {
 	
 	/**
 	 * User 객체를 이용해 UserProfileDTO 객체 생성 및 반환하는 메소드
-	 * @param user
-	 * @return
+	 * @author kimgun-yeong
 	 */
 	public static UserProfileDTO of(User user) {
 		UserProfileDTO dto = UserProfileDTO.builder()

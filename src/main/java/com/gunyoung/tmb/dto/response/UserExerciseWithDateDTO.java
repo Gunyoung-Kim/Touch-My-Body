@@ -32,8 +32,7 @@ public class UserExerciseWithDateDTO {
 	
 	/**
 	 * UserExercise List 객체를 UserExerciseWithDateDTO 로 변환하는 메소드
-	 * @param list
-	 * @return
+	 * @author kimgun-yeong
 	 */
 	public static List<UserExerciseWithDateDTO> of(List<UserExercise> list) {
 		List<UserExerciseWithDateDTO> result = new ArrayList<>();
@@ -54,8 +53,7 @@ public class UserExerciseWithDateDTO {
 	
 	/**
 	 * UserExercise 객체를 UserExerciseWithDateDTO로 변환하는 메소드
-	 * @param userExercise
-	 * @return
+	 * @author kimgun-yeong
 	 */
 	public static UserExerciseWithDateDTO of(UserExercise userExercise) {
 		UserExerciseWithDateDTO dto = UserExerciseWithDateDTO.builder()
