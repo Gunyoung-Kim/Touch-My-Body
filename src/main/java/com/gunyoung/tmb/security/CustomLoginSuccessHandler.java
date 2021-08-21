@@ -19,6 +19,11 @@ import com.gunyoung.tmb.utils.SessionUtil;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 로그인 성공 후 핸들러
+ * @author kimgun-yeong
+ *
+ */
 @Component
 @RequiredArgsConstructor
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
@@ -35,17 +40,12 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-		
 		String redirectedUrl ="/";
 		HttpSession session = request.getSession();
 		
-		/*
-		 *  세션에 로그인 유저의 ID 값 저장
-		 */
+		//세션에 로그인 유저의 ID 값 저장 
 		String username = authentication.getName();
-		
 		Long userId = userService.findByEmail(username).getId();
-		
 		SessionUtil.setLoginUserId(session, userId);
 		
 		/*
@@ -56,7 +56,6 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		SavedRequest savedRequest = requestCache.getRequest(request, response);
 		
 		String redirectedUrlFromSession = SessionUtil.getAfterLoginRedirectedUrl(session);
-		
 		if(redirectedUrlFromSession != null) {
 			SessionUtil.removeAfterLoginRedirectedUrl(session);
 		}
@@ -67,7 +66,6 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		} else if(redirectedUrlFromSession != null && !redirectedUrlFromSession.equals("")) {
 			redirectedUrl = redirectedUrlFromSession;
 		}
-		
 		
 		// 세션에서 로그인 실패 기록 삭제 
 		SessionUtil.removeAuthenticationExceptionAttributes(session);
