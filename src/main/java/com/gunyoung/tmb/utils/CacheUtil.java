@@ -7,6 +7,8 @@ package com.gunyoung.tmb.utils;
  */
 public class CacheUtil {
 	
+	private CacheUtil() {};
+	
 	/*
 	 *  ------------- CacheNames ----------------------------------
 	 */

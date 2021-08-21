@@ -10,6 +10,8 @@ import java.util.GregorianCalendar;
  */
 public class DateUtil {
 	
+	private DateUtil() {};
+	
 	/**
 	 * 해당 연,월의 첫째날과 마지막 날을 반환하는 메소드
 	 * @param year

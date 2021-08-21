@@ -2,7 +2,6 @@ package com.gunyoung.tmb.utils;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
 
 public class SessionUtil {
@@ -13,14 +12,6 @@ public class SessionUtil {
 	private SessionUtil() {}
 	
 	// ------------------- LOGIN_USER_ID ---------------------------------------
-	
-	/**
-	 * 현재 접속자의 username을 SecurityContext에서 가져오는 메소드
-	 * @return
-	 */
-	public static String getUsernameFromSecurityContext() {
-		return SecurityContextHolder.getContext().getAuthentication().getName();
-	}
 	
 	/**
 	 * 로그인한 유저의 id 값(User_id)을 세션에 저장하는 메소드 
@@ -39,14 +30,6 @@ public class SessionUtil {
 	 */
 	public static Long getLoginUserId(HttpSession session) {
 		return (Long) session.getAttribute(LOGIN_USER_ID);
-	}
-	
-	/**
-	 * 세션에서 로그인한 유저의 id 값(User_id)를 삭제하는 메소드
-	 * @param session
-	 */
-	public static void removeLoginUserId(HttpSession session) {
-		session.removeAttribute(LOGIN_USER_ID);
 	}
 	
 	// ------------------- AFTER_LOGIN_REDIRECTED_URL  ---------------------------------------
