@@ -27,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
+	
+	public static final String DEFAULT_REDIRECTED_URL_AFTER_LOGIN_SUCCESS = "/";
 
 	private final UserService userService;
 	
@@ -40,7 +42,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-		String redirectedUrl ="/";
+		String redirectedUrl = DEFAULT_REDIRECTED_URL_AFTER_LOGIN_SUCCESS;
 		HttpSession session = request.getSession();
 		
 		//세션에 로그인 유저의 ID 값 저장 
