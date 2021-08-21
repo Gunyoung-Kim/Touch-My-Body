@@ -36,7 +36,6 @@ import com.gunyoung.tmb.error.exceptions.nonexist.RoleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.SessionAttributesNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
-import com.gunyoung.tmb.error.exceptions.notmatch.UserNotMatchException;
 import com.gunyoung.tmb.error.exceptions.request.AccessDeniedException;
 import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
 
@@ -150,11 +149,6 @@ public class ErrorController {
 	 * --------------------- FORBIDDEN ------------------------------------------------
 	 */
 	
-	@ResponseStatus(HttpStatus.FORBIDDEN)
-	@ExceptionHandler(UserNotMatchException.class)
-	public ErrorMsg userNotMatch(UserNotMatchException e) {
-		return new ErrorMsg(UserErrorCode.USER_NOT_MATCH_ERROR.getCode(), e.getMessage());
-	}
 	
 	/*
 	 * --------------------- BAD_REQUEST ------------------------------------------------
