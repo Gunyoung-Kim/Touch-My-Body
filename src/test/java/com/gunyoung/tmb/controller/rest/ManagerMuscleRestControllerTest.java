@@ -16,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
+import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.util.MuscleTest;
+import com.gunyoung.tmb.util.TargetTypeTest;
 
 /**
  * {@link ManagerMuscleRestController} 에 대한 테스트 클래스
@@ -94,8 +96,31 @@ public class ManagerMuscleRestControllerTest {
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
-	@DisplayName("Muscle 수정 -> 정상")
-	public void modifyMuscleTest() throws Exception {
+	@DisplayName("Muscle 수정 -> 정상, category(중복되도 되는것)가 변경")
+	public void modifyMuscleCategoryTest() throws Exception {
+		//Given
+		Muscle muscle = MuscleTest.getMuscleInstance();
+		muscleRepository.save(muscle);
+		
+		TargetType modifiedTargetType = TargetTypeTest.getAnotherTargetType(muscle.getCategory());
+		
+		MultiValueMap<String,String> paramMap = MuscleTest.getSaveMuscleDTOMap(muscle.getName(), modifiedTargetType);
+		
+		//When
+		mockMvc.perform(put("/manager/muscle/modify/"+muscle.getId())
+				.params(paramMap))
+		
+		//Then
+				.andExpect(status().isOk());
+		
+		assertEquals(modifiedTargetType, muscleRepository.findById(muscle.getId()).get().getCategory());
+	}
+	
+	@WithMockUser(roles= {"MANAGER"})
+	@Test
+	@Transactional
+	@DisplayName("Muscle 수정 -> 정상, 이름(중복되면 안되는것)이 변경")
+	public void modifyMuscleNameTest() throws Exception {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		muscleRepository.save(muscle);

@@ -157,8 +157,32 @@ public class ManagerExerciseRestControllerTest {
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
-	@DisplayName("Exercise 수정 -> 정상")
-	public void modifyExerciseTest() throws Exception {
+	@DisplayName("Exercise 수정 -> 정상, description(중복되도 되는것)이 바뀔때")
+	public void modifyExerciseDescriptionTest() throws Exception {
+		//Given
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		String changedDescription = "modifiedDescription";
+		
+		exerciseRepository.save(exercise);
+		
+		MultiValueMap<String,String> paramMap = ExerciseTest.getSaveExerciseDTOMap(exercise.getName());
+		paramMap.put("description", List.of("modifiedDescription"));
+		
+		//When
+		mockMvc.perform(put("/manager/exercise/modify/"+ exercise.getId())
+				.params(paramMap))
+		
+		//Then
+				.andExpect(status().isOk());
+		
+		assertEquals(changedDescription,exerciseRepository.findById(exercise.getId()).get().getDescription());
+	}
+	
+	@WithMockUser(roles= {"MANAGER"})
+	@Test
+	@Transactional
+	@DisplayName("Exercise 수정 -> 정상, 이름(중복되면 안되는 것)이 바뀔때")
+	public void modifyExerciseNameTest() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		String changedName = "modifiedName";
