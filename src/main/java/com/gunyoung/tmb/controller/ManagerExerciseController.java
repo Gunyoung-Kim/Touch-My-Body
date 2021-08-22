@@ -64,7 +64,7 @@ public class ManagerExerciseController {
 		
 		mav.addObject("listObject",listObject);
 		
-		mav.setPageNumbers(page, pageSize, totalPageNum);
+		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("exerciseListViewForManage");
 		
