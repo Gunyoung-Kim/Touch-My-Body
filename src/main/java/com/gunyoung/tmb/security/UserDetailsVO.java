@@ -9,12 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.gunyoung.tmb.domain.user.User;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @SuppressWarnings("serial")
 @NoArgsConstructor
-@Getter
 public class UserDetailsVO implements UserDetails{
 	
 	// Spring Security에서 사용하는 username
@@ -46,29 +44,34 @@ public class UserDetailsVO implements UserDetails{
 	public String getUsername() {
 		return this.email;
 	}
-
+	
+	/**
+	 * 아직까진 계정 만료 정책이 따로 있지 않음
+	 */
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
+	/**
+	 * 계정 잠금 정책 없음
+	 */
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
+	/**
+	 * 비밀번호 만료 정책 없음
+	 */
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }
