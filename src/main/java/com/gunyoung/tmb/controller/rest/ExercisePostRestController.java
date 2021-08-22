@@ -88,7 +88,7 @@ public class ExercisePostRestController {
 	 * @throws LikeNotFoundedException 세션의 저장된 UserId와 postId를 만족하는 PostLike 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/{postId}/removelike",method = RequestMethod.DELETE)
+	@RequestMapping(value="/community/post/{postId}/removeLike",method = RequestMethod.DELETE)
 	@LoginIdSessionNotNull
 	public void removeLikeToExercisePost(@PathVariable("postId") Long postId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
