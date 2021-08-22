@@ -38,6 +38,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExerciseServiceImpl implements ExerciseService {
 	
+	public static final String EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY = "bycategory";
+	
 	private final ExerciseRepository exerciseRepository;
 	
 	private final MuscleService muscleService;
@@ -105,7 +107,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	
 	@Override
 	@Transactional(readOnly=true)
-	@Cacheable(cacheNames=CacheUtil.EXERCISE_SORT_NAME,key="#root.methodName")
+	@Cacheable(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Map<String, List<String>> getAllExercisesNamewithSorting() {
 		Map<String, List<String>> result = new HashMap<>();
 		List<ExerciseNameAndTargetDTO> list = exerciseRepository.findAllWithNameAndTarget();
@@ -127,12 +129,13 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Exercise save(Exercise exercise) {
 		return exerciseRepository.save(exercise);
 	}
 	
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Exercise saveWithSaveExerciseDTO(Exercise exercise,SaveExerciseDTO dto) {
 		exercise.setName(dto.getName());
 		exercise.setDescription(dto.getDescription());
@@ -182,11 +185,13 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void delete(Exercise exercise) {
 		exerciseRepository.delete(exercise);
 	}
 	
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void deleteById(Long id) {
 		Exercise exercise = findById(id);
 		if(exercise != null)

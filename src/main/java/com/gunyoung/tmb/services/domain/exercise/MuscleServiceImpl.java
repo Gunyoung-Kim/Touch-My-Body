@@ -27,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MuscleServiceImpl implements MuscleService {
 	
+	public static final String MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY = "bycategory";
+	
 	private final MuscleRepository muscleRepository;
 
 	@Override
@@ -40,7 +42,6 @@ public class MuscleServiceImpl implements MuscleService {
 	
 	@Override
 	@Transactional(readOnly=true)
-	@Cacheable(cacheNames=CacheUtil.MUSCLE_NAME,key="#name")
 	public Muscle findByName(String name) {
 		Optional<Muscle> result = muscleRepository.findByName(name);
 		if(result.isEmpty())
@@ -65,7 +66,7 @@ public class MuscleServiceImpl implements MuscleService {
 	
 	@Override
 	@Transactional(readOnly =true)
-	@Cacheable(cacheNames=CacheUtil.MUSCLE_SORT_NAME, key="#root.methodName")
+	@Cacheable(cacheNames=CacheUtil.MUSCLE_SORT_NAME, key= "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Map<String, List<String>> getAllMusclesWithSortingByCategory() {
 		Map<String,List<String>> result = new HashMap<>();
 		List<MuscleNameAndCategoryDTO> muscles = muscleRepository.findAllWithNamaAndCategory();
@@ -99,19 +100,19 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_NAME,CacheUtil.MUSCLE_SORT_NAME}, allEntries=true)
+	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_SORT_NAME}, key="#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Muscle save(Muscle muscle) {
 		return muscleRepository.save(muscle);
 	}
 
 	@Override
-	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_NAME,CacheUtil.MUSCLE_SORT_NAME}, allEntries=true)
+	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_SORT_NAME}, key="#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void delete(Muscle muscle) {
 		muscleRepository.delete(muscle);
 	}
 	
 	@Override
-	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_NAME,CacheUtil.MUSCLE_SORT_NAME}, allEntries=true)
+	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_SORT_NAME}, key="#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void deleteById(Long id) {
 		Muscle muscle = findById(id);
 		if(muscle!= null)

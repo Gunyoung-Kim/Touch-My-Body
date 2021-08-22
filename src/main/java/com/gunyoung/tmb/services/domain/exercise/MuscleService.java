@@ -58,7 +58,7 @@ public interface MuscleService {
 	
 	/**
 	 * Muscle 생성 및 수정 <br>
-	 * {@code CacheUtil.MUSCLE_NAME}, {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제
+	 * {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제
 	 * @param muscle 저장하려는 Muscle
 	 * @return 저장된 Muscle
 	 * @author kimgun-yeong
@@ -67,7 +67,7 @@ public interface MuscleService {
 	
 	/**
 	 * Muscle 삭제 <br>
-	 * {@code CacheUtil.MUSCLE_NAME}, {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제
+	 * {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제
 	 * @param muscle 삭제하려는 muscle
 	 * @author kimgun-yeong
 	 */
@@ -75,7 +75,7 @@ public interface MuscleService {
 	
 	/**
 	 * ID를 만족하는 Muscle 삭제 <br>
-	 * {@code CacheUtil.MUSCLE_NAME}, {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제
+	 * {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제
 	 * @param id 삭제하려는 Muscle의 ID
 	 * @author kimgun-yeong
 	 */
