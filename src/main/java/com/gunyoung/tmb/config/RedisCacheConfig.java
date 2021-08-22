@@ -99,7 +99,6 @@ public class RedisCacheConfig {
 	@Bean
 	public Map<String,RedisCacheConfiguration> detailCacheConfigurations() {
 		Map<String,RedisCacheConfiguration> cacheConfigurations= new HashMap<>();
-		cacheConfigurations.put(CacheUtil.USER_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.USER_EXPIRE_MIN)));
 		cacheConfigurations.put(CacheUtil.MUSCLE_SORT_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.MUSCLE_SORT_EXPIRE_MIN)));
 		cacheConfigurations.put(CacheUtil.EXERCISE_SORT_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.EXERCISE_SORT_EXPIRE_MIN)));
 		cacheConfigurations.put(CacheUtil.COMMENT_LIKE_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.COMMENT_LIKE_EXPIRE_MIN)));
