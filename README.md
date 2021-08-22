@@ -1,6 +1,6 @@
 # Touch-My-Body [![Build Status](https://app.travis-ci.com/Gunyoung-Kim/Touch-My-Body.svg?branch=master)](https://app.travis-ci.com/Gunyoung-Kim/Touch-My-Body)
 
-최신 버전 : ver 0.0.8
+최신 버전 : ver 0.0.9
 
 ## 프로젝트 주 기능
 
@@ -78,17 +78,11 @@
 
 ---
 
-### 테스트 방식 
+### 테스트 
 
-1. RestController, Controller 클래스 
+- 테스트 커버리지 : 100 %
 
-   - 통합 테스트 : 프레젠테이션 계층 - 서비스 계층 - 영속성 계층 
-
-2. Service 클래스 
-
-   - 통합 테스트 : 서비스 계층 - 영속성 계층 (com.gunyoung.tmb.services.domain.* 클래스들만)
-
-   - 단위 테스트: 서비스 계층 
+<img width="661" alt="tmb_test_coverage_0_0_9" src="https://user-images.githubusercontent.com/60494603/130346128-9c04f981-04fb-49c7-b545-bb50b11b06e5.png">
 
 ---
 
