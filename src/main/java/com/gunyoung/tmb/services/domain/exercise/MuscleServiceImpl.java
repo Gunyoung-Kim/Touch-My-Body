@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -98,16 +99,19 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 
 	@Override
+	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_NAME,CacheUtil.MUSCLE_SORT_NAME}, allEntries=true)
 	public Muscle save(Muscle muscle) {
 		return muscleRepository.save(muscle);
 	}
 
 	@Override
+	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_NAME,CacheUtil.MUSCLE_SORT_NAME}, allEntries=true)
 	public void delete(Muscle muscle) {
 		muscleRepository.delete(muscle);
 	}
 	
 	@Override
+	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_NAME,CacheUtil.MUSCLE_SORT_NAME}, allEntries=true)
 	public void deleteById(Long id) {
 		Muscle muscle = findById(id);
 		if(muscle!= null)

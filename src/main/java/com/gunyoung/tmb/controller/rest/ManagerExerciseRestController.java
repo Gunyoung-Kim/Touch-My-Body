@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,6 @@ import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoun
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
-import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,7 +42,6 @@ public class ManagerExerciseRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/add" ,method = RequestMethod.POST)
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
 	public void addExercise(@ModelAttribute SaveExerciseDTO dto) {
 		if(exerciseService.existsByName(dto.getName())) {
 			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getDescription());
@@ -63,7 +60,6 @@ public class ManagerExerciseRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/modify/{exerciseId}",method=RequestMethod.PUT)
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
 	public void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute SaveExerciseDTO dto) {
 		Exercise exercise = exerciseService.findById(exerciseId);
 		
@@ -84,8 +80,7 @@ public class ManagerExerciseRestController {
 	 * @param exerciseId 삭제하려는 대상 Exercise의 Id
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/exercise/remove" ,method = RequestMethod.DELETE) 
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME,allEntries=true)
+	@RequestMapping(value="/manager/exercise/remove" ,method = RequestMethod.DELETE)
 	public void deleteExercise(@RequestParam("exerciseId") Long exerciseId) {
 		exerciseService.deleteById(exerciseId);
 	}

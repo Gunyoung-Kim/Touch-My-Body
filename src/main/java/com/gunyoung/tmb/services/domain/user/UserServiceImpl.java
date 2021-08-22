@@ -2,6 +2,7 @@ package com.gunyoung.tmb.services.domain.user;
 
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -112,11 +113,13 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.USER_NAME, allEntries=true)
 	public User save(User user) {
 		return userRepository.save(user);
 	}
 	
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.USER_NAME, allEntries=true)
 	public User saveByJoinDTO(UserJoinDTO dto,RoleType role) {
 		User user = User.builder()
 						.email(dto.getEmail())
@@ -130,6 +133,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.USER_NAME, allEntries=true)
 	public void deleteUser(User user) {
 		userRepository.delete(user);
 	}

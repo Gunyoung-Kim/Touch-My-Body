@@ -89,7 +89,8 @@ public interface UserService {
 	public Page<User> findAllByNickNameOrNameInPage(String keyword,Integer pageNumber);
 	
 	/**
-	 * User 생성 및 수정
+	 * User 생성 및 수정 <br>
+	 * {@code CacheUtil.USER_NAME} 관련 캐쉬 삭제
 	 * @param user 저장하려는 User 객체
 	 * @return User
 	 * @author kimgun-yeong
@@ -97,7 +98,8 @@ public interface UserService {
 	public User save(User user);
 	
 	/**
-	 * {@link UserJoinDTO} 객체에 담긴 정보를 이용하여 User 객체 생성 후 저장
+	 * {@link UserJoinDTO} 객체에 담긴 정보를 이용하여 User 객체 생성 후 저장 <br>
+	 * {@code CacheUtil.USER_NAME} 관련 캐쉬 삭제
 	 * @param dto 저장할 User 객체 정보가 담긴 dto 객체
 	 * @param role 저장할 User의 role
 	 * @return 저장된 객체
@@ -106,7 +108,8 @@ public interface UserService {
 	public User saveByJoinDTO(UserJoinDTO dto,RoleType role);
 	
 	/**
-	 * User 삭제 
+	 * User 삭제 <br>
+	 * {@code CacheUtil.USER_NAME} 관련 캐쉬 삭제
 	 * @param user 삭제하려는 user
 	 * @author kimgun-yeong
 	 */

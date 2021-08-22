@@ -1,6 +1,5 @@
 package com.gunyoung.tmb.controller.rest;
 
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +13,6 @@ import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.MuscleNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
-import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,15 +28,13 @@ public class ManagerMuscleRestController {
 	private final MuscleService muscleService;
 	
 	/**
-	 * Muscle 정보 수정 요청 처리하는 메소드 <br>
-	 * {@code CacheUtil.MUSCLE_NAME}, {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제
+	 * Muscle 정보 수정 요청 처리하는 메소드
 	 * @param muscleId 정보 수정하려는 대상 Muscle의 Id
 	 * @throws MuscleNotFoundedException 해당 Id의 Muscle 없으면
 	 * @throws MuscleNameDuplicationFoundedException 수정된 이름이 이미 존재하는 Muscle의 이름과 일치한다면
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.PUT)
-	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_NAME,CacheUtil.MUSCLE_SORT_NAME}, allEntries=true)
 	public void modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute SaveMuscleDTO dto) {
 		Muscle muscle = muscleService.findById(muscleId);
 		
@@ -57,13 +53,11 @@ public class ManagerMuscleRestController {
 	
 	
 	/**
-	 * Muscle의 삭제 요철 처리하는 메소드 <br>
-	 * {@code CacheUtil.MUSCLE_NAME}, {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제
+	 * Muscle의 삭제 요철 처리하는 메소드
 	 * @param muscleId 삭제하려는 대상 Muscle의 Id
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/muscle/remove" ,method = RequestMethod.DELETE)
-	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_NAME,CacheUtil.MUSCLE_SORT_NAME}, allEntries=true)
 	public void removeMuscle(@RequestParam("muscleId") Long muscleId) {
 		muscleService.deleteById(muscleId);
 	}	

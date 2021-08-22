@@ -6,7 +6,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -36,7 +35,6 @@ import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.user.UserService;
-import com.gunyoung.tmb.utils.CacheUtil;
 import com.gunyoung.tmb.utils.PageUtil;
 import com.gunyoung.tmb.utils.SessionUtil;
 
@@ -105,14 +103,12 @@ public class UserController {
 	/**
 	 * 회원가입을 처리하는 메소드 <br>
 	 * 입력된 password는 암호화를 거쳐 저장 <br>
-	 * 정상 처리 시 메인화면으로 리다이렉트 <br>
-	 * {@code CacheUtil.USER_NAME} 관련 캐쉬 삭제
+	 * 정상 처리 시 메인화면으로 리다이렉트
 	 * @throws EmailDuplicationFoundedException 입력된 email이 이미 존재한다면
 	 * @throws NickNameDuplicationFoundedException 입력된 nickName이 이미 존재한다면
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/join",method=RequestMethod.POST)
-	@CacheEvict(cacheNames=CacheUtil.USER_NAME, allEntries=true)
 	public ModelAndView join(@ModelAttribute("formModel")UserJoinDTO formModel) {
 		String email = formModel.getEmail();
 		

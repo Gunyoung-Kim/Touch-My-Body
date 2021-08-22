@@ -3,7 +3,6 @@ package com.gunyoung.tmb.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,7 +23,6 @@ import com.gunyoung.tmb.error.exceptions.duplication.MuscleNameDuplicationFounde
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
-import com.gunyoung.tmb.utils.CacheUtil;
 import com.gunyoung.tmb.utils.PageUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -95,15 +93,13 @@ public class ManagerMuscleController {
 	}
 	
 	/**
-	 * 근육 추가 처리하는 메소드 <br>
-	 * {@code CacheUtil.MUSCLE_NAME}, {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제
+	 * 근육 추가 처리하는 메소드
 	 * @param dto
 	 * @throws MuscleNameDuplicationFoundedException 추가하려는 Muscle의 Name이 중복된다면
 	 * @throws TargetTypeNotFoundedException 추가하려는 Muscle의 category와 일치하는 TargetType 없으면
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/muscle/add" ,method=RequestMethod.POST)
-	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_NAME,CacheUtil.MUSCLE_SORT_NAME}, allEntries=true)
 	public ModelAndView addMuscle(@ModelAttribute SaveMuscleDTO dto) {
 		if(muscleService.existsByName(dto.getName())) {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
