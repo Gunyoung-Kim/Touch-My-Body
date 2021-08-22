@@ -8,6 +8,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
+import com.gunyoung.tmb.dto.reqeust.SaveMuscleDTO;
 import com.gunyoung.tmb.enums.TargetType;
 
 /**
@@ -48,6 +49,20 @@ public class MuscleTest {
 				.build();
 		
 		return muscle;
+	}
+	
+	/**
+	 * 테스트용 SaveMuscleDTO 인스턴스 반환 <br>
+	 * name, categoy 커스터마이징 가능
+	 * @author kimgun-yeongs
+	 */
+	public static SaveMuscleDTO getSaveMuscleDTOInstance(String name, String category) {
+		SaveMuscleDTO dto = SaveMuscleDTO.builder()
+				.name(name)
+				.category(category)
+				.build();
+		
+		return dto;
 	}
 	
 	/**
