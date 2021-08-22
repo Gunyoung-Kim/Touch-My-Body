@@ -242,6 +242,20 @@ public class UserControllerTest {
 	@WithMockUser
 	@Test
 	@Transactional
+	@DisplayName("내 프로필 화면 반환하기 -> 세션에 저장된 ID가 없을 때")
+	public void profileViewLoginIdSessionNull() throws Exception{
+		//Given
+		
+		//When
+		mockMvc.perform(get("/user/profile"))
+		
+		//Then
+				.andExpect(redirectedUrl("/login"));
+	}
+	
+	@WithMockUser
+	@Test
+	@Transactional
 	@DisplayName("내 프로필 화면 반환하기 -> 세션에 저장된 ID의 User 없을 때")
 	public void profileViewNonExist() throws Exception {
 		//Given

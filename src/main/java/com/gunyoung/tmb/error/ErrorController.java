@@ -172,12 +172,7 @@ public class ErrorController {
 	
 	@ResponseStatus(HttpStatus.MOVED_PERMANENTLY)
 	@ExceptionHandler(SessionAttributesNotFoundedException.class)
-	public void sessionAttributesNotFounded(SessionAttributesNotFoundedException e,HttpServletResponse response) {
-		try {
-			response.sendRedirect("/login");
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	public void sessionAttributesNotFounded(SessionAttributesNotFoundedException e, HttpServletResponse response) throws IOException {
+		response.sendRedirect("/login");
 	}
 }
