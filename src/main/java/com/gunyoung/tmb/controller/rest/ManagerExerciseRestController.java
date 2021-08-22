@@ -61,7 +61,7 @@ public class ManagerExerciseRestController {
 	 */
 	@RequestMapping(value="/manager/exercise/modify/{exerciseId}",method=RequestMethod.PUT)
 	public void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute SaveExerciseDTO dto) {
-		Exercise exercise = exerciseService.findById(exerciseId);
+		Exercise exercise = exerciseService.findWithExerciseMusclesById(exerciseId);
 		
 		if(exercise == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
