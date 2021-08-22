@@ -11,6 +11,6 @@ import com.gunyoung.tmb.domain.BaseEntity;
  *
  */
 @MappedSuperclass
-public class Like extends BaseEntity{
+public abstract class Like extends BaseEntity{
 
 }
