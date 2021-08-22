@@ -79,7 +79,7 @@ public class ManagerUserController {
 		
 		mav.addObject("listObject",listObject);
 		
-		mav.setPageNumbers(page, pageSize, totalPageNum);
+		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("userManage");
 		
@@ -162,7 +162,7 @@ public class ManagerUserController {
 		mav.addObject("userId", userId);
 		mav.addObject("username", user.getFullName()+": " +user.getNickName());
 		
-		mav.setPageNumbers(page, pageSize, totalPageNum);
+		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("userCommentList");
 		
@@ -215,7 +215,7 @@ public class ManagerUserController {
 		mav.addObject("userId", userId);
 		mav.addObject("username", user.getFullName()+": " +user.getNickName());
 		
-		mav.setPageNumbers(page, pageSize, totalPageNum);
+		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("userPostList");
 		

@@ -58,7 +58,7 @@ public class ManagerFeedbackController {
 		mav.addObject("listObject", pageResult);
 		mav.addObject("exerciseName", exercise.getName());
 		
-		mav.setPageNumbers(page, pageSize, totalPageNum);
+		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("feedbackListViewForManage");
 		

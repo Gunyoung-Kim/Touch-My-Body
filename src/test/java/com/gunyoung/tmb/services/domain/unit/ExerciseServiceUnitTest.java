@@ -27,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
+import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO;
 import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
@@ -37,6 +38,7 @@ import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseServiceImpl;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
+import com.gunyoung.tmb.util.ExerciseMuscleTest;
 
 /**
  * {@link ExerciseServiceImpl} 에 대한 테스트 클래스 <br>
@@ -481,10 +483,31 @@ public class ExerciseServiceUnitTest {
 	}
 	
 	@Test
-	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환  -> 정상")
-	public void getExerciseForInfoViewDTOByExerciseIdTest() {
+	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환  -> 정상, ExerciseMuscle 없는 버전")
+	public void getExerciseForInfoViewDTOByExerciseIdTestNoExerciseMuscle() {
 		//Given
 		Long exerciseId = Long.valueOf(1);
+		
+		given(exerciseRepository.findById(exerciseId)).willReturn(Optional.of(exercise));
+		
+		//When
+		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(exerciseId);
+		
+		//Then
+		assertNotNull(result);
+	}
+	
+	@Test
+	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환  -> 정상, ExerciseMuscle 있는 버전")
+	public void getExerciseForInfoViewDTOByExerciseIdTestWithExerciseMuscle() {
+		//Given
+		Long exerciseId = Long.valueOf(1);
+		ExerciseMuscle mainExerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance();
+		mainExerciseMuscle.setMain(true);
+		ExerciseMuscle subExerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance();
+		subExerciseMuscle.setMain(false);
+		
+		exercise.getExerciseMuscles().addAll(List.of(mainExerciseMuscle, subExerciseMuscle));
 		
 		given(exerciseRepository.findById(exerciseId)).willReturn(Optional.of(exercise));
 		

@@ -79,7 +79,7 @@ public interface ExerciseService {
 	
 	/** 
 	 * Exercise 생성 및 수정 <br>
-	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 Cache 삭제 
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제
 	 * @param exercise 저장하려는 Exercise
 	 * @return 저장된 Exercise
 	 * @author kimgun-yeong
@@ -87,7 +87,8 @@ public interface ExerciseService {
 	public Exercise save(Exercise exercise);
 	
 	/**
-	 * {@link SaveExerciseDTO} 에 담긴 정보로 Exercise save
+	 * {@link SaveExerciseDTO} 에 담긴 정보로 Exercise save <br>
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제
 	 * @param dto 클라이언트로부터 받은 Exercise save하기 위한 {@link SaveExerciseDTO} 객체
 	 * @throws TargetTypeNotFoundedException dto 객체에 담긴 target이 아무런 TargetType의 이름이 아닐때 
 	 * @author kimgun-yeong
@@ -96,14 +97,15 @@ public interface ExerciseService {
 	
 	/**
 	 * Exercise 삭제 <br>
-	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 Cache 삭제 
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제
 	 * @param exercise 삭제하려는 Exercise
 	 * @author kimgun-yeong
 	 */
 	public void delete(Exercise exercise);
 	
 	/**
-	 * ID를 만족하는 Exercise 삭제
+	 * ID를 만족하는 Exercise 삭제 <br>
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제
 	 * @author kimgun-yeong
 	 */
 	public void deleteById(Long id);

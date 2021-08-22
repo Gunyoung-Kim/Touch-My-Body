@@ -23,8 +23,7 @@ public class MuscleForTableDTO {
 	
 	/**
 	 * Muscle 객체로 MuscleForTableDTO 객체 생성 및 반환하는 메소드
-	 * @param muscle
-	 * @return
+	 * @author kimgun-yeong
 	 */
 	public static MuscleForTableDTO of(Muscle muscle) {
 		MuscleForTableDTO dto = MuscleForTableDTO.builder()

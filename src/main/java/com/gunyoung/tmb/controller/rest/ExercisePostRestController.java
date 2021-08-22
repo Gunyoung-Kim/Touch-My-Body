@@ -102,7 +102,7 @@ public class ExercisePostRestController {
 	}
 	
 	/**
-	 * 유저가 댓글에 좋아요 추가 요청 처리하는 메소드 
+	 * 유저가 댓글에 좋아요 추가 요청 처리하는 메소드
 	 * @param postId 댓글이 속해있는 ExercisePost의 Id
 	 * @param commentId 좋아요 추가하려는 대상 Comment의 Id
 	 * @throws UserNotFoundedException 세션에 저장된 Id의 User 없으면

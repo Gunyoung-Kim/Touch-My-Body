@@ -3,7 +3,6 @@ package com.gunyoung.tmb.dto.reqeust;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
-import com.gunyoung.tmb.error.exceptions.BusinessException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +23,10 @@ public class SaveMuscleDTO {
 	private String name;
 	private String category;
 	
+	/**
+	 * Muscle 인스턴스 정보를 통해 SaveMuscleDTO 생성
+	 * @author kimgun-yeong
+	 */
 	public static SaveMuscleDTO of(Muscle muscle) {
 		SaveMuscleDTO dto = SaveMuscleDTO.builder()
 				.name(muscle.getName())
@@ -33,20 +36,21 @@ public class SaveMuscleDTO {
 		return dto;
 	}
 	
-	public static Muscle toMuscle(Muscle muscle, SaveMuscleDTO dto) throws BusinessException{
+	/**
+	 * SaveMuscleDTO를 통해 Muscle 업데이트 후 반환 
+	 * @throws TargetTypeNotFoundedException dto category에 해당하는 TargetType KoreanName 없을 때 
+	 */
+	public static Muscle updateMuscleBySaveMuscleDTO(Muscle muscle, SaveMuscleDTO dto) throws TargetTypeNotFoundedException{
 		muscle.setName(dto.getName());
 		
 		TargetType newMusclesCategory = null;
-		
 		String category = dto.getCategory();
-		
 		for(TargetType tt: TargetType.values()) {
 			if(tt.getKoreanName().equals(category)) {
 				newMusclesCategory = tt;
 				break;
 			}
 		}
-		
 		if(newMusclesCategory == null) {
 			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
 		}

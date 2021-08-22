@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.Comment;
@@ -95,6 +96,29 @@ public class ManagerUserRestControllerTest {
 		
 				.andExpect(status().isBadRequest());
 		assertEquals(RoleType.ADMIN,userRepository.findById(user.getId()).get().getRole());
+	}
+	
+	@WithMockUser(roles= {"ADMIN"})
+	@Test
+	@Transactional
+	@DisplayName("유저의 정보(권한) 수정 -> 리퀘스트 파라미터에 잘못된 role 값")
+	public void manageUserProfileTestInvalidRole() throws Exception {
+		//Given
+		User user = UserTest.getUserInstance(RoleType.USER);
+		userRepository.save(user);
+		
+		MultiValueMap<String,String> paramMap = new LinkedMultiValueMap<>();
+		paramMap.add("role", "invalidRole");
+		
+		//When
+		mockMvc.perform(put("/manager/usermanage/" + user.getId())
+				.params(paramMap))
+		
+		//Then
+		
+				.andExpect(status().isNoContent());
+		
+		assertEquals(RoleType.USER,userRepository.findById(user.getId()).get().getRole());
 	}
 	
 	@WithMockUser(roles= {"ADMIN"})

@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.services.security;
+package com.gunyoung.tmb.security;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -27,7 +27,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.enums.RoleType;
-import com.gunyoung.tmb.security.AuthorityServiceImpl;
 
 /**
  * {@link AuthorityServiceImpl}에 대한 테스트 클래스 <br> 

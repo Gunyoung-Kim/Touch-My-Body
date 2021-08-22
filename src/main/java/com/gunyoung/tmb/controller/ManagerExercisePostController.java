@@ -52,7 +52,7 @@ public class ManagerExercisePostController {
 		
 		mav.addObject("listObject", pageResult);
 		
-		mav.setPageNumbers(page, pageSize, totalPageNum);
+		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("communityForManage");
 		

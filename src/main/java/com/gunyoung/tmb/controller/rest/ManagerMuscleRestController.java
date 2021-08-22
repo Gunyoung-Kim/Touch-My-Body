@@ -46,7 +46,7 @@ public class ManagerMuscleRestController {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
-		muscle = SaveMuscleDTO.toMuscle(muscle, dto);
+		muscle = SaveMuscleDTO.updateMuscleBySaveMuscleDTO(muscle, dto);
 		
 		muscleService.save(muscle);
 	}

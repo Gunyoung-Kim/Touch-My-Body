@@ -92,7 +92,7 @@ public class ExercisePostController {
 		mav.addObject("category", "전체");
 		mav.addObject("targetNames", targetTypes);
 		
-		mav.setPageNumbers(page, pageSize, totalPageNum);
+		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("community");
 		
@@ -137,7 +137,7 @@ public class ExercisePostController {
 		mav.addObject("targetNames", targetTypes);
 		mav.addObject("category", type.getKoreanName());
 		
-		mav.setPageNumbers(page, pageSize, totalPageNum);
+		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("community");
 		

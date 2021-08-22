@@ -20,6 +20,10 @@ public class SaveCommentDTO {
 	private String contents;
 	private boolean isAnonymous;
 	
+	/**
+	 * SaveCommentDTO 필드 값과 writerIp를 통해 Comment 생성 후 반환
+	 * @author kimgun-yeong
+	 */
 	public static Comment toComment(SaveCommentDTO dto,String writerIp) {
 		Comment comment = Comment.builder()
 				.writerIp(writerIp)

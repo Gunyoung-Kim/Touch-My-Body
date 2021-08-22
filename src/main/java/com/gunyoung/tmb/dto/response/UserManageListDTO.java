@@ -25,8 +25,7 @@ public class UserManageListDTO {
 	
 	/**
 	 * User을 UserManagerListDTO객체로 변환하는 메소드
-	 * @param user
-	 * @return
+	 * @author kimgun-yeong
 	 */
 	public static UserManageListDTO of(User user) {
 		UserManageListDTO dto = UserManageListDTO.builder()

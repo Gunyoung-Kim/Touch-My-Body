@@ -27,7 +27,7 @@ public class LoginAspect {
 	
 	/**
 	 * 세션에서 로그인된 유저의 ID 가져오는 메소드에서 세션에 유저의 ID 없으면 예외 발생 
-	 * @param dp
+	 * @throws SessionAttributesNotFoundedException 세션에 로그인 유저의 ID 없을 때 발생
 	 * @author kimgun-yeong
 	 */
 	@Before("@annotation(com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull)")

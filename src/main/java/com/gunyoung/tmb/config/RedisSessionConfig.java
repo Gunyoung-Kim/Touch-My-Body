@@ -42,7 +42,6 @@ public class RedisSessionConfig {
 	
 	/**
 	 * REDIS-CLi로 LETTUCE 채택
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@Bean
@@ -55,7 +54,6 @@ public class RedisSessionConfig {
 	 * 오브젝트 serialization 과 connection management <br>
 	 * key serializer : stringSerializer <br>
 	 * value serializer : genericjsonSerializer
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@Bean
@@ -67,6 +65,11 @@ public class RedisSessionConfig {
 		return redisTemplate;
 	}
 	
+	/**
+	 * AWS ElastiCache 같은 secured redis 환경에서 <br>
+	 * {@link org.springframework.session.data.redis.config.ConfigureNotifyKeyspaceEventsAction} 가 Redis config 명령어 수행하지 않게 설
+	 * @author kimgun-yeong
+	 */
 	@Bean
 	public ConfigureRedisAction configureRedisAction() {
 		return ConfigureRedisAction.NO_OP;

@@ -32,10 +32,10 @@ import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.PrivacyPolicyNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.nonexist.RoleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.SessionAttributesNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
-import com.gunyoung.tmb.error.exceptions.notmatch.UserNotMatchException;
 import com.gunyoung.tmb.error.exceptions.request.AccessDeniedException;
 import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
 
@@ -139,15 +139,16 @@ public class ErrorController {
 		return new ErrorMsg(PrivacyPolicyErrorCode.PRIVACY_NOT_FOUNDED_ERROR.getCode(),e.getMessage());
 	}
 	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ExceptionHandler(RoleNotFoundedException.class)
+	public ErrorMsg roleNotFounded(RoleNotFoundedException e) {
+		return new ErrorMsg(UserErrorCode.ROLE_NOT_FOUNDED_ERROR.getCode(), e.getMessage());
+	}
+	
 	/*
 	 * --------------------- FORBIDDEN ------------------------------------------------
 	 */
 	
-	@ResponseStatus(HttpStatus.FORBIDDEN)
-	@ExceptionHandler(UserNotMatchException.class)
-	public ErrorMsg userNotMatch(UserNotMatchException e) {
-		return new ErrorMsg(UserErrorCode.USER_NOT_MATCH_ERROR.getCode(), e.getMessage());
-	}
 	
 	/*
 	 * --------------------- BAD_REQUEST ------------------------------------------------
@@ -171,12 +172,7 @@ public class ErrorController {
 	
 	@ResponseStatus(HttpStatus.MOVED_PERMANENTLY)
 	@ExceptionHandler(SessionAttributesNotFoundedException.class)
-	public void sessionAttributesNotFounded(SessionAttributesNotFoundedException e,HttpServletResponse response) {
-		try {
-			response.sendRedirect("/login");
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	public void sessionAttributesNotFounded(SessionAttributesNotFoundedException e, HttpServletResponse response) throws IOException {
+		response.sendRedirect("/login");
 	}
 }

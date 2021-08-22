@@ -167,13 +167,17 @@ public class MuscleServiceUnitTest {
 		TargetType[] targetTypes = TargetType.values();
 		List<MuscleNameAndCategoryDTO> muscleNameAndCategoryDTOList = new ArrayList<>();
 		
-		for(TargetType target: targetTypes) {
-			MuscleNameAndCategoryDTO dto = MuscleNameAndCategoryDTO.builder()
-					.name("muscle")
-					.category(target)
-					.build();
-			
-			muscleNameAndCategoryDTOList.add(dto);
+		int numForEachTargetType = 2;
+		
+		for(int i=0;i < numForEachTargetType;i++) {
+			for(TargetType target: targetTypes) {
+				MuscleNameAndCategoryDTO dto = MuscleNameAndCategoryDTO.builder()
+						.name("muscle" + i)
+						.category(target)
+						.build();
+				
+				muscleNameAndCategoryDTOList.add(dto);
+			}
 		}
 		
 		given(muscleRepository.findAllWithNamaAndCategory()).willReturn(muscleNameAndCategoryDTOList);
@@ -185,7 +189,7 @@ public class MuscleServiceUnitTest {
 		assertEquals(targetTypes.length, result.size());
 		
 		for(String category: result.keySet()) {
-			assertEquals(1, result.get(category).size());
+			assertEquals(numForEachTargetType, result.get(category).size());
 		}
 	}
 	

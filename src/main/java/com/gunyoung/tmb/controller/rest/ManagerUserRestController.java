@@ -42,6 +42,7 @@ public class ManagerUserRestController {
 	 * @param userId 정보 수정하려는 대상 User의 Id
 	 * @throws UserNotFoundedException 해당 Id의 User 없으면
 	 * @throws AccessDeniedException 접속자가 대상 User 보다 권한이 낮으면
+	 * @throws BusinessException dto를 통해 유저 정보 처리하는 과정에서 발생하는 예외
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage/{userId}", method = RequestMethod.PUT)

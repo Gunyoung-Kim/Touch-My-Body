@@ -24,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class CommentLikeServiceImpl implements CommentLikeService {
+	
+	public static final String EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY = "exsitByUserIdAndCommentId"; 
 
 	private final CommentLikeRepository commentLikeRepository;
 	
@@ -46,12 +48,15 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.COMMENT_LIKE_NAME, allEntries = true)
+	@CacheEvict(cacheNames=CacheUtil.COMMENT_LIKE_NAME, 
+	key="#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#commentLike.user.id).concat(':').concat(#commentLike.comment.id)")
 	public CommentLike save(CommentLike commentLike) {
 		return commentLikeRepository.save(commentLike);
 	}
 
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.COMMENT_LIKE_NAME, 
+	key="#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#user.id).concat(':').concat(#comment.id)")
 	public CommentLike createAndSaveWithUserAndComment(User user, Comment comment) {
 		CommentLike commentLike = CommentLike.builder()
 				.user(user)
@@ -65,7 +70,8 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	}
 	
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.COMMENT_LIKE_NAME,allEntries=true)
+	@CacheEvict(cacheNames=CacheUtil.COMMENT_LIKE_NAME, 
+	key="#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#commentLike.user.id).concat(':').concat(#commentLike.comment.id)")
 	public void delete(CommentLike commentLike) {
 		commentLikeRepository.delete(commentLike);
 	}
@@ -73,7 +79,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	@Override
 	@Transactional(readOnly=true)
 	@Cacheable(cacheNames=CacheUtil.COMMENT_LIKE_NAME,
-			key="#root.methodName.concat(':').concat('#userId').concat(':').concat('#exercisePostId')",
+			key="#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#userId).concat(':').concat(#commentId)",
 			unless="#result != true")
 	public boolean existsByUserIdAndCommentId(Long userId, Long commentId) {
 		return commentLikeRepository.existsByUserIdAndCommentId(userId, commentId);

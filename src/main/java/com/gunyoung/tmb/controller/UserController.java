@@ -200,7 +200,7 @@ public class UserController {
 		
 		mav.addObject("commentList", commentListForView);
 	
-		mav.setPageNumbers(page, pageSize, totalPageNum);
+		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("profileCommentList");
 		
@@ -253,7 +253,7 @@ public class UserController {
 		
 		mav.addObject("postList", postListForView);
 		
-		mav.setPageNumbers(page, pageSize, totalPageNum);
+		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("profilePostList");
 		

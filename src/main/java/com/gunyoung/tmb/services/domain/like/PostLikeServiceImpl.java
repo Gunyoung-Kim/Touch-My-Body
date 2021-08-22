@@ -25,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostLikeServiceImpl implements PostLikeService {
 	
+	public static final String EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY = "exsitByUserIdAndExercisePostId"; 
+	
 	private final PostLikeRepository postLikeRepository;
 
 	@Override
@@ -47,12 +49,15 @@ public class PostLikeServiceImpl implements PostLikeService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME,allEntries=true)
+	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME, 
+	key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#postLike.user.id).concat(':').concat(#postLike.exercisePost.id)")
 	public PostLike save(PostLike postLike) {
 		return postLikeRepository.save(postLike);
 	}
 	
 	@Override
+	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME,
+	key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#user.id).concat(':').concat(#exercisePost.id)")
 	public PostLike createAndSaveWithUserAndExercisePost(User user, ExercisePost exercisePost) {
 		PostLike postLike = PostLike.builder()
 				.user(user)
@@ -66,7 +71,8 @@ public class PostLikeServiceImpl implements PostLikeService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME,allEntries=true)
+	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME, 
+	key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#postLike.user.id).concat(':').concat(#postLike.exercisePost.id)")
 	public void delete(PostLike postLike) {
 		postLikeRepository.delete(postLike);
 	}
@@ -74,7 +80,7 @@ public class PostLikeServiceImpl implements PostLikeService {
 	@Override
 	@Transactional(readOnly=true)
 	@Cacheable(cacheNames=CacheUtil.POST_LIKE_NAME,
-		key="#root.methodName.concat(':').concat('#userId').concat(':').concat('#exercisePostId')",
+		key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#userId).concat(':').concat(#exercisePostId)",
 		unless="#result != true")
 	public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId) {
 		return postLikeRepository.existsByUserIdAndExercisePostId(userId, exercisePostId);

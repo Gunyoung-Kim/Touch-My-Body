@@ -47,10 +47,11 @@ public class ExerciseControllerTest {
 	 * @RequestMapping(value="/exercise",method = RequestMethod.GET)
 	 * public ModelAndView exerciseInfoMainView(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav)
 	 */
+	
 	@Test
 	@Transactional
-	@DisplayName("운동 메인 화면 반환 -> 정상")
-	public void exerciseInfoMainViewTest() throws Exception {
+	@DisplayName("운동 메인 화면 반환 -> 정상, 키워드 없음")
+	public void exerciseInfoMainViewTestNoKeyword() throws Exception {
 		//Given
 		List<Exercise> exerciseList = new LinkedList<>();
 		TargetType[] targetTypes = TargetType.values();
@@ -73,6 +74,56 @@ public class ExerciseControllerTest {
 		List<ExerciseForTableDTO> resultList = (List<ExerciseForTableDTO>) modelMap.get("listObject");
 		
 		assertEquals(Math.min(targetTypes.length,PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE), resultList.size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("운동 메인 화면 반환 -> 정상, 모든 Exercise가 만족하는 키워드")
+	public void exerciseInfoMainViewTestKeywordForAll() throws Exception {
+		//Given
+		String keywordForAllExercise = ExerciseTest.DEFAULT_NAME;
+		int givenExerciseNum = 10;
+		ExerciseTest.addNewExercisesInDBByNum(givenExerciseNum, exerciseRepository);
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/exercise")
+				.param("page", "1")
+				.param("keyword", keywordForAllExercise))
+		
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		Map<String, Object> modelMap = ControllerTest.getResponseModel(result);
+		@SuppressWarnings("unchecked")
+		List<ExerciseForTableDTO> resultList = (List<ExerciseForTableDTO>) modelMap.get("listObject");
+		
+		assertEquals(Math.min(givenExerciseNum, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE), resultList.size());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("운동 메인 화면 반환 -> 정상, 어떤 Exercise도 만족하지 않는 키워드")
+	public void exerciseInfoMainViewTestKeywordForNothing() throws Exception {
+		//Given
+		String keywordForNothing = "nothing!!";
+		int givenExerciseNum = 10;
+		ExerciseTest.addNewExercisesInDBByNum(givenExerciseNum, exerciseRepository);
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/exercise")
+				.param("page", "1")
+				.param("keyword", keywordForNothing))
+		
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		Map<String, Object> modelMap = ControllerTest.getResponseModel(result);
+		@SuppressWarnings("unchecked")
+		List<ExerciseForTableDTO> resultList = (List<ExerciseForTableDTO>) modelMap.get("listObject");
+		
+		assertEquals(0, resultList.size());
 	}
 	
 	/*

@@ -35,7 +35,8 @@ public interface CommentLikeService {
 	public CommentLike save(CommentLike commentLike);
 	
 	/**
-	 * CommentLike 생성 및 User, Comment 와 연관 관계 추가 후 저장
+	 * CommentLike 생성 및 User, Comment 와 연관 관계 추가 후 저장 <br>
+	 * {@code CacheUtil.COMMENT_LIKE_NAME} 관련 캐쉬 삭제
 	 * @param user CommentLike 추가하려는 User
 	 * @param comment CommentLike가 추가되는 Comment
 	 * @return 새로 저장된 CommentLike
@@ -53,7 +54,7 @@ public interface CommentLikeService {
 	
 	/**
 	 * User Id, Comment Id로 CommentLike 존재하는 여부 반환 <br>
-	 * 캐쉬 사용
+	 * 캐쉬 사용, 결과값이 true인 경우에
 	 * @param userId 찾으려는 CommenLike의 User ID
 	 * @param commentId 찾으려는 CommentLike의 Comment ID
 	 * @author kimgun-yeong

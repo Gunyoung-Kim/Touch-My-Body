@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gunyoung.tmb.domain.exercise.Comment;
-import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForManageViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostForManageViewDTO;
@@ -80,7 +77,7 @@ public class ManagerUserControllerTest {
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
-	@DisplayName("매니저의 유저 검색 페이지 반환 -> 정상")
+	@DisplayName("매니저의 유저 검색 페이지 반환 -> 정상, 키워드 존재")
 	public void userManageViewTest() throws Exception {
 		//Given
 		String nameKeyword = "first";
@@ -99,6 +96,28 @@ public class ManagerUserControllerTest {
 		List<UserManageListDTO> resultList = (List<UserManageListDTO>) model.get("listObject");
 		
 		assertEquals(1,resultList.size());
+	}
+	
+	@WithMockUser(roles= {"MANAGER"})
+	@Test
+	@Transactional
+	@DisplayName("매니저의 유저 검색 페이지 반환 -> 정상, 키워드 없음")
+	public void userManageViewTestNoKeyword() throws Exception {
+		//Given
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/manager/usermanage"))
+		
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		Map<String, Object> model = ControllerTest.getResponseModel(result);
+		
+		@SuppressWarnings("unchecked")
+		List<UserManageListDTO> resultList = (List<UserManageListDTO>) model.get("listObject");
+		
+		assertEquals(0,resultList.size());
 	}
 	
 	/*
@@ -193,19 +212,11 @@ public class ManagerUserControllerTest {
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
-	@DisplayName("특정 유저의 작성 댓글 화면 -> 정상")
-	public void manageUserCommentsTest() throws Exception {
+	@DisplayName("특정 유저의 작성 댓글 화면 -> 정상, 최신순으로 정렬")
+	public void manageUserCommentsTestSortingDESC() throws Exception {
 		//Given
-		int commentNum = 10;
-		List<Comment> commentList = new LinkedList<>();
-		
-		for(int i= 0 ; i<commentNum ; i++) {
-			Comment comment = CommentTest.getCommentInstance();
-			comment.setUser(user);
-			commentList.add(comment);
-		}
-		
-		commentRepository.saveAll(commentList);
+		int givenCommentNum = 10;
+		CommentTest.addCommentsInDBWithSettingUser(givenCommentNum,user,commentRepository);
 		
 		//When
 		MvcResult result = mockMvc.perform(get("/manager/usermanage/" + user.getId() +"/comments"))
@@ -218,7 +229,31 @@ public class ManagerUserControllerTest {
 		 
 		 @SuppressWarnings("unchecked")
 		List<CommentForManageViewDTO> listObject = (List<CommentForManageViewDTO>) model.get("commentList");
-		assertEquals(Math.min(commentNum, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE),listObject.size());
+		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE), listObject.size());
+	}
+	
+	@WithMockUser(roles= {"MANAGER"})
+	@Test
+	@Transactional
+	@DisplayName("특정 유저의 작성 댓글 화면 -> 정상, 오래된순으로 정렬")
+	public void manageUserCommentsTestSortingASC() throws Exception {
+		//Given
+		int givenCommentNum = 10;
+		CommentTest.addCommentsInDBWithSettingUser(givenCommentNum,user,commentRepository);
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/manager/usermanage/" + user.getId() +"/comments")
+				.param("order", "asc"))
+				
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		 Map<String, Object> model = ControllerTest.getResponseModel(result);
+		 
+		 @SuppressWarnings("unchecked")
+		List<CommentForManageViewDTO> listObject = (List<CommentForManageViewDTO>) model.get("commentList");
+		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE), listObject.size());
 	}
 	
 	/*
@@ -260,22 +295,39 @@ public class ManagerUserControllerTest {
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
-	@DisplayName("특정 유저의 작성 게시글 화면 -> 정상")
-	public void managerUserPostsTest() throws Exception {
+	@DisplayName("특정 유저의 작성 게시글 화면 -> 정상, 정렬 최신순으로")
+	public void managerUserPostsTestSortDesc() throws Exception {
 		//Given
 		int exercisePostNum = 10;
-		List<ExercisePost> exercisePostList = new LinkedList<>();
-		
-		for(int i= 0 ; i<exercisePostNum ; i++) {
-			ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
-			exercisePost.setUser(user);
-			exercisePostList.add(exercisePost);
-		}
-		
-		exercisePostRepository.saveAll(exercisePostList);
+		ExercisePostTest.addNewExercisePostsInDBWithSettingUser(exercisePostNum, user, exercisePostRepository);
 		
 		//When
 		MvcResult result = mockMvc.perform(get("/manager/usermanage/" + user.getId() +"/posts"))
+		
+		//Then
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		 Map<String, Object> model = ControllerTest.getResponseModel(result);
+		 
+		 @SuppressWarnings("unchecked")
+		List<ExercisePostForManageViewDTO> listObject = (List<ExercisePostForManageViewDTO>) model.get("postList");
+		 
+		 assertEquals(Math.min(exercisePostNum, PageUtil.POST_FOR_MANAGE_PAGE_SIZE),listObject.size());
+	}
+	
+	@WithMockUser(roles= {"MANAGER"})
+	@Test
+	@Transactional
+	@DisplayName("특정 유저의 작성 게시글 화면 -> 정상, 정렬 오래된순으로")
+	public void managerUserPostsTestSortAsc() throws Exception {
+		//Given
+		int exercisePostNum = 10;
+		ExercisePostTest.addNewExercisePostsInDBWithSettingUser(exercisePostNum, user, exercisePostRepository);
+		
+		//When
+		MvcResult result = mockMvc.perform(get("/manager/usermanage/" + user.getId() +"/posts")
+				.param("order", "asc"))
 		
 		//Then
 				.andExpect(status().isOk())
