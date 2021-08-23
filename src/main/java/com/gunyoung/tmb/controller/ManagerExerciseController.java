@@ -90,7 +90,6 @@ public class ManagerExerciseController {
 		return mav;
 	}
 	
-	
 	/**
 	 * Exercise 정보 수정 화면 반환하는 메소드 
 	 * @param exerciseId 정보 수정하려는 대상 Exercise
