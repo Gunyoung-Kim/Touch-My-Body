@@ -51,10 +51,10 @@ public class ManagerFeedbackControllerUnitTest {
 	@InjectMocks
 	ManagerFeedbackController managerFeedbackController;
 	
+	private int defaultPageNum = 1;
+	
 	private ModelAndView mav;
 	private ModelAndPageView mapv;
-	
-	private int defaultPageNum = 1;
 	
 	@BeforeEach
 	void setup() {

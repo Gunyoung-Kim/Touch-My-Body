@@ -52,6 +52,14 @@ public class MuscleTest {
 	}
 	
 	/**
+	 * 테스트용 SaveMuscleDTO 인스턴스 반환
+	 * @author kimgun-yeong
+	 */
+	public static SaveMuscleDTO getSaveMuscleDTOInstance() {
+		return getSaveMuscleDTOInstance("name", TargetType.ARM.getKoreanName());
+	}
+	
+	/**
 	 * 테스트용 SaveMuscleDTO 인스턴스 반환 <br>
 	 * name, categoy 커스터마이징 가능
 	 * @author kimgun-yeongs
