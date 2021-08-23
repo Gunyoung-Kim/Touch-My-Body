@@ -71,14 +71,16 @@ public class UserExerciseController {
 	public ModelAndView addUserExercise(@ModelAttribute("formModel") SaveUserExerciseDTO formModel) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findWithUserExerciseById(loginUserId);
-		if(user == null) 
+		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
+		}
 		
 		UserExercise userExercise = SaveUserExerciseDTO.toUserExercise(formModel);
 		
 		Exercise exercise = exerciseService.findByName(formModel.getExerciseName());
-		if(exercise == null)
+		if(exercise == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription());
+		}
 		userExercise.setExercise(exercise);
 		
 		userService.addUserExercise(user, userExercise);

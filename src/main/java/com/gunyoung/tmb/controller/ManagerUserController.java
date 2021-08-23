@@ -105,15 +105,16 @@ public class ManagerUserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Collection<? extends GrantedAuthority> sessionUserAuthorities = authorityService.getSessionUserAuthorities();
-		List<String> myReachableAuthStringList = authorityService.getReachableAuthorityStrings(sessionUserAuthorities);
 		if(!authorityService.isSessionUserAuthorityCanAccessToTargetAuthority(targetUser)) {
 			throw new AccessDeniedException(UserErrorCode.ACESS_DENIED_ERROR.getDescription());
 		}
 		
+		Collection<? extends GrantedAuthority> sessionUserAuthorities = authorityService.getSessionUserAuthorities();
+		List<String> myReachableAuthStringList = authorityService.getReachableAuthorityStrings(sessionUserAuthorities);
+		
+		mav.addObject("userId", userId);
 		mav.addObject("userInfo", targetUser);
 		mav.addObject("roleList", myReachableAuthStringList);
-		mav.addObject("userId", userId);
 		
 		mav.setViewName("userProfileForManage");
 		
