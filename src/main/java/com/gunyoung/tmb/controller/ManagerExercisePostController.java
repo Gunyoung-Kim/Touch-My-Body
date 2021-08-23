@@ -36,7 +36,7 @@ public class ManagerExercisePostController {
 	 */
 	@RequestMapping(value="/manager/community", method = RequestMethod.GET)
 	public ModelAndView manageCommunityView(@RequestParam(value="page", defaultValue="1") int page,
-			@RequestParam(value ="keyword", required=false) String keyword,ModelAndPageView mav) {
+			@RequestParam(value ="keyword", required=false) String keyword, ModelAndPageView mav) {
 		int pageSize = PageUtil.POST_FOR_MANAGE_PAGE_SIZE;
 		
 		Page<PostForCommunityViewDTO> pageResult;
@@ -47,6 +47,7 @@ public class ManagerExercisePostController {
 			totalPageNum = exercisePostService.countWithTitleAndContentsKeyword(keyword)/pageSize +1;
 		} else {
 			pageResult = new PageImpl<PostForCommunityViewDTO>(new ArrayList<>());
+			page = 1;
 			totalPageNum = 1;
 		}
 		

@@ -7,7 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
+import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
 
 /**
  *  Test 클래스 전용 Feedback 엔티티 관련 유틸리티 클래스
@@ -54,6 +57,32 @@ public class FeedbackTest {
 			newFeedbacks.add(newFeedback);
 		}
 		return feedbackRepository.saveAll(newFeedbacks);
+	}
+	
+	/**
+	 * 테스트용 {@link com.gunyoung.tmb.dto.response.FeedbackViewDTO} 인스턴스 반환 
+	 * @author kimgun-yeong
+	 */
+	public static FeedbackViewDTO getFeedbackViewDTOInstance() {
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		User user = UserTest.getUserInstance();
+		return getFeedbackViewDTOInstance(exercise, user);
+	}
+	
+	/**
+	 * 테스트용 {@link com.gunyoung.tmb.dto.response.FeedbackViewDTO} 인스턴스 반환 <br>
+	 * Exercise, User를 통해 ExerciseName, UserNickName 커스터마이징 가능
+	 * @author kimgun-yeong 
+	 */
+	public static FeedbackViewDTO getFeedbackViewDTOInstance(Exercise exercise, User user) {
+		FeedbackViewDTO feedbackViewDTO = FeedbackViewDTO.builder()
+				.contents("contents")
+				.title("title")
+				.exerciseName(exercise.getName())
+				.userNickName(user.getNickName())
+				.build();
+		
+		return feedbackViewDTO;
 	}
 	
 	/**

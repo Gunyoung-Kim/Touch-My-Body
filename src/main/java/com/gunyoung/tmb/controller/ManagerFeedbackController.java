@@ -45,7 +45,6 @@ public class ManagerFeedbackController {
 	public ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId,@RequestParam(value="page", defaultValue="1") int page
 			,ModelAndPageView mav) {
 		Exercise exercise = exerciseService.findById(exerciseId);
-		
 		if(exercise == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -74,7 +73,6 @@ public class ManagerFeedbackController {
 	@RequestMapping(value="/manager/exercise/feedback/detail/{feedbackId}" ,method = RequestMethod.GET) 
 	public ModelAndView feedbackView(@PathVariable("feedbackId") Long feedbackId, ModelAndView mav) {
 		FeedbackViewDTO feedbackViewDTO = feedbackService.findForFeedbackViewDTOById(feedbackId);
-		
 		if(feedbackViewDTO == null) {
 			throw new FeedbackNotFoundedException(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getDescription());
 		}

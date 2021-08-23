@@ -70,19 +70,15 @@ public class UserExerciseController {
 	@LoginIdSessionNotNull
 	public ModelAndView addUserExercise(@ModelAttribute("formModel") SaveUserExerciseDTO formModel) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
-		//유저와 유저 운동 기록 페치 조인으로 가져옴
 		User user = userService.findWithUserExerciseById(loginUserId);
-		
 		if(user == null) 
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		
 		UserExercise userExercise = SaveUserExerciseDTO.toUserExercise(formModel);
 		
 		Exercise exercise = exerciseService.findByName(formModel.getExerciseName());
-		
 		if(exercise == null)
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription());
-		
 		userExercise.setExercise(exercise);
 		
 		userService.addUserExercise(user, userExercise);
