@@ -1,6 +1,5 @@
 package com.gunyoung.tmb.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -39,33 +38,46 @@ public class ExerciseController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/exercise",method = RequestMethod.GET)
-	public ModelAndView exerciseInfoMainView(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndPageView mav) {
-		int pageSize = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
+	public ModelAndView exerciseInfoMainView(@RequestParam(value="page", required=false, defaultValue="1") Integer page, @RequestParam(value="keyword", required=false) String keyword
+			, ModelAndPageView mav) {
+		Page<Exercise> pageResult = getPageResultForExerciseListView(keyword, page);
+		long totalPageNum = getTotalPageNumForExerciseListView(keyword);
 		
-		Page<Exercise> pageResult;
-		long totalPageNum;
-		
-		if(keyword != null) {
-			pageResult = exerciseService.findAllWithNameKeywordInPage(keyword, page, pageSize);
-			totalPageNum = exerciseService.countAllWithNameKeyword(keyword)/pageSize +1;
-		} else {
-			pageResult = exerciseService.findAllInPage(page, pageSize);
-			totalPageNum = exerciseService.countAll()/pageSize +1;
-		}
-		
-		List<ExerciseForTableDTO> listObject = new ArrayList<>();
-		
-		for(Exercise e: pageResult) {
-			listObject.add(ExerciseForTableDTO.of(e));
-		}
+		List<ExerciseForTableDTO> listObject = ExerciseForTableDTO.of(pageResult);
 		
 		mav.addObject("listObject",listObject);
-		
 		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("exerciseListView");
 		
 		return mav;
+	}
+	
+	/**
+	 * ExerciseService를 사용하여 keyword에 해당하는 page의 Exercise Page List 반환 
+	 * @param keyword 찾으려는 Exercise들의 name 키워드
+	 * @param page 찾으려는 페이지 넘버
+	 * @author kimgun-yeong
+	 */
+	private Page<Exercise> getPageResultForExerciseListView(String keyword, Integer page) {
+		int pageSize = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
+		if(keyword != null) {
+			return exerciseService.findAllWithNameKeywordInPage(keyword, page, pageSize);
+		}
+		return exerciseService.findAllInPage(page, pageSize);
+	}
+	
+	/**
+	 * ExerciseService를 사용하여 keyword에 해당하는 모든 Exercise 개수를 통해 페이지 갯수 반환
+	 * @param keyword 찾으려는 Exercise들의 name 키워드
+	 * @author kimgun-yeong
+	 */
+	private long getTotalPageNumForExerciseListView(String keyword) {
+		int pageSize = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
+		if(keyword != null) {
+			return exerciseService.countAllWithNameKeyword(keyword)/pageSize +1;
+		}
+		return  exerciseService.countAll()/pageSize +1;
 	}
 	
 	/**
