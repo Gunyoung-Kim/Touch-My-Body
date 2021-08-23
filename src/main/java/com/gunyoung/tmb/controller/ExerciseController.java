@@ -40,8 +40,8 @@ public class ExerciseController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/exercise",method = RequestMethod.GET)
-	public ModelAndView exerciseInfoMainView(@RequestParam(value="page", required=false, defaultValue="1") Integer page, @RequestParam(value="keyword", required=false) String keyword
-			, ModelAndPageView mav) {
+	public ModelAndView exerciseInfoMainView(@RequestParam(value="page", required=false, defaultValue="1") Integer page,
+			@RequestParam(value="keyword", required=false) String keyword, ModelAndPageView mav) {
 		Page<Exercise> pageResult = getPageResultForExerciseListView(keyword, page);
 		long totalPageNum = getTotalPageNumForExerciseListView(keyword);
 		

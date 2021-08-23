@@ -135,7 +135,6 @@ public class ExerciseControllerUnitTest {
 		});
 	}
 	
-	
 	@Test
 	@DisplayName("운동 상세 정보 화면 반환 -> 정상, Check ModelAndView")
 	public void exerciseInfoDetailViewTestCheckModelAndView() {
