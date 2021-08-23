@@ -1,5 +1,6 @@
 package com.gunyoung.tmb.controller.rest.unit;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
@@ -21,7 +22,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.gunyoung.tmb.controller.ManagerExerciseController;
 import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Exercise;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
+import com.gunyoung.tmb.util.ExerciseTest;
 
 /**
  * {@link ManagerExerciseController} 에 대한 테스트 클래스 <br>
@@ -118,6 +121,39 @@ public class ManagerExerciseControllerUnitTest {
 		
 		//Then
 		then(mav).should(times(1)).setViewName("addExercise");
+	}
+	
+	/*
+	 * public ModelAndView modifyExerciseView(@PathVariable("exerciseId") Long exerciseId, ModelAndView mav) 
+	 */
+	
+	@Test
+	@DisplayName("Exercise 정보 수정 화면 반환 -> 해당 Id 의 Exercise 없으면")
+	public void modifyExerciseViewExerciseNonExist() {
+		//Given
+		Long nonExistExerciseId = Long.valueOf(25);
+		given(exerciseService.findWithExerciseMusclesById(nonExistExerciseId)).willReturn(null);
+		
+		//When, Then
+		assertThrows(ExerciseNotFoundedException.class , () -> {
+			managerExerciseController.modifyExerciseView(nonExistExerciseId, mav);
+		});
+	}
+	
+	@Test
+	@DisplayName("Exercise 정보 수정 화면 반환 -> 정상, ModelAndView check")
+	public void modifyExerciseViewTestCheckMav() {
+		//Given
+		Long exerciseId = Long.valueOf(36);
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		given(exerciseService.findWithExerciseMusclesById(exerciseId)).willReturn(exercise);
+		
+		//When
+		managerExerciseController.modifyExerciseView(exerciseId, mav);
+		
+		//Then
+		then(mav).should(times(1)).addObject("exerciseId", exerciseId);
+		then(mav).should(times(1)).setViewName("modifyExercise");
 	}
 	
 }

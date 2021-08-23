@@ -2,6 +2,9 @@ package com.gunyoung.tmb.dto.response.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -33,6 +36,35 @@ public class MuscleForTableDTOUnitTest {
 		MuscleForTableDTO result = MuscleForTableDTO.of(muscle);
 		
 		//Then
-		assertEquals(muscleId, result.getId());
+		verifyMuscleForTableDTOFieldWithMuscle(muscle, result);
+	}
+	
+	private void verifyMuscleForTableDTOFieldWithMuscle(Muscle muscle, MuscleForTableDTO muscleForTableDTO) {
+		assertEquals(muscle.getId(), muscleForTableDTO.getId());
+		assertEquals(muscle.getName(), muscleForTableDTO.getName());
+		assertEquals(muscle.getCategory().getKoreanName(), muscleForTableDTO.getCategory());
+	}
+	
+	/*
+	 * public static List<MuscleForTableDTO> of(Iterable<Muscle> muscles)
+	 */
+	
+	@Test
+	@DisplayName("Muscle 컬렉션을 통해 MuscleForTableDTO 리스트 반환 -> 정상")
+	public void ofListTest() {
+		//Given
+		List<Muscle> muscles = new ArrayList<>();
+		int givenMuscleNum = 15;
+		for(int i = 0 ; i < givenMuscleNum; i++) {
+			Muscle muscle = MuscleTest.getMuscleInstance();
+			muscle.setId(Long.valueOf(i));
+			muscles.add(muscle);
+		}
+		
+		//When
+		List<MuscleForTableDTO> result = MuscleForTableDTO.of(muscles);
+		
+		//Then
+		assertEquals(givenMuscleNum, result.size());
 	}
 }

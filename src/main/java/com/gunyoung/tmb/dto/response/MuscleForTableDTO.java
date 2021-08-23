@@ -1,5 +1,8 @@
 package com.gunyoung.tmb.dto.response;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.gunyoung.tmb.domain.exercise.Muscle;
 
 import lombok.AllArgsConstructor;
@@ -33,5 +36,18 @@ public class MuscleForTableDTO {
 				.build();
 		
 		return dto;
+	}
+	
+	/**
+	 * Muscle 컬렉션을 통해 MuscleForTableDTO 리스트 반환
+	 * @author kimgun-yeong
+	 */
+	public static List<MuscleForTableDTO> of(Iterable<Muscle> muscles) {
+		List<MuscleForTableDTO> dtos = new ArrayList<>();
+		for(Muscle m : muscles) {
+			dtos.add(of(m));
+		}
+		
+		return dtos;
 	}
 }
