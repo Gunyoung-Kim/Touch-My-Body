@@ -140,7 +140,7 @@ public class CommentServiceTest {
 		
 		//When
 		
-		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtASC(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
 		
 		//Then
 		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE), result.size());
@@ -170,7 +170,7 @@ public class CommentServiceTest {
 		
 		//When
 		
-		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtASC(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
 		
 		//Then
 		assertTrue(result.get(0).getCreatedAt().isBefore(result.get(1).getCreatedAt()));
@@ -195,7 +195,7 @@ public class CommentServiceTest {
 		commentRepository.saveAll(comments);
 		
 		//When
-		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtDESC(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
 		
 		//Then
 		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE), result.size());
@@ -225,7 +225,7 @@ public class CommentServiceTest {
 		commentRepository.saveAll(comments);
 		
 		//When
-		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtDESC(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
 		
 		//Then
 		assertTrue(result.get(0).getCreatedAt().isAfter(result.get(1).getCreatedAt()));

@@ -160,9 +160,9 @@ public class ManagerUserController {
 	private Page<Comment> getPageResultForUserCommentListViewForManage(String order,Long userId, Integer page) throws SearchCriteriaInvalidException{
 		Page<Comment> pageResult;
 		if(order.equals("asc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtASC(userId,page,USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtAsc(userId,page,USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
 		} else if(order.equals("desc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtDESC(userId,page,USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtDesc(userId,page,USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
 		} else {
 			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 		}

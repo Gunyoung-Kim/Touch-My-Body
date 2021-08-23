@@ -189,9 +189,9 @@ public class UserController {
 	private Page<Comment> getPageResultForMyCommentListView(String order, Long loginUserId, Integer page) throws SearchCriteriaInvalidException{
 		Page<Comment> pageResult;
 		if(order.equals("asc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtASC(loginUserId, page, MY_COMMENT_LIST_VIEW_PAGE_SIZE);
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtAsc(loginUserId, page, MY_COMMENT_LIST_VIEW_PAGE_SIZE);
 		} else if(order.equals("desc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtDESC(loginUserId, page, MY_COMMENT_LIST_VIEW_PAGE_SIZE);
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtDesc(loginUserId, page, MY_COMMENT_LIST_VIEW_PAGE_SIZE);
 		} else {
 			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 		}

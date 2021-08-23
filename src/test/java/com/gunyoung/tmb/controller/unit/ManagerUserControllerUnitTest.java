@@ -216,7 +216,7 @@ public class ManagerUserControllerUnitTest {
 		stubbingUserServiceFindById(userId);
 		
 		Page<Comment> pageResult = new PageImpl<>(new ArrayList<>());
-		given(commentService.findAllByUserIdOrderByCreatedAtASC(userId, defaultPageNum, ManagerUserController.USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE)).willReturn(pageResult);
+		given(commentService.findAllByUserIdOrderByCreatedAtAsc(userId, defaultPageNum, ManagerUserController.USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE)).willReturn(pageResult);
 		
 		String order = "asc";
 		
@@ -235,7 +235,7 @@ public class ManagerUserControllerUnitTest {
 		stubbingUserServiceFindById(userId);
 		
 		Page<Comment> pageResult = new PageImpl<>(new ArrayList<>());
-		given(commentService.findAllByUserIdOrderByCreatedAtDESC(userId, defaultPageNum, ManagerUserController.USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE)).willReturn(pageResult);
+		given(commentService.findAllByUserIdOrderByCreatedAtDesc(userId, defaultPageNum, ManagerUserController.USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE)).willReturn(pageResult);
 		
 		String order = "desc";
 		
@@ -254,7 +254,7 @@ public class ManagerUserControllerUnitTest {
 		User user = stubbingUserServiceFindById(userId);
 		
 		Page<Comment> pageResult = new PageImpl<>(new ArrayList<>());
-		given(commentService.findAllByUserIdOrderByCreatedAtDESC(userId, defaultPageNum, ManagerUserController.USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE)).willReturn(pageResult);
+		given(commentService.findAllByUserIdOrderByCreatedAtDesc(userId, defaultPageNum, ManagerUserController.USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE)).willReturn(pageResult);
 		
 		Long givenCommentNum = Long.valueOf(63);
 		given(commentService.countByUserId(userId)).willReturn(givenCommentNum);

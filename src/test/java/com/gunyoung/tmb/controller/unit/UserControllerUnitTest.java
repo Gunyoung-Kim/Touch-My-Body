@@ -333,7 +333,7 @@ public class UserControllerUnitTest {
 		stubbingUserServiceFindById(loginIdInSession);
 		
 		Page<Comment> pageResult = new PageImpl<>(new ArrayList<>());
-		given(commentService.findAllByUserIdOrderByCreatedAtASC(loginIdInSession, defaultPageNum, UserController.MY_COMMENT_LIST_VIEW_PAGE_SIZE)).willReturn(pageResult);
+		given(commentService.findAllByUserIdOrderByCreatedAtAsc(loginIdInSession, defaultPageNum, UserController.MY_COMMENT_LIST_VIEW_PAGE_SIZE)).willReturn(pageResult);
 		
 		String order = "asc";
 		
@@ -354,7 +354,7 @@ public class UserControllerUnitTest {
 		stubbingUserServiceFindById(loginIdInSession);
 		
 		Page<Comment> pageResult = new PageImpl<>(new ArrayList<>());
-		given(commentService.findAllByUserIdOrderByCreatedAtDESC(loginIdInSession, defaultPageNum, UserController.MY_COMMENT_LIST_VIEW_PAGE_SIZE)).willReturn(pageResult);
+		given(commentService.findAllByUserIdOrderByCreatedAtDesc(loginIdInSession, defaultPageNum, UserController.MY_COMMENT_LIST_VIEW_PAGE_SIZE)).willReturn(pageResult);
 		
 		String order = "desc";
 		
@@ -375,7 +375,7 @@ public class UserControllerUnitTest {
 		stubbingUserServiceFindById(loginIdInSession);
 		
 		Page<Comment> pageResult = new PageImpl<>(new ArrayList<>());
-		given(commentService.findAllByUserIdOrderByCreatedAtDESC(loginIdInSession, defaultPageNum, UserController.MY_COMMENT_LIST_VIEW_PAGE_SIZE)).willReturn(pageResult);
+		given(commentService.findAllByUserIdOrderByCreatedAtDesc(loginIdInSession, defaultPageNum, UserController.MY_COMMENT_LIST_VIEW_PAGE_SIZE)).willReturn(pageResult);
 		
 		Long givenCommentNum = Long.valueOf(63);
 		given(commentService.countByUserId(loginIdInSession)).willReturn(givenCommentNum);
