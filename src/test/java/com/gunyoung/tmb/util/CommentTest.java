@@ -9,6 +9,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.dto.reqeust.SaveCommentDTO;
 
 /**
  * Test 클래스 전용 Comment 엔티티 관련 유틸리티 클래스
@@ -56,6 +57,18 @@ public class CommentTest {
 			commentList.add(comment);
 		}
 		commentRepository.saveAll(commentList);
+	}
+	
+	/**
+	 * 테스트용 {@link com.gunyoung.tmb.dto.reqeust.SaveCommentDTO} 인스턴스 반환
+	 * @author kimgun-yeong
+	 */
+	public static SaveCommentDTO getSaveCommentDTOInstance() {
+		SaveCommentDTO saveCommentDTO = SaveCommentDTO.builder()
+				.contents("contents")
+				.isAnonymous(false)
+				.build();
+		return saveCommentDTO;
 	}
 	
 	/**

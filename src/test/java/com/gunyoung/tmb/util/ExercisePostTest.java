@@ -8,8 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.dto.reqeust.SaveExercisePostDTO;
+import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 
 /**
  * Test 클래스 전용 ExercisePost 엔티티 관련 유틸리티 클래스
@@ -30,6 +33,35 @@ public class ExercisePostTest {
 				.contents("contents")
 				.build();
 		return ep;
+	}
+	
+	/**
+	 * 테스트 용 {@link com.gunyoung.tmb.dto.response.ExercisePostViewDTO} 인스턴스 반환
+	 * @author kimgun-yeong
+	 */
+	public static ExercisePostViewDTO getExercisePostViewDTOInstance() {
+		User user = UserTest.getUserInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		return getExercisePostViewDTOInstance(exercise, user);
+	}
+	
+
+	/**
+	 * 테스트 용 {@link com.gunyoung.tmb.dto.response.ExercisePostViewDTO} 인스턴스 반환
+	 * Exercise, User 을 통해 exreciseName, writerName 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static ExercisePostViewDTO getExercisePostViewDTOInstance(Exercise exercise, User user) {
+		ExercisePostViewDTO exercisePostViewDTO = ExercisePostViewDTO.builder()
+				.title(DEFAULT_TITLE)
+				.exerciseName(exercise.getName())
+				.writerName(user.getNickName())
+				.contents("contents")
+				.viewNum(1)
+				.likeNum(Long.valueOf(1))
+				.commentNum(Long.valueOf(1))
+				.build();
+		return exercisePostViewDTO;
 	}
 	
 	/**
@@ -74,6 +106,21 @@ public class ExercisePostTest {
 		}
 		
 		return exercisePostRepository.saveAll(exercisePostList);
+	}
+	
+	/**
+	 * 테스트 용 {@link com.gunyoung.tmb.dto.reqeust.SaveExercisePostDTO} 인스턴스 반환 <br>
+	 * exerciseName 커스터마이징 가능
+	 * @return
+	 */
+	public static SaveExercisePostDTO getSaveExercisePostDTOInstance(String exerciseName) {
+		SaveExercisePostDTO saveExercisePostDTO = SaveExercisePostDTO.builder()
+				.title(DEFAULT_TITLE)
+				.contents("contents")
+				.exerciseName(exerciseName)
+				.build();
+		
+		return saveExercisePostDTO;
 	}
 	
 	/**

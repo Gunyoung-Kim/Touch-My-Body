@@ -72,7 +72,7 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community",method=RequestMethod.GET)
 	public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") Integer page,
-			@RequestParam(value="keyword",required=false)String keyword, ModelAndPageView mav) {
+			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
 		Page<PostForCommunityViewDTO> pageResult = getPageResultForExercisePostView(keyword, page);
 		long totalPageNum = getTotalPageNumForExercisePostView(keyword);
 		
@@ -155,7 +155,7 @@ public class ExercisePostController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}" ,method = RequestMethod.GET)
-	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId,ModelAndView mav) {
+	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId, ModelAndView mav) {
 		ExercisePostViewDTO postViewDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(postId);
 		if(postViewDTO == null) {
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
@@ -220,7 +220,7 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community/post/{post_id}/addComment",method = RequestMethod.POST)
 	@LoginIdSessionNotNull
-	public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute SaveCommentDTO dto,
+	public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId, @ModelAttribute SaveCommentDTO dto,
 			@RequestParam("isAnonymous") boolean isAnonymous, HttpServletRequest request) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findWithCommentsById(loginUserId);
