@@ -10,6 +10,7 @@ import org.springframework.util.MultiValueMap;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.dto.reqeust.SaveFeedbackDTO;
 import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
 
 /**
@@ -83,6 +84,19 @@ public class FeedbackTest {
 				.build();
 		
 		return feedbackViewDTO;
+	}
+	
+	/**
+	 * 테스트 용 {@link com.gunyoung.tmb.dto.reqeust.SaveFeedbackDTO} 인스턴스 반환
+	 * @author kimgun-yeong
+	 */
+	public static SaveFeedbackDTO getSaveFeedbackDTOInstance() {
+		SaveFeedbackDTO saveFeedbackDTO = SaveFeedbackDTO.builder()
+				.title("title")
+				.contents("contents")
+				.build();
+		
+		return saveFeedbackDTO;
 	}
 	
 	/**
