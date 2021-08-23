@@ -1,5 +1,8 @@
 package com.gunyoung.tmb.dto.response;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.gunyoung.tmb.domain.user.User;
 
 import lombok.AllArgsConstructor;
@@ -36,5 +39,18 @@ public class UserManageListDTO {
 				.role(user.getRole().getKoreanName())
 				.build();
 		return dto;
+	}
+	
+	/**
+	 * User 컬렉션을 통해 UserManageListDTO 리스트 반환
+	 * @author kimgun-yeong
+	 */
+	public static List<UserManageListDTO> of(Iterable<User> users) {
+		List<UserManageListDTO> dtos = new ArrayList<>();
+		for(User p: users) {
+			dtos.add(of(p));
+		}
+		
+		return dtos;
 	}
 }
