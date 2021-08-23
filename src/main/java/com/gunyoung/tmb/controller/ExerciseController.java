@@ -30,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExerciseController {
 	
+	public static final int EXERCISE_LIST_VIEW_PAGE_SIZE = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
+	
 	private final ExerciseService exerciseService;
 	
 	/**
@@ -52,32 +54,19 @@ public class ExerciseController {
 		
 		return mav;
 	}
-	
-	/**
-	 * ExerciseService를 사용하여 keyword에 해당하는 page의 Exercise Page List 반환 
-	 * @param keyword 찾으려는 Exercise들의 name 키워드
-	 * @param page 찾으려는 페이지 넘버
-	 * @author kimgun-yeong
-	 */
+
 	private Page<Exercise> getPageResultForExerciseListView(String keyword, Integer page) {
-		int pageSize = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
-		if(keyword != null) {
-			return exerciseService.findAllWithNameKeywordInPage(keyword, page, pageSize);
+		if(keyword == null) {
+			return exerciseService.findAllInPage(page, EXERCISE_LIST_VIEW_PAGE_SIZE);
 		}
-		return exerciseService.findAllInPage(page, pageSize);
+		return exerciseService.findAllWithNameKeywordInPage(keyword, page, EXERCISE_LIST_VIEW_PAGE_SIZE); 
 	}
 	
-	/**
-	 * ExerciseService를 사용하여 keyword에 해당하는 모든 Exercise 개수를 통해 페이지 갯수 반환
-	 * @param keyword 찾으려는 Exercise들의 name 키워드
-	 * @author kimgun-yeong
-	 */
 	private long getTotalPageNumForExerciseListView(String keyword) {
-		int pageSize = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
-		if(keyword != null) {
-			return exerciseService.countAllWithNameKeyword(keyword)/pageSize +1;
+		if(keyword == null) {
+			return exerciseService.countAll()/EXERCISE_LIST_VIEW_PAGE_SIZE +1;
 		}
-		return  exerciseService.countAll()/pageSize +1;
+		return exerciseService.countAllWithNameKeyword(keyword)/EXERCISE_LIST_VIEW_PAGE_SIZE +1;
 	}
 	
 	/**
@@ -87,16 +76,13 @@ public class ExerciseController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/exercise/about/{exercise_id}", method = RequestMethod.GET)
-	public ModelAndView exerciseInfoDetailView(@PathVariable("exercise_id") Long exerciseId,ModelAndView mav) {
-		
+	public ModelAndView exerciseInfoDetailView(@PathVariable("exercise_id") Long exerciseId, ModelAndView mav) {
 		ExerciseForInfoViewDTO exerciseforInfoViewDTO = exerciseService.getExerciseForInfoViewDTOByExerciseId(exerciseId);
-		
 		if(exerciseforInfoViewDTO == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		mav.addObject("exerciseInfo", exerciseforInfoViewDTO);
-		
 		mav.setViewName("exerciseInfo");
 		
 		return mav;

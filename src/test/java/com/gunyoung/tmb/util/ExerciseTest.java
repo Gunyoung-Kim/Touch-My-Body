@@ -9,6 +9,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
+import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 
 /**
@@ -52,6 +53,24 @@ public class ExerciseTest {
 				.build();
 		
 		return exercise;
+	}
+	
+	/**
+	 * 테스트용 {@link com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO} 인스턴스 반환
+	 * @author kimgun-yeong
+	 */
+	public static ExerciseForInfoViewDTO getExerciseForInfoViewDTOInstance() {
+		ExerciseForInfoViewDTO exerciseForInfoViewDTO = ExerciseForInfoViewDTO.builder()
+				.id(Long.valueOf(1))
+				.name("name")
+				.description("description")
+				.caution("caution")
+				.movement("movement")
+				.target("target")
+				.mainMuscle("mainMuscle")
+				.subMuscle("subMuscles")
+				.build();
+		return exerciseForInfoViewDTO;
 	}
 	
 	/**
