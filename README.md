@@ -1,6 +1,6 @@
 # Touch-My-Body [![Build Status](https://app.travis-ci.com/Gunyoung-Kim/Touch-My-Body.svg?branch=master)](https://app.travis-ci.com/Gunyoung-Kim/Touch-My-Body)
 
-최신 버전 : ver 0.0.9
+최신 버전 : ver 0.0.10
 
 ## 프로젝트 주 기능
 
@@ -80,7 +80,7 @@
 
 ### 테스트 
 
-- 테스트 커버리지 : 100 %
+- 테스트 커버리지 : 100 % - ver 0.0.9 이후 유지
 
 <img width="661" alt="tmb_test_coverage_0_0_9" src="https://user-images.githubusercontent.com/60494603/130346128-9c04f981-04fb-49c7-b545-bb50b11b06e5.png">
 
