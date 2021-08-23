@@ -33,6 +33,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ManagerExerciseController {
 	
+	public static final int EXERCISE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
+	
 	private final ExerciseService exerciseService;
 	
 	/**
@@ -41,34 +43,33 @@ public class ManagerExerciseController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise",method= RequestMethod.GET)
-	public ModelAndView exerciseViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,
-			ModelAndPageView mav) {
-		int pageSize = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
+	public ModelAndView exerciseViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,
+			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
+		Page<Exercise> pageResult = getPageResultForExerciseListViewForManager(keyword, page);
+		long totalPageNum = getTotalPageNumForExerciseListViewForManager(keyword);
 		
-		Page<Exercise> pageResult;
-		long totalPageNum;
-		
-		if(keyword != null) {
-			pageResult = exerciseService.findAllWithNameKeywordInPage(keyword, page, pageSize);
-			totalPageNum = exerciseService.countAllWithNameKeyword(keyword)/pageSize +1;
-		} else {
-			pageResult = exerciseService.findAllInPage(page, pageSize);
-			totalPageNum = exerciseService.countAll()/pageSize +1;
-		}
-		
-		List<ExerciseForTableDTO> listObject = new ArrayList<>();
-		
-		for(Exercise e: pageResult) {
-			listObject.add(ExerciseForTableDTO.of(e));
-		}
+		List<ExerciseForTableDTO> listObject = ExerciseForTableDTO.of(pageResult);
 		
 		mav.addObject("listObject",listObject);
-		
 		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("exerciseListViewForManage");
 		
 		return mav;
+	}
+	
+	private Page<Exercise> getPageResultForExerciseListViewForManager(String keyword, Integer page) {
+		if(keyword == null) {
+			return exerciseService.findAllInPage(page, EXERCISE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE);
+		}
+		return exerciseService.findAllWithNameKeywordInPage(keyword, page, EXERCISE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE);
+	}
+	
+	private long getTotalPageNumForExerciseListViewForManager(String keyword) {
+		if(keyword == null) {
+			return exerciseService.countAll()/EXERCISE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE +1;
+		}
+		return exerciseService.countAllWithNameKeyword(keyword)/EXERCISE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE +1;
 	}
 	
 	/**
@@ -78,7 +79,6 @@ public class ManagerExerciseController {
 	@RequestMapping(value="/manager/exercise/add",method = RequestMethod.GET)
 	public ModelAndView addExerciseView(ModelAndView mav) {
 		List<String> targetTypeKoreanNames = new ArrayList<>();
-		
 		for(TargetType t: TargetType.values()) {
 			targetTypeKoreanNames.add(t.getKoreanName());
 		}
@@ -100,7 +100,6 @@ public class ManagerExerciseController {
 	@RequestMapping(value="/manager/exercise/modify/{exerciseId}", method = RequestMethod.GET) 
 	public ModelAndView modifyExerciseView(@PathVariable("exerciseId") Long exerciseId, ModelAndView mav)  {
 		Exercise exercise = exerciseService.findWithExerciseMusclesById(exerciseId);
-	
 		if(exercise == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -108,7 +107,6 @@ public class ManagerExerciseController {
 		SaveExerciseDTO addExerciseDTO = SaveExerciseDTO.of(exercise); 
 		
 		List<String> targetTypeKoreanNames = new ArrayList<>();
-		
 		for(TargetType t: TargetType.values()) {
 			targetTypeKoreanNames.add(t.getKoreanName());
 		}
