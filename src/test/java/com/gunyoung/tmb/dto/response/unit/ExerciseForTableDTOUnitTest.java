@@ -2,6 +2,9 @@ package com.gunyoung.tmb.dto.response.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,5 +37,29 @@ public class ExerciseForTableDTOUnitTest {
 		
 		//Then
 		assertEquals(exerciseId, result.getId());
+	}
+	
+	/*
+	 * public static List<ExerciseForTableDTO> of(Iterable<Exercise> exercises)
+	 */
+	
+	@Test
+	@DisplayName("Exercise 컬렉션을 통해 ExerciseForTableDTO 리스트 생성 후 반환 -> 정상")
+	public void ofListTest() {
+		//Given
+		List<Exercise> exercises = new ArrayList<>();
+		int givenExerciseNum = 10;
+		for(int i=0; i < givenExerciseNum; i++) {
+			Long exerciseId = Long.valueOf(23);
+			Exercise exercise = ExerciseTest.getExerciseInstance();
+			exercise.setId(exerciseId);
+			exercises.add(exercise);
+		}
+		
+		//When
+		List<ExerciseForTableDTO> result = ExerciseForTableDTO.of(exercises);
+		
+		//Then
+		assertEquals(givenExerciseNum, result.size());
 	}
 }

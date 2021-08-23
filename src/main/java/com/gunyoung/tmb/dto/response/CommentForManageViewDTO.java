@@ -1,5 +1,11 @@
 package com.gunyoung.tmb.dto.response;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.gunyoung.tmb.domain.exercise.Comment;
+import com.gunyoung.tmb.domain.user.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,4 +25,23 @@ public class CommentForManageViewDTO {
 	private String userName;
 	private String writerIp;
 	private String contents;
+	
+	/**
+	 * Comment들과 User를 통해 CommentForManageViewDTO 리스트 반환
+	 * @author kimgun-yeong
+	 */
+	public static List<CommentForManageViewDTO> of(Iterable<Comment> comments, User user) {
+		List<CommentForManageViewDTO> dtos = new ArrayList<>();
+		for(Comment c: comments) {
+			CommentForManageViewDTO dto = CommentForManageViewDTO.builder()
+					.commentId(c.getId())
+					.userName(user.getNickName())
+					.writerIp(c.getWriterIp())
+					.contents(c.getContents())
+					.build();
+			
+			dtos.add(dto);
+		}
+		return dtos;
+	}
 }

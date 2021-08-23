@@ -63,14 +63,14 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	@Transactional(readOnly= true)
-	public Page<Comment> findAllByUserIdOrderByCreatedAtASC(Long userId,Integer pageNum, int page_size) {
+	public Page<Comment> findAllByUserIdOrderByCreatedAtAsc(Long userId,Integer pageNum, int page_size) {
 		PageRequest pageRequest = PageRequest.of(pageNum-1, page_size);
 		return commentRepository.findAllByUserIdOrderByCreatedAtASCCustom(userId,pageRequest);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<Comment> findAllByUserIdOrderByCreatedAtDESC(Long userId,Integer pageNum, int page_size) {
+	public Page<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId,Integer pageNum, int page_size) {
 		PageRequest pageRequest = PageRequest.of(pageNum-1, page_size);
 		return commentRepository.findAllByUserIdOrderByCreatedAtDescCustom(userId,pageRequest);
 	}

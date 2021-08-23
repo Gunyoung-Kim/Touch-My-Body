@@ -1,10 +1,12 @@
 package com.gunyoung.tmb.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +43,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ManagerUserController {
 	
+	public static final int USER_MANAGE_VIEW_PAGE_SIZE = PageUtil.BY_NICKNAME_NAME_PAGE_SIZE;
+	public static final int USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE = PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE;
+	public static final int USER_POST_LIST_VIEW_FOR_MANAGER_PAGE_SIZE = PageUtil.POST_FOR_MANAGE_PAGE_SIZE;
+	
 	private final UserService userService;
 	
 	private final CommentService commentService;
@@ -56,34 +62,33 @@ public class ManagerUserController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage",method= RequestMethod.GET)
-	public ModelAndView userManageView(@RequestParam(value="page", required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,
-			ModelAndPageView mav) {
-		int pageSize = PageUtil.BY_NICKNAME_NAME_PAGE_SIZE;
+	public ModelAndView userManageView(@RequestParam(value="page", required=false,defaultValue="1") Integer page,
+			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
+		Page<User> pageResult = getPageResultForUserManageView(keyword, page);
+		long totalPageNum = getTotalPageNumForUserManageView(keyword);
 		
-		Page<User> pageResult;
-		long totalPageNum;
-		
-		if(keyword != null) {
-			pageResult = userService.findAllByNickNameOrNameInPage(keyword, page);
-			totalPageNum = userService.countAllByNickNameOrName(keyword)/pageSize +1;
-		} else {
-			pageResult = new PageImpl<User>(new ArrayList<>());
-			totalPageNum = 1;
-		}
-		
-		List<UserManageListDTO> listObject = new ArrayList<>();
-		
-		for(User p: pageResult) {
-			listObject.add(UserManageListDTO.of(p));
-		}
+		List<UserManageListDTO> listObject = UserManageListDTO.of(pageResult);
 		
 		mav.addObject("listObject",listObject);
-		
 		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("userManage");
 		
 		return mav;
+	}
+	
+	private Page<User> getPageResultForUserManageView(String keyword, Integer page) {
+		if(keyword == null) {
+			return new PageImpl<User>(new ArrayList<>());
+		}
+		return userService.findAllByNickNameOrNameInPage(keyword, page);
+	}
+	
+	private long getTotalPageNumForUserManageView(String keyword) {
+		if(keyword == null) {
+			return 1;
+		}
+		return userService.countAllByNickNameOrName(keyword)/USER_MANAGE_VIEW_PAGE_SIZE +1;
 	}
 	
 	/**
@@ -95,20 +100,21 @@ public class ManagerUserController {
 	 */
 	@RequestMapping(value="/manager/usermanage/{user_id}" , method = RequestMethod.GET)
 	public ModelAndView manageUserProfileView(@PathVariable("user_id") Long userId, ModelAndView mav) {
-		User user = userService.findById(userId);
-		if(user == null) {
+		User targetUser = userService.findById(userId);
+		if(targetUser == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
-	
-		List<String> myReachableAuthStringList = authorityService.getReachableAuthorityStrings(authorityService.getSessionUserAuthorities());
 		
-		if(!authorityService.isSessionUserAuthorityCanAccessToTargetAuthority(user)) {
+		if(!authorityService.isSessionUserAuthorityCanAccessToTargetAuthority(targetUser)) {
 			throw new AccessDeniedException(UserErrorCode.ACESS_DENIED_ERROR.getDescription());
 		}
 		
-		mav.addObject("userInfo", user);
-		mav.addObject("roleList", myReachableAuthStringList);
+		Collection<? extends GrantedAuthority> sessionUserAuthorities = authorityService.getSessionUserAuthorities();
+		List<String> myReachableAuthStringList = authorityService.getReachableAuthorityStrings(sessionUserAuthorities);
+		
 		mav.addObject("userId", userId);
+		mav.addObject("userInfo", targetUser);
+		mav.addObject("roleList", myReachableAuthStringList);
 		
 		mav.setViewName("userProfileForManage");
 		
@@ -131,43 +137,42 @@ public class ManagerUserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		int pageSize = PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE;
-		
 		Page<Comment> pageResult;
-		
-		if(order.equals("asc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtASC(userId,page,pageSize);
-		} else if(order.equals("desc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtDESC(userId,page,pageSize);
-		} else {
-			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
+		try {
+			pageResult = getPageResultForUserCommentListViewForManage(order, userId, page);
+		} catch(SearchCriteriaInvalidException scie) {
+			throw scie;
 		}
+		long totalPageNum = getTotalPageNumForUserCommentListViewForManage(userId);
 		
-		long totalPageNum = commentService.countByUserId(userId)/pageSize+1;
+		List<CommentForManageViewDTO> commentListForView = CommentForManageViewDTO.of(pageResult, user);
 		
-		List<CommentForManageViewDTO> commentListForView = new ArrayList<>();
-		
-		for(Comment c: pageResult.getContent()) {
-			CommentForManageViewDTO dto = CommentForManageViewDTO.builder()
-					.commentId(c.getId())
-					.userName(user.getNickName())
-					.writerIp(c.getWriterIp())
-					.contents(c.getContents())
-					.build();
-			
-			commentListForView.add(dto);
-		}
-		
-		mav.addObject("commentList", commentListForView);
 		mav.addObject("userId", userId);
 		mav.addObject("username", user.getFullName()+": " +user.getNickName());
-		
 		mav.setPageNumbers(page, totalPageNum);
+		mav.addObject("commentList", commentListForView);
 		
 		mav.setViewName("userCommentList");
 		
 		return mav;
 	}
+	
+	private Page<Comment> getPageResultForUserCommentListViewForManage(String order,Long userId, Integer page) throws SearchCriteriaInvalidException{
+		Page<Comment> pageResult;
+		if(order.equals("asc")) {
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtAsc(userId,page,USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
+		} else if(order.equals("desc")) {
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtDesc(userId,page,USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
+		} else {
+			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
+		}
+		return pageResult;
+	}
+	
+	private long getTotalPageNumForUserCommentListViewForManage(Long userId) {
+		return commentService.countByUserId(userId)/USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE+1;
+	}
+	
 	/**
 	 * 특정 유저의 게시글 목록 보여주는 화면 반환하는 메소드
 	 * @param userId 열람하려는 게시글 목록의 대상 User의 Id 
@@ -184,41 +189,39 @@ public class ManagerUserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		int pageSize = PageUtil.POST_FOR_MANAGE_PAGE_SIZE;
-		
 		Page<ExercisePost> pageResult; 
-		
-		if(order.equals("asc")) {
-			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(userId, page, pageSize);
-		} else if(order.equals("desc")) {
-			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(userId, page, pageSize);
-		} else {
-			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
+		try {
+			pageResult = getPageResultForUserPostListViewForManage(order, userId, page);
+		} catch(SearchCriteriaInvalidException scie) {
+			throw scie;
 		}
+		long totalPageNum = getTotalPageNumForUserPostListViewForManage(userId);
 		
-		long totalPageNum = exercisePostService.countWithUserId(userId) / pageSize + 1;
+		List<ExercisePostForManageViewDTO> postListForView = ExercisePostForManageViewDTO.of(pageResult, user);
 		
-		List<ExercisePostForManageViewDTO> postListForView = new ArrayList<>();
-		
-		for(ExercisePost ep: pageResult.getContent()) {
-			ExercisePostForManageViewDTO dto = ExercisePostForManageViewDTO.builder()
-					.postId(ep.getId())
-					.title(ep.getTitle())
-					.writer(user.getNickName())
-					.createdAt(ep.getCreatedAt())
-					.viewNum(ep.getViewNum())
-					.build();
-			postListForView.add(dto);
-		}
-		
-		mav.addObject("postList", postListForView);
 		mav.addObject("userId", userId);
 		mav.addObject("username", user.getFullName()+": " +user.getNickName());
-		
 		mav.setPageNumbers(page, totalPageNum);
+		mav.addObject("postList", postListForView);
 		
 		mav.setViewName("userPostList");
 		
 		return mav;
+	}
+	
+	private Page<ExercisePost> getPageResultForUserPostListViewForManage(String order, Long userId, Integer page) throws SearchCriteriaInvalidException{
+		Page<ExercisePost> pageResult; 
+		if(order.equals("asc")) {
+			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(userId, page, USER_POST_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
+		} else if(order.equals("desc")) {
+			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(userId, page, USER_POST_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
+		} else {
+			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
+		}
+		return pageResult;
+	}
+	
+	private long getTotalPageNumForUserPostListViewForManage(Long userId) {
+		return exercisePostService.countWithUserId(userId) / USER_POST_LIST_VIEW_FOR_MANAGER_PAGE_SIZE + 1;
 	}
 }

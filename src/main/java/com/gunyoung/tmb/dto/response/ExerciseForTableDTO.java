@@ -1,5 +1,8 @@
 package com.gunyoung.tmb.dto.response;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.gunyoung.tmb.domain.exercise.Exercise;
 
 import lombok.AllArgsConstructor;
@@ -33,5 +36,18 @@ public class ExerciseForTableDTO {
 				.build();
 		
 		return dto;
+	}
+	
+	/**
+	 * Exercise 컬렉션을 통해 ExerciseForTableDTO 리스트 생성 후 반환
+	 * @author kimgun-yeong
+	 */
+	public static List<ExerciseForTableDTO> of(Iterable<Exercise> exercises) {
+		List<ExerciseForTableDTO> dtos = new ArrayList<>();
+		for(Exercise e: exercises) {
+			dtos.add(of(e));
+		}
+		
+		return dtos;
 	}
 }

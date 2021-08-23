@@ -12,6 +12,7 @@ import com.gunyoung.tmb.dto.reqeust.SaveMuscleDTO;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.MuscleNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
+import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class ManagerMuscleRestController {
 	 * @param muscleId 정보 수정하려는 대상 Muscle의 Id
 	 * @throws MuscleNotFoundedException 해당 Id의 Muscle 없으면
 	 * @throws MuscleNameDuplicationFoundedException 수정된 이름이 이미 존재하는 Muscle의 이름과 일치한다면
+	 * @throws TargetTypeNotFoundedException dto에 담긴 category을 한국이름으로 갖는 TargetType 없을 때
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.PUT)
@@ -46,7 +48,11 @@ public class ManagerMuscleRestController {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
-		muscle = SaveMuscleDTO.updateMuscleBySaveMuscleDTO(muscle, dto);
+		try {
+			muscle = SaveMuscleDTO.updateMuscleBySaveMuscleDTO(muscle, dto);
+		} catch(TargetTypeNotFoundedException ex) {
+			throw ex;
+		}
 		
 		muscleService.save(muscle);
 	}

@@ -53,6 +53,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExercisePostController {
 	
+	public static final int COMMUNITY_VIEW_PAGE_SIZE = PageUtil.COMMUNITY_PAGE_SIZE;
+	
 	private final ExercisePostService exercisePostService;
 	
 	private final CommentService commentService;
@@ -69,34 +71,35 @@ public class ExercisePostController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community",method=RequestMethod.GET)
-	public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") int page,
-			@RequestParam(value="keyword",required=false)String keyword, ModelAndPageView mav) {
-		int pageSize = PageUtil.COMMUNITY_PAGE_SIZE;
-		
-		Page<PostForCommunityViewDTO> pageResult;
-		long totalPageNum;
-		
-		if(keyword == null) {
-			pageResult = exercisePostService.findAllForPostForCommunityViewDTOByPage(page, PageUtil.COMMUNITY_PAGE_SIZE);
-			totalPageNum = exercisePostService.count()/pageSize + 1;
-		} else {
-			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, page, PageUtil.COMMUNITY_PAGE_SIZE);
-			totalPageNum = exercisePostService.countWithTitleAndContentsKeyword(keyword)/pageSize +1;
-		}
-		
-		List<PostForCommunityViewDTO> listObject = pageResult.getContent();
+	public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") Integer page,
+			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
+		Page<PostForCommunityViewDTO> pageResult = getPageResultForExercisePostView(keyword, page);
+		long totalPageNum = getTotalPageNumForExercisePostView(keyword);
 		
 		TargetType[] targetTypes = TargetType.values();
 		
-		mav.addObject("listObject",listObject);
-		mav.addObject("category", "전체");
-		mav.addObject("targetNames", targetTypes);
-		
+		mav.addObject("listObject",pageResult);
 		mav.setPageNumbers(page, totalPageNum);
+		mav.addObject("targetNames", targetTypes);
+		mav.addObject("category", "전체");
 		
 		mav.setViewName("community");
 		
 		return mav;
+	}
+	
+	private Page<PostForCommunityViewDTO> getPageResultForExercisePostView(String keyword, Integer page) {
+		if(keyword == null) {
+			return exercisePostService.findAllForPostForCommunityViewDTOByPage(page, COMMUNITY_VIEW_PAGE_SIZE);
+		}	
+		return exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, page, COMMUNITY_VIEW_PAGE_SIZE);
+	}
+	
+	private long getTotalPageNumForExercisePostView(String keyword) {
+		if(keyword == null) {
+			return exercisePostService.count()/COMMUNITY_VIEW_PAGE_SIZE + 1;
+		}
+		return exercisePostService.countWithTitleAndContentsKeyword(keyword)/COMMUNITY_VIEW_PAGE_SIZE +1;
 	}
 	
 	/**
@@ -107,7 +110,7 @@ public class ExercisePostController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/{target}",method = RequestMethod.GET)
-	public ModelAndView exercisePostViewWithTarget(@RequestParam(value="page", required = false,defaultValue="1") int page
+	public ModelAndView exercisePostViewWithTarget(@RequestParam(value="page", required = false,defaultValue="1") Integer page
 			, @RequestParam(value="keyword",required=false)String keyword, ModelAndPageView mav, @PathVariable("target") String targetName) {
 		TargetType type;
 		try {
@@ -116,33 +119,33 @@ public class ExercisePostController {
 			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		int pageSize = PageUtil.COMMUNITY_PAGE_SIZE;
-		
-		Page<PostForCommunityViewDTO> pageResult;
-		long totalPageNum;
-		
-		if(keyword == null) {
-			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(type, page,PageUtil.COMMUNITY_PAGE_SIZE);
-			totalPageNum = exercisePostService.countWithTarget(type)/pageSize + 1;
-		} else {
-			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(type, keyword, page,PageUtil.COMMUNITY_PAGE_SIZE);
-			totalPageNum = exercisePostService.countWithTargetAndKeyword(type, keyword)/pageSize + 1;
-		}
-		
-		List<PostForCommunityViewDTO> listObject = pageResult.getContent();
+		Page<PostForCommunityViewDTO> pageResult = getPageResultForExercisePostViewWithTarget(keyword, type, page);
+		long totalPageNum = getTotalPageNumForExercisePostViewWithTarget(keyword, type);
 		
 		TargetType[] targetTypes = TargetType.values();
 		
-		mav.addObject("listObject",listObject);
+		mav.addObject("listObject",pageResult);
+		mav.setPageNumbers(page, totalPageNum);
 		mav.addObject("targetNames", targetTypes);
 		mav.addObject("category", type.getKoreanName());
-		
-		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("community");
 		
 		return mav;
-
+	}
+	
+	private Page<PostForCommunityViewDTO> getPageResultForExercisePostViewWithTarget(String keyword, TargetType type, Integer page) {
+		if(keyword == null) {
+			return exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(type, page, COMMUNITY_VIEW_PAGE_SIZE);
+		}
+		return exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(type, keyword, page, COMMUNITY_VIEW_PAGE_SIZE);
+	}
+	
+	private long getTotalPageNumForExercisePostViewWithTarget(String keyword, TargetType type) {
+		if(keyword == null) {
+			return exercisePostService.countWithTarget(type)/COMMUNITY_VIEW_PAGE_SIZE + 1;
+		}
+		return exercisePostService.countWithTargetAndKeyword(type, keyword)/COMMUNITY_VIEW_PAGE_SIZE + 1;
 	}
 	
 	/**
@@ -152,9 +155,8 @@ public class ExercisePostController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/community/post/{post_id}" ,method = RequestMethod.GET)
-	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId,ModelAndView mav) {
+	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId, ModelAndView mav) {
 		ExercisePostViewDTO postViewDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(postId);
-		
 		if(postViewDTO == null) {
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -191,23 +193,17 @@ public class ExercisePostController {
 	@LoginIdSessionNotNull
 	public ModelAndView addExercisePost(@ModelAttribute SaveExercisePostDTO dto, ModelAndView mav) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
-		
 		User user = userService.findWithExercisePostsById(loginUserId);
-		
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		Exercise exercise = exerciseService.findWithExercisePostsByName(dto.getExerciseName());
-		
 		if(exercise == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		ExercisePost exercisePost = ExercisePost.builder()
-				.title(dto.getTitle())
-				.contents(dto.getContents())
-				.build();
+		ExercisePost exercisePost = dto.createExercisePost();
 		
 		exercisePostService.saveWithUserAndExercise(exercisePost, user, exercise);
 		
@@ -224,29 +220,20 @@ public class ExercisePostController {
 	 */
 	@RequestMapping(value="/community/post/{post_id}/addComment",method = RequestMethod.POST)
 	@LoginIdSessionNotNull
-	public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute SaveCommentDTO dto,
+	public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId, @ModelAttribute SaveCommentDTO dto,
 			@RequestParam("isAnonymous") boolean isAnonymous, HttpServletRequest request) {
-		
-		dto.setAnonymous(isAnonymous);
-		
-		// 세션으로 가져온 유저 id로 유저 객체 찾기
 		Long loginUserId = SessionUtil.getLoginUserId(session);
-		
 		User user = userService.findWithCommentsById(loginUserId);
-		
 		if(user == null)
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		
-		// post_id 로 해당 ExercisePost 가져오기 
 		ExercisePost exercisePost = exercisePostService.findWithCommentsById(postId);
-		
 		if(exercisePost == null) 
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
-		
-		// request IP 가져오기 
+		 
 		String writerIp = HttpRequestUtil.getRemoteHost(request);
-		
 		Comment comment = SaveCommentDTO.toComment(dto, writerIp);
+		comment.setAnonymous(isAnonymous);
 		
 		commentService.saveWithUserAndExercisePost(comment, user, exercisePost);
 		

@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,9 +117,9 @@ public class ExercisePostControllerTest {
 		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
-		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO> )resultMap.get("listObject");
+		Page<PostForCommunityViewDTO> listObject = (Page<PostForCommunityViewDTO> )resultMap.get("listObject");
 		
-		assertEquals(Math.min(givenExercisePostNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.size());
+		assertEquals(Math.min(givenExercisePostNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.getNumberOfElements());
 	}
 	
 	@Test
@@ -150,9 +151,9 @@ public class ExercisePostControllerTest {
 		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
-		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO> )resultMap.get("listObject");
+		Page<PostForCommunityViewDTO> listObject = (Page<PostForCommunityViewDTO> )resultMap.get("listObject");
 		
-		assertEquals(Math.min(givenExercisePostNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.size());
+		assertEquals(Math.min(givenExercisePostNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.getNumberOfElements());
 	}
 	
 	
@@ -198,8 +199,8 @@ public class ExercisePostControllerTest {
 		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
-		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO>)resultMap.get("listObject");
-		assertEquals(Math.min(givenExercisePostNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.size());
+		Page<PostForCommunityViewDTO> listObject = (Page<PostForCommunityViewDTO>)resultMap.get("listObject");
+		assertEquals(Math.min(givenExercisePostNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.getNumberOfElements());
 	}
 	
 	@Test
@@ -226,8 +227,8 @@ public class ExercisePostControllerTest {
 		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
-		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO>)resultMap.get("listObject");
-		assertEquals(0, listObject.size());
+		Page<PostForCommunityViewDTO> listObject = (Page<PostForCommunityViewDTO>)resultMap.get("listObject");
+		assertEquals(0, listObject.getNumberOfElements());
 	}
 	
 	@Test
@@ -253,8 +254,8 @@ public class ExercisePostControllerTest {
 		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
-		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO>)resultMap.get("listObject");
-		assertEquals(Math.min(givenExercisePostNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.size());
+		Page<PostForCommunityViewDTO> listObject = (Page<PostForCommunityViewDTO>)resultMap.get("listObject");
+		assertEquals(Math.min(givenExercisePostNum, PageUtil.COMMUNITY_PAGE_SIZE), listObject.getNumberOfElements());
 	}
 	
 	@Test
@@ -279,8 +280,8 @@ public class ExercisePostControllerTest {
 		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
-		List<PostForCommunityViewDTO> listObject = (List<PostForCommunityViewDTO>)resultMap.get("listObject");
-		assertEquals(0, listObject.size());
+		Page<PostForCommunityViewDTO> listObject = (Page<PostForCommunityViewDTO>)resultMap.get("listObject");
+		assertEquals(0, listObject.getNumberOfElements());
 	}
 	
 	private void saveExercisePostListWithSettingUserAndExercise(int exercisePostNum, User user, Exercise exercise) {

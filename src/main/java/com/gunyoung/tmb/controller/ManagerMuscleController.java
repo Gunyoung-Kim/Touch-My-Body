@@ -18,7 +18,6 @@ import com.gunyoung.tmb.dto.reqeust.SaveMuscleDTO;
 import com.gunyoung.tmb.dto.response.MuscleForTableDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
-import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.MuscleNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
@@ -36,6 +35,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ManagerMuscleController {
 	
+	public static final int MUSCLE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
+	
 	private final MuscleService muscleService;
 	
 	/**
@@ -46,32 +47,31 @@ public class ManagerMuscleController {
 	@RequestMapping(value="/manager/muscle",method = RequestMethod.GET)
 	public ModelAndView muscleViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,
 			ModelAndPageView mav) {
-		int pageSize = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
+		Page<Muscle> pageResult = getPageResultForMuscleViewForManager(keyword, page);
+		long totalPageNum = getTotalPageNumForMuscleViewForManager(keyword);
 		
-		Page<Muscle> pageResult;
-		long totalPageNum;
-		
-		if(keyword != null) {
-			pageResult = muscleService.findAllWithNameKeywordInPage(keyword, page, pageSize);
-			totalPageNum = muscleService.countAllWithNameKeyword(keyword)/pageSize +1;
-		} else {
-			pageResult = muscleService.findAllInPage(page,pageSize);
-			totalPageNum = muscleService.countAll()/pageSize +1;
-		}
-		
-		List<MuscleForTableDTO> listObject = new ArrayList<>();
-		
-		for(Muscle m : pageResult) {
-			listObject.add(MuscleForTableDTO.of(m));
-		}
+		List<MuscleForTableDTO> listObject = MuscleForTableDTO.of(pageResult);
 		
 		mav.addObject("listObject",listObject);
-		
 		mav.setPageNumbers(page, totalPageNum);
 		
 		mav.setViewName("muscleListViewForManage");
 		
 		return mav;
+	}
+	
+	private Page<Muscle> getPageResultForMuscleViewForManager(String keyword, Integer page) {
+		if(keyword == null) {
+			return muscleService.findAllInPage(page, MUSCLE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE);
+		}
+		return muscleService.findAllWithNameKeywordInPage(keyword, page, MUSCLE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE);
+	}
+	
+	private long getTotalPageNumForMuscleViewForManager(String keyword) {
+		if(keyword == null) {
+			return muscleService.countAll() / MUSCLE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE +1;
+		}
+		return muscleService.countAllWithNameKeyword(keyword) / MUSCLE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE +1;
 	}
 	
 	/**
@@ -105,18 +105,12 @@ public class ManagerMuscleController {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
-		String category = dto.getCategory();
-		
-		TargetType newMusclesCategory = TargetType.getFromKoreanName(category);
-		
-		if(newMusclesCategory == null) {
-			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
+		Muscle newMuscle;
+		try {
+			newMuscle = dto.createMuscle();
+		} catch(TargetTypeNotFoundedException ttfe) {
+			throw ttfe;
 		}
-		
-		Muscle newMuscle = Muscle.builder()
-				.name(dto.getName())
-				.category(newMusclesCategory)
-				.build();
 		
 		muscleService.save(newMuscle);
 		
@@ -132,7 +126,6 @@ public class ManagerMuscleController {
 	@RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.GET)
 	public ModelAndView modifyMuscleView(@PathVariable("muscleId") Long muscleId, ModelAndView mav) {
 		Muscle muscle = muscleService.findById(muscleId);
-		
 		if(muscle == null) {
 			throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -142,9 +135,11 @@ public class ManagerMuscleController {
 			targetTypeKoreanNames.add(tt.getKoreanName());
 		}
 		
-		mav.addObject("muscleInfo", SaveMuscleDTO.of(muscle));
-		mav.addObject("targetTypes", targetTypeKoreanNames);
+		SaveMuscleDTO saveMuscleDTO = SaveMuscleDTO.of(muscle);
+		
 		mav.addObject("muscleId", muscleId);
+		mav.addObject("targetTypes", targetTypeKoreanNames);
+		mav.addObject("muscleInfo", saveMuscleDTO);
 		
 		mav.setViewName("modifyMuscle");
 		

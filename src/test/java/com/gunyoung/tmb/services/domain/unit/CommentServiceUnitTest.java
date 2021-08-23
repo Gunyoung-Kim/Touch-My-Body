@@ -184,7 +184,7 @@ public class CommentServiceUnitTest {
 		given(commentRepository.findAllByUserIdOrderByCreatedAtASCCustom(userId, pageRequest)).willReturn(commentPage);
 		
 		//When
-		Page<Comment> result =  commentService.findAllByUserIdOrderByCreatedAtASC(userId, pageNum, pageSize);
+		Page<Comment> result =  commentService.findAllByUserIdOrderByCreatedAtAsc(userId, pageNum, pageSize);
 		
 		//Then
 		assertEquals(commentPage, result);
@@ -208,7 +208,7 @@ public class CommentServiceUnitTest {
 		given(commentRepository.findAllByUserIdOrderByCreatedAtDescCustom(userId, pageRequest)).willReturn(commentPage);
 				
 		//When
-		Page<Comment> result =  commentService.findAllByUserIdOrderByCreatedAtDESC(userId, pageNum, pageSize);
+		Page<Comment> result =  commentService.findAllByUserIdOrderByCreatedAtDesc(userId, pageNum, pageSize);
 				
 		//Then
 		assertEquals(commentPage, result);

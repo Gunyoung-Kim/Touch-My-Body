@@ -10,6 +10,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.user.UserExercise;
+import com.gunyoung.tmb.dto.reqeust.SaveUserExerciseDTO;
 
 /**
  * Test 클래스 전용 UserExercise 엔티티 관련 유틸리티 클래스
@@ -72,7 +73,24 @@ public class UserExerciseTest {
 		}
 		return userExerciseRepository.saveAll(newUserExercises);
 	}
-	
+
+	/**
+	 * 테스트 용 {@link com.gunyoung.tmb.dto.reqeust.SaveUserExerciseDTO} 인스턴스 반환 <br>
+	 * exerciseName 커스터마이징 가능 
+	 * @author kimgun-yeong
+	 */
+	public static SaveUserExerciseDTO getSaveUserExerciseDTOInstance(String exerciseName) {
+		SaveUserExerciseDTO saveUserExerciseDTO = SaveUserExerciseDTO.builder()
+				.laps(1)
+				.sets(1)
+				.weight(1)
+				.description("description")
+				.date(new GregorianCalendar(1999, Calendar.JANUARY, 16))
+				.exerciseName(exerciseName)
+				.build();
+		
+		return saveUserExerciseDTO;
+	}
 	
 	/**
 	 * {@link com.gunyoung.tmb.dto.reqeust.SaveUserExerciseDTO} 객체에 바인딩 될 수 있는 MultiValueMap 반환 <br>

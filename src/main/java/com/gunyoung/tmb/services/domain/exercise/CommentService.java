@@ -50,14 +50,14 @@ public interface CommentService {
 	 * @param userId Comment들 작성자의 ID
 	 * @author kimgun-yeong
 	 */
-	public Page<Comment> findAllByUserIdOrderByCreatedAtASC(Long userId,Integer pageNum, int pageSize);
+	public Page<Comment> findAllByUserIdOrderByCreatedAtAsc(Long userId,Integer pageNum, int pageSize);
 	
 	/**
 	 * User ID를 만족하는 Comment들 생성 최신순으로 페이지 반환
 	 * @param userId Comment들 작성자의 ID
 	 * @author kimgun-yeong
 	 */
-	public Page<Comment> findAllByUserIdOrderByCreatedAtDESC(Long userId,Integer pageNum, int pageSize);
+	public Page<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId,Integer pageNum, int pageSize);
 	
 	/**
 	 * Comment 생성 및 수정

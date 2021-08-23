@@ -49,9 +49,8 @@ public class FeedbackController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.GET)
-	public ModelAndView addFeedbackView(@PathVariable("exercise_id") Long exerciseId,ModelAndView mav) {
+	public ModelAndView addFeedbackView(@PathVariable("exercise_id") Long exerciseId, ModelAndView mav) {
 		Exercise exercise = exerciseService.findById(exerciseId);
-		
 		if(exercise == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -73,25 +72,19 @@ public class FeedbackController {
 	 */
 	@RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.POST)
 	@LoginIdSessionNotNull
-	public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId,@ModelAttribute SaveFeedbackDTO dto) {
+	public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId, @ModelAttribute SaveFeedbackDTO dto) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
-		
 		User user = userService.findWithFeedbacksById(loginUserId);
-		
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
 		Exercise exercise = exerciseService.findWithFeedbacksById(exerciseId);
-		
 		if(exercise == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Feedback feedback = Feedback.builder()
-				.title(dto.getTitle())
-				.contents(dto.getContents())
-				.build();
+		Feedback feedback = dto.createFeedback();
 		
 		feedbackService.saveWithUserAndExercise(feedback, user, exercise);
 		

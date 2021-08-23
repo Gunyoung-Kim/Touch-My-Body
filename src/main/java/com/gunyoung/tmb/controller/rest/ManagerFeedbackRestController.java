@@ -32,11 +32,9 @@ public class ManagerFeedbackRestController {
 	@RequestMapping(value="/manager/exercise/feedback/reflect/{feedbackId}", method = RequestMethod.PATCH)
 	public void reflectFeedback(@PathVariable("feedbackId") Long feedbackId) {
 		Feedback feedback = feedbackService.findById(feedbackId);
-		
 		if(feedback == null) {
 			throw new FeedbackNotFoundedException(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getDescription());
 		}
-		
 		feedback.setReflected(true);
 		
 		feedbackService.save(feedback);

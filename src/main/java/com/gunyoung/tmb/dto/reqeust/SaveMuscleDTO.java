@@ -37,6 +37,25 @@ public class SaveMuscleDTO {
 	}
 	
 	/**
+	 * SaveMuscleDTO을 통해 Muscle 객체 생성 후 반환
+	 * @throws TargetTypeNotFoundedException SaveMuscleDTO category에 해당하는 TargetType KoreanName 없을 때
+	 * @author kimgun-yeong
+	 */
+	public Muscle createMuscle() throws TargetTypeNotFoundedException{
+		String categoryKoreanName = this.category;
+		TargetType newMusclesCategory = TargetType.getFromKoreanName(categoryKoreanName);
+		if(newMusclesCategory == null) {
+			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
+		}
+		
+		Muscle muscle = Muscle.builder()
+				.name(this.name)
+				.category(newMusclesCategory)
+				.build();
+		return muscle;
+	}
+	
+	/**
 	 * SaveMuscleDTO를 통해 Muscle 업데이트 후 반환 
 	 * @throws TargetTypeNotFoundedException dto category에 해당하는 TargetType KoreanName 없을 때 
 	 */

@@ -1,6 +1,5 @@
 package com.gunyoung.tmb.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +48,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 	
+	public static final int MY_COMMENT_LIST_VIEW_PAGE_SIZE = PageUtil.COMMENT_FOR_PROFILE_PAGE_SIZE;
+	public static final int MY_POST_LIST_VIEW_PAGE_SIZE = PageUtil.POST_FOR_PROFILE_PAGE_SIZE;
+	
 	private final UserService userService;
 	
 	private final CommentService commentService;
@@ -79,7 +81,6 @@ public class UserController {
 	@RequestMapping(value="/login",method=RequestMethod.GET)
 	public ModelAndView loginView(HttpServletRequest request,ModelAndView mav) {
 		String afterLoginRedirectedUrl = request.getHeader("Referer");
-		
 		if(afterLoginRedirectedUrl != null && !afterLoginRedirectedUrl.contains("/login")) {
 			SessionUtil.setAfterLoginRedirectedUrl(session,afterLoginRedirectedUrl);
 		}
@@ -111,13 +112,11 @@ public class UserController {
 	@RequestMapping(value="/join",method=RequestMethod.POST)
 	public ModelAndView join(@ModelAttribute("formModel")UserJoinDTO formModel) {
 		String email = formModel.getEmail();
-		
 		if(userService.existsByEmail(email)) {
 			throw new EmailDuplicationFoundedException(JoinErrorCode.EMAIL_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
 		String nickName = formModel.getNickName();
-		
 		if(userService.existsByNickName(nickName)) {
 			throw new NickNameDuplicationFoundedException(JoinErrorCode.NICKNAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
@@ -138,9 +137,7 @@ public class UserController {
 	@LoginIdSessionNotNull
 	public ModelAndView profileView(ModelAndView mav) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
-		
 		User user = userService.findById(loginUserId);
-		
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
@@ -166,45 +163,43 @@ public class UserController {
 	public ModelAndView myCommentsView(ModelAndPageView mav,@RequestParam(value="page", required=false,defaultValue="1") Integer page
 			,@RequestParam(value="order", defaultValue="desc") String order) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
-		
 		User user = userService.findById(loginUserId);
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		int pageSize = PageUtil.COMMENT_FOR_PROFILE_PAGE_SIZE;
-		
 		Page<Comment> pageResult;
-		
-		if(order.equals("asc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtASC(loginUserId, page, pageSize);
-		} else if(order.equals("desc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtDESC(loginUserId, page, pageSize);
-		} else {
-			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
+		try {
+			pageResult = getPageResultForMyCommentListView(order, loginUserId, page);
+		} catch(SearchCriteriaInvalidException scie) {
+			throw scie;
 		}
-		long totalPageNum = commentService.countByUserId(loginUserId) / pageSize + 1;
+		long totalPageNum = getTotalPageNumForMyCommentListView(loginUserId);
 		
-		List<CommentForManageViewDTO> commentListForView = new ArrayList<>();
-		
-		for(Comment c: pageResult.getContent()) {
-			CommentForManageViewDTO dto = CommentForManageViewDTO.builder()
-					.commentId(c.getId())
-					.userName(user.getNickName())
-					.writerIp(c.getWriterIp())
-					.contents(c.getContents())
-					.build();
-			
-			commentListForView.add(dto);
-		}
-		
-		mav.addObject("commentList", commentListForView);
-	
+		List<CommentForManageViewDTO> commentListForView = CommentForManageViewDTO.of(pageResult, user);
+
 		mav.setPageNumbers(page, totalPageNum);
-		
+		mav.addObject("commentList", commentListForView);
+
 		mav.setViewName("profileCommentList");
 		
 		return mav;
+	}
+	
+	private Page<Comment> getPageResultForMyCommentListView(String order, Long loginUserId, Integer page) throws SearchCriteriaInvalidException{
+		Page<Comment> pageResult;
+		if(order.equals("asc")) {
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtAsc(loginUserId, page, MY_COMMENT_LIST_VIEW_PAGE_SIZE);
+		} else if(order.equals("desc")) {
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtDesc(loginUserId, page, MY_COMMENT_LIST_VIEW_PAGE_SIZE);
+		} else {
+			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
+		}
+		return pageResult;
+	}
+	
+	private long getTotalPageNumForMyCommentListView(Long loginUserId) {
+		return commentService.countByUserId(loginUserId) / MY_COMMENT_LIST_VIEW_PAGE_SIZE + 1;
 	}
 	
 	/**
@@ -216,47 +211,45 @@ public class UserController {
 	 */
 	@RequestMapping(value="/user/profile/myposts",method=RequestMethod.GET)
 	@LoginIdSessionNotNull
-	public ModelAndView myPostsView(ModelAndPageView mav, @RequestParam(value="page", required=false,defaultValue="1") Integer page
-			,@RequestParam(value="order", defaultValue="desc") String order ) {
+	public ModelAndView myPostsView(ModelAndPageView mav, @RequestParam(value="page", required=false,defaultValue="1") Integer page,
+			@RequestParam(value="order", defaultValue="desc") String order) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
-		
 		User user = userService.findById(loginUserId);
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
-		int pageSize = PageUtil.POST_FOR_PROFILE_PAGE_SIZE;
 		
 		Page<ExercisePost> pageResult; 
-		
-		if(order.equals("asc")) {
-			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(loginUserId,page,pageSize);
-		} else if(order.equals("desc")) {
-			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(loginUserId,page,pageSize);
-		} else {
-			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
+		try {
+			pageResult = getPageResultForMyPostListView(order, loginUserId, page);
+		} catch(SearchCriteriaInvalidException scie) {
+			throw scie;
 		}
+		long totalPageNum = getTotalPageNumForMyPostListView(loginUserId);
 		
-		long totalPageNum = exercisePostService.countWithUserId(loginUserId)/pageSize+1;
-		
-		List<ExercisePostForManageViewDTO> postListForView = new ArrayList<>();
-		
-		for(ExercisePost ep: pageResult.getContent()) {
-			ExercisePostForManageViewDTO dto = ExercisePostForManageViewDTO.builder()
-					.postId(ep.getId())
-					.title(ep.getTitle())
-					.writer(user.getNickName())
-					.createdAt(ep.getCreatedAt())
-					.viewNum(ep.getViewNum())
-					.build();
-			postListForView.add(dto);
-		}
-		
-		mav.addObject("postList", postListForView);
+		List<ExercisePostForManageViewDTO> postListForView = ExercisePostForManageViewDTO.of(pageResult, user);
 		
 		mav.setPageNumbers(page, totalPageNum);
+		mav.addObject("postList", postListForView);
 		
 		mav.setViewName("profilePostList");
 		
 		return mav;
+	}
+	
+	private Page<ExercisePost> getPageResultForMyPostListView(String order, Long loginUserId, Integer page) throws SearchCriteriaInvalidException{
+		Page<ExercisePost> pageResult; 
+		if(order.equals("asc")) {
+			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(loginUserId,page,MY_POST_LIST_VIEW_PAGE_SIZE);
+		} else if(order.equals("desc")) {
+			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(loginUserId,page,MY_POST_LIST_VIEW_PAGE_SIZE);
+		} else {
+			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
+		}
+		return pageResult;
+	}
+	
+	private long getTotalPageNumForMyPostListView(Long loginUserId) {
+		return exercisePostService.countWithUserId(loginUserId)/MY_POST_LIST_VIEW_PAGE_SIZE+1;
 	}
 }
