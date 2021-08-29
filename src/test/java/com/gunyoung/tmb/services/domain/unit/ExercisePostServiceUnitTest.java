@@ -166,10 +166,10 @@ public class ExercisePostServiceUnitTest {
 		int pageSize = 1;
 		
 		//When
-		exercisePostService.findAllForPostForCommunityViewDTOByPage(pageNum, pageSize);
+		exercisePostService.findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(pageNum, pageSize);
 		
 		//Then
-		then(exercisePostRepository).should(times(1)).findAllForPostForCommunityViewDTOByPage(any(PageRequest.class));
+		then(exercisePostRepository).should(times(1)).findAllForPostForCommunityViewDTOOrderByCreatedAtDESCByPage(any(PageRequest.class));
 	}
 	
 	/*

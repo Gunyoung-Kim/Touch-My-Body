@@ -90,7 +90,7 @@ public class ExercisePostController {
 	
 	private Page<PostForCommunityViewDTO> getPageResultForExercisePostView(String keyword, Integer page) {
 		if(keyword == null) {
-			return exercisePostService.findAllForPostForCommunityViewDTOByPage(page, COMMUNITY_VIEW_PAGE_SIZE);
+			return exercisePostService.findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(page, COMMUNITY_VIEW_PAGE_SIZE);
 		}	
 		return exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, page, COMMUNITY_VIEW_PAGE_SIZE);
 	}

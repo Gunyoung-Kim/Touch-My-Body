@@ -72,9 +72,9 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Integer pageNumber,int pageSize) {
+	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(Integer pageNumber,int pageSize) {
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
-		return exercisePostRepository.findAllForPostForCommunityViewDTOByPage(pageRequest);
+		return exercisePostRepository.findAllForPostForCommunityViewDTOOrderByCreatedAtDESCByPage(pageRequest);
 	}
 	
 	@Override

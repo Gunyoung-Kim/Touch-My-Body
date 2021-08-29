@@ -218,7 +218,7 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOByPage(1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(1,PageUtil.COMMUNITY_PAGE_SIZE);
 		
 		//Then
 		

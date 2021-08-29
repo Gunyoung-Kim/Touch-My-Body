@@ -103,7 +103,7 @@ public class ExercisePostControllerUnitTest {
 		exercisePostController.exercisePostView(defaultPageNum, null, mapv);
 		
 		//Then
-		then(exercisePostService).should(times(1)).findAllForPostForCommunityViewDTOByPage(defaultPageNum, ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE);
+		then(exercisePostService).should(times(1)).findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(defaultPageNum, ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE);
 		then(exercisePostService).should(times(1)).count();
 	}
 	
@@ -126,7 +126,7 @@ public class ExercisePostControllerUnitTest {
 	public void exercisePostViewTestCheckMapv() {
 		//Given
 		Page<PostForCommunityViewDTO> pageResult = new PageImpl<>(new ArrayList<>());
-		given(exercisePostService.findAllForPostForCommunityViewDTOByPage(defaultPageNum, ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE)).willReturn(pageResult);
+		given(exercisePostService.findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(defaultPageNum, ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE)).willReturn(pageResult);
 		
 		Long givenExercisPostNum = Long.valueOf(10);
 		given(exercisePostService.count()).willReturn(givenExercisPostNum);

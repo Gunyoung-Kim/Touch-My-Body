@@ -107,7 +107,7 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "INNER JOIN ep.user u "
 			+ "INNER JOIN ep.exercise e "
 			+ "ORDER BY ep.createdAt DESC")
-	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Pageable pageable);
+	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOrderByCreatedAtDESCByPage(Pageable pageable);
 	
 	/**
 	 * ExercisePost의 필드들로 {@link PostForCommunityViewDTO} 들로 바인딩하여 가져오는 쿼리 <br>
@@ -134,6 +134,7 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 	 * @param targetExerciePost와 연관된 Exercise의 target
 	 * @param pageable
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@Query("SELECT new com.gunyoung.tmb.dto.response.PostForCommunityViewDTO (ep.id, e.target, ep.title, u.nickName, e.name, ep.createdAt, ep.viewNum) from ExercisePost ep "
 			+ "INNER JOIN ep.user u "

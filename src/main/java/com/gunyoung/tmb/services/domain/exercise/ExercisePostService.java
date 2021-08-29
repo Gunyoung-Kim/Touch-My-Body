@@ -56,7 +56,7 @@ public interface ExercisePostService {
 	 * 모든 ExercisePost로 {@link PostForCommunityViewDTO} 생성 후 페이지 반환
 	 * @author kimgun-yeong
 	 */
-	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Integer pageNumber,int pageSize);
+	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(Integer pageNumber,int pageSize);
 	
 	/**
 	 * 키워드를 만족하는 ExercisePost들로 {@link PostForCommunityViewDTO} 생성 후 페이지 반환
