@@ -195,13 +195,13 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Integer pageNumber)
+	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOrderByCreatedAtDESCByPage(Integer pageNumber)
 	 */
 	
 	@Test
 	@Transactional
-	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 가져오기 -> 정상")
-	public void findAllForPostForCommunityViewDTOByPageTest() {
+	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 가져오기 -> 정상, 개수 확인")
+	public void findAllForPostForCommunityViewDTOByPageTestCheckSize() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);

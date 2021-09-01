@@ -46,26 +46,32 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 	@Transactional(readOnly=true)
 	public List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year,int month) {
 		Calendar[] firstAndLastDay = DateUtil.calendarForStartAndEndOfYearAndMonth(year, month);
+		boolean[] isDoneArr = getIsDoneArrayFromRepository(userId, firstAndLastDay);
+		
 		int lastDateOfMonth = firstAndLastDay[1].get(Calendar.DATE);
-		
-		List<Calendar> calendarList = userExerciseRepository.findUserExercisesIdForDayToDay(userId, firstAndLastDay[0], firstAndLastDay[1]);
-		boolean[] isDoneArr = new  boolean[lastDateOfMonth+1];	
-		
+		return getUserExerciseIsDoneDTOList(lastDateOfMonth, isDoneArr);
+	}
+	
+	private boolean[] getIsDoneArrayFromRepository(Long userId, Calendar[] firstAndLastDay) {
+		Calendar firstDayOfMonth = firstAndLastDay[0];
+		Calendar lastDayOfMonth = firstAndLastDay[1];
+		List<Calendar> calendarList = userExerciseRepository.findUserExercisesIdForDayToDay(userId, firstDayOfMonth, lastDayOfMonth);
+		boolean[] isDoneArr = new  boolean[lastDayOfMonth.get(Calendar.DATE)+1];
 		for(Calendar c : calendarList) {
 			isDoneArr[c.get(Calendar.DATE)] = true;
 		}
-		
+		return isDoneArr;
+	}
+	
+	private List<UserExerciseIsDoneDTO> getUserExerciseIsDoneDTOList(int lastDateOfMonth, boolean[] isDoneArr) {
 		List<UserExerciseIsDoneDTO> dtoList = new ArrayList<>();
-		
 		for(int i=1;i<=lastDateOfMonth;i++) {
 			UserExerciseIsDoneDTO dto = UserExerciseIsDoneDTO.builder()
 					.date(i)
 					.isDone(isDoneArr[i])
 					.build();
-			
 			dtoList.add(dto);
 		}
-		
 		return dtoList;
 	}
 	
