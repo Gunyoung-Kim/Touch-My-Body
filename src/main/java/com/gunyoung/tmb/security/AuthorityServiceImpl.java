@@ -33,14 +33,13 @@ public class AuthorityServiceImpl implements AuthorityService {
 	public boolean isSessionUserAuthorityCanAccessToTargetAuthority(User target) {
 		List<String> sessionUserAuthStringList = getReachableAuthorityStrings(getSessionUserAuthorities());
 		List<String> targetReacheableStringList = getReachableAuthorityStrings(getAuthoritiesByUserRoleType(target.getRole()));
-		
 		if(targetReacheableStringList.size() > sessionUserAuthStringList.size()) {
 			return false;
 		}
-		
 		return true;
 	}
 	
+	@Override
 	public Collection<? extends GrantedAuthority> getSessionUserAuthorities() {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		Authentication sessionUserAuthentication = securityContext.getAuthentication();
@@ -59,7 +58,6 @@ public class AuthorityServiceImpl implements AuthorityService {
 		for(GrantedAuthority a : authorities) {
 			result.add(a.getAuthority().substring(5));
 		}
-		
 		return result;
 	}
 
