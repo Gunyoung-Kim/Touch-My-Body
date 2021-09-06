@@ -2,6 +2,7 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -16,9 +17,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.PostLike;
+import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.repos.PostLikeRepository;
 import com.gunyoung.tmb.services.domain.like.PostLikeServiceImpl;
+import com.gunyoung.tmb.util.ExercisePostTest;
+import com.gunyoung.tmb.util.UserTest;
 
 /**
  * {@link PostLikeServiceImpl} 에 대한 테스트 클래스 <br>
@@ -129,6 +134,24 @@ public class PostLikeServiceUnitTest {
 		
 		//Then
 		assertEquals(postLike, result);
+	}
+	
+	/*
+	 * public PostLike createAndSaveWithUserAndPost(User user, Post post) 
+	 */
+	
+	@Test
+	@DisplayName("PostLike 생성 및 User, Post 와 연관 관계 추가 후 저장 -> 정상, 저장 확인")
+	public void createAndSaveWithUserAndPostTestCheckSave() {
+		//Given
+		User user = UserTest.getUserInstance();
+		ExercisePost exercisepost = ExercisePostTest.getExercisePostInstance();
+		
+		//When
+		postLikeService.createAndSaveWithUserAndExercisePost(user, exercisepost);
+		
+		//Then
+		then(postLikeRepository).should(times(1)).save(any());
 	}
 	
 	/*

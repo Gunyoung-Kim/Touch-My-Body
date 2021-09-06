@@ -2,6 +2,7 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -16,9 +17,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.like.CommentLike;
+import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
 import com.gunyoung.tmb.services.domain.like.CommentLikeServiceImpl;
+import com.gunyoung.tmb.util.CommentTest;
+import com.gunyoung.tmb.util.UserTest;
 
 /**
  * {@link CommentLikeServiceImpl} 에 대한 테스트 클래스 <br>
@@ -123,6 +128,24 @@ public class CommentLikeServiceUnitTest {
 		
 		//Then
 		assertEquals(commentLike, result);
+	}
+	
+	/*
+	 * public CommentLike createAndSaveWithUserAndComment(User user, Comment comment) 
+	 */
+	
+	@Test
+	@DisplayName("CommentLike 생성 및 User, Comment 와 연관 관계 추가 후 저장 -> 정상, 저장 확인")
+	public void createAndSaveWithUserAndCommentTestCheckSave() {
+		//Given
+		User user = UserTest.getUserInstance();
+		Comment comment = CommentTest.getCommentInstance();
+		
+		//When
+		commentLikeService.createAndSaveWithUserAndComment(user, comment);
+		
+		//Then
+		then(commentLikeRepository).should(times(1)).save(any());
 	}
 
 	/*
