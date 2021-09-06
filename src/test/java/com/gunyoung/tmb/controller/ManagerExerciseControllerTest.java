@@ -23,6 +23,7 @@ import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.util.ControllerTest;
 import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.util.tag.Integration;
 import com.gunyoung.tmb.utils.PageUtil;
 
 /**
@@ -32,6 +33,7 @@ import com.gunyoung.tmb.utils.PageUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ManagerExerciseControllerTest {

@@ -24,6 +24,7 @@ import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
 import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.util.FeedbackTest;
 import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.util.tag.Integration;
 import com.gunyoung.tmb.utils.PageUtil;
 
 /**
@@ -32,6 +33,7 @@ import com.gunyoung.tmb.utils.PageUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class FeedbackServiceTest {
 	

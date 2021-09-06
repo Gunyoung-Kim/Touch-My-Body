@@ -24,6 +24,7 @@ import com.gunyoung.tmb.services.domain.like.CommentLikeService;
 import com.gunyoung.tmb.util.CommentLikeTest;
 import com.gunyoung.tmb.util.CommentTest;
 import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.util.tag.Integration;
 
 /**
  * CommentLikeService에 대한 테스트 클래스 <br>
@@ -31,6 +32,7 @@ import com.gunyoung.tmb.util.UserTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class CommentLikeServiceTest {
 	

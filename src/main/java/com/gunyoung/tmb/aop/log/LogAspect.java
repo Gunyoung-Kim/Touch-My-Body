@@ -35,7 +35,6 @@ public class LogAspect {
 	@Around("within(com.gunyoung.tmb.controller..*)")
 	public Object loggingAroundController(ProceedingJoinPoint pjp) throws Throwable {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		
 		Map<String, String[]> paramMap = request.getParameterMap();
 		String params = "";
 		if(paramMap.isEmpty() == false) {

@@ -16,6 +16,7 @@ import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
 import com.gunyoung.tmb.util.ExerciseMuscleTest;
+import com.gunyoung.tmb.util.tag.Integration;
 
 /**
  * ExerciseMuscleService에 대한 테스트 클래스 <br>
@@ -23,6 +24,7 @@ import com.gunyoung.tmb.util.ExerciseMuscleTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class ExerciseMuscleServiceTest {
 	

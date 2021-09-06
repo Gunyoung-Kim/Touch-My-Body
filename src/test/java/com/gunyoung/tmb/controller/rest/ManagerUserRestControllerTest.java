@@ -26,6 +26,7 @@ import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.util.CommentTest;
 import com.gunyoung.tmb.util.ExercisePostTest;
 import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.util.tag.Integration;
 
 /**
  * {@link ManagerUserRestController} 에 대한 테스트 클래스
@@ -34,6 +35,7 @@ import com.gunyoung.tmb.util.UserTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ManagerUserRestControllerTest {

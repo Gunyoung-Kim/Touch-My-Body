@@ -31,6 +31,7 @@ import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.util.MuscleTest;
+import com.gunyoung.tmb.util.tag.Integration;
 
 /**
  * {@link ManagerExerciseRestController} 에 대한 테스트 클래스 
@@ -39,6 +40,7 @@ import com.gunyoung.tmb.util.MuscleTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ManagerExerciseRestControllerTest {

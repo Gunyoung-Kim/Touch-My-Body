@@ -31,6 +31,7 @@ import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.util.MuscleTest;
 import com.gunyoung.tmb.util.TargetTypeTest;
+import com.gunyoung.tmb.util.tag.Integration;
 import com.gunyoung.tmb.utils.PageUtil;
 
 /**
@@ -39,6 +40,7 @@ import com.gunyoung.tmb.utils.PageUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class ExerciseServiceTest {
 	

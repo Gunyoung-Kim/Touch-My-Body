@@ -25,6 +25,7 @@ import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.util.UserExerciseTest;
 import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.util.tag.Integration;
 import com.gunyoung.tmb.utils.PageUtil;
 
 /**
@@ -33,6 +34,7 @@ import com.gunyoung.tmb.utils.PageUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class UserServiceTest {
 	

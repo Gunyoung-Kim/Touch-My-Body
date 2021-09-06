@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.util.ExercisePostTest;
+import com.gunyoung.tmb.util.tag.Integration;
 
 /**
  * {@link ManagerExercisePostRestController} 에 대한 테스트 클래스 <br>
@@ -24,6 +25,7 @@ import com.gunyoung.tmb.util.ExercisePostTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ManagerExercisePostRestControllerTest {

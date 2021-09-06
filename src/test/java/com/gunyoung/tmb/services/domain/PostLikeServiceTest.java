@@ -24,6 +24,7 @@ import com.gunyoung.tmb.services.domain.like.PostLikeService;
 import com.gunyoung.tmb.util.ExercisePostTest;
 import com.gunyoung.tmb.util.PostLikeTest;
 import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.util.tag.Integration;
 
 /**
  * PostLikeService 클래스에 대한 테스트 클래스 <br>
@@ -31,6 +32,7 @@ import com.gunyoung.tmb.util.UserTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class PostLikeServiceTest {
 	

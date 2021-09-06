@@ -31,6 +31,7 @@ import com.gunyoung.tmb.util.CommentTest;
 import com.gunyoung.tmb.util.ControllerTest;
 import com.gunyoung.tmb.util.ExercisePostTest;
 import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.util.tag.Integration;
 import com.gunyoung.tmb.utils.PageUtil;
 
 /**
@@ -40,6 +41,7 @@ import com.gunyoung.tmb.utils.PageUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ManagerUserControllerTest {

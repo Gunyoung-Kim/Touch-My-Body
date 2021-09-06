@@ -26,6 +26,7 @@ import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 import com.gunyoung.tmb.util.UserExerciseTest;
 import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.util.tag.Integration;
 
 /**
  * UserExerciseService 클래스에 대한 테스트 클래스 <br>
@@ -33,6 +34,7 @@ import com.gunyoung.tmb.util.UserTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class UserExerciseServiceTest {
 	

@@ -28,6 +28,7 @@ import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.util.UserExerciseTest;
 import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.util.tag.Integration;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**
@@ -37,6 +38,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UserExerciseControllerTest {

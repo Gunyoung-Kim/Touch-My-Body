@@ -20,6 +20,7 @@ import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.util.MuscleTest;
 import com.gunyoung.tmb.util.TargetTypeTest;
+import com.gunyoung.tmb.util.tag.Integration;
 
 /**
  * {@link ManagerMuscleRestController} 에 대한 테스트 클래스
@@ -28,6 +29,7 @@ import com.gunyoung.tmb.util.TargetTypeTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ManagerMuscleRestControllerTest {
