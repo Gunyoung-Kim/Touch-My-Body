@@ -85,6 +85,24 @@ public class ExercisePostServiceUnitTest {
 	}
 	
 	/*
+	 * public ExercisePost findWithPostLikesById(Long id)
+	 */
+	
+	@Test
+	@DisplayName("ID로 ExercisePost 찾기, PostLikes 페치 조인 -> 존재하지 않음")
+	public void findWithPostLikesByIdNonExist() {
+		//Given
+		Long nonExistId = Long.valueOf(1);
+		given(exercisePostRepository.findWithPostLikesById(nonExistId)).willReturn(Optional.empty());
+		
+		//When
+		ExercisePost result = exercisePostService.findWithPostLikesById(nonExistId);
+		
+		//Then
+		assertNull(result);
+	}
+	
+	/*
 	 * public ExercisePost findWithCommentsById(Long id)
 	 */
 	

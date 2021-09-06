@@ -277,7 +277,17 @@ public class ExerciseServiceUnitTest {
 	public void getAllExercisesNamewithSortingTest() {
 		//Given
 		List<ExerciseNameAndTargetDTO> exerciseNameAndTargetDTOList = new ArrayList<>();
+		addExerciseNameAndTargetDTOListTwoForARMAndOneForOthers(exerciseNameAndTargetDTOList);
+		given(exerciseRepository.findAllWithNameAndTarget()).willReturn(exerciseNameAndTargetDTOList);
 		
+		//When
+		Map<String, List<String>> result = exerciseService.getAllExercisesNamewithSorting();
+		
+		//Then
+		verifyResult_for_getAllExercisesNamewithSortingTest(result);
+	}
+	
+	private void addExerciseNameAndTargetDTOListTwoForARMAndOneForOthers(List<ExerciseNameAndTargetDTO> exerciseNameAndTargetDTOList) {
 		TargetType[] targetTypes = TargetType.values();
 		for(TargetType target: targetTypes) {
 			ExerciseNameAndTargetDTO dto = ExerciseNameAndTargetDTO.builder()
@@ -287,18 +297,23 @@ public class ExerciseServiceUnitTest {
 			exerciseNameAndTargetDTOList.add(dto);
 		}
 		
-		given(exerciseRepository.findAllWithNameAndTarget()).willReturn(exerciseNameAndTargetDTOList);
-		
-		//When
-		Map<String, List<String>> result = exerciseService.getAllExercisesNamewithSorting();
-		
-		//Then
+		ExerciseNameAndTargetDTO dto = ExerciseNameAndTargetDTO.builder()
+				.name("name")
+				.target(TargetType.ARM)
+				.build();
+		exerciseNameAndTargetDTOList.add(dto);
+	}
+	
+	private void verifyResult_for_getAllExercisesNamewithSortingTest(Map<String, List<String>> result) {
 		Set<String> resultMapKeySet = result.keySet();
 		
-		assertEquals(targetTypes.length, resultMapKeySet.size());
+		assertEquals(TargetType.values().length, resultMapKeySet.size());
 		
 		for(String target: resultMapKeySet) {
-			assertEquals(1, result.get(target).size());
+			if(target.equals(TargetType.ARM.getKoreanName()))
+				assertEquals(2, result.get(target).size());
+			else 
+				assertEquals(1, result.get(target).size());
 		}
 	}
 	
