@@ -47,7 +47,7 @@ public class LogAspect {
 		} finally {
 			long timeAfterProceed = System.currentTimeMillis();
 			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, 
-					HttpRequestUtil.getRemoteHost(request), timeAfterProceed- timeBeforeProceed);
+					HttpRequestUtil.getRemoteHost(request), timeAfterProceed - timeBeforeProceed);
 		}
 	}
 	
