@@ -30,6 +30,8 @@ public class MuscleServiceImpl implements MuscleService {
 	public static final String MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY = "bycategory";
 	
 	private final MuscleRepository muscleRepository;
+	
+	private final ExerciseMuscleService exerciseMuscleService;
 
 	@Override
 	@Transactional(readOnly= true)
@@ -108,6 +110,7 @@ public class MuscleServiceImpl implements MuscleService {
 	@Override
 	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_SORT_NAME}, key="#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void delete(Muscle muscle) {
+		exerciseMuscleService.deleteAllByMuscleId(muscle.getId());
 		muscleRepository.delete(muscle);
 	}
 	

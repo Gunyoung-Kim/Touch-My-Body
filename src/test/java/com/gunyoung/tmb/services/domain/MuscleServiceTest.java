@@ -17,11 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
+import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
+import com.gunyoung.tmb.util.ExerciseMuscleTest;
 import com.gunyoung.tmb.util.MuscleTest;
 import com.gunyoung.tmb.util.TargetTypeTest;
 import com.gunyoung.tmb.util.tag.Integration;
@@ -36,6 +39,9 @@ import com.gunyoung.tmb.utils.PageUtil;
 @Integration
 @SpringBootTest
 public class MuscleServiceTest {
+	
+	@Autowired
+	ExerciseMuscleRepository exerciseMuscleRepository;
 	
 	@Autowired
 	MuscleRepository muscleRepository;
@@ -324,8 +330,8 @@ public class MuscleServiceTest {
 	 */
 	
 	@Test
-	@DisplayName("Muscle 삭제하기 -> 정상")
-	public void deleteTest() {
+	@DisplayName("Muscle 삭제하기 -> 정상, Muscle 삭제 확인")
+	public void deleteTestCheckMuscleDelete() {
 		//Given
 		Long givenMuscleNum = muscleRepository.count();
 		
@@ -334,6 +340,33 @@ public class MuscleServiceTest {
 		
 		//Then
 		assertEquals(givenMuscleNum - 1, muscleRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Muscle 삭제하기 -> 정상, 관련 ExerciseMuscle 삭제 확인")
+	public void deleteTestCheckExerciseMusclesDelete() {
+		//Given
+		Long givenExerciseMuscleNum = Long.valueOf(12);
+		List<ExerciseMuscle> exerciseMuscles = getExerciseMusclesWithMuscle(givenExerciseMuscleNum);
+		exerciseMuscleRepository.saveAll(exerciseMuscles);
+		
+		//When
+		muscleService.delete(muscle);
+		
+		//Then
+		assertEquals(0, exerciseMuscleRepository.count());
+	}
+	
+	private List<ExerciseMuscle> getExerciseMusclesWithMuscle(Long givenExerciseMusclesNum) {
+		Long givenExerciseMuscleNum = Long.valueOf(12);
+		List<ExerciseMuscle> exerciseMuscles = new ArrayList<>();
+		for(int i=0;i<givenExerciseMuscleNum;i++) {
+			ExerciseMuscle em = ExerciseMuscleTest.getExerciseMuscleInstance();
+			em.setMuscle(muscle);
+			exerciseMuscles.add(em);
+		}
+		return exerciseMuscles;
 	}
 	
 	/*

@@ -131,6 +131,23 @@ public class ExerciseMuscleServiceUnitTest {
 	}
 	
 	/*
+	 * public void deleteAllByMuscleId(Long muscleId)
+	 */
+	
+	@Test
+	@DisplayName("Muscle ID를 통한 ExerciseMuscle 모두 삭제 -> 정상, check repository")
+	public void deleteAllByMuscleIdTestCheckRepo() {
+		//Given
+		Long muscleId = Long.valueOf(52);
+		
+		//When
+		exerciseMuscleService.deleteAllByMuscleId(muscleId);
+		
+		//Then
+		then(exerciseMuscleRepository).should(times(1)).deleteAllByMuscleIdInQuery(muscleId);
+	}
+	
+	/*
 	 * public List<ExerciseMuscle> getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(Exercise exercise, List<Muscle> muscleList,boolean isMain)
 	 */
 	

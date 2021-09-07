@@ -45,10 +45,14 @@ public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 		return exerciseMuscleRepository.saveAll(exerciseMuscles);
 	}
 	
-	
 	@Override
 	public void delete(ExerciseMuscle exerciseMuscle) {
 		exerciseMuscleRepository.delete(exerciseMuscle);
+	}
+	
+	@Override
+	public void deleteAllByMuscleId(Long muscleId) {
+		exerciseMuscleRepository.deleteAllByMuscleIdInQuery(muscleId);
 	}
 
 	@Override
@@ -68,4 +72,5 @@ public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 		
 		return exerciseMuscleList; 
 	}
+
 }
