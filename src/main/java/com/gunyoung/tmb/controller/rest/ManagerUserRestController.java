@@ -46,7 +46,7 @@ public class ManagerUserRestController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/usermanage/{userId}", method = RequestMethod.PUT)
-	public void manageUserProfile(@PathVariable("userId") Long userId,@ModelAttribute UserProfileForManagerDTO dto) {
+	public void manageUserProfile(@PathVariable("userId") Long userId, @ModelAttribute UserProfileForManagerDTO dto) {
 		User user = userService.findById(userId);
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());

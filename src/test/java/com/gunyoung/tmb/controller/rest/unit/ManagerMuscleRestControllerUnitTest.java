@@ -159,4 +159,21 @@ public class ManagerMuscleRestControllerUnitTest {
 		given(muscleService.findById(muscleId)).willReturn(muscle);
 		return muscle;
 	}
+	
+	/*
+	 * public void removeMuscle(@RequestParam("muscleId") Long muscleId)
+	 */
+	
+	@Test
+	@DisplayName("Muscle의 삭제 요철 처리 -> 정상, check Service")
+	public void removeMuscleTestCheckService() {
+		//Given
+		Long muscleId = Long.valueOf(24);
+		
+		//When
+		managerMuscleRestController.removeMuscle(muscleId);
+		
+		//Then
+		then(muscleService).should(times(1)).deleteById(muscleId);
+	}
 }
