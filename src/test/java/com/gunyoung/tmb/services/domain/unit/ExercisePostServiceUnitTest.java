@@ -102,6 +102,20 @@ public class ExercisePostServiceUnitTest {
 		assertNull(result);
 	}
 	
+	@Test
+	@DisplayName("ID로 ExercisePost 찾기, PostLikes 페치 조인 -> 정상")
+	public void findWithPostLikesByIdTest() {
+		//Given
+		Long exercisePostId = Long.valueOf(1);
+		given(exercisePostRepository.findWithPostLikesById(exercisePostId)).willReturn(Optional.of(exercisePost));
+		
+		//When
+		ExercisePost result = exercisePostService.findWithPostLikesById(exercisePostId);
+		
+		//Then
+		assertEquals(exercisePost, result);
+	}
+	
 	/*
 	 * public ExercisePost findWithCommentsById(Long id)
 	 */

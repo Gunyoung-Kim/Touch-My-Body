@@ -115,15 +115,9 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
-	public User saveByJoinDTO(UserJoinDTO dto,RoleType role) {
-		User user = User.builder()
-						.email(dto.getEmail())
-						.password(dto.getPassword())
-						.firstName(dto.getFirstName())
-						.lastName(dto.getLastName())
-						.nickName(dto.getNickName())
-						.role(role)
-						.build();
+	public User saveByJoinDTOAndRoleType(UserJoinDTO dto, RoleType role) {
+		User user = dto.createUserInstance();
+		user.setRole(role);
 		return userRepository.save(user);
 	}
 

@@ -227,7 +227,7 @@ public class UserControllerUnitTest {
 		userController.join(userJoinDTO);
 		
 		//Then
-		then(userService).should(times(1)).saveByJoinDTO(userJoinDTO, RoleType.USER);
+		then(userService).should(times(1)).saveByJoinDTOAndRoleType(userJoinDTO, RoleType.USER);
 	}
 	
 	@Test

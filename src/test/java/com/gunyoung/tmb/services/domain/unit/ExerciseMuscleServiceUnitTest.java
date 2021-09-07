@@ -90,7 +90,7 @@ public class ExerciseMuscleServiceUnitTest {
 		given(exerciseMuscleRepository.save(exerciseMuscle)).willReturn(exerciseMuscle);
 		
 		//When
-		ExerciseMuscle result = exerciseMuscleRepository.save(exerciseMuscle);
+		ExerciseMuscle result = exerciseMuscleService.save(exerciseMuscle);
 		
 		//Then
 		assertEquals(exerciseMuscle, result);

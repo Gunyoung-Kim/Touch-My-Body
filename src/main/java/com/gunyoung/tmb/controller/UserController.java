@@ -123,7 +123,7 @@ public class UserController {
 		
 		// 비밀번호 암호화
 		formModel.setPassword(passwordEncoder.encode(formModel.getPassword()));
-		userService.saveByJoinDTO(formModel, RoleType.USER);
+		userService.saveByJoinDTOAndRoleType(formModel, RoleType.USER);
 		
 		return new ModelAndView("redirect:/");
 	}

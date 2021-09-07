@@ -239,7 +239,7 @@ public class UserServiceTest {
 		UserJoinDTO dto = UserTest.getUserJoinDTOInstance("newUser@test.com", "newby");
 		
 		//When
-		userService.saveByJoinDTO(dto, RoleType.USER);
+		userService.saveByJoinDTOAndRoleType(dto, RoleType.USER);
 		
 		//Then
 		assertTrue(userRepository.existsByEmail(newUserEmail));

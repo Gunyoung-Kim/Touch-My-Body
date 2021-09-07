@@ -103,7 +103,7 @@ public interface UserService {
 	 * @return 저장된 객체
 	 * @author kimgun-yeong
 	 */
-	public User saveByJoinDTO(UserJoinDTO dto,RoleType role);
+	public User saveByJoinDTOAndRoleType(UserJoinDTO dto,RoleType role);
 	
 	/**
 	 * User 삭제 
