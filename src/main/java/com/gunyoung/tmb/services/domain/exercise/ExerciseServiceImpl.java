@@ -209,30 +209,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 		Exercise exercise = findById(exerciseId);
 		if(exercise == null)
 			return null;
-		
-		ExerciseForInfoViewDTO dto = ExerciseForInfoViewDTO.builder()
-				.id(exercise.getId())
-				.name(exercise.getName())
-				.description(exercise.getDescription())
-				.caution(exercise.getCaution())
-				.movement(exercise.getMovement())
-				.target(exercise.getTarget().getKoreanName())
-				.build();
-		
-		List<ExerciseMuscle> muscles = exercise.getExerciseMuscles();
-		StringBuilder mainMuscleBuilder = new StringBuilder();
-		StringBuilder subMuscleBuilder = new StringBuilder();
-		
-		for(ExerciseMuscle muscle: muscles) {
-			if(muscle.isMain()) {
-				mainMuscleBuilder.append(muscle.getMuscleName()+".");
-			} else {
-				subMuscleBuilder.append(muscle.getMuscleName()+".");
-			}
-		}
-		
-		dto.setMainMuscle(mainMuscleBuilder.toString());
-		dto.setSubMuscle(subMuscleBuilder.toString());
+		ExerciseForInfoViewDTO dto = ExerciseForInfoViewDTO.of(exercise);
 		
 		return dto;
 	}
