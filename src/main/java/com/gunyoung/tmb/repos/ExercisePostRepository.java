@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -205,4 +206,14 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "WHERE (e.target = :target) AND "
 			+ "((ep.title LIKE %:keyword%) OR (ep.contents LIKE %:keyword%))")
 	public long countWithTargetAndKeyword(@Param("target") TargetType target, @Param("keyword") String keyword);
+	
+	/**
+	 * User Id로 만족하는 ExercisePost들 일괄 삭제
+	 * @param userId 삭제하려는 ExercisePost들의 User ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM ExercisePost ep "
+			+ "WHERE ep.user.id = :userId")
+	public void deleteAllByUserIdInQuery(@Param("userId") Long userId);
 }

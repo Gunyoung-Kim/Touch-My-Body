@@ -395,7 +395,7 @@ public class UserServiceUnitTest {
 		//Given
 		
 		//When
-		userService.deleteUser(user);
+		userService.delete(user);
 		
 		//Then
 		then(userRepository).should(times(1)).delete(user);

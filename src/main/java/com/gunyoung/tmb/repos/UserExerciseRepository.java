@@ -38,6 +38,16 @@ public interface UserExerciseRepository extends JpaRepository<UserExercise,Long>
 	public List<Calendar> findUserExercisesIdForDayToDay(@Param("userId")Long userId, @Param("startDay")Calendar start, @Param("endDay")Calendar end);
 	
 	/**
+	 * User Id로 만족하는 UserUser들 일괄 삭제
+	 * @param user 삭제하려는 UserExercise들의 User ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically= true, flushAutomatically = true)
+	@Query("DELETE FROM UserExercise ue "
+			+ "WHERE ue.user.id = :userId")
+	public void deleteAllByUserIdInQuery(@Param("userId") Long userId);
+	
+	/**
 	 * Exercise Id로 만족하는 UserExercise들 일괄 삭제
 	 * @param exerciseId 삭제하려는 UserExercise들의 Exercise ID
 	 * @author kimgun-yeong

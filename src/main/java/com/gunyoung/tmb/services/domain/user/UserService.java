@@ -106,11 +106,11 @@ public interface UserService {
 	public User saveByJoinDTOAndRoleType(UserJoinDTO dto,RoleType role);
 	
 	/**
-	 * User 삭제 
+	 * User 삭제
 	 * @param user 삭제하려는 user
 	 * @author kimgun-yeong
 	 */
-	public void deleteUser(User user);
+	public void delete(User user);
 	
 	/**
 	 * email로 User 존재 여부 반환

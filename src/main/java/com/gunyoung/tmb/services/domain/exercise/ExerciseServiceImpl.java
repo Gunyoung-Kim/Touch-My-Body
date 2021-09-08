@@ -138,7 +138,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	
 	@Override
 	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
-	public Exercise saveWithSaveExerciseDTO(Exercise exercise,SaveExerciseDTO dto) {
+	public Exercise saveWithSaveExerciseDTO(Exercise exercise, SaveExerciseDTO dto) {
 		exercise.setName(dto.getName());
 		exercise.setDescription(dto.getDescription());
 		exercise.setCaution(dto.getCaution());

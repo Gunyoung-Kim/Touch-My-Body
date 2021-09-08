@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -105,7 +106,6 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
 			+ "ORDER BY c.createdAt DESC")
 	public Page<Comment> findAllByUserIdOrderByCreatedAtDescCustom(@Param("userId") Long userId, Pageable pageable);
 	
-	
 	/**
 	 * User ID로 만족하는 Comment들 개수 가져오기 
 	 * @param userId 찾으려는 Comment들을 작성한 User의 ID
@@ -117,4 +117,13 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
 			+ "ON u.id = :userId ")
 	public long countByUserId(@Param("userId") Long userId);
 	
+	/**
+	 * User ID로 만족하는 Comment들 일괄 삭제
+	 * @param userId 삭제하려는 Comment들의 User ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM Comment c "
+			+ "WHERE c.user.id = :userId")
+	public void deleteAllByUserIdInQuery(@Param("userId") Long userId);
 }

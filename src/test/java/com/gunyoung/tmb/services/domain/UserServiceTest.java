@@ -255,7 +255,7 @@ public class UserServiceTest {
 		Long userId = user.getId();
 
 		//When
-		userService.deleteUser(user);
+		userService.delete(user);
 		
 		//Then
 		assertFalse(userRepository.existsById(userId));
