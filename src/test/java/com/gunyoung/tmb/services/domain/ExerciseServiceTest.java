@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Muscle;
+import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
@@ -27,10 +29,12 @@ import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
+import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.util.MuscleTest;
 import com.gunyoung.tmb.util.TargetTypeTest;
+import com.gunyoung.tmb.util.UserExerciseTest;
 import com.gunyoung.tmb.util.tag.Integration;
 import com.gunyoung.tmb.utils.PageUtil;
 
@@ -43,6 +47,9 @@ import com.gunyoung.tmb.utils.PageUtil;
 @Integration
 @SpringBootTest
 public class ExerciseServiceTest {
+	
+	@Autowired
+	UserExerciseRepository userExerciseRepository;
 	
 	@Autowired
 	ExerciseRepository exerciseRepository;
@@ -474,9 +481,8 @@ public class ExerciseServiceTest {
 	 */
 	
 	@Test
-	@Transactional
-	@DisplayName("Exercise 삭제하기 -> 정상")
-	public void deleteTest() {
+	@DisplayName("Exercise 삭제하기 -> 정상, Exercise Delete Check")
+	public void deleteTestCheckExerciseDelete() {
 		//Given
 		Long givenExerciseNum = exerciseRepository.count();
 		
@@ -486,6 +492,33 @@ public class ExerciseServiceTest {
 		//Then
 		assertEquals(givenExerciseNum - 1, exerciseRepository.count());
 	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise 삭제하기 -> 정상, 관련 UserExercise Delete check")
+	public void deleteTestCheckUserExerciseDelete() {
+		//Given
+		Long givenUserExerciseNum = Long.valueOf(9);
+		saveUserExercisesWithExercise(givenUserExerciseNum, exercise);
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		assertEquals(0, userExerciseRepository.count());
+	}
+	
+	private void saveUserExercisesWithExercise(Long givenUserExerciseNum, Exercise exercise) {
+		List<UserExercise> userExercises = new ArrayList<>();
+		for(int i=0; i < givenUserExerciseNum; i++) {
+			UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
+			userExercise.setExercise(exercise);
+			userExercises.add(userExercise);
+		}
+		
+		userExerciseRepository.saveAll(userExercises);
+	}
+	
 	
 	/*
 	 *  public long countAll()

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -18,12 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.response.UserExerciseIsDoneDTO;
+import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
+import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.util.UserExerciseTest;
 import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.util.tag.Integration;
@@ -39,6 +43,9 @@ import com.gunyoung.tmb.util.tag.Integration;
 public class UserExerciseServiceTest {
 	
 	private static final Calendar DEFAULT_CALENDAR = new GregorianCalendar(1999,Calendar.JANUARY,16);
+	
+	@Autowired
+	ExerciseRepository exerciseRepository;
 	
 	@Autowired
 	UserExerciseRepository userExerciseRepository;
@@ -224,7 +231,7 @@ public class UserExerciseServiceTest {
 	}
 	
 	/*
-	 *   public void delete(UserExercise userExercise)
+	 *  public void delete(UserExercise userExercise)
 	 */
 	
 	@Test
@@ -240,5 +247,45 @@ public class UserExerciseServiceTest {
 		//Then
 		Optional<UserExercise> result = userExerciseRepository.findById(userExerciseId);
 		assertTrue(result.isEmpty());
+	}
+	
+	/*
+	 *  public void deleteAllByExerciseId(Long exerciseId)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise Id로 만족하는 UserExercise들 일괄 삭제 -> 정상")
+	public void deleteAllByExerciseIdTest() {
+		//Given
+		int newUserExercisesNum = 10;
+		addUserExercises(newUserExercisesNum);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		setAllUserExercisesExercise(exercise);
+		
+		//When
+		userExerciseService.deleteAllByExerciseId(exercise.getId());
+		
+		//Then
+		assertEquals(0, userExerciseRepository.count());
+	}
+	
+	private void addUserExercises(int userExerciseNum) {
+		List<UserExercise> newUserExercises = new ArrayList<>();
+		for(int i = 0 ; i < userExerciseNum; i++) {
+			UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
+			newUserExercises.add(userExercise);
+		}
+		userExerciseRepository.saveAll(newUserExercises);
+	}
+	
+	private void setAllUserExercisesExercise(Exercise exercise) {
+		List<UserExercise> userExercises = userExerciseRepository.findAll();
+		for(UserExercise ue: userExercises) {
+			ue.setExercise(exercise);
+		}
+		userExerciseRepository.saveAll(userExercises);
 	}
 }
