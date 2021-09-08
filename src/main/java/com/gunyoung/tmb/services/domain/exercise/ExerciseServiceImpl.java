@@ -206,7 +206,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Override
 	@Transactional(readOnly=true)
 	public ExerciseForInfoViewDTO getExerciseForInfoViewDTOByExerciseId(Long exerciseId) {
-		Exercise exercise = findById(exerciseId);
+		Exercise exercise = findWithExerciseMusclesById(exerciseId);
 		if(exercise == null)
 			return null;
 		ExerciseForInfoViewDTO dto = ExerciseForInfoViewDTO.of(exercise);

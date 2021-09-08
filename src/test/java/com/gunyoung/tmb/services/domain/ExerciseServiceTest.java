@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
+import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
@@ -31,6 +32,7 @@ import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
+import com.gunyoung.tmb.util.ExerciseMuscleTest;
 import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.util.MuscleTest;
 import com.gunyoung.tmb.util.TargetTypeTest;
@@ -595,7 +597,6 @@ public class ExerciseServiceTest {
 	 */
 	
 	@Test
-	@Transactional
 	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 해당 exercise 없음")
 	public void getExerciseForInfoViewDTOByExerciseIdNonExist() {
 		//Given
@@ -609,11 +610,34 @@ public class ExerciseServiceTest {
 	}
 	
 	@Test
-	@Transactional
-	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 정상")
-	public void getExerciseForInfoViewDTOByExerciseIdTest() {
+	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 정상, ExerciseMuscle 미포함")
+	public void getExerciseForInfoViewDTOByExerciseIdTestWithOutExerciseMuscle() {
 		//Given
 		Long existId = exercise.getId();
+		
+		//When
+		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(existId);
+		
+		//Then
+		assertNotNull(result);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 정상, ExerciseMuscle 포함")
+	public void getExerciseForInfoViewDTOByExerciseIdTestWithExerciseMuscle() {
+		//Given
+		Long existId = exercise.getId();
+		
+		String mainExerciseMuscleName = "mainMuscle";
+		ExerciseMuscle mainExerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance(mainExerciseMuscleName, true);
+		mainExerciseMuscle.setExercise(exercise);
+		exerciseMuscleRepository.save(mainExerciseMuscle);
+		
+		String subExerciseMuscleName = "subMuscle";
+		ExerciseMuscle subExerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance(subExerciseMuscleName, false);
+		subExerciseMuscle.setExercise(exercise);
+		exerciseMuscleRepository.save(subExerciseMuscle);
 		
 		//When
 		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(existId);
