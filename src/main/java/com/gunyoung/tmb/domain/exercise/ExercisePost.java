@@ -72,7 +72,7 @@ public class ExercisePost extends BaseEntity {
 	 * fetch: 지연로딩
 	 * cascade: Remove - 해당 게시글이 삭제되면 관련 댓글들도 삭제
 	 */
-	@OneToMany(mappedBy="exercisePost",cascade= {CascadeType.REMOVE})
+	@OneToMany(mappedBy="exercisePost", cascade= {CascadeType.REMOVE})
 	@Builder.Default
 	private List<Comment> comments = new ArrayList<>();
 	

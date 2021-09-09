@@ -58,7 +58,6 @@ public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 	@Override
 	public List<ExerciseMuscle> getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(Exercise exercise, List<Muscle> muscleList,boolean isMain) {
 		List<ExerciseMuscle> exerciseMuscleList = new ArrayList<>();
-		
 		for(Muscle muscle: muscleList) {
 			ExerciseMuscle em = ExerciseMuscle.builder()
 					.exercise(exercise)

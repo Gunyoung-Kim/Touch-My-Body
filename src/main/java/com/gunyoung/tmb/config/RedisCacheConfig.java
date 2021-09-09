@@ -80,7 +80,6 @@ public class RedisCacheConfig {
 	 */
 	@Bean
 	public RedisCacheConfiguration redisCacheConfiguration() {
-		
 		return RedisCacheConfiguration.defaultCacheConfig()
 				.entryTtl(Duration.ofMinutes(CacheUtil.CACHE_DEFAULT_EXPIRE_MIN))
 				.disableCachingNullValues()
