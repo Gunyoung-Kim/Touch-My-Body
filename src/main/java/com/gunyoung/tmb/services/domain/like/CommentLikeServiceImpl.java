@@ -23,9 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Service("commentLikeService")
 @Transactional
 @RequiredArgsConstructor
-public class CommentLikeServiceImpl implements CommentLikeService {
-	
-	public static final String EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY = "exsitByUserIdAndCommentId"; 
+public class CommentLikeServiceImpl implements CommentLikeService { 
 
 	private final CommentLikeRepository commentLikeRepository;
 	

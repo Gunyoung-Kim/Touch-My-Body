@@ -39,8 +39,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExerciseServiceImpl implements ExerciseService {
 	
-	public static final String EXERCISE_SORT_BY_CATEGORY_DEFAULT_KEY = "bycategory";
-	
 	private final ExerciseRepository exerciseRepository;
 	
 	private final MuscleService muscleService;

@@ -12,6 +12,8 @@ import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 
 public interface ExerciseService {
 	
+	public static final String EXERCISE_SORT_BY_CATEGORY_DEFAULT_KEY = "bycategory";
+	
 	/**
 	 * ID로 Exercise 찾기
 	 * @param id 찾으려는 Exercise의 id

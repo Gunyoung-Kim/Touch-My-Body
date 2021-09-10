@@ -27,8 +27,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MuscleServiceImpl implements MuscleService {
 	
-	public static final String MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY = "bycategory";
-	
 	private final MuscleRepository muscleRepository;
 	
 	private final ExerciseMuscleService exerciseMuscleService;

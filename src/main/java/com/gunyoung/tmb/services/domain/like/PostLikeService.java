@@ -6,6 +6,8 @@ import com.gunyoung.tmb.domain.user.User;
 
 public interface PostLikeService {
 	
+	public static final String EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY = "exsitByUserIdAndExercisePostId";
+	
 	/**
 	 * ID로 PostLike 찾기
 	 * @param id 찾으려는 PostLike의 id

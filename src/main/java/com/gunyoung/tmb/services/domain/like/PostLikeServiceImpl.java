@@ -23,9 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Service("postLikeService")
 @Transactional
 @RequiredArgsConstructor
-public class PostLikeServiceImpl implements PostLikeService {
-	
-	public static final String EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY = "exsitByUserIdAndExercisePostId"; 
+public class PostLikeServiceImpl implements PostLikeService { 
 	
 	private final PostLikeRepository postLikeRepository;
 
