@@ -7,7 +7,13 @@ package com.gunyoung.tmb.utils;
  */
 public class CacheUtil {
 	
-	private CacheUtil() {};
+	/**
+	 * 인스턴스화 방지
+	 * @author kimgun-yeong
+	 */
+	private CacheUtil() {
+		throw new AssertionError();
+	}
 	
 	/*
 	 *  ------------- CacheNames ----------------------------------

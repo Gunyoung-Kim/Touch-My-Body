@@ -2,7 +2,13 @@ package com.gunyoung.tmb.utils;
 
 public class PageUtil {
 	
-	private PageUtil() {};
+	/**
+	 * 인스턴스화 방지
+	 * @author kimgun-yeong
+	 */
+	private PageUtil() {
+		throw new AssertionError();
+	}
 	
 	public static final int BY_NICKNAME_NAME_PAGE_SIZE = 20;
 	
