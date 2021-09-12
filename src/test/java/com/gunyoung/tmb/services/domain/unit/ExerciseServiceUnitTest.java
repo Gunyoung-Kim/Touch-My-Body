@@ -505,7 +505,7 @@ public class ExerciseServiceUnitTest {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
-		given(exerciseRepository.findById(nonExistId)).willReturn(Optional.empty());
+		given(exerciseRepository.findWithExerciseMusclesById(nonExistId)).willReturn(Optional.empty());
 		
 		//When
 		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistId);
@@ -520,7 +520,7 @@ public class ExerciseServiceUnitTest {
 		//Given
 		Long exerciseId = Long.valueOf(1);
 		
-		given(exerciseRepository.findById(exerciseId)).willReturn(Optional.of(exercise));
+		given(exerciseRepository.findWithExerciseMusclesById(exerciseId)).willReturn(Optional.of(exercise));
 		
 		//When
 		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(exerciseId);
@@ -541,7 +541,7 @@ public class ExerciseServiceUnitTest {
 		
 		exercise.getExerciseMuscles().addAll(List.of(mainExerciseMuscle, subExerciseMuscle));
 		
-		given(exerciseRepository.findById(exerciseId)).willReturn(Optional.of(exercise));
+		given(exerciseRepository.findWithExerciseMusclesById(exerciseId)).willReturn(Optional.of(exercise));
 		
 		//When
 		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(exerciseId);
