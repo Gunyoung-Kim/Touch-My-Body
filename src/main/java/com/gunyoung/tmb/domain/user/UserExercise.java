@@ -99,4 +99,10 @@ public class UserExercise extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name="exercise_id")
 	private Exercise exercise;
+	
+	@Override
+	public String toString() {
+		return "[ id = " + id + ", laps = " + laps + ", sets = " + sets + ", weight = " + weight + ", description = " + description 
+				+ ", date = " + date.get(Calendar.YEAR) + "." + date.get(Calendar.MONTH) + 1  + "." + date.get(Calendar.DATE) + " ]"; 
+	}
 }

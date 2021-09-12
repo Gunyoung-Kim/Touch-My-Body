@@ -157,4 +157,14 @@ public class User extends BaseEntity {
 		return lastName + firstName;
 	}
 	
+	/**
+	 * User 인스턴스의 연관 객체 필드를 제외한 필드 정보 반환 <br>
+	 * password 필드는 제외
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public String toString() {
+		return "[ id = " + id + ", email = " + email + ", firstName = " + firstName + ", lastName = " + lastName 
+				+ ", nickName = " + nickName + ", role = " + role + " ]";
+	}
 }

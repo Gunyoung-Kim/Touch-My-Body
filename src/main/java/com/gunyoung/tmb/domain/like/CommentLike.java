@@ -54,4 +54,13 @@ public class CommentLike extends Like{
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="comment_id")
 	private Comment comment;
+	
+	/**
+	 * CommentLike 인스턴스의 연관 객체 필드를 제외한 필드 정보 반환
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public String toString() {
+		return "[ id = " + id + " ]";
+	}
 }

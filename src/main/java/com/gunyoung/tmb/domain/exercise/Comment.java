@@ -89,5 +89,12 @@ public class Comment extends BaseEntity {
 	@Builder.Default
 	private List<CommentLike> commentLikes = new ArrayList<>();
 	
-	
+	/**
+	 * Comment 인스턴스의 연관 객체 필드를 제외한 필드 정보 반환
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public String toString() {
+		return "[ id = " + id + ", writerIp = " + writerIp + ", contents = " + contents + ", isAnonymous = " + isAnonymous +" ]"; 
+	}
 }

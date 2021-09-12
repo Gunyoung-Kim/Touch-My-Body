@@ -104,4 +104,13 @@ public class Exercise extends BaseEntity{
 	@Builder.Default
 	private List<Feedback> feedbacks = new ArrayList<>();
 	
+	/**
+	 * Exercise 인스턴스의 연관 객체 필드를 제외한 필드 정보 반환
+	 * @author kimgun-yeong
+	 */
+	@Override
+	public String toString() {
+		return "[ id = " + id + ", name = " + name + ", description = " + description 
+				+ ", caution = " + caution + ", movement = " + movement + ", target = " + target +" ]";
+	}
 }
