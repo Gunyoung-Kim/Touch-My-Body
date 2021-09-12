@@ -22,6 +22,7 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
@@ -32,7 +33,6 @@ import com.gunyoung.tmb.util.ExercisePostTest;
 import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.util.tag.Integration;
-import com.gunyoung.tmb.utils.PageUtil;
 
 /**
  * {@link ManagerExercisePostController} 에 대한 테스트 클래스
@@ -100,7 +100,7 @@ public class ManagerExercisePostControllerTest {
 		@SuppressWarnings("unchecked")
 		Page<PostForCommunityViewDTO> resultList = (Page<PostForCommunityViewDTO>) model.get("listObject");
 		
-		assertEquals(Math.min(PageUtil.POST_FOR_MANAGE_PAGE_SIZE, givenExercisePostNum), resultList.getContent().size());
+		assertEquals(Math.min(PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize(), givenExercisePostNum), resultList.getContent().size());
 	}
 	
 	@WithMockUser(roles= {"MANAGER"})

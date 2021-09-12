@@ -24,6 +24,7 @@ import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
@@ -38,7 +39,6 @@ import com.gunyoung.tmb.util.MuscleTest;
 import com.gunyoung.tmb.util.TargetTypeTest;
 import com.gunyoung.tmb.util.UserExerciseTest;
 import com.gunyoung.tmb.util.tag.Integration;
-import com.gunyoung.tmb.utils.PageUtil;
 
 /**
  * ExerciseService에 대한 테스트 클래스 <br>
@@ -153,10 +153,10 @@ public class ExerciseServiceTest {
 		long givenExerciseNum = exerciseRepository.count();
 		
 		//When
-		Page<Exercise> result =exerciseService.findAllInPage(pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
+		Page<Exercise> result =exerciseService.findAllInPage(pageNumber, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize());
 		
 		//Then
-		assertEquals(Math.min(givenExerciseNum, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE), result.getContent().size());
+		assertEquals(Math.min(givenExerciseNum, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize()), result.getContent().size());
 	}
 	
 	/*
@@ -176,10 +176,10 @@ public class ExerciseServiceTest {
 		long givenExerciseNum = exerciseRepository.count();
 		
 		//When
-		Page<Exercise> result = exerciseService.findAllWithNameKeywordInPage(keywordForAllExercise, pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
+		Page<Exercise> result = exerciseService.findAllWithNameKeywordInPage(keywordForAllExercise, pageNumber, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize());
 		
 		//Then
-		assertEquals(Math.min(givenExerciseNum, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE), result.getContent().size());
+		assertEquals(Math.min(givenExerciseNum, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize()), result.getContent().size());
 	}
 	
 	@Test
@@ -197,7 +197,7 @@ public class ExerciseServiceTest {
 		exerciseRepository.save(exerciseForOnlyOne);
 		
 		//When
-		Page<Exercise> result = exerciseService.findAllWithNameKeywordInPage(keywordOnlyOneContains, pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
+		Page<Exercise> result = exerciseService.findAllWithNameKeywordInPage(keywordOnlyOneContains, pageNumber, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize());
 		
 		//Then
 		assertEquals(1, result.getContent().size());
@@ -214,7 +214,7 @@ public class ExerciseServiceTest {
 		ExerciseTest.addNewExercisesInDBByNum(5, exerciseRepository);
 		
 		//When
-		Page<Exercise> noResult = exerciseService.findAllWithNameKeywordInPage(noContainsKeyword, pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
+		Page<Exercise> noResult = exerciseService.findAllWithNameKeywordInPage(noContainsKeyword, pageNumber, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize());
 		
 		//Then
 		assertEquals(0, noResult.getContent().size());

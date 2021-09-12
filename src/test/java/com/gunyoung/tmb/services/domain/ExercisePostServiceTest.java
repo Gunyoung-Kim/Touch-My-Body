@@ -22,6 +22,7 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
@@ -32,7 +33,6 @@ import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.util.TargetTypeTest;
 import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.util.tag.Integration;
-import com.gunyoung.tmb.utils.PageUtil;
 
 /**
  * ExercisePostService에 대한 테스트 클래스 <br>
@@ -119,10 +119,10 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePosts);
 		
 		//When
-		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()).getContent();
 		
 		//Then
-		assertEquals(Math.min(givenExercisePostNum, PageUtil.POST_FOR_MANAGE_PAGE_SIZE),result.size());
+		assertEquals(Math.min(givenExercisePostNum, PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()),result.size());
 	}
 	
 	@Test
@@ -142,7 +142,7 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePosts);
 		
 		//When
-		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()).getContent();
 		
 		//Then
 		assertTrue(result.get(0).getCreatedAt().isBefore(result.get(1).getCreatedAt()));
@@ -167,10 +167,10 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePosts);
 		
 		//When
-		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()).getContent();
 		
 		//Then
-		assertEquals(result.size(),Math.min(givenExercisePostNum, PageUtil.POST_FOR_MANAGE_PAGE_SIZE));
+		assertEquals(result.size(),Math.min(givenExercisePostNum, PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()));
 	}
 	
 	@Test
@@ -190,7 +190,7 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePosts);
 		
 		//When
-		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()).getContent();
 		
 		//Then
 		assertTrue(result.get(0).getCreatedAt().isAfter(result.get(1).getCreatedAt()));
@@ -220,12 +220,12 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(1,PageSize.COMMUNITY_PAGE_SIZE.getSize());
 		
 		//Then
 		
 		//Math.Min은 인자에 있는 값들이 추후에 변경될수 있는점 고려
-		assertEquals(Math.min(PageUtil.COMMUNITY_PAGE_SIZE,givenExercisePostNum), result.getContent().size());
+		assertEquals(Math.min(PageSize.COMMUNITY_PAGE_SIZE.getSize(),givenExercisePostNum), result.getContent().size());
 	}
 	
 	/*
@@ -258,12 +258,12 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keywordForAllExercisePostInDB,1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keywordForAllExercisePostInDB,1,PageSize.COMMUNITY_PAGE_SIZE.getSize());
 		
 		//Then
 		
 		//Math.Min은 인자에 있는 값들이 추후에 변경될수 있는점 고려
-		assertEquals(Math.min(PageUtil.COMMUNITY_PAGE_SIZE,givenExercisePostNum), result.getContent().size());
+		assertEquals(Math.min(PageSize.COMMUNITY_PAGE_SIZE.getSize(),givenExercisePostNum), result.getContent().size());
 	}
 	
 	@Test
@@ -289,7 +289,7 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keywordForNothing, 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keywordForNothing, 1,PageSize.COMMUNITY_PAGE_SIZE.getSize());
 		
 		//Then
 		
@@ -324,10 +324,10 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(targetTypeForAllExercisePost, 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(targetTypeForAllExercisePost, 1,PageSize.COMMUNITY_PAGE_SIZE.getSize());
 		
 		//Then
-		assertEquals(Math.min(PageUtil.COMMUNITY_PAGE_SIZE, givenExercisePostNum), result.getContent().size());
+		assertEquals(Math.min(PageSize.COMMUNITY_PAGE_SIZE.getSize(), givenExercisePostNum), result.getContent().size());
 	}
 	
 	/*
@@ -359,7 +359,7 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(targetTypeForAllExercisePost, keywordForNothing, 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(targetTypeForAllExercisePost, keywordForNothing, 1,PageSize.COMMUNITY_PAGE_SIZE.getSize());
 		
 		//Then
 		assertEquals(0, result.getContent().size());
@@ -391,7 +391,7 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(targetTypeForAllExercisePost, keywordForAllExercisePostInDB, 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(targetTypeForAllExercisePost, keywordForAllExercisePostInDB, 1,PageSize.COMMUNITY_PAGE_SIZE.getSize());
 		
 		//Then
 		assertEquals(givenExercisePostNum, result.getContent().size());

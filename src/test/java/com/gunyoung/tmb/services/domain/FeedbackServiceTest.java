@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 import com.gunyoung.tmb.repos.UserRepository;
@@ -25,7 +26,6 @@ import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.util.FeedbackTest;
 import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.util.tag.Integration;
-import com.gunyoung.tmb.utils.PageUtil;
 
 /**
  * FeedbackService에 대한 테스트 클래스 <br>
@@ -102,7 +102,7 @@ public class FeedbackServiceTest {
 	@DisplayName("Exercise ID로 Feedback 페이징 처리해서 찾기 -> 정상")
 	public void findAllByExerciseIdByPageTest() {
 		//Given
-		int pageSize = PageUtil.FEEDBACK_FOR_MANAGE_PAGE_SIZE;
+		int pageSize = PageSize.FEEDBACK_FOR_MANAGE_PAGE_SIZE.getSize();
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		

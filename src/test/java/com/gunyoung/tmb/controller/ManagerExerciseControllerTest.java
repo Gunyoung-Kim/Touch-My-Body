@@ -19,12 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.ExerciseForTableDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.util.ControllerTest;
 import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.util.tag.Integration;
-import com.gunyoung.tmb.utils.PageUtil;
 
 /**
  * {@link ManagerExerciseController} 에 대한 테스트 클래스
@@ -69,7 +69,7 @@ public class ManagerExerciseControllerTest {
 		@SuppressWarnings("unchecked")
 		List<ExerciseForTableDTO> listObject = (List<ExerciseForTableDTO>) model.get("listObject");
 		
-		assertEquals(Math.min(PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE, givenExerciseNum), listObject.size());
+		assertEquals(Math.min(PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize(), givenExerciseNum), listObject.size());
 	}
 	
 	@WithMockUser(roles= {"MANAGER"})
@@ -120,7 +120,7 @@ public class ManagerExerciseControllerTest {
 		@SuppressWarnings("unchecked")
 		List<ExerciseForTableDTO> listObject = (List<ExerciseForTableDTO>) model.get("listObject");
 		
-		assertEquals(Math.min(PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE, givenExerciseNum), listObject.size());
+		assertEquals(Math.min(PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize(), givenExerciseNum), listObject.size());
 	}
 	
 	/*

@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.UserRepository;
-import com.gunyoung.tmb.utils.PageUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	@Transactional(readOnly=true)
 	public Page<User> findAllByNickNameOrNameInPage(String keyword,Integer pageNumber) {
-		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageUtil.BY_NICKNAME_NAME_PAGE_SIZE);
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageSize.BY_NICKNAME_NAME_PAGE_SIZE.getSize());
 		return userRepository.findAllByNickNameOrName(keyword, pageRequest);
 	}
 

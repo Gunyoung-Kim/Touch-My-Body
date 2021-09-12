@@ -12,13 +12,13 @@ import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
 import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.FeedbackErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
-import com.gunyoung.tmb.utils.PageUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class ManagerFeedbackController {
+	
+	public static final int FEEDBACK_FOR_MANAGE_PAGE_SIZE = PageSize.FEEDBACK_FOR_MANAGE_PAGE_SIZE.getSize();
 	
 	private final FeedbackService feedbackService;
 	
@@ -49,7 +51,7 @@ public class ManagerFeedbackController {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		int pageSize = PageUtil.FEEDBACK_FOR_MANAGE_PAGE_SIZE;
+		int pageSize = FEEDBACK_FOR_MANAGE_PAGE_SIZE;
 		
 		Page<FeedbackManageListDTO> pageResult = feedbackService.findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, page, pageSize);
 		long totalPageNum = feedbackService.countByExerciseId(exerciseId)/pageSize +1;

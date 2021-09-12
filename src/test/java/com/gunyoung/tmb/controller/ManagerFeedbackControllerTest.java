@@ -23,6 +23,7 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
@@ -33,7 +34,6 @@ import com.gunyoung.tmb.util.ExerciseTest;
 import com.gunyoung.tmb.util.FeedbackTest;
 import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.util.tag.Integration;
-import com.gunyoung.tmb.utils.PageUtil;
 
 /**
  * {@link ManagerFeedbackController} 에 대한 테스트 클래스
@@ -116,7 +116,7 @@ public class ManagerFeedbackControllerTest {
 		@SuppressWarnings("unchecked")
 		Page<FeedbackManageListDTO> listObject = (Page<FeedbackManageListDTO>) model.get("listObject");
 		
-		assertEquals(Math.min(feedbackNum, PageUtil.FEEDBACK_FOR_MANAGE_PAGE_SIZE),listObject.getContent().size());
+		assertEquals(Math.min(feedbackNum, PageSize.FEEDBACK_FOR_MANAGE_PAGE_SIZE.getSize()),listObject.getContent().size());
 	}
 	
 	/*

@@ -23,6 +23,7 @@ import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.dto.response.CommentForManageViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostForManageViewDTO;
 import com.gunyoung.tmb.dto.response.UserProfileDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.error.codes.JoinErrorCode;
 import com.gunyoung.tmb.error.codes.SearchCriteriaErrorCode;
@@ -34,7 +35,6 @@ import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.user.UserService;
-import com.gunyoung.tmb.utils.PageUtil;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -48,8 +48,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 	
-	public static final int MY_COMMENT_LIST_VIEW_PAGE_SIZE = PageUtil.COMMENT_FOR_PROFILE_PAGE_SIZE;
-	public static final int MY_POST_LIST_VIEW_PAGE_SIZE = PageUtil.POST_FOR_PROFILE_PAGE_SIZE;
+	public static final int MY_COMMENT_LIST_VIEW_PAGE_SIZE = PageSize.COMMENT_FOR_PROFILE_PAGE_SIZE.getSize();
+	public static final int MY_POST_LIST_VIEW_PAGE_SIZE = PageSize.POST_FOR_PROFILE_PAGE_SIZE.getSize();
 	
 	private final UserService userService;
 	
@@ -60,7 +60,6 @@ public class UserController {
 	private final HttpSession session;
 	
 	private final PasswordEncoder passwordEncoder;
-	
 	
 	/**
 	 * 메인 화면을 반환하는 메소드

@@ -12,8 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
-import com.gunyoung.tmb.utils.PageUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ManagerExercisePostController {
 	
+	public static final int POST_FOR_MANAGE_PAGE_SIZE = PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize();
+	
 	private final ExercisePostService exercisePostService;
 	
 	/**
@@ -37,7 +39,7 @@ public class ManagerExercisePostController {
 	@RequestMapping(value="/manager/community", method = RequestMethod.GET)
 	public ModelAndView manageCommunityView(@RequestParam(value="page", defaultValue="1") int page,
 			@RequestParam(value ="keyword", required=false) String keyword, ModelAndPageView mav) {
-		int pageSize = PageUtil.POST_FOR_MANAGE_PAGE_SIZE;
+		int pageSize = POST_FOR_MANAGE_PAGE_SIZE;
 		
 		Page<PostForCommunityViewDTO> pageResult;
 		long totalPageNum;

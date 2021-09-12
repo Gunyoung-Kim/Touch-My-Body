@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
@@ -26,7 +27,6 @@ import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.util.UserExerciseTest;
 import com.gunyoung.tmb.util.UserTest;
 import com.gunyoung.tmb.util.tag.Integration;
-import com.gunyoung.tmb.utils.PageUtil;
 
 /**
  * UserService 클래스에 대한 테스트 클래스<br>
@@ -141,7 +141,7 @@ public class UserServiceTest {
 		int result = userService.findAllByNickNameOrNameInPage(keywordForAllUser, 1).getContent().size();
 		
 		//Then
-		assertEquals(Math.min(PageUtil.BY_NICKNAME_NAME_PAGE_SIZE, givenUserNum), result);
+		assertEquals(Math.min(PageSize.BY_NICKNAME_NAME_PAGE_SIZE.getSize(), givenUserNum), result);
 	}
 	
 	@Test

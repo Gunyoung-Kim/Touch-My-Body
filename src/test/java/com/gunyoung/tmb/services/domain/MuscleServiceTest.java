@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 import com.gunyoung.tmb.domain.exercise.Muscle;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
@@ -28,7 +29,6 @@ import com.gunyoung.tmb.util.ExerciseMuscleTest;
 import com.gunyoung.tmb.util.MuscleTest;
 import com.gunyoung.tmb.util.TargetTypeTest;
 import com.gunyoung.tmb.util.tag.Integration;
-import com.gunyoung.tmb.utils.PageUtil;
 
 /**
  * MuscleService에 대한 테스트 클래스 <br>
@@ -132,7 +132,7 @@ public class MuscleServiceTest {
 	@DisplayName("모든 근육 정보들을 페이지 처리해서 가져오기 ->정상")
 	public void findAllInPageTest() {
 		//Given
-		int pageSize = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
+		int pageSize = PageSize.MUSCLE_FOR_MANAGE_PAGE_SIZE.getSize();
 		
 		MuscleTest.addNewMusclesInDBByNum(10, muscleRepository);
 		
@@ -154,7 +154,7 @@ public class MuscleServiceTest {
 	@DisplayName("키워드 이름에 포함하는 근육정보들 페이지 처리해서 가져오기 ->정상, 모든 Muscle이 만족하는 키워드")
 	public void findAllWithNameKeywordInPageTestAll() {
 		//Given
-		int pageSize = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
+		int pageSize = PageSize.MUSCLE_FOR_MANAGE_PAGE_SIZE.getSize();
 		String keywordForAllMuscle = MuscleTest.getMuscleInstance().getName();
 		
 		MuscleTest.addNewMusclesInDBByNum(10, muscleRepository);
@@ -173,7 +173,7 @@ public class MuscleServiceTest {
 	@DisplayName("키워드 이름에 포함하는 근육정보들 페이지 처리해서 가져오기 ->정상, 단 하나의 Muscle이 만족하는 키워드")
 	public void findAllWithNameKeywordInPageTestOnlyOne() {
 		//Given
-		int pageSize = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
+		int pageSize = PageSize.MUSCLE_FOR_MANAGE_PAGE_SIZE.getSize();
 		String keywordForOnlyOne = "I am only one";
 		Muscle onlyOneMuscle = MuscleTest.getMuscleInstance(keywordForOnlyOne, TargetType.ARM);
 		muscleRepository.save(onlyOneMuscle);
@@ -192,7 +192,7 @@ public class MuscleServiceTest {
 	@DisplayName("키워드 이름에 포함하는 근육정보들 페이지 처리해서 가져오기 ->정상")
 	public void findAllWithNameKeywordInPageTest() {
 		//Given
-		int pageSize = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
+		int pageSize = PageSize.MUSCLE_FOR_MANAGE_PAGE_SIZE.getSize();
 		String keywordForNothing = "none!!!";
 		
 		MuscleTest.addNewMusclesInDBByNum(10, muscleRepository);
