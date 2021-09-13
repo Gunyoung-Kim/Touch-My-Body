@@ -108,7 +108,7 @@ public class User extends BaseEntity {
 	 * fetch: 지연로딩
 	 * cascade: Remove - 유저가 삭제되면 관련 피드백도 모두 삭제
 	 */
-	@OneToMany(mappedBy="user", cascade = {CascadeType.REMOVE})
+	@OneToMany(mappedBy="user", cascade= {CascadeType.REMOVE})
 	@Builder.Default
 	List<Feedback> feedbacks = new ArrayList<>();
 	
@@ -117,7 +117,7 @@ public class User extends BaseEntity {
 	 * fetch: 지연로딩
 	 * cascade: Remove - 유저가 삭제되면 관련 게시글도 모두 삭제
 	 */
-	@OneToMany(mappedBy="user",cascade= {CascadeType.REMOVE})
+	@OneToMany(mappedBy="user", cascade= {CascadeType.REMOVE})
 	@Builder.Default
 	List<ExercisePost> exercisePosts = new ArrayList<>();
 	
@@ -126,7 +126,7 @@ public class User extends BaseEntity {
 	 * fetch: 지연로딩
 	 * cascade: Remove - 유저가 삭제되면 관련 게시글 좋아요도 모두 삭제
 	 */
-	@OneToMany(mappedBy="user",cascade = {CascadeType.REMOVE})
+	@OneToMany(mappedBy="user", cascade= {CascadeType.REMOVE})
 	@Builder.Default
 	List<PostLike> postLikes = new ArrayList<>();
 	
@@ -135,7 +135,7 @@ public class User extends BaseEntity {
 	 * fetch: 지연로딩
 	 * cascade: Remove - 유저가 삭제되면 관련 댓글들도 모두 삭제
 	 */
-	@OneToMany(mappedBy="user",cascade= {CascadeType.REMOVE})
+	@OneToMany(mappedBy="user", cascade= {CascadeType.REMOVE})
 	@Builder.Default
 	List<Comment> comments = new ArrayList<>();
 	
@@ -147,7 +147,7 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy="user",cascade= {CascadeType.REMOVE})
 	@Builder.Default
 	List<CommentLike> commentLikes = new ArrayList<>();
-	
+
 	/**
 	 * 유저의 Full Name을 반환하는 메소드
 	 * @return 유저의 Full Name

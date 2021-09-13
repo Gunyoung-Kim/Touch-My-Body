@@ -101,7 +101,6 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 		return exercisePostRepository.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(target, keyword, pageRuquest);
 	}
 
-
 	@Override
 	public ExercisePost save(ExercisePost exercisePost) {
 		return exercisePostRepository.save(exercisePost);
@@ -110,7 +109,6 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Override
 	public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exericse) {
 		user.getExercisePosts().add(exercisePost);
-		
 		exericse.getExercisePosts().add(exercisePost);
 		
 		exercisePost.setUser(user);
@@ -127,9 +125,13 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Override
 	public void deleteById(Long id) {
 		ExercisePost exercisePost = findById(id);
-		
 		if(exercisePost != null)
 			delete(exercisePost);
+	}
+	
+	@Override
+	public void deleteAllByUserId(Long userId) {
+		exercisePostRepository.deleteAllByUserIdInQuery(userId);
 	}
 	
 	@Override

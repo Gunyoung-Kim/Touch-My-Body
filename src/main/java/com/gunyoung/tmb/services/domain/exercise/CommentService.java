@@ -90,6 +90,13 @@ public interface CommentService {
 	public void deleteById(Long id);
 	
 	/**
+	 * User ID로 만족하는 Comment들 일괄 삭제
+	 * @param userId 삭제하려는 Comment들의 User ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByUserId(Long userId);
+	
+	/**
 	 * 해당 Comment ID의 Comment 작성자의 ID가 userID와 일치하면 삭제
 	 * @param userId Comment 작성자의 ID와 비교할 User ID
 	 * @param commentId 삭제하려는 Comment의 ID
@@ -109,5 +116,4 @@ public interface CommentService {
 	 * @author kimgun-yeong
 	 */
 	public List<CommentForPostViewDTO> getCommentForPostViewDTOsByExercisePostId(Long postId);
-	
 }

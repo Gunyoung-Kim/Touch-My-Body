@@ -109,6 +109,13 @@ public interface ExercisePostService {
 	public void deleteById(Long id);
 	
 	/**
+	 * User Id로 만족하는 ExercisePost들 일괄 삭제
+	 * @param userId 삭제하려는 ExercisePost들의 User ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByUserId(Long userId);
+	
+	/**
 	 * User ID, ExercisePost ID 에 해당하는 ExercisePost 있으면 삭제 
 	 * @param userId User의 ID
 	 * @param exercisePostId ExercisePost의 ID

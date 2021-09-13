@@ -85,7 +85,7 @@ public class Comment extends BaseEntity {
 	 * fetch: 지연로딩
 	 * cascade: Remove - Comment 객체 삭제 시 관련 CommentLike 객체들도 삭제
 	 */
-	@OneToMany(mappedBy="comment",cascade= {CascadeType.REMOVE})
+	@OneToMany(mappedBy="comment", cascade= {CascadeType.REMOVE})
 	@Builder.Default
 	private List<CommentLike> commentLikes = new ArrayList<>();
 	

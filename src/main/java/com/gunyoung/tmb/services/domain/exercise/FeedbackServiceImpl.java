@@ -84,6 +84,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public void delete(Feedback feedback) {	
 		feedbackRepository.delete(feedback);
 	}
+	
+	@Override
+	public void deleteAllByUserId(Long userId) {
+		feedbackRepository.deleteAllByUserIdInQuery(userId);
+	}
 
 	@Override
 	@Transactional(readOnly=true)

@@ -13,6 +13,9 @@ import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.services.domain.exercise.CommentService;
+import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
+import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +32,12 @@ public class UserServiceImpl implements UserService{
 	private final UserRepository userRepository;
 	
 	private final UserExerciseService userExerciseService;
+	
+	private final ExercisePostService exercisePostService;
+	
+	private final CommentService commentService;
+	
+	private final FeedbackService feedbackService;
 	
 	@Override
 	@Transactional(readOnly=true)
@@ -123,7 +132,11 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public void delete(User user) {
-		userRepository.delete(user);
+		Long userId = user.getId();
+		exercisePostService.deleteAllByUserId(userId);
+		commentService.deleteAllByUserId(userId);
+		feedbackService.deleteAllByUserId(userId);
+		userRepository.deleteByIdInQuery(userId);
 	}
 
 	@Override

@@ -104,6 +104,11 @@ public class CommentServiceImpl implements CommentService {
 	}
 	
 	@Override
+	public void deleteAllByUserId(Long userId) {
+		commentRepository.deleteAllByUserIdInQuery(userId);
+	}
+	
+	@Override
 	public void checkIsMineAndDelete(Long userId, Long commentId) {
 		Optional<Comment> comment = commentRepository.findByUserIdAndCommentId(userId, commentId);
 		comment.ifPresent((c) -> {
@@ -122,6 +127,4 @@ public class CommentServiceImpl implements CommentService {
 	public List<CommentForPostViewDTO> getCommentForPostViewDTOsByExercisePostId(Long postId) {
 		return commentRepository.findForCommentForPostViewDTOByExercisePostId(postId);
 	}
-
-
 }
