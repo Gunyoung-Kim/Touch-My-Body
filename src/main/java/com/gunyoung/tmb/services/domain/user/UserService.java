@@ -106,7 +106,8 @@ public interface UserService {
 	public User saveByJoinDTOAndRoleType(UserJoinDTO dto,RoleType role);
 	
 	/**
-	 * User 삭제
+	 * User 삭제 <br>
+	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param user 삭제하려는 user
 	 * @author kimgun-yeong
 	 */

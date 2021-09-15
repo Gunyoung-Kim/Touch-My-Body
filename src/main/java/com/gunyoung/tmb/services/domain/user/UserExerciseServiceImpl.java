@@ -84,6 +84,11 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 	public void delete(UserExercise userExercise) {
 		userExerciseRepository.delete(userExercise);
 	}
+	
+	@Override
+	public void deleteAllByUserId(Long userId) {
+		userExerciseRepository.deleteAllByUserIdInQuery(userId);
+	}
 
 	@Override
 	public void deleteAllByExerciseId(Long exerciseId) {

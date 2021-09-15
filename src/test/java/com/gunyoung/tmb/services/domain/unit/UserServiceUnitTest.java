@@ -25,7 +25,12 @@ import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.services.domain.exercise.CommentService;
+import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseServiceImpl;
+import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
+import com.gunyoung.tmb.services.domain.like.CommentLikeService;
+import com.gunyoung.tmb.services.domain.like.PostLikeService;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserServiceImpl;
 import com.gunyoung.tmb.util.UserExerciseTest;
@@ -46,6 +51,21 @@ public class UserServiceUnitTest {
 	
 	@Mock
 	UserExerciseService userExerciseService;
+	
+	@Mock
+	PostLikeService postLikeService;
+	
+	@Mock
+	ExercisePostService exercisePostService;
+	
+	@Mock
+	CommentLikeService commentLikeService;
+	
+	@Mock
+	CommentService commentService;
+	
+	@Mock
+	FeedbackService feedbackService;
 	
 	@InjectMocks
 	UserServiceImpl userService;
@@ -390,15 +410,40 @@ public class UserServiceUnitTest {
 	 */
 	
 	@Test
-	@DisplayName("User 삭제 -> 정상")
-	public void deleteTest() {
+	@DisplayName("User 삭제 -> 정상, check UserRepository")
+	public void deleteTestCheckUserRepo() {
 		//Given
+		Long userId = Long.valueOf(53);
+		user.setId(userId);
 		
 		//When
 		userService.delete(user);
 		
 		//Then
-		then(userRepository).should(times(1)).delete(user);
+		then(userRepository).should(times(1)).deleteByIdInQuery(userId);
+	}
+	
+	@Test
+	@DisplayName("User 삭제 -> 정상, check OneToMany domain Repo")
+	public void deleteTestCheckOneToManyRepo() {
+		//Given
+		Long userId = Long.valueOf(53);
+		user.setId(userId);
+		
+		//When
+		userService.delete(user);
+		
+		//Then
+		verifyService_for_deleteTestCheckOneToManyRepo(userId);
+	}
+	
+	private void verifyService_for_deleteTestCheckOneToManyRepo(Long userId) {
+		then(userExerciseService).should(times(1)).deleteAllByUserId(userId);
+		then(commentLikeService).should(times(1)).deleteAllByUserId(userId);
+		then(commentService).should(times(1)).deleteAllByUserId(userId);
+		then(postLikeService).should(times(1)).deleteAllByUserId(userId);
+		then(exercisePostService).should(times(1)).deleteAllByUserId(userId);
+		then(feedbackService).should(times(1)).deleteAllByUserId(userId);
 	}
 	
 	/*

@@ -55,4 +55,15 @@ public interface PostLikeRepository extends JpaRepository<PostLike,Long>{
 	@Query("DELETE FROM PostLike pl "
 			+ "WHERE pl.user.id = :userId")
 	public void deleteAllByUserIdInQuery(@Param("userId") Long userId);
+	
+	/**
+	 * ExercisePost Id로 만족하는 PostLike들 일괄 삭제
+	 * @param exercisePostId 삭제하려는 PostLike의 ExercisePost ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM PostLike pl "
+			+ "WHERE pl.exercisePost.id = :exercisePostId")
+	public void deleteAllByExercisePostIdInQuery(@Param("exercisePostId") Long exercisePostId);
 }
+

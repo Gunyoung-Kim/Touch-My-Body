@@ -73,6 +73,16 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	public void delete(CommentLike commentLike) {
 		commentLikeRepository.delete(commentLike);
 	}
+	
+	@Override
+	public void deleteAllByUserId(Long userId) {
+		commentLikeRepository.deleteAllByUserIdInQuery(userId);
+	}
+	
+	@Override
+	public void deleteAllByCommentId(Long commentId) {
+		commentLikeRepository.deleteAllByCommentIdInQuery(commentId);
+	}
 
 	@Override
 	@Transactional(readOnly=true)
@@ -82,5 +92,4 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	public boolean existsByUserIdAndCommentId(Long userId, Long commentId) {
 		return commentLikeRepository.existsByUserIdAndCommentId(userId, commentId);
 	}
-
 }

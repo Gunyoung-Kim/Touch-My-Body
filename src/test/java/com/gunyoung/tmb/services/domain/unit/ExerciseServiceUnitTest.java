@@ -36,7 +36,9 @@ import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
+import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseServiceImpl;
+import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 import com.gunyoung.tmb.util.ExerciseMuscleTest;
@@ -61,7 +63,13 @@ public class ExerciseServiceUnitTest {
 	ExerciseMuscleService exerciseMuscleService;
 	
 	@Mock
+	ExercisePostService exercisePostService;
+	
+	@Mock
 	UserExerciseService userExerciseService;
+	
+	@Mock
+	FeedbackService feedbackService;
 	
 	@InjectMocks
 	ExerciseServiceImpl exerciseService;
@@ -412,8 +420,8 @@ public class ExerciseServiceUnitTest {
 	}
 	
 	@Test
-	@DisplayName("Exercise 삭제 -> 정상, Check UserExerciseRepository")
-	public void deleteTestCheckUserExerciseRepo() {
+	@DisplayName("Exercise 삭제 -> 정상, Check UserExerciseService")
+	public void deleteTestCheckUserExerciseService() {
 		//Given
 		Long exerciseId = exercise.getId();
 		
@@ -422,6 +430,45 @@ public class ExerciseServiceUnitTest {
 		
 		//Then
 		then(userExerciseService).should(times(1)).deleteAllByExerciseId(exerciseId);
+	}
+	
+	@Test
+	@DisplayName("Exercise 삭제 -> 정상, Check FeedbackService")
+	public void deleteTestCheckFeedbackService() {
+		//Given
+		Long exerciseId = exercise.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		then(feedbackService).should(times(1)).deleteAllByExerciseId(exerciseId);
+	}
+	
+	@Test
+	@DisplayName("Exercise 삭제 -> 정상, Check ExerciseMuscleService")
+	public void deleteTestCheckExerciseMuscleService() {
+		//Given
+		Long exerciseId = exercise.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		then(exerciseMuscleService).should(times(1)).deleteAllByExerciseId(exerciseId);
+	}
+	
+	@Test
+	@DisplayName("Exercise 삭제 -> 정상, Check ExercisePostService")
+	public void deleteTestCheckExercisePostService() {
+		//Given
+		Long exerciseId = exercise.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		then(exercisePostService).should(times(1)).deleteAllByExerciseId(exerciseId);
 	}
 	
 	/*

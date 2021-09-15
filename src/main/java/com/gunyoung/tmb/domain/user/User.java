@@ -3,7 +3,6 @@ package com.gunyoung.tmb.domain.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -95,56 +94,50 @@ public class User extends BaseEntity {
 	private RoleType role = RoleType.USER;
 	
 	/**
-	 * 유저의 개인 웨이트 트레이닝 기록들
+	 * 유저의 개인 웨이트 트레이닝 기록들 <br>
 	 * fetch: 지연로딩
-	 * cascade: Remove - 유저가 삭제되면 관련 운동 기록들도 모두 삭제
 	 */
-	@OneToMany(mappedBy="user",cascade= {CascadeType.REMOVE})
+	@OneToMany(mappedBy="user", orphanRemoval= true)
 	@Builder.Default
 	List<UserExercise> userExercises = new ArrayList<>();
 	
 	/**
-	 * 유저가 작성한 피드백들 
+	 * 유저가 작성한 피드백들 <br> 
 	 * fetch: 지연로딩
-	 * cascade: Remove - 유저가 삭제되면 관련 피드백도 모두 삭제
 	 */
-	@OneToMany(mappedBy="user", cascade= {CascadeType.REMOVE})
+	@OneToMany(mappedBy="user", orphanRemoval= true)
 	@Builder.Default
 	List<Feedback> feedbacks = new ArrayList<>();
 	
 	/**
-	 * 유저가 작성한 게시글들
+	 * 유저가 작성한 게시글들 <br>
 	 * fetch: 지연로딩
-	 * cascade: Remove - 유저가 삭제되면 관련 게시글도 모두 삭제
 	 */
-	@OneToMany(mappedBy="user", cascade= {CascadeType.REMOVE})
+	@OneToMany(mappedBy="user", orphanRemoval= true)
 	@Builder.Default
 	List<ExercisePost> exercisePosts = new ArrayList<>();
 	
 	/**
-	 * 유저가 게시글에 추가한 좋아요들
+	 * 유저가 게시글에 추가한 좋아요들 <br>
 	 * fetch: 지연로딩
-	 * cascade: Remove - 유저가 삭제되면 관련 게시글 좋아요도 모두 삭제
 	 */
-	@OneToMany(mappedBy="user", cascade= {CascadeType.REMOVE})
+	@OneToMany(mappedBy="user", orphanRemoval= true)
 	@Builder.Default
 	List<PostLike> postLikes = new ArrayList<>();
 	
 	/**
-	 * 유저가 작성한 댓글들
+	 * 유저가 작성한 댓글들 <br>
 	 * fetch: 지연로딩
-	 * cascade: Remove - 유저가 삭제되면 관련 댓글들도 모두 삭제
 	 */
-	@OneToMany(mappedBy="user", cascade= {CascadeType.REMOVE})
+	@OneToMany(mappedBy="user", orphanRemoval= true)
 	@Builder.Default
 	List<Comment> comments = new ArrayList<>();
 	
 	/**
-	 * 유저가 댓글에 추가한 좋아요들
+	 * 유저가 댓글에 추가한 좋아요들 <br>
 	 * fetch: 지연로딩
-	 * cascade: Remove - 유저가 삭제되면 관련 댓글 좋아요들도 모두 삭제
 	 */
-	@OneToMany(mappedBy="user",cascade= {CascadeType.REMOVE})
+	@OneToMany(mappedBy="user", orphanRemoval= true)
 	@Builder.Default
 	List<CommentLike> commentLikes = new ArrayList<>();
 

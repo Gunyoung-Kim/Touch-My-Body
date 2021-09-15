@@ -55,6 +55,20 @@ public interface CommentLikeService {
 	public void delete(CommentLike commentLike);
 	
 	/**
+	 * User Id를 만족하는 CommentLike들 일괄 삭제
+	 * @param userId 삭제하려는 CommenLike들의 User ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByUserId(Long userId);
+	
+	/**
+	 * Comment Id를 만족하는 CommentLike들 일괄 삭제
+	 * @param commentId 삭제하려는 CommentLike들의 Comment ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByCommentId(Long commentId);
+	
+	/**
 	 * User Id, Comment Id로 CommentLike 존재하는 여부 반환 <br>
 	 * 캐쉬 사용, 결과값이 true인 경우에
 	 * @param userId 찾으려는 CommenLike의 User ID

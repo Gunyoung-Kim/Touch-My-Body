@@ -50,6 +50,13 @@ public interface UserExerciseService {
 	 */
 	public void delete(UserExercise userExercise);
 	
+	/** 
+	 * User Id로 만족하는 UserExercise들 일괄 삭제
+	 * @param userId 삭제하려는 UserExercise들의 User ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByUserId(Long userId);
+	
 	/**
 	 * Exercise Id로 만족하는 UserExercise들 일괄 삭제
 	 * @param exerciseId 삭제하려는 UserExercise들의 Exercise ID

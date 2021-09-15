@@ -89,7 +89,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public void deleteAllByUserId(Long userId) {
 		feedbackRepository.deleteAllByUserIdInQuery(userId);
 	}
-
+	
+	@Override
+	public void deleteAllByExerciseId(Long exerciseId) {
+		feedbackRepository.deleteAllByExerciseIdInQuery(exerciseId);
+	}
 	@Override
 	@Transactional(readOnly=true)
 	public long countByExerciseId(Long exerciseId) {

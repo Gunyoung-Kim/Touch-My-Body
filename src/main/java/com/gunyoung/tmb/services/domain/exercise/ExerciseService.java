@@ -99,7 +99,8 @@ public interface ExerciseService {
 	
 	/**
 	 * Exercise 삭제 <br>
-	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제 <br>
+	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param exercise 삭제하려는 Exercise
 	 * @author kimgun-yeong
 	 */
@@ -107,7 +108,8 @@ public interface ExerciseService {
 	
 	/**
 	 * ID를 만족하는 Exercise 삭제 <br>
-	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제 <br>
+	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @author kimgun-yeong
 	 */
 	public void deleteById(Long id);

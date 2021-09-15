@@ -45,7 +45,11 @@ public class ExerciseServiceImpl implements ExerciseService {
 	
 	private final ExerciseMuscleService exerciseMuscleService;
 	
+	private final ExercisePostService exercisePostService;
+	
 	private final UserExerciseService userExerciseService;
+	
+	private final FeedbackService feedbackService;
 
 	@Override
 	@Transactional(readOnly=true)
@@ -173,13 +177,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 		
 		return exercise;
 	}
-
-	@Override
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
-	public void delete(Exercise exercise) {
-		userExerciseService.deleteAllByExerciseId(exercise.getId());
-		exerciseRepository.delete(exercise);
-	}
 	
 	@Override
 	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
@@ -187,6 +184,21 @@ public class ExerciseServiceImpl implements ExerciseService {
 		Exercise exercise = findById(id);
 		if(exercise != null)
 			delete(exercise);
+	}
+
+	@Override
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	public void delete(Exercise exercise) {
+		deleteAllOneToManyEntityForExercise(exercise);
+		exerciseRepository.delete(exercise);
+	}
+	
+	private void deleteAllOneToManyEntityForExercise(Exercise exercise) {
+		Long exerciseId = exercise.getId();
+		userExerciseService.deleteAllByExerciseId(exerciseId);
+		feedbackService.deleteAllByExerciseId(exerciseId);
+		exerciseMuscleService.deleteAllByExerciseId(exerciseId);
+		exercisePostService.deleteAllByExerciseId(exerciseId);
 	}
 
 	@Override

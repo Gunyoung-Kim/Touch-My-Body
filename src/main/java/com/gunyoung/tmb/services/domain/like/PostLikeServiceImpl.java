@@ -74,7 +74,17 @@ public class PostLikeServiceImpl implements PostLikeService {
 	public void delete(PostLike postLike) {
 		postLikeRepository.delete(postLike);
 	}
-
+	
+	@Override
+	public void deleteAllByUserId(Long userId) {
+		postLikeRepository.deleteAllByUserIdInQuery(userId);
+	}
+	
+	@Override
+	public void deleteAllByExercisePostId(Long exercisePostId) {
+		postLikeRepository.deleteAllByExercisePostIdInQuery(exercisePostId);
+	}
+	
 	@Override
 	@Transactional(readOnly=true)
 	@Cacheable(cacheNames=CacheUtil.POST_LIKE_NAME,
@@ -83,5 +93,4 @@ public class PostLikeServiceImpl implements PostLikeService {
 	public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId) {
 		return postLikeRepository.existsByUserIdAndExercisePostId(userId, exercisePostId);
 	}
-	
 }

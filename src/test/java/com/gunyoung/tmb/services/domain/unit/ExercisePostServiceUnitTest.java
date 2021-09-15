@@ -10,6 +10,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +29,9 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
+import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostServiceImpl;
+import com.gunyoung.tmb.services.domain.like.PostLikeService;
 
 /**
  * {@link ExercisePostServiceImpl} 에 대한 테스트 클래스 <br>
@@ -42,6 +46,12 @@ public class ExercisePostServiceUnitTest {
 	@Mock
 	ExercisePostRepository exercisePostRepository;
 	
+	@Mock
+	CommentService commentService;
+	
+	@Mock
+	PostLikeService postLikeService;
+	
 	@InjectMocks 
 	ExercisePostServiceImpl exercisePostService;
 	
@@ -49,7 +59,8 @@ public class ExercisePostServiceUnitTest {
 	
 	@BeforeEach
 	void setup() {
-		exercisePost = new ExercisePost();
+		exercisePost = ExercisePost.builder()
+				.build();
 	}
 	
 	/*
@@ -164,7 +175,7 @@ public class ExercisePostServiceUnitTest {
 		exercisePostService.findAllByUserIdOrderByCreatedAtAsc(userId, pageNum, pageSize);
 		
 		//Then
-		then(exercisePostRepository).should(times(1)).findAllByUserIdOrderByCreatedAtASCCustom(anyLong(), any(PageRequest.class));
+		then(exercisePostRepository).should(times(1)).findAllByUserIdOrderByCreatedAtAscInPage(anyLong(), any(PageRequest.class));
 	}
 	
 	/*
@@ -183,7 +194,7 @@ public class ExercisePostServiceUnitTest {
 		exercisePostService.findAllByUserIdOrderByCreatedAtDesc(userId, pageNum, pageSize);
 		
 		//Then
-		then(exercisePostRepository).should(times(1)).findAllByUserIdOrderByCreatedAtDescCustom(anyLong(), any(PageRequest.class));
+		then(exercisePostRepository).should(times(1)).findAllByUserIdOrderByCreatedAtDescInPage(anyLong(), any(PageRequest.class));
 	}
 	
 	/*
@@ -201,7 +212,7 @@ public class ExercisePostServiceUnitTest {
 		exercisePostService.findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(pageNum, pageSize);
 		
 		//Then
-		then(exercisePostRepository).should(times(1)).findAllForPostForCommunityViewDTOOrderByCreatedAtDESCByPage(any(PageRequest.class));
+		then(exercisePostRepository).should(times(1)).findAllForPostForCommunityViewDTOOrderByCreatedAtDescInPage(any(PageRequest.class));
 	}
 	
 	/*
@@ -220,7 +231,7 @@ public class ExercisePostServiceUnitTest {
 		exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, pageNum, pageSize);
 		
 		//Then
-		then(exercisePostRepository).should(times(1)).findAllForPostForCommunityViewDTOWithKeywordByPage(anyString(), any(PageRequest.class));
+		then(exercisePostRepository).should(times(1)).findAllForPostForCommunityViewDTOWithKeywordInPage(anyString(), any(PageRequest.class));
 	}
 	
 	/*
@@ -239,7 +250,7 @@ public class ExercisePostServiceUnitTest {
 		exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(target, pageNum, pageSize);
 		
 		//Then
-		then(exercisePostRepository).should(times(1)).findAllForPostForCommunityViewDTOWithTargetByPage(any(TargetType.class), any(PageRequest.class));
+		then(exercisePostRepository).should(times(1)).findAllForPostForCommunityViewDTOWithTargetInPage(any(TargetType.class), any(PageRequest.class));
 	}
 	
 	/*
@@ -259,7 +270,7 @@ public class ExercisePostServiceUnitTest {
 		exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(target, keyword,pageNum, pageSize);
 		
 		//Then
-		then(exercisePostRepository).should(times(1)).findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(any(TargetType.class), anyString(), any(PageRequest.class));
+		then(exercisePostRepository).should(times(1)).findAllForPostForCommunityViewDTOWithTargetAndKeywordInPage(any(TargetType.class), anyString(), any(PageRequest.class));
 	}
 	
 	/*
@@ -305,8 +316,8 @@ public class ExercisePostServiceUnitTest {
 	 */
 	
 	@Test
-	@DisplayName("ExercisePost 삭제 -> 정상")
-	public void deleteTest() {
+	@DisplayName("ExercisePost 삭제 -> 정상, check ExercisePostRepository")
+	public void deleteTestCheckExercisePostRepo() {
 		//Given
 		
 		//When
@@ -314,6 +325,34 @@ public class ExercisePostServiceUnitTest {
 		
 		//Then
 		then(exercisePostRepository).should(times(1)).delete(exercisePost);
+	}
+	
+	@Test
+	@DisplayName("ExercisePost 삭제 -> 정상, Check PostLikeService") 
+	public void deleteTestCheckPostLikeService(){
+		//Given
+		Long exercisePostId = Long.valueOf(85);
+		exercisePost.setId(exercisePostId);
+		
+		//When
+		exercisePostService.delete(exercisePost);
+		
+		//Then
+		then(postLikeService).should(times(1)).deleteAllByExercisePostId(exercisePostId);
+	}
+	
+	@Test
+	@DisplayName("ExercisePost 삭제 -> 정상, Check CommentService") 
+	public void deleteTestCheckCommentService(){
+		//Given
+		Long exercisePostId = Long.valueOf(85);
+		exercisePost.setId(exercisePostId);
+		
+		//When
+		exercisePostService.delete(exercisePost);
+		
+		//Then
+		then(commentService).should(times(1)).deleteAllByExercisePostId(exercisePostId);
 	}
 	
 	/*
@@ -380,6 +419,44 @@ public class ExercisePostServiceUnitTest {
 		
 		//Then
 		then(exercisePostRepository).should(times(1)).delete(exercisePost);
+	}
+	
+	/*
+	 * public void deleteAllByUserId(Long userId)
+	 */
+	
+	@Test
+	@DisplayName("User ID에 해당하는 ExerciePost들 일괄 삭제 -> 정상, check ExercisePostRepo")
+	public void deleteAllByUserIdTestCheckExercisePostRepo() {
+		//Given
+		Long userId = Long.valueOf(74);
+		List<ExercisePost> exercisePosts = new ArrayList<>();
+		given(exercisePostRepository.findAllByUserIdInQuery(userId)).willReturn(exercisePosts);
+		
+		//When
+		exercisePostService.deleteAllByUserId(userId);
+		
+		//Then
+		then(exercisePostRepository).should(times(1)).deleteAllByUserIdInQuery(userId);
+	}
+	
+	/*
+	 * public void deleteAllByExerciseId(Long exerciseId)
+	 */
+	
+	@Test
+	@DisplayName("Exercise ID에 해당하는 ExerciePost들 일괄 삭제 -> 정상, check ExercisePostRepo")
+	public void deleteAllByExerciseIdTestCheckExercisePostRepo() {
+		//Given
+		Long exerciseId = Long.valueOf(74);
+		List<ExercisePost> exercisePosts = new ArrayList<>();
+		given(exercisePostRepository.findAllByExerciseIdInQuery(exerciseId)).willReturn(exercisePosts);
+		
+		//When
+		exercisePostService.deleteAllByExerciseId(exerciseId);
+		
+		//Then
+		then(exercisePostRepository).should(times(1)).deleteAllByExerciseIdInQuery(exerciseId);
 	}
 	
 	/*

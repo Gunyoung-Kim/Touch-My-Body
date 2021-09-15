@@ -3,7 +3,6 @@ package com.gunyoung.tmb.domain.exercise;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -65,7 +64,7 @@ public class Comment extends BaseEntity {
 	private boolean isAnonymous = false;
 	
 	/**
-	 * 댓글 작성자를 나타내는 User 객체
+	 * 댓글 작성자를 나타내는 User 객체 <br>
 	 * fetch: 지연로딩
 	 */
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -73,7 +72,7 @@ public class Comment extends BaseEntity {
 	private User user;
 	
 	/**
-	 * 댓글이 추가된 해당 게시글을 나타내는 ExercisePost 객체
+	 * 댓글이 추가된 해당 게시글을 나타내는 ExercisePost 객체 <br>
 	 * fetch: 지연로딩
 	 */
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -81,11 +80,10 @@ public class Comment extends BaseEntity {
 	private ExercisePost exercisePost;
 	
 	/**
-	 * 댓글에 추가되는 좋아요를 나타내는 CommentLike List 객체  
+	 * 댓글에 추가되는 좋아요를 나타내는 CommentLike List 객체 <br>  
 	 * fetch: 지연로딩
-	 * cascade: Remove - Comment 객체 삭제 시 관련 CommentLike 객체들도 삭제
 	 */
-	@OneToMany(mappedBy="comment", cascade= {CascadeType.REMOVE})
+	@OneToMany(mappedBy="comment", orphanRemoval = true)
 	@Builder.Default
 	private List<CommentLike> commentLikes = new ArrayList<>();
 	

@@ -53,6 +53,20 @@ public interface PostLikeService {
 	public void delete(PostLike postLike);
 	
 	/**
+	 * User Id를 만족하는 PostLike들 일괄 삭제
+	 * @param userId 삭제하려는 PostLike들의 User ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByUserId(Long userId);
+	
+	/**
+	 * ExercisePost ID를 만족하는 PostLike들 일괄 삭제
+	 * @param exercisePostId 삭제하려는 PostLike들의 ExercisePost ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByExercisePostId(Long exercisePostId);
+	
+	/**
 	 * User Id, ExercisePost Id로 PostLike 존재 여부 반환 <br>
 	 * 캐시 사용, 결과값이 true인 경우에만
 	 * @param userId 찾으려는 PostLike를 추가한 User Id

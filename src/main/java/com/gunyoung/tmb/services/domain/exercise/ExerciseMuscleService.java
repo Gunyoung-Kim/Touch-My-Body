@@ -41,10 +41,17 @@ public interface ExerciseMuscleService {
 	
 	/**
 	 * Muscle ID를 통한 ExerciseMuscle 모두 삭제
-	 * @param muscleId 삭제하려는 ExerciseMuscle들의 연관 Muscle의 ID
+	 * @param muscleId 삭제하려는 ExerciseMuscle들의 Muscle의 ID
 	 * @author kimgun-yeong
 	 */
 	public void deleteAllByMuscleId(Long muscleId);
+	
+	/**
+	 * Exercise ID를 통한 ExerciseMuscle 모두 삭제
+	 * @param exerciseId 삭제하려는 ExerciseMuscle들이 Exercise ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByExerciseId(Long exerciseId);
 	
 	/**
 	 * Exercise, Muscle List, isMain 인자를 이용해 ExerciseMuscle List 생성 후 반환

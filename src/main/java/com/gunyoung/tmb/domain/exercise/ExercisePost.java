@@ -3,7 +3,6 @@ package com.gunyoung.tmb.domain.exercise;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -68,24 +67,6 @@ public class ExercisePost extends BaseEntity {
 	private Integer viewNum = 0;
 	
 	/**
-	 * 해당 게시글에 추가된 댓글들
-	 * fetch: 지연로딩
-	 * cascade: Remove - 해당 게시글이 삭제되면 관련 댓글들도 삭제
-	 */
-	@OneToMany(mappedBy="exercisePost", cascade= {CascadeType.REMOVE})
-	@Builder.Default
-	private List<Comment> comments = new ArrayList<>();
-	
-	/**
-	 * 해당 게시글에 추가된 좋아요들
-	 * fetch: 지연로딩
-	 * cascade: Remove - 해당 게시글이 삭제되면 관련 좋아요들도 삭제
-	 */
-	@OneToMany(mappedBy="exercisePost",cascade= {CascadeType.REMOVE})
-	@Builder.Default
-	private List<PostLike> postLikes = new ArrayList<>();
-	
-	/**
 	 * 해당 게시글의 관련 운동
 	 * fetch: 지연로딩
 	 */
@@ -100,6 +81,22 @@ public class ExercisePost extends BaseEntity {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="user_id")
 	private User user;
+	
+	/**
+	 * 해당 게시글에 추가된 댓글들 <br>
+	 * fetch: 지연로딩
+	 */
+	@OneToMany(mappedBy="exercisePost", orphanRemoval = true)
+	@Builder.Default
+	private List<Comment> comments = new ArrayList<>();
+	
+	/**
+	 * 해당 게시글에 추가된 좋아요들 <br>
+	 * fetch: 지연로딩
+	 */
+	@OneToMany(mappedBy="exercisePost", orphanRemoval = true)
+	@Builder.Default
+	private List<PostLike> postLikes = new ArrayList<>();
 	
 	/**
 	 * ExercisePost 인스턴스의 연관 객체 필드를 제외한 필드 정보 반환

@@ -73,11 +73,21 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long>{
 	
 	/**
 	 * User Id를 만족하는 Feedback들 일괄 삭제
-	 * @param userId 삭제하려는 UserExercise들의 User ID
+	 * @param userId 삭제하려는 Feedback들의 User ID
 	 * @author kimgun-yeong
 	 */
 	@Modifying(clearAutomatically= true, flushAutomatically = true)
 	@Query("DELETE FROM Feedback f "
 			+ "WHERE f.user.id = :userId")
 	public void deleteAllByUserIdInQuery(@Param("userId") Long userId);
+	
+	/**
+	 * Exercise Id를 만족하는 Feedback들 일괄 삭
+	 * @param exerciseId 삭제하려는 Feedback들의 Exercise ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically= true, flushAutomatically = true)
+	@Query("DELETE FROM Feedback f "
+			+ "WHERE f.exercise.id = :exerciseId")
+	public void deleteAllByExerciseIdInQuery(@Param("exerciseId") Long exerciseId);
 }

@@ -16,6 +16,8 @@ import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
+import com.gunyoung.tmb.services.domain.like.CommentLikeService;
+import com.gunyoung.tmb.services.domain.like.PostLikeService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +35,11 @@ public class UserServiceImpl implements UserService{
 	
 	private final UserExerciseService userExerciseService;
 	
+	private final PostLikeService postLikeService;
+	
 	private final ExercisePostService exercisePostService;
+	
+	private final CommentLikeService commentLikeService;
 	
 	private final CommentService commentService;
 	
@@ -133,10 +139,17 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void delete(User user) {
 		Long userId = user.getId();
-		exercisePostService.deleteAllByUserId(userId);
-		commentService.deleteAllByUserId(userId);
-		feedbackService.deleteAllByUserId(userId);
+		deleteAllOneToManyEntityById(userId);
 		userRepository.deleteByIdInQuery(userId);
+	}
+	
+	private void deleteAllOneToManyEntityById(Long userId) {
+		userExerciseService.deleteAllByUserId(userId);
+		commentLikeService.deleteAllByUserId(userId);
+		commentService.deleteAllByUserId(userId);
+		postLikeService.deleteAllByUserId(userId);
+		exercisePostService.deleteAllByUserId(userId);
+		feedbackService.deleteAllByUserId(userId);
 	}
 
 	@Override
