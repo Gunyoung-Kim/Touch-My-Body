@@ -94,6 +94,14 @@ public class CommentServiceImpl implements CommentService {
 	}
 	
 	@Override
+	public void checkIsMineAndDelete(Long userId, Long commentId) {
+		Optional<Comment> comment = commentRepository.findByUserIdAndCommentId(userId, commentId);
+		comment.ifPresent((c) -> {
+			delete(c);
+		});
+	}
+	
+	@Override
 	public void deleteById(Long id) {
 		Comment comment = findById(id);
 		if(comment == null) 
@@ -104,7 +112,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public void delete(Comment comment) {
 		deleteAllOneToManyEntityForComment(comment);
-		commentRepository.delete(comment);
+		commentRepository.deleteByIdInQuery(comment.getId());
 	}
 	
 	@Override
@@ -128,14 +136,6 @@ public class CommentServiceImpl implements CommentService {
 	private void deleteAllOneToManyEntityForComment(Comment comment) {
 		Long commentId = comment.getId();
 		commentLikeService.deleteAllByCommentId(commentId);
-	}
-	
-	@Override
-	public void checkIsMineAndDelete(Long userId, Long commentId) {
-		Optional<Comment> comment = commentRepository.findByUserIdAndCommentId(userId, commentId);
-		comment.ifPresent((c) -> {
-			delete(c);
-		});
 	}
 	
 	@Override

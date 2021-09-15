@@ -33,12 +33,12 @@ import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
-import com.gunyoung.tmb.util.CommentTest;
-import com.gunyoung.tmb.util.ControllerTest;
-import com.gunyoung.tmb.util.ExercisePostTest;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.UserTest;
-import com.gunyoung.tmb.util.tag.Integration;
+import com.gunyoung.tmb.testutil.CommentTest;
+import com.gunyoung.tmb.testutil.ControllerTest;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.UserTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**

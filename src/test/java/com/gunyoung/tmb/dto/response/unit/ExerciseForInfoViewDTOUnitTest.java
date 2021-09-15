@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
-import com.gunyoung.tmb.util.ExerciseMuscleTest;
-import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.testutil.ExerciseMuscleTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
 
 /**
  * {@link ExerciseForInfoViewDTO} 에 대한 테스트 클래스 <br>

@@ -120,6 +120,16 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
 	public long countByUserId(@Param("userId") Long userId);
 	
 	/**
+	 * ID로 Comment 삭제
+	 * @param commentId 삭제하려는 Comment ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM Comment c "
+			+ "WHERE c.id = :commentId")
+	public void deleteByIdInQuery(@Param("commentId") Long commentId);
+	
+	/**
 	 * User ID로 만족하는 Comment들 일괄 삭제
 	 * @param userId 삭제하려는 Comment들의 User ID
 	 * @author kimgun-yeong

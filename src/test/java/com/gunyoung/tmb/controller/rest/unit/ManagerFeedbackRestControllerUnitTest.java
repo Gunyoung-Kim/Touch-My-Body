@@ -17,7 +17,7 @@ import com.gunyoung.tmb.controller.rest.ManagerFeedbackRestController;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
-import com.gunyoung.tmb.util.FeedbackTest;
+import com.gunyoung.tmb.testutil.FeedbackTest;
 
 /**
  * {@link ManagerFeedbackRestController} 에 대한 테스트 클래스 <br>

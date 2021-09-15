@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -84,6 +85,16 @@ public interface ExerciseRepository extends JpaRepository<Exercise,Long>{
 	 */
 	@Query("SELECT new com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO(e.name, e.target) from Exercise e")
 	public List<ExerciseNameAndTargetDTO> findAllWithNameAndTarget();
+	
+	/**
+	 * ID로 Exercise 삭제 
+	 * @param exerciseId 삭제하려는 Exercise ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM Exercise e "
+			+ "WHERE e.id = :exerciseId")
+	public void deleteByIdInQuery(@Param("exerciseId") Long exerciseId);
 	
 	/**
 	 * 이름에 키워드를 포함하는 Exercise들 개수 가져오기 

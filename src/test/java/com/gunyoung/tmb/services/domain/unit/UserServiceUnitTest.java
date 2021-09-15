@@ -33,8 +33,8 @@ import com.gunyoung.tmb.services.domain.like.CommentLikeService;
 import com.gunyoung.tmb.services.domain.like.PostLikeService;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserServiceImpl;
-import com.gunyoung.tmb.util.UserExerciseTest;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.UserExerciseTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link ExerciseServiceImpl} 에 대한 테스트 클래스 <br>

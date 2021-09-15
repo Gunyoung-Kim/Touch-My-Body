@@ -29,9 +29,9 @@ import com.gunyoung.tmb.dto.response.MuscleInfoBySortDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.MuscleTest;
-import com.gunyoung.tmb.util.tag.Integration;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.MuscleTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * {@link ManagerExerciseRestController} 에 대한 테스트 클래스 

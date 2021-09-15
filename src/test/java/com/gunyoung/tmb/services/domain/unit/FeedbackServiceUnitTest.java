@@ -207,6 +207,40 @@ public class FeedbackServiceUnitTest {
 	}
 	
 	/*
+	 *  public void deleteAllByUserId(Long userId)
+	 */
+	
+	@Test
+	@DisplayName("User ID로 Feedback 일괄 삭제 -> 정상, check Repo") 
+	public void deleteAllByUserIdTestCheckRepo() {
+		//Given
+		Long userId = Long.valueOf(53);
+		
+		//When
+		feedbackService.deleteAllByUserId(userId);
+		
+		//Then
+		then(feedbackRepository).should(times(1)).deleteAllByUserIdInQuery(userId);
+	}
+	
+	/*
+	 *  public void deleteAllByExerciseId(Long exerciseId)
+	 */
+	
+	@Test
+	@DisplayName("Exercise ID로 Feedback 일괄 삭제 -> 정상, check Repo") 
+	public void deleteAllByExerciseIdTestCheckRepo() {
+		//Given
+		Long exerciseId = Long.valueOf(53);
+		
+		//When
+		feedbackService.deleteAllByExerciseId(exerciseId);
+		
+		//Then
+		then(feedbackRepository).should(times(1)).deleteAllByExerciseIdInQuery(exerciseId);
+	}
+	
+	/*
 	 * public long countByExerciseId(Long exerciseId)
 	 */
 	

@@ -28,7 +28,7 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.security.CustomLoginSuccessHandler;
 import com.gunyoung.tmb.services.domain.user.UserService;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.UserTest;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**

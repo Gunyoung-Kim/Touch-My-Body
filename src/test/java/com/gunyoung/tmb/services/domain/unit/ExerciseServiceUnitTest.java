@@ -41,7 +41,7 @@ import com.gunyoung.tmb.services.domain.exercise.ExerciseServiceImpl;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
-import com.gunyoung.tmb.util.ExerciseMuscleTest;
+import com.gunyoung.tmb.testutil.ExerciseMuscleTest;
 
 /**
  * {@link ExerciseServiceImpl} 에 대한 테스트 클래스 <br>
@@ -79,7 +79,7 @@ public class ExerciseServiceUnitTest {
 	@BeforeEach
 	void setup() {
 		exercise = Exercise.builder()
-				.id(Long.valueOf(1))
+				.id(Long.valueOf(24))
 				.name("name")
 				.description("description")
 				.caution("caution")
@@ -416,7 +416,7 @@ public class ExerciseServiceUnitTest {
 		exerciseService.delete(exercise);
 		
 		//Then
-		then(exerciseRepository).should(times(1)).delete(exercise);
+		then(exerciseRepository).should(times(1)).deleteByIdInQuery(exercise.getId());
 	}
 	
 	@Test
@@ -502,7 +502,7 @@ public class ExerciseServiceUnitTest {
 		exerciseService.deleteById(exerciseId);
 		
 		//Then
-		then(exerciseRepository).should(times(1)).delete(exercise);
+		then(exerciseRepository).should(times(1)).deleteByIdInQuery(exercise.getId());
 	}
 	
 	/*

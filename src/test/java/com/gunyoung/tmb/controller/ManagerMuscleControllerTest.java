@@ -25,9 +25,9 @@ import com.gunyoung.tmb.dto.response.MuscleForTableDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.MuscleRepository;
-import com.gunyoung.tmb.util.ControllerTest;
-import com.gunyoung.tmb.util.MuscleTest;
-import com.gunyoung.tmb.util.tag.Integration;
+import com.gunyoung.tmb.testutil.ControllerTest;
+import com.gunyoung.tmb.testutil.MuscleTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * {@link ManagerMuscleController} 에 대한 테스트 클래스

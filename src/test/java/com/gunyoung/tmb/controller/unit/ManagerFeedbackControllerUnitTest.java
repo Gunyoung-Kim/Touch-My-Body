@@ -29,8 +29,8 @@ import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.FeedbackTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.FeedbackTest;
 
 /**
  * {@link ManagerFeedbackController} 에 대한 테스트 클래스 <br>

@@ -28,11 +28,11 @@ import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
-import com.gunyoung.tmb.util.ExercisePostTest;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.TargetTypeTest;
-import com.gunyoung.tmb.util.UserTest;
-import com.gunyoung.tmb.util.tag.Integration;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.TargetTypeTest;
+import com.gunyoung.tmb.testutil.UserTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * ExercisePostService에 대한 테스트 클래스 <br>

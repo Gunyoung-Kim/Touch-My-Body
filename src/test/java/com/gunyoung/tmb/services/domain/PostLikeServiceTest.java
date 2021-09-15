@@ -21,10 +21,10 @@ import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.PostLikeRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.like.PostLikeService;
-import com.gunyoung.tmb.util.ExercisePostTest;
-import com.gunyoung.tmb.util.PostLikeTest;
-import com.gunyoung.tmb.util.UserTest;
-import com.gunyoung.tmb.util.tag.Integration;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.PostLikeTest;
+import com.gunyoung.tmb.testutil.UserTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * PostLikeService 클래스에 대한 테스트 클래스 <br>

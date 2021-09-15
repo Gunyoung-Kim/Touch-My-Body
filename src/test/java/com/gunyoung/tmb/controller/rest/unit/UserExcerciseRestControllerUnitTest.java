@@ -25,8 +25,8 @@ import com.gunyoung.tmb.dto.reqeust.DateDTO;
 import com.gunyoung.tmb.dto.response.UserExerciseIsDoneDTO;
 import com.gunyoung.tmb.dto.response.UserExerciseWithDateDTO;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.UserExerciseTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.UserExerciseTest;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**

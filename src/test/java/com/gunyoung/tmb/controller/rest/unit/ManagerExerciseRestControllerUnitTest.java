@@ -28,8 +28,8 @@ import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoun
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.TargetTypeTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.TargetTypeTest;
 
 /**
  * {@link ManagerExerciseRestController} 에 대한 테스트 클래스 <br>

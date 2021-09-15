@@ -15,7 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.security.UserDetailsVO;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link UserDetailsVO} 에 대한 테스트 클래스 <br>

@@ -25,10 +25,10 @@ import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
-import com.gunyoung.tmb.util.ExerciseMuscleTest;
-import com.gunyoung.tmb.util.MuscleTest;
-import com.gunyoung.tmb.util.TargetTypeTest;
-import com.gunyoung.tmb.util.tag.Integration;
+import com.gunyoung.tmb.testutil.ExerciseMuscleTest;
+import com.gunyoung.tmb.testutil.MuscleTest;
+import com.gunyoung.tmb.testutil.TargetTypeTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * MuscleService에 대한 테스트 클래스 <br>

@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForManageViewDTO;
-import com.gunyoung.tmb.util.CommentTest;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.CommentTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link CommentForManageViewDTO} 에 대한 테스트 클래스 <br>

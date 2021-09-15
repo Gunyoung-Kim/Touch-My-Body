@@ -40,7 +40,7 @@ import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.user.UserService;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.UserTest;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**

@@ -24,8 +24,8 @@ import com.gunyoung.tmb.security.AuthorityService;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.user.UserService;
-import com.gunyoung.tmb.util.RoleTypeTest;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.RoleTypeTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link ManagerUserRestController} 에 대한 테스트 클래스 <br>

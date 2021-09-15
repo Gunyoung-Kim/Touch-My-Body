@@ -33,12 +33,12 @@ import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
-import com.gunyoung.tmb.util.ExerciseMuscleTest;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.MuscleTest;
-import com.gunyoung.tmb.util.TargetTypeTest;
-import com.gunyoung.tmb.util.UserExerciseTest;
-import com.gunyoung.tmb.util.tag.Integration;
+import com.gunyoung.tmb.testutil.ExerciseMuscleTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.MuscleTest;
+import com.gunyoung.tmb.testutil.TargetTypeTest;
+import com.gunyoung.tmb.testutil.UserExerciseTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * ExerciseService에 대한 테스트 클래스 <br>

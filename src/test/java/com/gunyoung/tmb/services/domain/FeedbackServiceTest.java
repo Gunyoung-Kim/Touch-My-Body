@@ -22,10 +22,10 @@ import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.FeedbackTest;
-import com.gunyoung.tmb.util.UserTest;
-import com.gunyoung.tmb.util.tag.Integration;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.FeedbackTest;
+import com.gunyoung.tmb.testutil.UserTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * FeedbackService에 대한 테스트 클래스 <br>

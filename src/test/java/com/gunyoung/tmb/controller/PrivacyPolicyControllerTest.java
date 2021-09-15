@@ -11,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.gunyoung.tmb.util.tag.Integration;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * {@link PrivacyPolicyController} 에 대한 테스트 클래스

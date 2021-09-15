@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.util;
+package com.gunyoung.tmb.testutil;
 
 import com.gunyoung.tmb.enums.RoleType;
 

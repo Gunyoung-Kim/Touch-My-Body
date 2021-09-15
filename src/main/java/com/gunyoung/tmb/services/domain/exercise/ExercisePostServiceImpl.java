@@ -141,7 +141,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Override
 	public void delete(ExercisePost exercisePost) {
 		deleteAllOneToManyEntityForExercisePost(exercisePost);
-		exercisePostRepository.delete(exercisePost);
+		exercisePostRepository.deleteByIdInQuery(exercisePost.getId());
 	}
 	
 	@Override

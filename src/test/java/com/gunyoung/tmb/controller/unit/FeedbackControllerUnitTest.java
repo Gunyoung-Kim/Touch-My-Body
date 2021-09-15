@@ -29,9 +29,9 @@ import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
 import com.gunyoung.tmb.services.domain.user.UserService;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.FeedbackTest;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.FeedbackTest;
+import com.gunyoung.tmb.testutil.UserTest;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**

@@ -20,9 +20,9 @@ import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
-import com.gunyoung.tmb.util.ExerciseMuscleTest;
-import com.gunyoung.tmb.util.MuscleTest;
-import com.gunyoung.tmb.util.tag.Integration;
+import com.gunyoung.tmb.testutil.ExerciseMuscleTest;
+import com.gunyoung.tmb.testutil.MuscleTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * ExerciseMuscleService에 대한 테스트 클래스 <br>

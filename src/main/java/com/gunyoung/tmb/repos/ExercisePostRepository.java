@@ -228,6 +228,16 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 	public long countWithTargetAndKeyword(@Param("target") TargetType target, @Param("keyword") String keyword);
 	
 	/**
+	 * ID로 ExercisePost 삭제
+	 * @param exercisePostId 삭제하려는 ExercisePost ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM ExercisePost ep "
+			+ "WHERE ep.id = :exercisePostId")
+	public void deleteByIdInQuery(@Param("exercisePostId") Long exercisePostId);
+	
+	/**
 	 * User Id로 만족하는 ExercisePost들 일괄 삭제
 	 * @param userId 삭제하려는 ExercisePost들의 User ID
 	 * @author kimgun-yeong

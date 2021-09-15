@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.util.tag;
+package com.gunyoung.tmb.testutil.tag;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

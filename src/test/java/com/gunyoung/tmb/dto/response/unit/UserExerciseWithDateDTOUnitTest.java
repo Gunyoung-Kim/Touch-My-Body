@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.response.UserExerciseWithDateDTO;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.UserExerciseTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.UserExerciseTest;
 
 /**
  * {@link UserExerciseWithDateDTO} 에 대한 테스트 클래스 <br>

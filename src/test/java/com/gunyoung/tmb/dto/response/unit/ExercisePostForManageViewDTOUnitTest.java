@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostForManageViewDTO;
-import com.gunyoung.tmb.util.ExercisePostTest;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link ExercisePostForManageViewDTO} 에 대한 테스트 클래스 <br>

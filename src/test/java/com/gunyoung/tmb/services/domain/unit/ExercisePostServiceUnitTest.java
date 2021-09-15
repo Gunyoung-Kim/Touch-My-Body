@@ -32,6 +32,7 @@ import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostServiceImpl;
 import com.gunyoung.tmb.services.domain.like.PostLikeService;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
 
 /**
  * {@link ExercisePostServiceImpl} 에 대한 테스트 클래스 <br>
@@ -60,6 +61,7 @@ public class ExercisePostServiceUnitTest {
 	@BeforeEach
 	void setup() {
 		exercisePost = ExercisePost.builder()
+				.id(Long.valueOf(85))
 				.build();
 	}
 	
@@ -324,7 +326,7 @@ public class ExercisePostServiceUnitTest {
 		exercisePostService.delete(exercisePost);
 		
 		//Then
-		then(exercisePostRepository).should(times(1)).delete(exercisePost);
+		then(exercisePostRepository).should(times(1)).deleteByIdInQuery(exercisePost.getId());
 	}
 	
 	@Test
@@ -384,7 +386,7 @@ public class ExercisePostServiceUnitTest {
 		exercisePostService.deleteById(exercisePostId);
 		
 		//Then
-		then(exercisePostRepository).should(times(1)).delete(exercisePost);
+		then(exercisePostRepository).should(times(1)).deleteByIdInQuery(exercisePost.getId());
 	}
 	
 	/*
@@ -418,7 +420,7 @@ public class ExercisePostServiceUnitTest {
 		exercisePostService.checkIsMineAndDelete(userId, exercisePostId);
 		
 		//Then
-		then(exercisePostRepository).should(times(1)).delete(exercisePost);
+		then(exercisePostRepository).should(times(1)).deleteByIdInQuery(exercisePost.getId());
 	}
 	
 	/*
@@ -426,7 +428,7 @@ public class ExercisePostServiceUnitTest {
 	 */
 	
 	@Test
-	@DisplayName("User ID에 해당하는 ExerciePost들 일괄 삭제 -> 정상, check ExercisePostRepo")
+	@DisplayName("User ID에 해당하는 ExerciePost들 일괄 삭제 -> 정상, check only ExercisePostRepo")
 	public void deleteAllByUserIdTestCheckExercisePostRepo() {
 		//Given
 		Long userId = Long.valueOf(74);
@@ -440,12 +442,40 @@ public class ExercisePostServiceUnitTest {
 		then(exercisePostRepository).should(times(1)).deleteAllByUserIdInQuery(userId);
 	}
 	
+	@Test
+	@DisplayName("User ID에 해당하는 ExerciePost들 일괄 삭제 -> 정상, check OneToMany Domain Services")
+	public void deleteAllByUserIdTestCheckOneToManyDelete() {
+		//Given
+		List<ExercisePost> exercisePosts = new ArrayList<>();
+		Long exercisePostsId = Long.valueOf(72);
+		int givenExercisePostNum = 35;
+		for(int i=0;i<givenExercisePostNum;i++) {
+			ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+			exercisePost.setId(exercisePostsId);
+			exercisePosts.add(exercisePost);
+		}
+		
+		Long userId = Long.valueOf(74);
+		given(exercisePostRepository.findAllByUserIdInQuery(userId)).willReturn(exercisePosts);
+		
+		//When
+		exercisePostService.deleteAllByUserId(userId);
+		
+		//Then
+		verifyServices_for_deleteAllByUserIdTestCheckOneToManyDelete(givenExercisePostNum, exercisePostsId);
+	}
+	
+	private void verifyServices_for_deleteAllByUserIdTestCheckOneToManyDelete(int givenExercisePostNum, Long exercisePostsId) {
+		then(postLikeService).should(times(givenExercisePostNum)).deleteAllByExercisePostId(exercisePostsId);
+		then(commentService).should(times(givenExercisePostNum)).deleteAllByExercisePostId(exercisePostsId);
+	}
+	
 	/*
 	 * public void deleteAllByExerciseId(Long exerciseId)
 	 */
 	
 	@Test
-	@DisplayName("Exercise ID에 해당하는 ExerciePost들 일괄 삭제 -> 정상, check ExercisePostRepo")
+	@DisplayName("Exercise ID에 해당하는 ExerciePost들 일괄 삭제 -> 정상, check only ExercisePostRepo")
 	public void deleteAllByExerciseIdTestCheckExercisePostRepo() {
 		//Given
 		Long exerciseId = Long.valueOf(74);
@@ -457,6 +487,34 @@ public class ExercisePostServiceUnitTest {
 		
 		//Then
 		then(exercisePostRepository).should(times(1)).deleteAllByExerciseIdInQuery(exerciseId);
+	}
+	
+	@Test
+	@DisplayName("Exercise ID에 해당하는 ExerciePost들 일괄 삭제 -> 정상, check OneToMany Domain Services")
+	public void deleteAllByExerciseIdTestCheckOneToManyDelete() {
+		//Given
+		List<ExercisePost> exercisePosts = new ArrayList<>();
+		Long exercisePostsId = Long.valueOf(48);
+		int givenExercisePostNum = 6;
+		for(int i=0;i<givenExercisePostNum;i++) {
+			ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+			exercisePost.setId(exercisePostsId);
+			exercisePosts.add(exercisePost);
+		}
+		
+		Long exerciseId = Long.valueOf(74);
+		given(exercisePostRepository.findAllByExerciseIdInQuery(exerciseId)).willReturn(exercisePosts);
+		
+		//When
+		exercisePostService.deleteAllByExerciseId(exerciseId);
+		
+		//Then
+		verifyServices_for_deleteAllByExerciseIdTestCheckOneToManyDelete(givenExercisePostNum, exercisePostsId);
+	}
+	
+	private void verifyServices_for_deleteAllByExerciseIdTestCheckOneToManyDelete(int givenExercisePostNum, Long exercisePostsId) {
+		then(postLikeService).should(times(givenExercisePostNum)).deleteAllByExercisePostId(exercisePostsId);
+		then(commentService).should(times(givenExercisePostNum)).deleteAllByExercisePostId(exercisePostsId);
 	}
 	
 	/*
