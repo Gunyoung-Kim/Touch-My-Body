@@ -6,7 +6,13 @@ import javax.servlet.http.HttpServletRequest;
 
 public class HttpRequestUtil {
 	
-	private HttpRequestUtil() {};
+	/**
+	 * 인스턴스화 방지
+	 * @author kimgun-yeong
+	 */
+	private HttpRequestUtil() {
+		throw new AssertionError(); 
+	}
 	
 	/**
 	 * HttpRequest의 RemoteHost를 반환하는 메소드 <br>

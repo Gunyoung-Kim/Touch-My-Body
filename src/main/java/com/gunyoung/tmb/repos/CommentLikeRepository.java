@@ -3,6 +3,7 @@ package com.gunyoung.tmb.repos;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -48,4 +49,24 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike,Long>{
 	 * @author kimgun-yeong
 	 */
 	public boolean existsByUserIdAndCommentId(Long userId, Long commentId);
+	
+	/**
+	 * User Id로 만족하는 CommentLike 일괄 삭제
+	 * @param userId 삭제하려는 CommentLike들의 User ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM CommentLike cl "
+			+ "WHERE cl.user.id = :userId")
+	public void deleteAllByUserIdInQuery(@Param("userId") Long userId);
+	
+	/**
+	 * Comment Id로 만족하는 CommentLike 일괄 삭제
+	 * @param commentId 삭제하려는 CommentLike들의 Comment ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM CommentLike cl "
+			+ "WHERE cl.comment.id = :commentId")
+	public void deleteAllByCommentIdInQuery(@Param("commentId") Long commentId);
 }

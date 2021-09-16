@@ -36,7 +36,6 @@ public class ExerciseRestController {
 		Map<String ,List<String>> exerciseSortResultMap = exerciseService.getAllExercisesNamewithSorting();
 		
 		Set<String> keySet = exerciseSortResultMap.keySet();
-		
 		for(String key: keySet) {
 			resultList.add(new ExerciseInfoBySortDTO(key,exerciseSortResultMap.get(key)));
 		}

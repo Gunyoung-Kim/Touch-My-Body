@@ -23,9 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Service("postLikeService")
 @Transactional
 @RequiredArgsConstructor
-public class PostLikeServiceImpl implements PostLikeService {
-	
-	public static final String EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY = "exsitByUserIdAndExercisePostId"; 
+public class PostLikeServiceImpl implements PostLikeService { 
 	
 	private final PostLikeRepository postLikeRepository;
 
@@ -76,7 +74,17 @@ public class PostLikeServiceImpl implements PostLikeService {
 	public void delete(PostLike postLike) {
 		postLikeRepository.delete(postLike);
 	}
-
+	
+	@Override
+	public void deleteAllByUserId(Long userId) {
+		postLikeRepository.deleteAllByUserIdInQuery(userId);
+	}
+	
+	@Override
+	public void deleteAllByExercisePostId(Long exercisePostId) {
+		postLikeRepository.deleteAllByExercisePostIdInQuery(exercisePostId);
+	}
+	
 	@Override
 	@Transactional(readOnly=true)
 	@Cacheable(cacheNames=CacheUtil.POST_LIKE_NAME,
@@ -85,5 +93,4 @@ public class PostLikeServiceImpl implements PostLikeService {
 	public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId) {
 		return postLikeRepository.existsByUserIdAndExercisePostId(userId, exercisePostId);
 	}
-	
 }

@@ -20,11 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForTableDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExerciseRepository;
-import com.gunyoung.tmb.util.ControllerTest;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.utils.PageUtil;
+import com.gunyoung.tmb.testutil.ControllerTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * {@link ExerciseController} 에 대한 테스트 클래스
@@ -33,6 +34,7 @@ import com.gunyoung.tmb.utils.PageUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ExerciseControllerTest {
@@ -73,7 +75,7 @@ public class ExerciseControllerTest {
 		@SuppressWarnings("unchecked")
 		List<ExerciseForTableDTO> resultList = (List<ExerciseForTableDTO>) modelMap.get("listObject");
 		
-		assertEquals(Math.min(targetTypes.length,PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE), resultList.size());
+		assertEquals(Math.min(targetTypes.length,PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize()), resultList.size());
 	}
 	
 	@Test
@@ -98,7 +100,7 @@ public class ExerciseControllerTest {
 		@SuppressWarnings("unchecked")
 		List<ExerciseForTableDTO> resultList = (List<ExerciseForTableDTO>) modelMap.get("listObject");
 		
-		assertEquals(Math.min(givenExerciseNum, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE), resultList.size());
+		assertEquals(Math.min(givenExerciseNum, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize()), resultList.size());
 	}
 	
 	@Test

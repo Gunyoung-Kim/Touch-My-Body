@@ -17,7 +17,7 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.security.UserDetailsServiceImpl;
 import com.gunyoung.tmb.services.domain.user.UserService;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link UserDetailsServiceImpl} 에 대한 테스트 클래스 <br>

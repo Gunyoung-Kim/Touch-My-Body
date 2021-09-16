@@ -24,7 +24,7 @@ import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
-import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
 
 /**
  * {@link ManagerExerciseController} 에 대한 테스트 클래스 <br>

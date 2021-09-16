@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,9 +16,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
+import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
+import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
-import com.gunyoung.tmb.util.ExerciseMuscleTest;
+import com.gunyoung.tmb.testutil.ExerciseMuscleTest;
+import com.gunyoung.tmb.testutil.MuscleTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * ExerciseMuscleService에 대한 테스트 클래스 <br>
@@ -23,8 +30,12 @@ import com.gunyoung.tmb.util.ExerciseMuscleTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class ExerciseMuscleServiceTest {
+	
+	@Autowired
+	MuscleRepository muscleRepository;
 	
 	@Autowired
 	ExerciseMuscleRepository exerciseMuscleRepository;
@@ -130,5 +141,47 @@ public class ExerciseMuscleServiceTest {
 		
 		//Then
 		assertEquals(givenExerciseMuscleNum - 1, exerciseMuscleRepository.count());
+	}
+	
+	/*
+	 * public void deleteAllByMuscleId(Long muscleId)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("Muscle ID를 통한 ExerciseMuscle 모두 삭제 -> 정상")
+	public void deleteAllByMuscleIdTest() {
+		//Given
+		Long addExerciseMuscleNum = Long.valueOf(6);
+		addExerciseMuscles(addExerciseMuscleNum);
+		
+		Muscle muscle = MuscleTest.getMuscleInstance();
+		muscleRepository.save(muscle);
+		Long muscleId = muscle.getId();
+		
+		setMuscleForAllExerciseMuscles(muscle);
+		
+		//When
+		exerciseMuscleService.deleteAllByMuscleId(muscleId);
+		
+		//Then
+		assertEquals(0, exerciseMuscleRepository.count());
+	}
+	
+	private void addExerciseMuscles(Long exerciseMuscleNum) {
+		List<ExerciseMuscle> exerciseMuscles = new ArrayList<>();
+		for(int i=0;i<exerciseMuscleNum;i++) {
+			ExerciseMuscle em = ExerciseMuscleTest.getExerciseMuscleInstance();
+			exerciseMuscles.add(em);
+		}
+		exerciseMuscleRepository.saveAll(exerciseMuscles);
+	}
+	
+	private void setMuscleForAllExerciseMuscles(Muscle muscle) {
+		List<ExerciseMuscle> exerciseMuscles = exerciseMuscleRepository.findAll();
+		for(ExerciseMuscle em: exerciseMuscles) {
+			em.setMuscle(muscle);
+		}
+		exerciseMuscleRepository.saveAll(exerciseMuscles);
 	}
 }

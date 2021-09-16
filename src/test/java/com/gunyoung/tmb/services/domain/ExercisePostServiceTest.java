@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -17,21 +18,28 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
+import com.gunyoung.tmb.repos.PostLikeRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
-import com.gunyoung.tmb.util.ExercisePostTest;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.TargetTypeTest;
-import com.gunyoung.tmb.util.UserTest;
-import com.gunyoung.tmb.utils.PageUtil;
+import com.gunyoung.tmb.testutil.CommentTest;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.PostLikeTest;
+import com.gunyoung.tmb.testutil.TargetTypeTest;
+import com.gunyoung.tmb.testutil.UserTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * ExercisePostService에 대한 테스트 클래스 <br>
@@ -39,11 +47,18 @@ import com.gunyoung.tmb.utils.PageUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class ExercisePostServiceTest {
 	
 	@Autowired
 	ExercisePostRepository exercisePostRepository;
+	
+	@Autowired
+	CommentRepository commentRepository;
+	
+	@Autowired
+	PostLikeRepository postLikeRepository;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -117,10 +132,10 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePosts);
 		
 		//When
-		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()).getContent();
 		
 		//Then
-		assertEquals(Math.min(givenExercisePostNum, PageUtil.POST_FOR_MANAGE_PAGE_SIZE),result.size());
+		assertEquals(Math.min(givenExercisePostNum, PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()),result.size());
 	}
 	
 	@Test
@@ -140,7 +155,7 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePosts);
 		
 		//When
-		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()).getContent();
 		
 		//Then
 		assertTrue(result.get(0).getCreatedAt().isBefore(result.get(1).getCreatedAt()));
@@ -165,10 +180,10 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePosts);
 		
 		//When
-		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()).getContent();
 		
 		//Then
-		assertEquals(result.size(),Math.min(givenExercisePostNum, PageUtil.POST_FOR_MANAGE_PAGE_SIZE));
+		assertEquals(result.size(),Math.min(givenExercisePostNum, PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()));
 	}
 	
 	@Test
@@ -188,20 +203,20 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePosts);
 		
 		//When
-		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageUtil.POST_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<ExercisePost> result = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()).getContent();
 		
 		//Then
 		assertTrue(result.get(0).getCreatedAt().isAfter(result.get(1).getCreatedAt()));
 	}
 	
 	/*
-	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Integer pageNumber)
+	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOrderByCreatedAtDESCByPage(Integer pageNumber)
 	 */
 	
 	@Test
 	@Transactional
-	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 가져오기 -> 정상")
-	public void findAllForPostForCommunityViewDTOByPageTest() {
+	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 가져오기 -> 정상, 개수 확인")
+	public void findAllForPostForCommunityViewDTOByPageTestCheckSize() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -218,12 +233,12 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOByPage(1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(1,PageSize.COMMUNITY_PAGE_SIZE.getSize());
 		
 		//Then
 		
 		//Math.Min은 인자에 있는 값들이 추후에 변경될수 있는점 고려
-		assertEquals(Math.min(PageUtil.COMMUNITY_PAGE_SIZE,givenExercisePostNum), result.getContent().size());
+		assertEquals(Math.min(PageSize.COMMUNITY_PAGE_SIZE.getSize(),givenExercisePostNum), result.getContent().size());
 	}
 	
 	/*
@@ -256,12 +271,12 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keywordForAllExercisePostInDB,1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keywordForAllExercisePostInDB,1,PageSize.COMMUNITY_PAGE_SIZE.getSize());
 		
 		//Then
 		
 		//Math.Min은 인자에 있는 값들이 추후에 변경될수 있는점 고려
-		assertEquals(Math.min(PageUtil.COMMUNITY_PAGE_SIZE,givenExercisePostNum), result.getContent().size());
+		assertEquals(Math.min(PageSize.COMMUNITY_PAGE_SIZE.getSize(),givenExercisePostNum), result.getContent().size());
 	}
 	
 	@Test
@@ -287,7 +302,7 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keywordForNothing, 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keywordForNothing, 1,PageSize.COMMUNITY_PAGE_SIZE.getSize());
 		
 		//Then
 		
@@ -322,10 +337,10 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(targetTypeForAllExercisePost, 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetByPage(targetTypeForAllExercisePost, 1,PageSize.COMMUNITY_PAGE_SIZE.getSize());
 		
 		//Then
-		assertEquals(Math.min(PageUtil.COMMUNITY_PAGE_SIZE, givenExercisePostNum), result.getContent().size());
+		assertEquals(Math.min(PageSize.COMMUNITY_PAGE_SIZE.getSize(), givenExercisePostNum), result.getContent().size());
 	}
 	
 	/*
@@ -357,7 +372,7 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(targetTypeForAllExercisePost, keywordForNothing, 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(targetTypeForAllExercisePost, keywordForNothing, 1,PageSize.COMMUNITY_PAGE_SIZE.getSize());
 		
 		//Then
 		assertEquals(0, result.getContent().size());
@@ -389,7 +404,7 @@ public class ExercisePostServiceTest {
 		exercisePostRepository.saveAll(exercisePostList);
 		
 		//When
-		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(targetTypeForAllExercisePost, keywordForAllExercisePostInDB, 1,PageUtil.COMMUNITY_PAGE_SIZE);
+		Page<PostForCommunityViewDTO> result = exercisePostService.findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(targetTypeForAllExercisePost, keywordForAllExercisePostInDB, 1,PageSize.COMMUNITY_PAGE_SIZE.getSize());
 		
 		//Then
 		assertEquals(givenExercisePostNum, result.getContent().size());
@@ -519,8 +534,8 @@ public class ExercisePostServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("ExercisePost 삭제하기 -> 정상")
-	public void deleteTest() {
+	@DisplayName("ExercisePost 삭제하기 -> 정상, Check ExercisePost Delete")
+	public void deleteTestCheckExercisePostDelete() {
 		//Given
 		Long givenExercisePostNum = exercisePostRepository.count();
 		
@@ -529,6 +544,42 @@ public class ExercisePostServiceTest {
 		
 		//Then
 		assertEquals(givenExercisePostNum - 1, exercisePostRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("ExercisePost 삭제하기 -> 정상, Check PostLike Delete")
+	public void deleteTestCheckPostLikeDelete() {
+		//Given
+		PostLike postLike = PostLikeTest.getPostLikeInstance();
+		postLike.setExercisePost(exercisePost);
+		postLikeRepository.save(postLike);
+		
+		Long postLikeId = postLike.getId();
+		
+		//When
+		exercisePostService.delete(exercisePost);
+		
+		//Then
+		assertFalse(postLikeRepository.existsById(postLikeId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("ExercisePost 삭제하기 -> 정상, Check Comment Delete")
+	public void deleteTestCheckCommentDelete() {
+		//Given
+		Comment comment = CommentTest.getCommentInstance();
+		comment.setExercisePost(exercisePost);
+		commentRepository.save(comment);
+		
+		Long commentId = comment.getId();
+		
+		//When
+		exercisePostService.delete(exercisePost);
+		
+		//Then
+		assertFalse(commentRepository.existsById(commentId));
 	}
 	
 	/*
@@ -577,10 +628,230 @@ public class ExercisePostServiceTest {
 		assertFalse(exercisePostRepository.existsById(exercisePostId));
 	}
 	
+	/*
+	 * public void deleteAllByUserId(Long userId)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID로 ExercisePost 일괄 삭제 -> 정상 ,Check ExercisePosts Delete")
+	public void deleteAllByUserIdTestCheckExercisePostsDelete() {
+		//Given
+		int addExercisePostNum = 5;
+		addExercisePostNum(addExercisePostNum);
+		
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		saveAllExercisePostWithUser(user);
+		
+		Long userId = user.getId();
+		
+		//When
+		exercisePostService.deleteAllByUserId(userId);
+		
+		//Then
+		assertEquals(0, exercisePostRepository.count());
+	}
+	
+	private void saveAllExercisePostWithUser(User user) {
+		List<ExercisePost> exercisePosts = exercisePostRepository.findAll();
+		for(ExercisePost exercisePost: exercisePosts) {
+			exercisePost.setUser(user);
+		}
+		exercisePostRepository.saveAll(exercisePosts);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID로 ExercisePost 일괄 삭제 -> 정상 ,Check PostLikes Delete")
+	public void deleteAllByUserIdTestCheckPostLikesDelete() {
+		//Given
+		int addExercisePostNum = 10;
+		addExercisePostNum(addExercisePostNum);
+		
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		saveAllExerciseWithUserAndAddPostLikeForEach(user);
+		
+		Long userId = user.getId();
+		
+		//When
+		exercisePostService.deleteAllByUserId(userId);
+		
+		//Then
+		assertEquals(0, postLikeRepository.count());
+	}
+	
+	private void saveAllExerciseWithUserAndAddPostLikeForEach(User user) {
+		List<ExercisePost> exercisePosts = exercisePostRepository.findAll();
+		List<PostLike> newPostLikes = new ArrayList<>();
+		for(ExercisePost exercisePost: exercisePosts) {
+			PostLike postLike = PostLikeTest.getPostLikeInstance();
+			postLike.setExercisePost(exercisePost);
+			newPostLikes.add(postLike);
+			
+			exercisePost.setUser(user);
+		}
+		
+		exercisePostRepository.saveAll(exercisePosts);
+		postLikeRepository.saveAll(newPostLikes);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID로 ExercisePost 일괄 삭제 -> 정상 ,Check Comments Delete")
+	public void deleteAllByUserIdTestCheckCommentsDelete() {
+		//Given
+		int addExercisePostNum = 10;
+		addExercisePostNum(addExercisePostNum);
+		
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		saveAllExerciseWithUserAndAddCommentForEach(user);
+		
+		Long userId = user.getId();
+		
+		//When
+		exercisePostService.deleteAllByUserId(userId);
+		
+		//Then
+		assertEquals(0, commentRepository.count());
+	}
+	
+	private void saveAllExerciseWithUserAndAddCommentForEach(User user) {
+		List<ExercisePost> exercisePosts = exercisePostRepository.findAll();
+		List<Comment> newComments = new ArrayList<>();
+		for(ExercisePost exercisePost: exercisePosts) {
+			Comment comment = CommentTest.getCommentInstance();
+			comment.setExercisePost(exercisePost);
+			newComments.add(comment);
+			
+			exercisePost.setUser(user);
+		}
+		
+		exercisePostRepository.saveAll(exercisePosts);
+		commentRepository.saveAll(newComments);
+	}
+
+	/*
+	 * public void deleteAllByExerciseId(Long exerciseId)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise ID로 ExercisePost 일괄 삭제 -> 정상 ,Check ExercisePosts Delete")
+	public void deleteAllByExerciseIdTestCheckExercisePostsDelete() {
+		//Given
+		int addExercisePostNum = 5;
+		addExercisePostNum(addExercisePostNum);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		saveAllExercisePostWithExercise(exercise);
+		
+		Long exerciseId = exercise.getId();
+		
+		//When
+		exercisePostService.deleteAllByExerciseId(exerciseId);
+		
+		//Then
+		assertEquals(0, exercisePostRepository.count());
+	}
+	
+	private void saveAllExercisePostWithExercise(Exercise exercise) {
+		List<ExercisePost> exercisePosts = exercisePostRepository.findAll();
+		for(ExercisePost exercisePost: exercisePosts) {
+			exercisePost.setExercise(exercise);
+		}
+		exercisePostRepository.saveAll(exercisePosts);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise ID로 ExercisePost 일괄 삭제 -> 정상 ,Check PostLikes Delete")
+	public void deleteAllByExerciseIdTestCheckPostLikesDelete() {
+		//Given
+		int addExercisePostNum = 10;
+		addExercisePostNum(addExercisePostNum);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		saveAllExerciseWithExerciseAndAddPostLikeForEach(exercise);
+		
+		Long exerciseId = exercise.getId();
+		
+		//When
+		exercisePostService.deleteAllByExerciseId(exerciseId);
+		
+		//Then
+		assertEquals(0, postLikeRepository.count());
+	}
+	
+	private void saveAllExerciseWithExerciseAndAddPostLikeForEach(Exercise exercise) {
+		List<ExercisePost> exercisePosts = exercisePostRepository.findAll();
+		List<PostLike> newPostLikes = new ArrayList<>();
+		for(ExercisePost exercisePost: exercisePosts) {
+			PostLike postLike = PostLikeTest.getPostLikeInstance();
+			postLike.setExercisePost(exercisePost);
+			newPostLikes.add(postLike);
+			
+			exercisePost.setExercise(exercise);
+		}
+		
+		exercisePostRepository.saveAll(exercisePosts);
+		postLikeRepository.saveAll(newPostLikes);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise ID로 ExercisePost 일괄 삭제 -> 정상 ,Check Comments Delete")
+	public void deleteAllByExerciseIdTestCheckCommentsDelete() {
+		//Given
+		int addExercisePostNum = 10;
+		addExercisePostNum(addExercisePostNum);
+		
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		exerciseRepository.save(exercise);
+		saveAllExerciseWithExerciseAndAddCommentForEach(exercise);
+		
+		Long exerciseId = exercise.getId();
+		
+		//When
+		exercisePostService.deleteAllByExerciseId(exerciseId);
+		
+		//Then
+		assertEquals(0, commentRepository.count());
+	}
+	
+	private void saveAllExerciseWithExerciseAndAddCommentForEach(Exercise exercise) {
+		List<ExercisePost> exercisePosts = exercisePostRepository.findAll();
+		List<Comment> newComments = new ArrayList<>();
+		for(ExercisePost exercisePost: exercisePosts) {
+			Comment comment = CommentTest.getCommentInstance();
+			comment.setExercisePost(exercisePost);
+			newComments.add(comment);
+			
+			exercisePost.setExercise(exercise);
+		}
+		
+		exercisePostRepository.saveAll(exercisePosts);
+		commentRepository.saveAll(newComments);
+	}
+	
+	private void addExercisePostNum(int addExercisePostNum) {
+		List<ExercisePost> newExercisePosts = new ArrayList<>();
+		for(int i=0; i< addExercisePostNum;i++) {
+			ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+			newExercisePosts.add(exercisePost);
+		}
+		exercisePostRepository.saveAll(newExercisePosts);
+	}
+	
 	
 	/*
 	 *  public long countWithUserId(Long userId)
 	 */
+	
 	@Test
 	@Transactional
 	@DisplayName("User ID 만족하는 ExercisePost 개수 반환 -> 정상")

@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.util;
+package com.gunyoung.tmb.testutil;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,14 +9,25 @@ import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
  */
 public class ExerciseMuscleTest {
 	
+	public static final String DEFAULT_EXERCISE_MUSCLE_NAME = "muscleName";
+	
 	/**
 	 * 테스트용 ExerciseMuscle 인스턴스 반환
 	 * @author kimgun-yeong
 	 */
 	public static ExerciseMuscle getExerciseMuscleInstance() {
+		return getExerciseMuscleInstance(DEFAULT_EXERCISE_MUSCLE_NAME, true);
+	}
+	
+	/**
+	 * 테스트용 ExerciseMuscle 인스턴스 반환 <br>
+	 * muscleName, isMain 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static ExerciseMuscle getExerciseMuscleInstance(String muscleName, boolean isMain) {
 		ExerciseMuscle exerciseMuscle = ExerciseMuscle.builder()
-				.muscleName("muscleName")
-				.isMain(true)
+				.muscleName(muscleName)
+				.isMain(isMain)
 				.build();
 		
 		return exerciseMuscle;

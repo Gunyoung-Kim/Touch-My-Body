@@ -5,6 +5,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.gunyoung.tmb.domain.user.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,4 +38,19 @@ public class UserJoinDTO {
 	
 	@Size(min =1, max=10)
 	private String nickName;
+	
+	/**
+	 * UserJoinDTO를 통해 User 객체 생성 및 반환
+	 * @author kimgun-yeong
+	 */
+	public User createUserInstance() {
+		User user = User.builder()
+				.email(this.email)
+				.password(this.password)
+				.firstName(this.firstName)
+				.lastName(this.lastName)
+				.nickName(this.nickName)
+				.build();
+		return user;
+	}
 }

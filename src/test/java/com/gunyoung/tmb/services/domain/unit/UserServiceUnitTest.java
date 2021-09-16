@@ -1,6 +1,7 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -21,10 +22,19 @@ import org.springframework.data.domain.PageRequest;
 
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
+import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
+import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.UserRepository;
+import com.gunyoung.tmb.services.domain.exercise.CommentService;
+import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseServiceImpl;
+import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
+import com.gunyoung.tmb.services.domain.like.CommentLikeService;
+import com.gunyoung.tmb.services.domain.like.PostLikeService;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserServiceImpl;
+import com.gunyoung.tmb.testutil.UserExerciseTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link ExerciseServiceImpl} 에 대한 테스트 클래스 <br>
@@ -41,6 +51,21 @@ public class UserServiceUnitTest {
 	
 	@Mock
 	UserExerciseService userExerciseService;
+	
+	@Mock
+	PostLikeService postLikeService;
+	
+	@Mock
+	ExercisePostService exercisePostService;
+	
+	@Mock
+	CommentLikeService commentLikeService;
+	
+	@Mock
+	CommentService commentService;
+	
+	@Mock
+	FeedbackService feedbackService;
 	
 	@InjectMocks
 	UserServiceImpl userService;
@@ -361,19 +386,64 @@ public class UserServiceUnitTest {
 	}
 	
 	/*
+	 * public User saveByJoinDTOAndRoleType(UserJoinDTO dto,RoleType role);
+	 */
+	
+	@Test
+	@DisplayName(" UserJoinDTO 객체에 담긴 정보를 이용하여 User 객체 생성 후 저장 -> 정상, userRepository 확인")
+	public void saveByJoinDTOAndRoleTypeTestCheckRepository() {
+		//Given
+		String email = "test@test.com";
+		String nickName = "nickname";
+		RoleType role = RoleType.USER;
+		UserJoinDTO userJoinDTO = UserTest.getUserJoinDTOInstance(email, nickName);
+		
+		//When
+		userService.saveByJoinDTOAndRoleType(userJoinDTO, role);
+		
+		//Then
+		then(userRepository).should(times(1)).save(any(User.class));
+	}
+	
+	/*
 	 * public void delete(User user) 
 	 */
 	
 	@Test
-	@DisplayName("User 삭제 -> 정상")
-	public void deleteTest() {
+	@DisplayName("User 삭제 -> 정상, check UserRepository")
+	public void deleteTestCheckUserRepo() {
 		//Given
+		Long userId = Long.valueOf(53);
+		user.setId(userId);
 		
 		//When
-		userService.deleteUser(user);
+		userService.delete(user);
 		
 		//Then
-		then(userRepository).should(times(1)).delete(user);
+		then(userRepository).should(times(1)).deleteByIdInQuery(userId);
+	}
+	
+	@Test
+	@DisplayName("User 삭제 -> 정상, check OneToMany domain Repo")
+	public void deleteTestCheckOneToManyRepo() {
+		//Given
+		Long userId = Long.valueOf(53);
+		user.setId(userId);
+		
+		//When
+		userService.delete(user);
+		
+		//Then
+		verifyService_for_deleteTestCheckOneToManyRepo(userId);
+	}
+	
+	private void verifyService_for_deleteTestCheckOneToManyRepo(Long userId) {
+		then(userExerciseService).should(times(1)).deleteAllByUserId(userId);
+		then(commentLikeService).should(times(1)).deleteAllByUserId(userId);
+		then(commentService).should(times(1)).deleteAllByUserId(userId);
+		then(postLikeService).should(times(1)).deleteAllByUserId(userId);
+		then(exercisePostService).should(times(1)).deleteAllByUserId(userId);
+		then(feedbackService).should(times(1)).deleteAllByUserId(userId);
 	}
 	
 	/*
@@ -472,5 +542,37 @@ public class UserServiceUnitTest {
 		
 		assertEquals(userExercise, user.getUserExercises().get(0));
 		assertEquals(user, userExercise.getUser());
+	}
+	
+	/*
+	 * public void deleteUserExercise(User user, UserExercise userExercise)
+	 */
+	
+	@Test
+	@DisplayName("User 객체에서 UserExercise 삭제 -> 정상, User의 UserExercise 아님")
+	public void deleteUserExerciseTestNotMine() {
+		//Given
+		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
+		
+		//When
+		userService.deleteUserExercise(user, userExercise);
+		
+		//Then
+		then(userExerciseService).should(times(1)).delete(userExercise);
+	}
+	
+	@Test
+	@DisplayName("User 객체에서 UserExercise 삭제 -> 정상, User의 Exercise")
+	public void deleteUserExerciseTestMine() {
+		//Given
+		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
+		user.getUserExercises().add(userExercise);
+		
+		//When
+		userService.deleteUserExercise(user, userExercise);
+		
+		//Then
+		assertFalse(user.getUserExercises().contains(userExercise));
+		then(userExerciseService).should(times(1)).delete(userExercise);
 	}
 }

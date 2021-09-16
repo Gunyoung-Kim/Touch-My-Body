@@ -28,7 +28,8 @@ import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoun
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
-import com.gunyoung.tmb.util.ExerciseTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.TargetTypeTest;
 
 /**
  * {@link ManagerExerciseRestController} 에 대한 테스트 클래스 <br>
@@ -112,7 +113,7 @@ public class ManagerExerciseRestControllerUnitTest {
 		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance(changedButDuplicatedExerciseName);
 		
 		Long exerciseId = Long.valueOf(1);
-		stubbingExerciseServiceFindWithExerciseMusclesById(exerciseId);
+		mockingExerciseServiceFindWithExerciseMusclesById(exerciseId);
 		
 		given(exerciseService.existsByName(changedButDuplicatedExerciseName)).willReturn(true);
 		
@@ -123,14 +124,14 @@ public class ManagerExerciseRestControllerUnitTest {
 	}
 	
 	@Test
-	@DisplayName("특정 Exercise 정보 수정 처리 -> 정상")
-	public void modifyExerciseTest() {
+	@DisplayName("특정 Exercise 정보 수정 처리 -> 정상, 이름이 변경")
+	public void modifyExerciseNameChangedTest() {
 		//Given
 		String changedExerciseName = "changeExercise";
 		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance(changedExerciseName);
 		
 		Long exerciseId = Long.valueOf(1);
-		Exercise exercise = stubbingExerciseServiceFindWithExerciseMusclesById(exerciseId);
+		Exercise exercise = mockingExerciseServiceFindWithExerciseMusclesById(exerciseId);
 		
 		given(exerciseService.existsByName(changedExerciseName)).willReturn(false);
 		
@@ -141,7 +142,26 @@ public class ManagerExerciseRestControllerUnitTest {
 		then(exerciseService).should(times(1)).saveWithSaveExerciseDTO(exercise, dto);
 	}
 	
-	private Exercise stubbingExerciseServiceFindWithExerciseMusclesById(Long exerciseId) {
+	@Test
+	@DisplayName("특정 Exercise 정보 수정 처리 -> 정상, 이름은 변경 안됨")
+	public void modifyExerciseNameNonchangedTest() {
+		//Given
+		Long exerciseId = Long.valueOf(1);
+		Exercise exercise = mockingExerciseServiceFindWithExerciseMusclesById(exerciseId);
+		
+		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance(exercise.getName());
+		
+		TargetType changedTargetType = TargetTypeTest.getAnotherTargetType(exercise.getTarget());
+		dto.setTarget(changedTargetType.getKoreanName());
+		
+		//When
+		managerExerciseRestController.modifyExercise(exerciseId, dto);
+		
+		//Then
+		then(exerciseService).should(times(1)).saveWithSaveExerciseDTO(exercise, dto);
+	}
+	
+	private Exercise mockingExerciseServiceFindWithExerciseMusclesById(Long exerciseId) {
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		given(exerciseService.findWithExerciseMusclesById(exerciseId)).willReturn(exercise);
 		return exercise;

@@ -44,10 +44,10 @@ import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserService;
-import com.gunyoung.tmb.util.CommentTest;
-import com.gunyoung.tmb.util.ExercisePostTest;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.CommentTest;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.UserTest;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**
@@ -103,7 +103,7 @@ public class ExercisePostControllerUnitTest {
 		exercisePostController.exercisePostView(defaultPageNum, null, mapv);
 		
 		//Then
-		then(exercisePostService).should(times(1)).findAllForPostForCommunityViewDTOByPage(defaultPageNum, ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE);
+		then(exercisePostService).should(times(1)).findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(defaultPageNum, ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE);
 		then(exercisePostService).should(times(1)).count();
 	}
 	
@@ -126,7 +126,7 @@ public class ExercisePostControllerUnitTest {
 	public void exercisePostViewTestCheckMapv() {
 		//Given
 		Page<PostForCommunityViewDTO> pageResult = new PageImpl<>(new ArrayList<>());
-		given(exercisePostService.findAllForPostForCommunityViewDTOByPage(defaultPageNum, ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE)).willReturn(pageResult);
+		given(exercisePostService.findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(defaultPageNum, ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE)).willReturn(pageResult);
 		
 		Long givenExercisPostNum = Long.valueOf(10);
 		given(exercisePostService.count()).willReturn(givenExercisPostNum);

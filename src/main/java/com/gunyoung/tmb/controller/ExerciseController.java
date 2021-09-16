@@ -14,10 +14,10 @@ import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForTableDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
-import com.gunyoung.tmb.utils.PageUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExerciseController {
 	
-	public static final int EXERCISE_LIST_VIEW_PAGE_SIZE = PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE;
+	public static final int EXERCISE_LIST_VIEW_PAGE_SIZE = PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize();
 	
 	private final ExerciseService exerciseService;
 	

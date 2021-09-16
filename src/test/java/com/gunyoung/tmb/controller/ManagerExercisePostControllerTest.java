@@ -22,16 +22,17 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
-import com.gunyoung.tmb.util.ControllerTest;
-import com.gunyoung.tmb.util.ExercisePostTest;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.UserTest;
-import com.gunyoung.tmb.utils.PageUtil;
+import com.gunyoung.tmb.testutil.ControllerTest;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.UserTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * {@link ManagerExercisePostController} 에 대한 테스트 클래스
@@ -40,6 +41,7 @@ import com.gunyoung.tmb.utils.PageUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ManagerExercisePostControllerTest {
@@ -98,7 +100,7 @@ public class ManagerExercisePostControllerTest {
 		@SuppressWarnings("unchecked")
 		Page<PostForCommunityViewDTO> resultList = (Page<PostForCommunityViewDTO>) model.get("listObject");
 		
-		assertEquals(Math.min(PageUtil.POST_FOR_MANAGE_PAGE_SIZE, givenExercisePostNum), resultList.getContent().size());
+		assertEquals(Math.min(PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize(), givenExercisePostNum), resultList.getContent().size());
 	}
 	
 	@WithMockUser(roles= {"MANAGER"})

@@ -2,6 +2,7 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -16,9 +17,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.PostLike;
+import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.repos.PostLikeRepository;
 import com.gunyoung.tmb.services.domain.like.PostLikeServiceImpl;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link PostLikeServiceImpl} 에 대한 테스트 클래스 <br>
@@ -132,6 +137,24 @@ public class PostLikeServiceUnitTest {
 	}
 	
 	/*
+	 * public PostLike createAndSaveWithUserAndPost(User user, Post post) 
+	 */
+	
+	@Test
+	@DisplayName("PostLike 생성 및 User, Post 와 연관 관계 추가 후 저장 -> 정상, 저장 확인")
+	public void createAndSaveWithUserAndPostTestCheckSave() {
+		//Given
+		User user = UserTest.getUserInstance();
+		ExercisePost exercisepost = ExercisePostTest.getExercisePostInstance();
+		
+		//When
+		postLikeService.createAndSaveWithUserAndExercisePost(user, exercisepost);
+		
+		//Then
+		then(postLikeRepository).should(times(1)).save(any());
+	}
+	
+	/*
 	 * public void delete(PostLike postLike)
 	 */
 	
@@ -145,6 +168,40 @@ public class PostLikeServiceUnitTest {
 		
 		//Then
 		then(postLikeRepository).should(times(1)).delete(postLike);
+	}
+	
+	/*
+	 * public void deleteAllByUserId(Long userId) 
+	 */
+	
+	@Test
+	@DisplayName("User ID로 PostLike 일괄 삭제 -> 정상 ,check Repo") 
+	public void deleteAllByUserIdTestCheckRepo() {
+		//Given
+		Long userId = Long.valueOf(24);
+		
+		//When
+		postLikeService.deleteAllByUserId(userId);
+		
+		//Then
+		then(postLikeRepository).should(times(1)).deleteAllByUserIdInQuery(userId);
+	}
+	
+	/*
+	 * public void deleteAllByExercisePostId(Long exercisePostId) 
+	 */
+	
+	@Test
+	@DisplayName("ExercisePost ID로 PostLike 일괄 삭제 -> 정상 ,check Repo") 
+	public void deleteAllByExercisePostIdTestCheckRepo() {
+		//Given
+		Long exercisePostId = Long.valueOf(24);
+		
+		//When
+		postLikeService.deleteAllByExercisePostId(exercisePostId);
+		
+		//Then
+		then(postLikeRepository).should(times(1)).deleteAllByExercisePostIdInQuery(exercisePostId);
 	}
 	
 	/*

@@ -56,7 +56,7 @@ public interface ExercisePostService {
 	 * 모든 ExercisePost로 {@link PostForCommunityViewDTO} 생성 후 페이지 반환
 	 * @author kimgun-yeong
 	 */
-	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Integer pageNumber,int pageSize);
+	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(Integer pageNumber,int pageSize);
 	
 	/**
 	 * 키워드를 만족하는 ExercisePost들로 {@link PostForCommunityViewDTO} 생성 후 페이지 반환
@@ -107,6 +107,20 @@ public interface ExercisePostService {
 	 * @author kimgun-yeong
 	 */
 	public void deleteById(Long id);
+	
+	/**
+	 * User Id로 만족하는 ExercisePost들 일괄 삭제
+	 * @param userId 삭제하려는 ExercisePost들의 User ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByUserId(Long userId);
+	
+	/**
+	 * Exercise Id로 만족하는 ExercisePost들 일괄 삭제
+	 * @param exerciseId 삭제하려는 ExercisePost들의 Exercise ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByExerciseId(Long exerciseId);
 	
 	/**
 	 * User ID, ExercisePost ID 에 해당하는 ExercisePost 있으면 삭제 

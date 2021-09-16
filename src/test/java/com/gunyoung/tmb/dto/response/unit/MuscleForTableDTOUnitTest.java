@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.response.MuscleForTableDTO;
-import com.gunyoung.tmb.util.MuscleTest;
+import com.gunyoung.tmb.testutil.MuscleTest;
 
 /**
  * {@link MuscleForTableDTO} 에 대한 테스트 클래스 <br>

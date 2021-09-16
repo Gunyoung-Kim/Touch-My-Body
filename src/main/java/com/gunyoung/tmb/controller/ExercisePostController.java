@@ -25,6 +25,7 @@ import com.gunyoung.tmb.dto.reqeust.SaveExercisePostDTO;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
@@ -39,7 +40,6 @@ import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.user.UserService;
 import com.gunyoung.tmb.utils.HttpRequestUtil;
-import com.gunyoung.tmb.utils.PageUtil;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -53,7 +53,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExercisePostController {
 	
-	public static final int COMMUNITY_VIEW_PAGE_SIZE = PageUtil.COMMUNITY_PAGE_SIZE;
+	public static final int COMMUNITY_VIEW_PAGE_SIZE = PageSize.COMMUNITY_PAGE_SIZE.getSize();
 	
 	private final ExercisePostService exercisePostService;
 	
@@ -90,7 +90,7 @@ public class ExercisePostController {
 	
 	private Page<PostForCommunityViewDTO> getPageResultForExercisePostView(String keyword, Integer page) {
 		if(keyword == null) {
-			return exercisePostService.findAllForPostForCommunityViewDTOByPage(page, COMMUNITY_VIEW_PAGE_SIZE);
+			return exercisePostService.findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(page, COMMUNITY_VIEW_PAGE_SIZE);
 		}	
 		return exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, page, COMMUNITY_VIEW_PAGE_SIZE);
 	}

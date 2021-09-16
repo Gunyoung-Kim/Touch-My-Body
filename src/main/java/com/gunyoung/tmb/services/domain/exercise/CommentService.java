@@ -76,21 +76,40 @@ public interface CommentService {
 	public Comment saveWithUserAndExercisePost(Comment comment,User user, ExercisePost exercisePost);
 	
 	/**
-	 * Comment 삭제
+	 * Comment 삭제 <br>
+	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param comment 삭제하려는 Comment
 	 * @author kimgun-yeong
 	 */
 	public void delete(Comment comment);
 	
 	/**
-	 * ID를 만족하는 Comment 삭제 
+	 * ID를 만족하는 Comment 삭제 <br>
+	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param id 삭제하려는 Comment의 ID
 	 * @author kimgun-yeong
 	 */
 	public void deleteById(Long id);
 	
 	/**
-	 * 해당 Comment ID의 Comment 작성자의 ID가 userID와 일치하면 삭제
+	 * User ID로 만족하는 Comment들 일괄 삭제 <br>
+	 * OneToMany 연관 엔티티도 모두 삭제
+	 * @param userId 삭제하려는 Comment들의 User ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByUserId(Long userId);
+	
+	/**
+	 * ExercisePost ID로 만족하는 Comment들 일괄 삭제 <br>
+	 * OneToMany 연관 엔티티도 모두 삭제
+	 * @param exercisePostId 삭제하려는 Comment들의 ExercisePost ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByExercisePostId(Long exercisePostId);
+	
+	/**
+	 * 해당 Comment ID의 Comment 작성자의 ID가 userID와 일치하면 삭제 <br>
+	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param userId Comment 작성자의 ID와 비교할 User ID
 	 * @param commentId 삭제하려는 Comment의 ID
 	 * @author kimgun-yeong
@@ -109,5 +128,4 @@ public interface CommentService {
 	 * @author kimgun-yeong
 	 */
 	public List<CommentForPostViewDTO> getCommentForPostViewDTOsByExercisePostId(Long postId);
-	
 }

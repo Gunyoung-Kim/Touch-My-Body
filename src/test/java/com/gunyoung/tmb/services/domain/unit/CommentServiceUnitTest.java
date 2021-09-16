@@ -28,6 +28,8 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentServiceImpl;
+import com.gunyoung.tmb.services.domain.like.CommentLikeService;
+import com.gunyoung.tmb.testutil.CommentTest;
 
 /**
  * {@link CommentServiceImpl} 에 대한 테스트 클래스 <br>
@@ -42,6 +44,9 @@ public class CommentServiceUnitTest {
 	@Mock
 	CommentRepository commentRepository;
 	
+	@Mock
+	CommentLikeService commentLikeService;
+	
 	@InjectMocks
 	CommentServiceImpl commentService;
 	
@@ -49,7 +54,9 @@ public class CommentServiceUnitTest {
 	
 	@BeforeEach
 	void setup() {
-		comment = new Comment();
+		comment = Comment.builder()
+				.id(Long.valueOf(24))
+				.build();
 	}
 	
 	/*
@@ -157,7 +164,7 @@ public class CommentServiceUnitTest {
 		//Given
 		Long postId = Long.valueOf(1);
 		List<Comment> commentList = new ArrayList<>();
-		given(commentRepository.findAllByExercisePostIdCustom(postId)).willReturn(commentList);
+		given(commentRepository.findAllByExercisePostIdInQuery(postId)).willReturn(commentList);
 		
 		//When
 		List<Comment> result = commentService.findAllByExercisePostId(postId);
@@ -181,7 +188,7 @@ public class CommentServiceUnitTest {
 		PageRequest pageRequest = PageRequest.of(pageNum-1, pageSize);
 		Page<Comment> commentPage = new PageImpl<>(new ArrayList<>());
 		
-		given(commentRepository.findAllByUserIdOrderByCreatedAtASCCustom(userId, pageRequest)).willReturn(commentPage);
+		given(commentRepository.findAllByUserIdOrderByCreatedAtAscInPage(userId, pageRequest)).willReturn(commentPage);
 		
 		//When
 		Page<Comment> result =  commentService.findAllByUserIdOrderByCreatedAtAsc(userId, pageNum, pageSize);
@@ -205,7 +212,7 @@ public class CommentServiceUnitTest {
 		PageRequest pageRequest = PageRequest.of(pageNum-1, pageSize);
 		Page<Comment> commentPage = new PageImpl<>(new ArrayList<>());
 				
-		given(commentRepository.findAllByUserIdOrderByCreatedAtDescCustom(userId, pageRequest)).willReturn(commentPage);
+		given(commentRepository.findAllByUserIdOrderByCreatedAtDescInPage(userId, pageRequest)).willReturn(commentPage);
 				
 		//When
 		Page<Comment> result =  commentService.findAllByUserIdOrderByCreatedAtDesc(userId, pageNum, pageSize);
@@ -270,15 +277,29 @@ public class CommentServiceUnitTest {
 	 */
 	
 	@Test
-	@DisplayName("Comment 삭제 -> 정상")
-	public void deleteTest() {
+	@DisplayName("Comment 삭제 -> 정상, check CommentRepository")
+	public void deleteTestCheckCommentRepo() {
 		//Given
 		
 		//When
 		commentService.delete(comment);
 		
 		//Then
-		then(commentRepository).should(times(1)).delete(comment);
+		then(commentRepository).should(times(1)).deleteByIdInQuery(comment.getId());
+	}
+	
+	@Test
+	@DisplayName("Comment 삭제 -> 정상, check CommentLikeService")
+	public void deleteTestCheckCommentLikeService() {
+		//Given
+		Long commentId = Long.valueOf(24);
+		comment.setId(commentId);
+		
+		//When
+		commentService.delete(comment);
+		
+		//Then
+		then(commentLikeService).should(times(1)).deleteAllByCommentId(commentId);
 	}
 	
 	/*
@@ -310,7 +331,7 @@ public class CommentServiceUnitTest {
 		commentService.deleteById(commentId);
 		
 		//Then
-		then(commentRepository).should(times(1)).delete(comment);
+		then(commentRepository).should(times(1)).deleteByIdInQuery(comment.getId());
 	}
 	
 	/*
@@ -342,7 +363,91 @@ public class CommentServiceUnitTest {
 		commentService.checkIsMineAndDelete(userId, commentId);
 		
 		//Then
-		then(commentRepository).should(times(1)).delete(comment);
+		then(commentRepository).should(times(1)).deleteByIdInQuery(comment.getId());
+	}
+	
+	/*
+	 * public void deleteAllByUserId(Long userId)
+	 */
+	
+	@Test
+	@DisplayName("User ID에 해당하는 Comment 일괄 삭제 -> 정상, No OneToMany Delete,check CommentRepository") 
+	public void deleteAllByUserIdTestNoOneToManyCheckCommentRepo() {
+		//Given
+		Long userId = Long.valueOf(52);
+		List<Comment> comments = new ArrayList<>();
+		given(commentRepository.findAllByUserIdInQuery(userId)).willReturn(comments);
+		
+		//When
+		commentService.deleteAllByUserId(userId);
+		
+		//Then
+		then(commentRepository).should(times(1)).deleteAllByUserIdInQuery(userId);
+	}
+	
+	@Test
+	@DisplayName("User ID에 해당하는 Comment 일괄 삭제 -> 정상, check CommentLikeService")
+	public void deleteAllByUserIdTestCheckCommentLikeService() {
+		//Given
+		List<Comment> comments = new ArrayList<>();
+		Long commentsId = Long.valueOf(65);
+		int givenCommentNum = 13;
+		for(int i=0;i<givenCommentNum;i++) {
+			Comment comment = CommentTest.getCommentInstance();
+			comment.setId(commentsId);
+			comments.add(comment);
+		}
+		
+		Long userId = Long.valueOf(52);
+		given(commentRepository.findAllByUserIdInQuery(userId)).willReturn(comments);
+		
+		//When
+		commentService.deleteAllByUserId(userId);
+		
+		//Then
+		then(commentLikeService).should(times(givenCommentNum)).deleteAllByCommentId(commentsId);
+	}
+	
+	/*
+	 * public void deleteAllByExercisePostId(Long exercisePostId)
+	 */
+	
+	@Test
+	@DisplayName("ExercisePost ID에 해당하는 Comment 일괄 삭제 -> 정상, No OneToMany Delete ,check CommentRepository") 
+	public void deleteAllByExercisePostIdTestNoOneToManyCheckCommentRepo() {
+		//Given
+		Long exercisePostId = Long.valueOf(52);
+		List<Comment> comments = new ArrayList<>();
+		given(commentRepository.findAllByExercisePostIdInQuery(exercisePostId)).willReturn(comments);
+		
+		//When
+		commentService.deleteAllByExercisePostId(exercisePostId);
+		
+		//Then
+		then(commentRepository).should(times(1)).deleteAllByExercisePostIdInQuery(exercisePostId);
+	}
+	
+	@Test
+	@DisplayName("ExercisePost ID에 해당하는 Comment 일괄 삭제 -> 정상, check CommentLikeService")
+	public void deleteAllByExercisePostIdTestCheckCommentLikeService() {
+		//Given
+		List<Comment> comments = new ArrayList<>();
+		Long commentsId = Long.valueOf(24);
+		int givenCommentNum = 8;
+		for(int i=0;i<givenCommentNum;i++) {
+			Comment comment = CommentTest.getCommentInstance();
+			comment.setId(commentsId);
+			comments.add(comment);
+		}
+		
+		Long exercisePostId = Long.valueOf(52);
+		given(commentRepository.findAllByExercisePostIdInQuery(exercisePostId)).willReturn(comments);
+		
+		//When
+		commentService.deleteAllByExercisePostId(exercisePostId);
+		
+		//Then
+		then(commentLikeService).should(times(givenCommentNum)).deleteAllByCommentId(commentsId);
 	}
 	
 	/*

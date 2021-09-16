@@ -64,6 +64,20 @@ public interface FeedbackService {
 	public void delete(Feedback feedback);
 	
 	/**
+	 * User Id를 만족하는 Feedback들 일괄 삭제
+	 * @param userId 삭제하려는 UserExercise들의 User ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByUserId(Long userId);
+	
+	/**
+	 * Exercise Id를 만족하는 Feedback들 일괄 삭
+	 * @param exerciseId 삭제하려는 Feedback들의 Exercise ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByExerciseId(Long exerciseId);
+	
+	/**
 	 * Exercise ID를 만족하는 Feedback들 개수 반환 
 	 * @param exerciseId 찾으려는 Feedback들의 Exercise ID
 	 * @author kimgun-yeong

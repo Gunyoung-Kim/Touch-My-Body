@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -69,4 +70,24 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long>{
 			+ "INNER JOIN f.exercise e "
 			+ "WHERE e.id = :exerciseId")
 	public long countByExerciseId(@Param("exerciseId") Long exerciseId);
+	
+	/**
+	 * User Id를 만족하는 Feedback들 일괄 삭제
+	 * @param userId 삭제하려는 Feedback들의 User ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically= true, flushAutomatically = true)
+	@Query("DELETE FROM Feedback f "
+			+ "WHERE f.user.id = :userId")
+	public void deleteAllByUserIdInQuery(@Param("userId") Long userId);
+	
+	/**
+	 * Exercise Id를 만족하는 Feedback들 일괄 삭
+	 * @param exerciseId 삭제하려는 Feedback들의 Exercise ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically= true, flushAutomatically = true)
+	@Query("DELETE FROM Feedback f "
+			+ "WHERE f.exercise.id = :exerciseId")
+	public void deleteAllByExerciseIdInQuery(@Param("exerciseId") Long exerciseId);
 }

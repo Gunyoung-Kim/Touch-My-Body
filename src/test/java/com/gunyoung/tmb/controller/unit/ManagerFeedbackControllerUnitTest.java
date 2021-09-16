@@ -24,13 +24,13 @@ import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
 import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.FeedbackTest;
-import com.gunyoung.tmb.utils.PageUtil;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.FeedbackTest;
 
 /**
  * {@link ManagerFeedbackController} 에 대한 테스트 클래스 <br>
@@ -91,7 +91,7 @@ public class ManagerFeedbackControllerUnitTest {
 		managerFeedbackController.feedbackListView(exerciseId, defaultPageNum, mapv);
 		
 		//Then
-		then(feedbackService).should(times(1)).findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, defaultPageNum, PageUtil.FEEDBACK_FOR_MANAGE_PAGE_SIZE);
+		then(feedbackService).should(times(1)).findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, defaultPageNum, PageSize.FEEDBACK_FOR_MANAGE_PAGE_SIZE.getSize());
 		then(feedbackService).should(times(1)).countByExerciseId(exerciseId);
 	}
 	
@@ -103,7 +103,7 @@ public class ManagerFeedbackControllerUnitTest {
 		Exercise exercise = stubbingExerciseServiceFindById(exerciseId);
 		
 		Page<FeedbackManageListDTO> pageResult = new PageImpl<>(new ArrayList<>());
-		given(feedbackService.findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, defaultPageNum, PageUtil.FEEDBACK_FOR_MANAGE_PAGE_SIZE)).willReturn(pageResult);
+		given(feedbackService.findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, defaultPageNum, PageSize.FEEDBACK_FOR_MANAGE_PAGE_SIZE.getSize())).willReturn(pageResult);
 		Long givenFeedbackNum = Long.valueOf(10);
 		given(feedbackService.countByExerciseId(exerciseId)).willReturn(givenFeedbackNum);
 		
@@ -117,7 +117,7 @@ public class ManagerFeedbackControllerUnitTest {
 	private void verfiyMapvInFeedbackListViewTestCheckViewName(Page<FeedbackManageListDTO> pageResult, Exercise exercise, Long givenFeedbackNum) {
 		then(mapv).should(times(1)).addObject("listObject", pageResult);
 		then(mapv).should(times(1)).addObject("exerciseName", exercise.getName());
-		then(mapv).should(times(1)).setPageNumbers(defaultPageNum, givenFeedbackNum/ PageUtil.FEEDBACK_FOR_MANAGE_PAGE_SIZE +1);
+		then(mapv).should(times(1)).setPageNumbers(defaultPageNum, givenFeedbackNum/ PageSize.FEEDBACK_FOR_MANAGE_PAGE_SIZE.getSize() +1);
 		then(mapv).should(times(1)).setViewName("feedbackListViewForManage");
 	}
 	

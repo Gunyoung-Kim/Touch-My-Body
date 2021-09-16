@@ -36,9 +36,12 @@ import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
+import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseServiceImpl;
+import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
-import com.gunyoung.tmb.util.ExerciseMuscleTest;
+import com.gunyoung.tmb.services.domain.user.UserExerciseService;
+import com.gunyoung.tmb.testutil.ExerciseMuscleTest;
 
 /**
  * {@link ExerciseServiceImpl} 에 대한 테스트 클래스 <br>
@@ -59,6 +62,15 @@ public class ExerciseServiceUnitTest {
 	@Mock
 	ExerciseMuscleService exerciseMuscleService;
 	
+	@Mock
+	ExercisePostService exercisePostService;
+	
+	@Mock
+	UserExerciseService userExerciseService;
+	
+	@Mock
+	FeedbackService feedbackService;
+	
 	@InjectMocks
 	ExerciseServiceImpl exerciseService;
 	
@@ -67,7 +79,7 @@ public class ExerciseServiceUnitTest {
 	@BeforeEach
 	void setup() {
 		exercise = Exercise.builder()
-				.id(Long.valueOf(1))
+				.id(Long.valueOf(24))
 				.name("name")
 				.description("description")
 				.caution("caution")
@@ -277,7 +289,17 @@ public class ExerciseServiceUnitTest {
 	public void getAllExercisesNamewithSortingTest() {
 		//Given
 		List<ExerciseNameAndTargetDTO> exerciseNameAndTargetDTOList = new ArrayList<>();
+		addExerciseNameAndTargetDTOListTwoForARMAndOneForOthers(exerciseNameAndTargetDTOList);
+		given(exerciseRepository.findAllWithNameAndTarget()).willReturn(exerciseNameAndTargetDTOList);
 		
+		//When
+		Map<String, List<String>> result = exerciseService.getAllExercisesNamewithSorting();
+		
+		//Then
+		verifyResult_for_getAllExercisesNamewithSortingTest(result);
+	}
+	
+	private void addExerciseNameAndTargetDTOListTwoForARMAndOneForOthers(List<ExerciseNameAndTargetDTO> exerciseNameAndTargetDTOList) {
 		TargetType[] targetTypes = TargetType.values();
 		for(TargetType target: targetTypes) {
 			ExerciseNameAndTargetDTO dto = ExerciseNameAndTargetDTO.builder()
@@ -287,18 +309,23 @@ public class ExerciseServiceUnitTest {
 			exerciseNameAndTargetDTOList.add(dto);
 		}
 		
-		given(exerciseRepository.findAllWithNameAndTarget()).willReturn(exerciseNameAndTargetDTOList);
-		
-		//When
-		Map<String, List<String>> result = exerciseService.getAllExercisesNamewithSorting();
-		
-		//Then
+		ExerciseNameAndTargetDTO dto = ExerciseNameAndTargetDTO.builder()
+				.name("name")
+				.target(TargetType.ARM)
+				.build();
+		exerciseNameAndTargetDTOList.add(dto);
+	}
+	
+	private void verifyResult_for_getAllExercisesNamewithSortingTest(Map<String, List<String>> result) {
 		Set<String> resultMapKeySet = result.keySet();
 		
-		assertEquals(targetTypes.length, resultMapKeySet.size());
+		assertEquals(TargetType.values().length, resultMapKeySet.size());
 		
 		for(String target: resultMapKeySet) {
-			assertEquals(1, result.get(target).size());
+			if(target.equals(TargetType.ARM.getKoreanName()))
+				assertEquals(2, result.get(target).size());
+			else 
+				assertEquals(1, result.get(target).size());
 		}
 	}
 	
@@ -381,15 +408,67 @@ public class ExerciseServiceUnitTest {
 	 */
 	
 	@Test
-	@DisplayName("Exercise 삭제 -> 정상")
-	public void deleteTest() {
+	@DisplayName("Exercise 삭제 -> 정상, Check ExerciseRepository")
+	public void deleteTestCheckExerciseRepo() {
 		//Given
 		
 		//When
 		exerciseService.delete(exercise);
 		
 		//Then
-		then(exerciseRepository).should(times(1)).delete(exercise);
+		then(exerciseRepository).should(times(1)).deleteByIdInQuery(exercise.getId());
+	}
+	
+	@Test
+	@DisplayName("Exercise 삭제 -> 정상, Check UserExerciseService")
+	public void deleteTestCheckUserExerciseService() {
+		//Given
+		Long exerciseId = exercise.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		then(userExerciseService).should(times(1)).deleteAllByExerciseId(exerciseId);
+	}
+	
+	@Test
+	@DisplayName("Exercise 삭제 -> 정상, Check FeedbackService")
+	public void deleteTestCheckFeedbackService() {
+		//Given
+		Long exerciseId = exercise.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		then(feedbackService).should(times(1)).deleteAllByExerciseId(exerciseId);
+	}
+	
+	@Test
+	@DisplayName("Exercise 삭제 -> 정상, Check ExerciseMuscleService")
+	public void deleteTestCheckExerciseMuscleService() {
+		//Given
+		Long exerciseId = exercise.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		then(exerciseMuscleService).should(times(1)).deleteAllByExerciseId(exerciseId);
+	}
+	
+	@Test
+	@DisplayName("Exercise 삭제 -> 정상, Check ExercisePostService")
+	public void deleteTestCheckExercisePostService() {
+		//Given
+		Long exerciseId = exercise.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		then(exercisePostService).should(times(1)).deleteAllByExerciseId(exerciseId);
 	}
 	
 	/*
@@ -423,7 +502,7 @@ public class ExerciseServiceUnitTest {
 		exerciseService.deleteById(exerciseId);
 		
 		//Then
-		then(exerciseRepository).should(times(1)).delete(exercise);
+		then(exerciseRepository).should(times(1)).deleteByIdInQuery(exercise.getId());
 	}
 	
 	/*
@@ -473,7 +552,7 @@ public class ExerciseServiceUnitTest {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
-		given(exerciseRepository.findById(nonExistId)).willReturn(Optional.empty());
+		given(exerciseRepository.findWithExerciseMusclesById(nonExistId)).willReturn(Optional.empty());
 		
 		//When
 		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistId);
@@ -488,7 +567,7 @@ public class ExerciseServiceUnitTest {
 		//Given
 		Long exerciseId = Long.valueOf(1);
 		
-		given(exerciseRepository.findById(exerciseId)).willReturn(Optional.of(exercise));
+		given(exerciseRepository.findWithExerciseMusclesById(exerciseId)).willReturn(Optional.of(exercise));
 		
 		//When
 		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(exerciseId);
@@ -509,7 +588,7 @@ public class ExerciseServiceUnitTest {
 		
 		exercise.getExerciseMuscles().addAll(List.of(mainExerciseMuscle, subExerciseMuscle));
 		
-		given(exerciseRepository.findById(exerciseId)).willReturn(Optional.of(exercise));
+		given(exerciseRepository.findWithExerciseMusclesById(exerciseId)).willReturn(Optional.of(exercise));
 		
 		//When
 		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(exerciseId);

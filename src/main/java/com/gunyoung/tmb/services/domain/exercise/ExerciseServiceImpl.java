@@ -23,6 +23,7 @@ import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
+import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -38,13 +39,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExerciseServiceImpl implements ExerciseService {
 	
-	public static final String EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY = "bycategory";
-	
 	private final ExerciseRepository exerciseRepository;
 	
 	private final MuscleService muscleService;
 	
 	private final ExerciseMuscleService exerciseMuscleService;
+	
+	private final ExercisePostService exercisePostService;
+	
+	private final UserExerciseService userExerciseService;
+	
+	private final FeedbackService feedbackService;
 
 	@Override
 	@Transactional(readOnly=true)
@@ -115,7 +120,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 		for(ExerciseNameAndTargetDTO dto: list) {
 			String target = dto.getTarget().getKoreanName();
 			String name = dto.getName();
-			
 			if(result.containsKey(target)) {
 				result.get(target).add(name);
 			} else {
@@ -136,26 +140,21 @@ public class ExerciseServiceImpl implements ExerciseService {
 	
 	@Override
 	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
-	public Exercise saveWithSaveExerciseDTO(Exercise exercise,SaveExerciseDTO dto) {
+	public Exercise saveWithSaveExerciseDTO(Exercise exercise, SaveExerciseDTO dto) {
 		exercise.setName(dto.getName());
 		exercise.setDescription(dto.getDescription());
 		exercise.setCaution(dto.getCaution());
 		exercise.setMovement(dto.getMovement());
 		
-		// SaveExerciseDTO에 입력된 target에 해당하는 TargetType 있는지 확인
-		
 		TargetType exerciseTarget = TargetType.getFromKoreanName(dto.getTarget());
-		
 		if(exerciseTarget == null) {
 			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
 		}
-		
 		exercise.setTarget(exerciseTarget);
 		
 		// Main Muscle 들 이름으로 Muscle 객체들 가져오기
 		List<String> mainMusclesName = dto.getMainMuscles();
 		List<Muscle> mainMuscles = muscleService.getMuscleListFromMuscleNameList(mainMusclesName);
-		
 		
 		// Sub Muscle 들 이름으로 Muscle 객체들 가져오기
 		List<String> subMusclesName = dto.getSubMuscles();
@@ -165,29 +164,18 @@ public class ExerciseServiceImpl implements ExerciseService {
 		List<ExerciseMuscle> exerciseMuscles = new ArrayList<>();
 		
 		List<ExerciseMuscle> mainExerciseMuscleList =  exerciseMuscleService.getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(exercise, mainMuscles, true);
-		
 		exerciseMuscles.addAll(mainExerciseMuscleList);
 		exercise.getExerciseMuscles().addAll(mainExerciseMuscleList);
 		
-		
 		List<ExerciseMuscle> subExerciseMuscleList = exerciseMuscleService.getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(exercise, subMuscles, false);
-		
 		exerciseMuscles.addAll(subExerciseMuscleList);
 		exercise.getExerciseMuscles().addAll(subExerciseMuscleList);
 		
-		//Exercise 객체 저장 
 		save(exercise);
 		
-		//ExerciseMuscle 객체 저장
 		exerciseMuscleService.saveAll(exerciseMuscles);
 		
 		return exercise;
-	}
-
-	@Override
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
-	public void delete(Exercise exercise) {
-		exerciseRepository.delete(exercise);
 	}
 	
 	@Override
@@ -196,6 +184,21 @@ public class ExerciseServiceImpl implements ExerciseService {
 		Exercise exercise = findById(id);
 		if(exercise != null)
 			delete(exercise);
+	}
+
+	@Override
+	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	public void delete(Exercise exercise) {
+		deleteAllOneToManyEntityForExercise(exercise);
+		exerciseRepository.deleteByIdInQuery(exercise.getId());
+	}
+	
+	private void deleteAllOneToManyEntityForExercise(Exercise exercise) {
+		Long exerciseId = exercise.getId();
+		userExerciseService.deleteAllByExerciseId(exerciseId);
+		feedbackService.deleteAllByExerciseId(exerciseId);
+		exerciseMuscleService.deleteAllByExerciseId(exerciseId);
+		exercisePostService.deleteAllByExerciseId(exerciseId);
 	}
 
 	@Override
@@ -213,34 +216,10 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Override
 	@Transactional(readOnly=true)
 	public ExerciseForInfoViewDTO getExerciseForInfoViewDTOByExerciseId(Long exerciseId) {
-		Exercise exercise = findById(exerciseId);
-		
+		Exercise exercise = findWithExerciseMusclesById(exerciseId);
 		if(exercise == null)
 			return null;
-		
-		ExerciseForInfoViewDTO dto = ExerciseForInfoViewDTO.builder()
-				.id(exercise.getId())
-				.name(exercise.getName())
-				.description(exercise.getDescription())
-				.caution(exercise.getCaution())
-				.movement(exercise.getMovement())
-				.target(exercise.getTarget().getKoreanName())
-				.build();
-		
-		List<ExerciseMuscle> muscles = exercise.getExerciseMuscles();
-		StringBuilder mainMuscleBuilder = new StringBuilder();
-		StringBuilder subMuscleBuilder = new StringBuilder();
-		
-		for(ExerciseMuscle muscle: muscles) {
-			if(muscle.isMain()) {
-				mainMuscleBuilder.append(muscle.getMuscleName()+".");
-			} else {
-				subMuscleBuilder.append(muscle.getMuscleName()+".");
-			}
-		}
-		
-		dto.setMainMuscle(mainMuscleBuilder.toString());
-		dto.setSubMuscle(subMuscleBuilder.toString());
+		ExerciseForInfoViewDTO dto = ExerciseForInfoViewDTO.of(exercise);
 		
 		return dto;
 	}

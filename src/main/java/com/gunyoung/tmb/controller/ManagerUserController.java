@@ -21,6 +21,7 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForManageViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostForManageViewDTO;
 import com.gunyoung.tmb.dto.response.UserManageListDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.error.codes.SearchCriteriaErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
@@ -30,7 +31,6 @@ import com.gunyoung.tmb.security.AuthorityService;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
 import com.gunyoung.tmb.services.domain.user.UserService;
-import com.gunyoung.tmb.utils.PageUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,9 +43,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ManagerUserController {
 	
-	public static final int USER_MANAGE_VIEW_PAGE_SIZE = PageUtil.BY_NICKNAME_NAME_PAGE_SIZE;
-	public static final int USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE = PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE;
-	public static final int USER_POST_LIST_VIEW_FOR_MANAGER_PAGE_SIZE = PageUtil.POST_FOR_MANAGE_PAGE_SIZE;
+	public static final int USER_MANAGE_VIEW_PAGE_SIZE = PageSize.BY_NICKNAME_NAME_PAGE_SIZE.getSize();
+	public static final int USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE = PageSize.COMMENT_FOR_MANAGE_PAGE_SIZE.getSize();
+	public static final int USER_POST_LIST_VIEW_FOR_MANAGER_PAGE_SIZE = PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize();
 	
 	private final UserService userService;
 	

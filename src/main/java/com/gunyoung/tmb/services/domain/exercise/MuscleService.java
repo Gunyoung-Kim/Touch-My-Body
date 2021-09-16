@@ -10,6 +10,8 @@ import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 
 public interface MuscleService {
 	
+	public static final String MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY = "bycategory";
+	
 	/**
 	 * ID로 Muscle 찾기
 	 * @param id 찾으려는 Muscle의 id

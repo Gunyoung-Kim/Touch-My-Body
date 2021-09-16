@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -123,6 +124,11 @@ public interface UserRepository extends JpaRepository<User,Long>{
 			+ "(u.nickName LIKE %:keyword%) "
 			+ "ORDER BY u.role")
 	public Page<User> findAllByNickNameOrName(@Param("keyword")String keyword,Pageable pageable);
+	
+	@Modifying
+	@Query("DELETE FROM User u "
+			+ "WHERE u.id = :userId")
+	public void deleteByIdInQuery(@Param("userId") Long id);
 	
 	/**
 	 * nickName, name 검색 키워드로 만족하는 User들 개수 찾기

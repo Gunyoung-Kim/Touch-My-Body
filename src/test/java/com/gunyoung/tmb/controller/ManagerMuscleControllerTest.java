@@ -22,11 +22,12 @@ import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.response.MuscleForTableDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.repos.MuscleRepository;
-import com.gunyoung.tmb.util.ControllerTest;
-import com.gunyoung.tmb.util.MuscleTest;
-import com.gunyoung.tmb.utils.PageUtil;
+import com.gunyoung.tmb.testutil.ControllerTest;
+import com.gunyoung.tmb.testutil.MuscleTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * {@link ManagerMuscleController} 에 대한 테스트 클래스
@@ -35,6 +36,7 @@ import com.gunyoung.tmb.utils.PageUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ManagerMuscleControllerTest {
@@ -71,7 +73,7 @@ public class ManagerMuscleControllerTest {
 		@SuppressWarnings("unchecked")
 		List<MuscleForTableDTO> resultList = (List<MuscleForTableDTO>) model.get("listObject");
 		
-		assertEquals(Math.min(givenMuscleNum, PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE),resultList.size());
+		assertEquals(Math.min(givenMuscleNum, PageSize.MUSCLE_FOR_MANAGE_PAGE_SIZE.getSize()),resultList.size());
 	}
 	
 	@WithMockUser(roles = {"MANAGER"})
@@ -123,7 +125,7 @@ public class ManagerMuscleControllerTest {
 		@SuppressWarnings("unchecked")
 		List<MuscleForTableDTO> resultList = (List<MuscleForTableDTO>) model.get("listObject");
 		
-		assertEquals(Math.min(givenMuscleNum, PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE),resultList.size());
+		assertEquals(Math.min(givenMuscleNum, PageSize.MUSCLE_FOR_MANAGE_PAGE_SIZE.getSize()),resultList.size());
 	}
 	
 	/*

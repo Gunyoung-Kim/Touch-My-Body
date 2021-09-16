@@ -90,7 +90,7 @@ public class ExerciseMuscleServiceUnitTest {
 		given(exerciseMuscleRepository.save(exerciseMuscle)).willReturn(exerciseMuscle);
 		
 		//When
-		ExerciseMuscle result = exerciseMuscleRepository.save(exerciseMuscle);
+		ExerciseMuscle result = exerciseMuscleService.save(exerciseMuscle);
 		
 		//Then
 		assertEquals(exerciseMuscle, result);
@@ -128,6 +128,40 @@ public class ExerciseMuscleServiceUnitTest {
 		
 		//Then
 		then(exerciseMuscleRepository).should(times(1)).delete(exerciseMuscle);
+	}
+	
+	/*
+	 * public void deleteAllByMuscleId(Long muscleId)
+	 */
+	
+	@Test
+	@DisplayName("Muscle ID를 통한 ExerciseMuscle 모두 삭제 -> 정상, check repository")
+	public void deleteAllByMuscleIdTestCheckRepo() {
+		//Given
+		Long muscleId = Long.valueOf(52);
+		
+		//When
+		exerciseMuscleService.deleteAllByMuscleId(muscleId);
+		
+		//Then
+		then(exerciseMuscleRepository).should(times(1)).deleteAllByMuscleIdInQuery(muscleId);
+	}
+	
+	/*
+	 * public void deleteAllByExerciseId(Long exerciseId)
+	 */
+	
+	@Test
+	@DisplayName("Exercise ID를 통한 ExerciseMuscle 모두 삭제 -> 정상, check repository")
+	public void deleteAllByExerciseIdTestCheckRepo() {
+		//Given
+		Long exerciseId = Long.valueOf(52);
+		
+		//When
+		exerciseMuscleService.deleteAllByExerciseId(exerciseId);
+		
+		//Then
+		then(exerciseMuscleRepository).should(times(1)).deleteAllByExerciseIdInQuery(exerciseId);
 	}
 	
 	/*

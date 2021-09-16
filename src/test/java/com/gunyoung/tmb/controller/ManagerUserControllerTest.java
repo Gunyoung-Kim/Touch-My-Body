@@ -23,15 +23,16 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForManageViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostForManageViewDTO;
 import com.gunyoung.tmb.dto.response.UserManageListDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.UserRepository;
-import com.gunyoung.tmb.util.CommentTest;
-import com.gunyoung.tmb.util.ControllerTest;
-import com.gunyoung.tmb.util.ExercisePostTest;
-import com.gunyoung.tmb.util.UserTest;
-import com.gunyoung.tmb.utils.PageUtil;
+import com.gunyoung.tmb.testutil.CommentTest;
+import com.gunyoung.tmb.testutil.ControllerTest;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.UserTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * {@link ManagerUserController} 에 대한 테스트 클래스
@@ -40,6 +41,7 @@ import com.gunyoung.tmb.utils.PageUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ManagerUserControllerTest {
@@ -229,7 +231,7 @@ public class ManagerUserControllerTest {
 		 
 		 @SuppressWarnings("unchecked")
 		List<CommentForManageViewDTO> listObject = (List<CommentForManageViewDTO>) model.get("commentList");
-		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE), listObject.size());
+		assertEquals(Math.min(givenCommentNum, PageSize.COMMENT_FOR_MANAGE_PAGE_SIZE.getSize()), listObject.size());
 	}
 	
 	@WithMockUser(roles= {"MANAGER"})
@@ -253,7 +255,7 @@ public class ManagerUserControllerTest {
 		 
 		 @SuppressWarnings("unchecked")
 		List<CommentForManageViewDTO> listObject = (List<CommentForManageViewDTO>) model.get("commentList");
-		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE), listObject.size());
+		assertEquals(Math.min(givenCommentNum, PageSize.COMMENT_FOR_MANAGE_PAGE_SIZE.getSize()), listObject.size());
 	}
 	
 	/*
@@ -313,7 +315,7 @@ public class ManagerUserControllerTest {
 		 @SuppressWarnings("unchecked")
 		List<ExercisePostForManageViewDTO> listObject = (List<ExercisePostForManageViewDTO>) model.get("postList");
 		 
-		 assertEquals(Math.min(exercisePostNum, PageUtil.POST_FOR_MANAGE_PAGE_SIZE),listObject.size());
+		 assertEquals(Math.min(exercisePostNum, PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()),listObject.size());
 	}
 	
 	@WithMockUser(roles= {"MANAGER"})
@@ -338,6 +340,6 @@ public class ManagerUserControllerTest {
 		 @SuppressWarnings("unchecked")
 		List<ExercisePostForManageViewDTO> listObject = (List<ExercisePostForManageViewDTO>) model.get("postList");
 		 
-		 assertEquals(Math.min(exercisePostNum, PageUtil.POST_FOR_MANAGE_PAGE_SIZE),listObject.size());
+		 assertEquals(Math.min(exercisePostNum, PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize()),listObject.size());
 	}
 }

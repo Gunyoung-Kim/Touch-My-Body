@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.UserProfileDTO;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link UserProfileDTO} 에 대한 테스트 클래스 <br>

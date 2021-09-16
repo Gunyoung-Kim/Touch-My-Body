@@ -12,6 +12,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +28,7 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.security.CustomLoginSuccessHandler;
 import com.gunyoung.tmb.services.domain.user.UserService;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.UserTest;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**
@@ -45,6 +47,22 @@ public class CustomLoginSuccessHandlerUnitTest {
 	@InjectMocks 
 	CustomLoginSuccessHandler customLoginSuccessHandler;
 	
+	private HttpSession session;
+	
+	private HttpServletRequest request;
+	
+	private HttpServletResponse response;
+	
+	private Authentication authentication;
+	
+	@BeforeEach
+	void setup() {
+		 session = mock(HttpSession.class);
+		 request = mock(HttpServletRequest.class);
+		 response = mock(HttpServletResponse.class);
+		 authentication = mock(Authentication.class);
+	}
+	
 	/*
 	 * public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException 
@@ -55,18 +73,9 @@ public class CustomLoginSuccessHandlerUnitTest {
 	public void onAuthenticationSuccessTestNoRedirectedURLInSession() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
-		User user = UserTest.getUserInstance(loginUserEmail, RoleType.USER);
-		user.setId(Long.valueOf(1));
+		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
 		
-		HttpSession session = mock(HttpSession.class);
-		HttpServletRequest request = mock(HttpServletRequest.class);
-		HttpServletResponse response = mock(HttpServletResponse.class);
-		Authentication authentication = mock(Authentication.class);
-		
-		given(request.getSession()).willReturn(session);
-		given(authentication.getName()).willReturn(loginUserEmail);
-		given(userService.findByEmail(loginUserEmail)).willReturn(user);
-		given(session.getAttribute(SessionUtil.AFTER_LOGIN_REDIRECTED_URL)).willReturn(null);
+		mockingSessionForGetAfterLoginRedirectedURL(null);
 		
 		//When
 		customLoginSuccessHandler.onAuthenticationSuccess(request, response, authentication);
@@ -80,20 +89,10 @@ public class CustomLoginSuccessHandlerUnitTest {
 	public void onAuthenticationSuccessTestRedirectedURLExistInSession() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
-		User user = UserTest.getUserInstance(loginUserEmail, RoleType.USER);
-		user.setId(Long.valueOf(1));
+		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
 		
-		HttpSession session = mock(HttpSession.class);
-		HttpServletRequest request = mock(HttpServletRequest.class);
-		HttpServletResponse response = mock(HttpServletResponse.class);
-		Authentication authentication = mock(Authentication.class);
-		
-		given(request.getSession()).willReturn(session);
-		given(authentication.getName()).willReturn(loginUserEmail);
-		given(userService.findByEmail(loginUserEmail)).willReturn(user);
-		
-		String redirectedUrl = "/redirected";
-		given(session.getAttribute(SessionUtil.AFTER_LOGIN_REDIRECTED_URL)).willReturn(redirectedUrl);
+		String redirectedUrlInSession = "/redirected";
+		mockingSessionForGetAfterLoginRedirectedURL(redirectedUrlInSession);
 		
 		//When
 		customLoginSuccessHandler.onAuthenticationSuccess(request, response, authentication);
@@ -107,26 +106,15 @@ public class CustomLoginSuccessHandlerUnitTest {
 	public void onAuthenticationSuccessTestSavedRequestNotNull() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
-		User user = UserTest.getUserInstance(loginUserEmail, RoleType.USER);
-		user.setId(Long.valueOf(1));
-		
-		HttpSession session = mock(HttpSession.class);
-		HttpServletRequest request = mock(HttpServletRequest.class);
-		HttpServletResponse response = mock(HttpServletResponse.class);
-		Authentication authentication = mock(Authentication.class);
-		
-		given(request.getSession()).willReturn(session);
-		given(authentication.getName()).willReturn(loginUserEmail);
-		given(userService.findByEmail(loginUserEmail)).willReturn(user);
+		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
 		
 		String redirectedUrlInSession = "/redirected";
-		given(session.getAttribute(SessionUtil.AFTER_LOGIN_REDIRECTED_URL)).willReturn(redirectedUrlInSession);
+		mockingSessionForGetAfterLoginRedirectedURL(redirectedUrlInSession);
 		
-		given(request.getSession(false)).willReturn(session);
+		mockingRequestGetSessionWithFalseReturnSession();
 		
 		SavedRequest savedRequest = mock(SavedRequest.class);
-		String SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST";
-		given(session.getAttribute(SAVED_REQUEST)).willReturn(savedRequest);
+		mockingSessionForGetSavedRequest(savedRequest);
 		
 		//When
 		customLoginSuccessHandler.onAuthenticationSuccess(request, response, authentication);
@@ -140,24 +128,13 @@ public class CustomLoginSuccessHandlerUnitTest {
 	public void onAuthenticationSuccessTestSavedRequestNullAndURLFromSessionNotNullNotEmpty() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
-		User user = UserTest.getUserInstance(loginUserEmail, RoleType.USER);
-		user.setId(Long.valueOf(1));
-		
-		HttpSession session = mock(HttpSession.class);
-		HttpServletRequest request = mock(HttpServletRequest.class);
-		HttpServletResponse response = mock(HttpServletResponse.class);
-		Authentication authentication = mock(Authentication.class);
-		
-		given(request.getSession()).willReturn(session);
-		given(authentication.getName()).willReturn(loginUserEmail);
-		given(userService.findByEmail(loginUserEmail)).willReturn(user);
+		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
 		
 		String redirectedUrlInSession = "/redirect";
-		given(session.getAttribute(SessionUtil.AFTER_LOGIN_REDIRECTED_URL)).willReturn(redirectedUrlInSession);
+		mockingSessionForGetAfterLoginRedirectedURL(redirectedUrlInSession);
 		
-		given(request.getSession(false)).willReturn(session);
-		String SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST";
-		given(session.getAttribute(SAVED_REQUEST)).willReturn(null);
+		mockingRequestGetSessionWithFalseReturnSession();
+		mockingSessionForGetSavedRequest(null);
 		
 		//When
 		customLoginSuccessHandler.onAuthenticationSuccess(request, response, authentication);
@@ -171,24 +148,13 @@ public class CustomLoginSuccessHandlerUnitTest {
 	public void onAuthenticationSuccessTestSavedRequestNullAndURLFromSessionNotNullEmpty() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
-		User user = UserTest.getUserInstance(loginUserEmail, RoleType.USER);
-		user.setId(Long.valueOf(1));
-		
-		HttpSession session = mock(HttpSession.class);
-		HttpServletRequest request = mock(HttpServletRequest.class);
-		HttpServletResponse response = mock(HttpServletResponse.class);
-		Authentication authentication = mock(Authentication.class);
-		
-		given(request.getSession()).willReturn(session);
-		given(authentication.getName()).willReturn(loginUserEmail);
-		given(userService.findByEmail(loginUserEmail)).willReturn(user);
+		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
 		
 		String redirectedUrlInSession = "";
-		given(session.getAttribute(SessionUtil.AFTER_LOGIN_REDIRECTED_URL)).willReturn(redirectedUrlInSession);
+		mockingSessionForGetAfterLoginRedirectedURL(redirectedUrlInSession);
 
-		given(request.getSession(false)).willReturn(session);
-		String SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST";
-		given(session.getAttribute(SAVED_REQUEST)).willReturn(null);
+		mockingRequestGetSessionWithFalseReturnSession();
+		mockingSessionForGetSavedRequest(null);
 		
 		//When
 		customLoginSuccessHandler.onAuthenticationSuccess(request, response, authentication);
@@ -202,23 +168,10 @@ public class CustomLoginSuccessHandlerUnitTest {
 	public void onAuthenticationSuccessTestSavedRequestNullAndURLFromSessionNull() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
-		User user = UserTest.getUserInstance(loginUserEmail, RoleType.USER);
-		user.setId(Long.valueOf(1));
-		
-		HttpSession session = mock(HttpSession.class);
-		HttpServletRequest request = mock(HttpServletRequest.class);
-		HttpServletResponse response = mock(HttpServletResponse.class);
-		Authentication authentication = mock(Authentication.class);
-		
-		given(request.getSession()).willReturn(session);
-		given(authentication.getName()).willReturn(loginUserEmail);
-		given(userService.findByEmail(loginUserEmail)).willReturn(user);
-		
-		given(session.getAttribute(SessionUtil.AFTER_LOGIN_REDIRECTED_URL)).willReturn(null);
-
-		given(request.getSession(false)).willReturn(session);
-		String SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST";
-		given(session.getAttribute(SAVED_REQUEST)).willReturn(null);
+		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
+		mockingSessionForGetAfterLoginRedirectedURL(null);
+		mockingRequestGetSessionWithFalseReturnSession();
+		mockingSessionForGetSavedRequest(null);
 		
 		//When
 		customLoginSuccessHandler.onAuthenticationSuccess(request, response, authentication);
@@ -232,28 +185,37 @@ public class CustomLoginSuccessHandlerUnitTest {
 	public void onAuthenticationSuccessTestCheckRemoveAuthenticationExceptionAttributes() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
-		User user = UserTest.getUserInstance(loginUserEmail, RoleType.USER);
-		user.setId(Long.valueOf(1));
-		
-		HttpSession session = mock(HttpSession.class);
-		HttpServletRequest request = mock(HttpServletRequest.class);
-		HttpServletResponse response = mock(HttpServletResponse.class);
-		Authentication authentication = mock(Authentication.class);
-		
-		given(request.getSession()).willReturn(session);
-		given(authentication.getName()).willReturn(loginUserEmail);
-		given(userService.findByEmail(loginUserEmail)).willReturn(user);
-		
-		given(session.getAttribute(SessionUtil.AFTER_LOGIN_REDIRECTED_URL)).willReturn(null);
-
-		given(request.getSession(false)).willReturn(session);
-		String SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST";
-		given(session.getAttribute(SAVED_REQUEST)).willReturn(null);
+		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
+		mockingSessionForGetAfterLoginRedirectedURL(null);
+		mockingRequestGetSessionWithFalseReturnSession();
+		mockingSessionForGetSavedRequest(null);
 		
 		//When
 		customLoginSuccessHandler.onAuthenticationSuccess(request, response, authentication);
 		
 		//Then
 		then(session).should(times(1)).removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+	}
+	
+	private void mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(String loginUserEmail) {
+		User user = UserTest.getUserInstance(loginUserEmail, RoleType.USER);
+		user.setId(Long.valueOf(1));
+		
+		given(request.getSession()).willReturn(session);
+		given(authentication.getName()).willReturn(loginUserEmail);
+		given(userService.findByEmail(loginUserEmail)).willReturn(user);
+	}
+	
+	private void mockingSessionForGetAfterLoginRedirectedURL(String redirectedUrlInSession) {
+		given(session.getAttribute(SessionUtil.AFTER_LOGIN_REDIRECTED_URL)).willReturn(redirectedUrlInSession);
+	}
+	
+	private void mockingRequestGetSessionWithFalseReturnSession() {
+		given(request.getSession(false)).willReturn(session);
+	}
+	
+	private void mockingSessionForGetSavedRequest(SavedRequest savedRequest) {
+		String SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST";
+		given(session.getAttribute(SAVED_REQUEST)).willReturn(savedRequest);
 	}
 }

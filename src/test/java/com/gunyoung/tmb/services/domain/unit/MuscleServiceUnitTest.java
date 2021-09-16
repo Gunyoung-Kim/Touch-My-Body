@@ -29,6 +29,7 @@ import com.gunyoung.tmb.dto.jpa.MuscleNameAndCategoryDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.repos.MuscleRepository;
+import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
 import com.gunyoung.tmb.services.domain.exercise.MuscleServiceImpl;
 
 /**
@@ -44,6 +45,9 @@ public class MuscleServiceUnitTest {
 	@Mock
 	MuscleRepository muscleRepository;
 	
+	@Mock
+	ExerciseMuscleService exerciseMuscleService;
+	
 	@InjectMocks
 	MuscleServiceImpl muscleService;
 	
@@ -51,7 +55,9 @@ public class MuscleServiceUnitTest {
 	
 	@BeforeEach
 	void setup() {
+		Long muscleId = Long.valueOf(25);
 		muscle = Muscle.builder()
+				.id(muscleId)
 				.build();
 	}
 	
@@ -252,8 +258,8 @@ public class MuscleServiceUnitTest {
 	 */
 	
 	@Test
-	@DisplayName("Muscle 삭제 -> 정상")
-	public void deleteTest() {
+	@DisplayName("Muscle 삭제 -> 정상, check muscleRepository")
+	public void deleteTestCheckMuscleRepository() {
 		//Given
 		
 		//When
@@ -261,6 +267,19 @@ public class MuscleServiceUnitTest {
 		
 		//Then
 		then(muscleRepository).should(times(1)).delete(muscle);
+	}
+	
+	@Test
+	@DisplayName("Muscle 삭제 -> 정상 , exerciseMuscleService check")
+	public void deleteTestCheckExerciseMuscleService() {
+		//Given
+		Long muscleId = muscle.getId();
+		
+		//When
+		muscleService.delete(muscle);
+		
+		//Then
+		then(exerciseMuscleService).should(times(1)).deleteAllByMuscleId(muscleId);
 	}
 	
 	/*

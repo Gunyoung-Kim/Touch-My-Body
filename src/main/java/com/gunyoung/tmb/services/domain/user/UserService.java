@@ -103,14 +103,15 @@ public interface UserService {
 	 * @return 저장된 객체
 	 * @author kimgun-yeong
 	 */
-	public User saveByJoinDTO(UserJoinDTO dto,RoleType role);
+	public User saveByJoinDTOAndRoleType(UserJoinDTO dto,RoleType role);
 	
 	/**
-	 * User 삭제 
+	 * User 삭제 <br>
+	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param user 삭제하려는 user
 	 * @author kimgun-yeong
 	 */
-	public void deleteUser(User user);
+	public void delete(User user);
 	
 	/**
 	 * email로 User 존재 여부 반환

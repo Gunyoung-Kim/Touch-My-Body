@@ -12,6 +12,8 @@ import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 
 public interface ExerciseService {
 	
+	public static final String EXERCISE_SORT_BY_CATEGORY_DEFAULT_KEY = "bycategory";
+	
 	/**
 	 * ID로 Exercise 찾기
 	 * @param id 찾으려는 Exercise의 id
@@ -97,7 +99,8 @@ public interface ExerciseService {
 	
 	/**
 	 * Exercise 삭제 <br>
-	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제 <br>
+	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param exercise 삭제하려는 Exercise
 	 * @author kimgun-yeong
 	 */
@@ -105,7 +108,8 @@ public interface ExerciseService {
 	
 	/**
 	 * ID를 만족하는 Exercise 삭제 <br>
-	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제
+	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제 <br>
+	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @author kimgun-yeong
 	 */
 	public void deleteById(Long id);

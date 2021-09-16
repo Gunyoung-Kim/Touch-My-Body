@@ -19,16 +19,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
+import com.gunyoung.tmb.repos.CommentLikeRepository;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
-import com.gunyoung.tmb.util.CommentTest;
-import com.gunyoung.tmb.util.ExercisePostTest;
-import com.gunyoung.tmb.util.UserTest;
-import com.gunyoung.tmb.utils.PageUtil;
+import com.gunyoung.tmb.testutil.CommentLikeTest;
+import com.gunyoung.tmb.testutil.CommentTest;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.UserTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * CommentService에 대한 테스트 클래스 <br>
@@ -36,11 +40,15 @@ import com.gunyoung.tmb.utils.PageUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class CommentServiceTest {
 	
 	@Autowired
 	CommentRepository commentRepository;
+	
+	@Autowired
+	CommentLikeRepository commentLikeRepository;
 	
 	@Autowired
 	CommentService commentService;
@@ -140,10 +148,10 @@ public class CommentServiceTest {
 		
 		//When
 		
-		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageSize.COMMENT_FOR_MANAGE_PAGE_SIZE.getSize()).getContent();
 		
 		//Then
-		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE), result.size());
+		assertEquals(Math.min(givenCommentNum, PageSize.COMMENT_FOR_MANAGE_PAGE_SIZE.getSize()), result.size());
 	}
 	
 	@Test
@@ -170,7 +178,7 @@ public class CommentServiceTest {
 		
 		//When
 		
-		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtAsc(user.getId(),1,PageSize.COMMENT_FOR_MANAGE_PAGE_SIZE.getSize()).getContent();
 		
 		//Then
 		assertTrue(result.get(0).getCreatedAt().isBefore(result.get(1).getCreatedAt()));
@@ -195,10 +203,10 @@ public class CommentServiceTest {
 		commentRepository.saveAll(comments);
 		
 		//When
-		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageSize.COMMENT_FOR_MANAGE_PAGE_SIZE.getSize()).getContent();
 		
 		//Then
-		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE), result.size());
+		assertEquals(Math.min(givenCommentNum, PageSize.COMMENT_FOR_MANAGE_PAGE_SIZE.getSize()), result.size());
 	}
 	
 	@Test
@@ -225,7 +233,7 @@ public class CommentServiceTest {
 		commentRepository.saveAll(comments);
 		
 		//When
-		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageUtil.COMMENT_FOR_MANAGE_PAGE_SIZE).getContent();
+		List<Comment> result = commentService.findAllByUserIdOrderByCreatedAtDesc(user.getId(),1,PageSize.COMMENT_FOR_MANAGE_PAGE_SIZE.getSize()).getContent();
 		
 		//Then
 		assertTrue(result.get(0).getCreatedAt().isAfter(result.get(1).getCreatedAt()));
@@ -298,7 +306,7 @@ public class CommentServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("Comment 삭제하기 -> 정상")
+	@DisplayName("Comment 삭제하기 -> 정상, Check Comment Delete")
 	public void deleteTest() {
 		//Given
 		Long givenCommentNum = commentRepository.count();
@@ -308,6 +316,24 @@ public class CommentServiceTest {
 		
 		//Then
 		assertEquals(givenCommentNum-1,commentRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Comment 삭제하기 -> 정상, Check CommentLike Delete")
+	public void deleteTestCheckCommentLikeDelete() {
+		//Given
+		CommentLike commentLike = CommentLikeTest.getCommentLikeInstance();
+		commentLike.setComment(comment);
+		commentLikeRepository.save(commentLike);
+		
+		Long commentLikeId = commentLike.getId();
+		
+		//When
+		commentService.delete(comment);
+		
+		//Then
+		assertFalse(commentLikeRepository.existsById(commentLikeId));
 	}
 	
 	/*
@@ -357,8 +383,155 @@ public class CommentServiceTest {
 	}
 	
 	/*
+	 * public void deleteAllByUserId(Long userId)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID로 Comment 일괄 삭제 -> 정상, Check Comments Delete")
+	public void deleteAllByUserIdTestCheckCommentDelete() {
+		//Given
+		int addCommentNum = 7;
+		addComments(addCommentNum);
+		
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		saveAllCommentWithUser(user);
+		
+		Long userId = user.getId();
+		
+		//When
+		commentService.deleteAllByUserId(userId);
+		
+		//Then
+		assertEquals(0, commentRepository.count());
+	}
+	
+	private void saveAllCommentWithUser(User user) {
+		List<Comment> comments = commentRepository.findAll();
+		for(Comment comment: comments) {
+			comment.setUser(user);
+		}
+		commentRepository.saveAll(comments);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("User ID로 Comment 일괄 삭제 -> 정상, Check CommentLike Delete")
+	public void deleteAllByUserIdTestCheckCommentLikeDelete() {
+		//Given
+		int addCommentNum = 5;
+		addComments(addCommentNum);
+		
+		User user = UserTest.getUserInstance();
+		userRepository.save(user);
+		saveAllCommentWithUserAndAddOneCommentLikeForEach(user);
+		
+		Long userId = user.getId();
+		
+		//When
+		commentService.deleteAllByUserId(userId);
+		
+		//Then
+		assertEquals(0, commentLikeRepository.count());
+	}
+	
+	private void saveAllCommentWithUserAndAddOneCommentLikeForEach(User user) {
+		List<Comment> comments = commentRepository.findAll();
+		List<CommentLike> newCommentLikes = new ArrayList<>();
+		for(Comment comment: comments) {
+			comment.setUser(user);
+			
+			CommentLike commentLike = CommentLikeTest.getCommentLikeInstance();
+			commentLike.setComment(comment);
+			newCommentLikes.add(commentLike);
+		}
+		commentRepository.saveAll(comments);
+		commentLikeRepository.saveAll(newCommentLikes);
+	}
+	
+	/*
+	 * public void deleteAllByExercisePostId(Long exercisePostId)
+	 */
+	
+	@Test
+	@Transactional
+	@DisplayName("ExercisePost ID로 Comment 일괄 삭제 -> 정상 , Check Comments Delete")
+	public void deleteAllByExercisePostIdTestCheckCommentsDelete() {
+		//Given
+		int addCommentNum = 6;
+		addComments(addCommentNum);
+		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		exercisePostRepository.save(exercisePost);
+		saveAllCommentsWithExercisePost(exercisePost);
+		
+		Long exercisePostId = exercisePost.getId();
+		
+		//When
+		commentService.deleteAllByExercisePostId(exercisePostId);
+		
+		//Then
+		assertEquals(0, commentRepository.count());
+	}
+	
+	private void saveAllCommentsWithExercisePost(ExercisePost exercisePost) {
+		List<Comment> comments = commentRepository.findAll();
+		for(Comment comment: comments) {
+			comment.setExercisePost(exercisePost);
+		}
+		commentRepository.saveAll(comments);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("ExercisePost ID로 Comment 일괄 삭제 -> 정상 , Check CommentLike Delete")
+	public void deleteAllByExercisePostIdTestCheckCommentLikeDelete() {
+		//Given
+		int addCommentNum = 6;
+		addComments(addCommentNum);
+		
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		exercisePostRepository.save(exercisePost);
+		saveAllCommentsWithExercisePostAndAddCommentLikeForEach(exercisePost);
+		
+		Long exercisePostId = exercisePost.getId();
+		
+		//When
+		commentService.deleteAllByExercisePostId(exercisePostId);
+		
+		//Then
+		assertEquals(0, commentLikeRepository.count());
+	}
+	
+	private void saveAllCommentsWithExercisePostAndAddCommentLikeForEach(ExercisePost exercisePost) {
+		List<Comment> comments = commentRepository.findAll();
+		List<CommentLike> newCommentLikes = new ArrayList<>();
+		for(Comment comment: comments) {
+			CommentLike commentLike = CommentLikeTest.getCommentLikeInstance();
+			commentLike.setComment(comment);
+			newCommentLikes.add(commentLike);
+			
+			comment.setExercisePost(exercisePost);
+		}
+		
+		commentRepository.saveAll(comments);
+		commentLikeRepository.saveAll(newCommentLikes);
+	}
+	
+	private void addComments(int addCommentNum) {
+		List<Comment> comments = new ArrayList<>();
+		for(int i=0; i < addCommentNum; i++) {
+			Comment comment = CommentTest.getCommentInstance();
+			comments.add(comment);
+		}
+		commentRepository.saveAll(comments);
+	}
+	
+	/*
 	 * public long countByUserId(Long userId)
 	 */
+	
 	@Test
 	@Transactional
 	@DisplayName("User ID를 만족하는 Comment 들 개수 가져오기 -> 정상")

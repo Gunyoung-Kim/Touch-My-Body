@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
  *
  */
 class TouchMyBodyApplicationTests {
-
+	
 	@Test
 	@DisplayName("Spring context load 테스트")
 	void contextLoads() {
@@ -21,5 +21,4 @@ class TouchMyBodyApplicationTests {
 		
 		//Then
 	}
-
 }

@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.util;
+package com.gunyoung.tmb.testutil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
+import com.gunyoung.tmb.dto.reqeust.UserProfileForManagerDTO;
 import com.gunyoung.tmb.enums.RoleType;
 
 /**
@@ -132,6 +133,19 @@ public class UserTest {
 		map.add("lastName", "lastName");
 		map.add("nickName", nickName);
 		return map;
+	}
+	
+	/**
+	 * 테스트 용 {@link com.gunyoung.tmb.dto.reqeust.UserProfileForManagerDTO} 인스턴스 반환 <br>
+	 * role 커스터마이징 가능
+	 * @author kimgun-yeong
+	 */
+	public static UserProfileForManagerDTO getUserProfileForManagerDTOInstance(String roleString) {
+		UserProfileForManagerDTO userProfileForManagerDTO = UserProfileForManagerDTO.builder()
+				.role(roleString)
+				.build();
+		
+		return userProfileForManagerDTO;
 	}
 	
 	/**

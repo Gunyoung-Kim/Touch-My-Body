@@ -45,16 +45,24 @@ public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 		return exerciseMuscleRepository.saveAll(exerciseMuscles);
 	}
 	
-	
 	@Override
 	public void delete(ExerciseMuscle exerciseMuscle) {
 		exerciseMuscleRepository.delete(exerciseMuscle);
+	}
+	
+	@Override
+	public void deleteAllByMuscleId(Long muscleId) {
+		exerciseMuscleRepository.deleteAllByMuscleIdInQuery(muscleId);
+	}
+	
+	@Override
+	public void deleteAllByExerciseId(Long exerciseId) {
+		exerciseMuscleRepository.deleteAllByExerciseIdInQuery(exerciseId);
 	}
 
 	@Override
 	public List<ExerciseMuscle> getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(Exercise exercise, List<Muscle> muscleList,boolean isMain) {
 		List<ExerciseMuscle> exerciseMuscleList = new ArrayList<>();
-		
 		for(Muscle muscle: muscleList) {
 			ExerciseMuscle em = ExerciseMuscle.builder()
 					.exercise(exercise)

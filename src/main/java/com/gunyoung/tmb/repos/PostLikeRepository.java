@@ -3,6 +3,7 @@ package com.gunyoung.tmb.repos;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -14,7 +15,6 @@ public interface PostLikeRepository extends JpaRepository<PostLike,Long>{
 	 * User Id, ExercisePost Id 를 만족하는 PostLike 찾기   
 	 * @param userId 찾으려는 PostLike의 User ID
 	 * @param exercisePostId 찾으려는 ExercisePost의 ID
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@Query("SELECT pl FROM PostLike pl "
@@ -29,7 +29,6 @@ public interface PostLikeRepository extends JpaRepository<PostLike,Long>{
 	 * User, ExercisePost Inner 페치 조인   
 	 * @param userId 찾으려는 PostLike의 User ID
 	 * @param exercisePostId 찾으려는 ExercisePost의 ID
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@Query("SELECT pl FROM PostLike pl "
@@ -43,8 +42,28 @@ public interface PostLikeRepository extends JpaRepository<PostLike,Long>{
 	 * User ID와 ExercisePost ID로 해당 PostLike 존재하는지 여부 확인
 	 * @param userId 찾으려는 PostLike의 User ID
 	 * @param exercisePostId 찾으려는 ExercisePost의 ID
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId);
+	
+	/**
+	 * User Id로 만족하는 PostLike들 일괄 삭제
+	 * @param userId 삭제하려는 PostLike의 User ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM PostLike pl "
+			+ "WHERE pl.user.id = :userId")
+	public void deleteAllByUserIdInQuery(@Param("userId") Long userId);
+	
+	/**
+	 * ExercisePost Id로 만족하는 PostLike들 일괄 삭제
+	 * @param exercisePostId 삭제하려는 PostLike의 ExercisePost ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM PostLike pl "
+			+ "WHERE pl.exercisePost.id = :exercisePostId")
+	public void deleteAllByExercisePostIdInQuery(@Param("exercisePostId") Long exercisePostId);
 }
+

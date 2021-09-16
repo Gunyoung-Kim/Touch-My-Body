@@ -17,8 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.gunyoung.tmb.controller.ManagerExercisePostController;
 import com.gunyoung.tmb.controller.util.ModelAndPageView;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
-import com.gunyoung.tmb.utils.PageUtil;
 
 /**
  * {@link ManagerExercisePostController} 에 대한 테스트 클래스 <br>
@@ -59,7 +59,7 @@ public class ManagerExercisePostControllerUnitTest {
 		managerExercisePostController.manageCommunityView(pageNum, keyword, mapv);
 		
 		//Then
-		then(exercisePostService).should(times(1)).findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, pageNum, PageUtil.POST_FOR_MANAGE_PAGE_SIZE);
+		then(exercisePostService).should(times(1)).findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, pageNum, PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize());
 		then(exercisePostService).should(times(1)).countWithTitleAndContentsKeyword(keyword);
 	}
 	

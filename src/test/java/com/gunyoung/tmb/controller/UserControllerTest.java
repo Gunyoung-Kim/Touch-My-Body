@@ -28,15 +28,16 @@ import org.springframework.util.MultiValueMap;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForManageViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostForManageViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.UserRepository;
-import com.gunyoung.tmb.util.CommentTest;
-import com.gunyoung.tmb.util.ControllerTest;
-import com.gunyoung.tmb.util.ExercisePostTest;
-import com.gunyoung.tmb.util.UserTest;
-import com.gunyoung.tmb.utils.PageUtil;
+import com.gunyoung.tmb.testutil.CommentTest;
+import com.gunyoung.tmb.testutil.ControllerTest;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.UserTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 import com.gunyoung.tmb.utils.SessionUtil;
 
 /**
@@ -46,6 +47,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UserControllerTest {
@@ -344,7 +346,7 @@ public class UserControllerTest {
 		
 		@SuppressWarnings("unchecked")
 		List<CommentForManageViewDTO> listObject = (List<CommentForManageViewDTO>) model.get("commentList");
-		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_PROFILE_PAGE_SIZE),listObject.size());
+		assertEquals(Math.min(givenCommentNum, PageSize.COMMENT_FOR_PROFILE_PAGE_SIZE.getSize()),listObject.size());
 	}
 
 	@WithMockUser
@@ -368,7 +370,7 @@ public class UserControllerTest {
 		
 		@SuppressWarnings("unchecked")
 		List<CommentForManageViewDTO> listObject = (List<CommentForManageViewDTO>) model.get("commentList");
-		assertEquals(Math.min(givenCommentNum, PageUtil.COMMENT_FOR_PROFILE_PAGE_SIZE),listObject.size());
+		assertEquals(Math.min(givenCommentNum, PageSize.COMMENT_FOR_PROFILE_PAGE_SIZE.getSize()),listObject.size());
 	}
 	
 	/*
@@ -431,7 +433,7 @@ public class UserControllerTest {
 		 
 		 @SuppressWarnings("unchecked")
 		List<ExercisePostForManageViewDTO> listObject = (List<ExercisePostForManageViewDTO>) model.get("postList"); 
-		assertEquals(Math.min(givenExercisePostNum, PageUtil.POST_FOR_PROFILE_PAGE_SIZE),listObject.size());
+		assertEquals(Math.min(givenExercisePostNum, PageSize.POST_FOR_PROFILE_PAGE_SIZE.getSize()),listObject.size());
 	}
 	
 	@WithMockUser
@@ -456,6 +458,6 @@ public class UserControllerTest {
 		 
 		 @SuppressWarnings("unchecked")
 		List<ExercisePostForManageViewDTO> listObject = (List<ExercisePostForManageViewDTO>) model.get("postList"); 
-		assertEquals(Math.min(givenExercisePostNum, PageUtil.POST_FOR_PROFILE_PAGE_SIZE),listObject.size());
+		assertEquals(Math.min(givenExercisePostNum, PageSize.POST_FOR_PROFILE_PAGE_SIZE.getSize()),listObject.size());
 	}
 }

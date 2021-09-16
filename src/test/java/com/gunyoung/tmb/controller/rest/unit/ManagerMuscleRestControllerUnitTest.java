@@ -21,8 +21,8 @@ import com.gunyoung.tmb.error.exceptions.duplication.MuscleNameDuplicationFounde
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
-import com.gunyoung.tmb.util.MuscleTest;
-import com.gunyoung.tmb.util.TargetTypeTest;
+import com.gunyoung.tmb.testutil.MuscleTest;
+import com.gunyoung.tmb.testutil.TargetTypeTest;
 
 /**
  * {@link ManagerMuscleRestController} 에 대한 테스트 클래스 <br>
@@ -158,5 +158,22 @@ public class ManagerMuscleRestControllerUnitTest {
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		given(muscleService.findById(muscleId)).willReturn(muscle);
 		return muscle;
+	}
+	
+	/*
+	 * public void removeMuscle(@RequestParam("muscleId") Long muscleId)
+	 */
+	
+	@Test
+	@DisplayName("Muscle의 삭제 요철 처리 -> 정상, check Service")
+	public void removeMuscleTestCheckService() {
+		//Given
+		Long muscleId = Long.valueOf(24);
+		
+		//When
+		managerMuscleRestController.removeMuscle(muscleId);
+		
+		//Then
+		then(muscleService).should(times(1)).deleteById(muscleId);
 	}
 }

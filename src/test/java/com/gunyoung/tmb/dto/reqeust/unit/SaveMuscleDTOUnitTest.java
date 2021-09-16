@@ -10,8 +10,8 @@ import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.reqeust.SaveMuscleDTO;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
-import com.gunyoung.tmb.util.MuscleTest;
-import com.gunyoung.tmb.util.TargetTypeTest;
+import com.gunyoung.tmb.testutil.MuscleTest;
+import com.gunyoung.tmb.testutil.TargetTypeTest;
 
 /**
  * {@link SaveMuscleDTO} 에 대한 테스트 클래스 <br>

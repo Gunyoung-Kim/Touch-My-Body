@@ -6,6 +6,8 @@ import com.gunyoung.tmb.domain.user.User;
 
 public interface PostLikeService {
 	
+	public static final String EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY = "exsitByUserIdAndExercisePostId";
+	
 	/**
 	 * ID로 PostLike 찾기
 	 * @param id 찾으려는 PostLike의 id
@@ -49,6 +51,20 @@ public interface PostLikeService {
 	 * @author kimgun-yeong
 	 */
 	public void delete(PostLike postLike);
+	
+	/**
+	 * User Id를 만족하는 PostLike들 일괄 삭제
+	 * @param userId 삭제하려는 PostLike들의 User ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByUserId(Long userId);
+	
+	/**
+	 * ExercisePost ID를 만족하는 PostLike들 일괄 삭제
+	 * @param exercisePostId 삭제하려는 PostLike들의 ExercisePost ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByExercisePostId(Long exercisePostId);
 	
 	/**
 	 * User Id, ExercisePost Id로 PostLike 존재 여부 반환 <br>

@@ -10,7 +10,7 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.reqeust.UserProfileForManagerDTO;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.error.exceptions.nonexist.RoleNotFoundedException;
-import com.gunyoung.tmb.util.UserTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link UserProfileForManagerDTO} 에 대한 테스트 클래스 <br>

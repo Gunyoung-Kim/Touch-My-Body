@@ -166,4 +166,38 @@ public class UserExerciseServiceUnitTest {
 		//Then
 		then(userExerciseRepository).should(times(1)).delete(userExercise);
 	}
+	
+	/*
+	 *  public void deleteAllByExerciseId(Long exerciseId)
+	 */
+	
+	@Test
+	@DisplayName("User Id로 만족하는 UserExercise들 일괄 삭제 -> 정상")
+	public void deleteAllByUserIdTest() {
+		//Given
+		Long userId = Long.valueOf(25);
+		
+		//When
+		userExerciseService.deleteAllByUserId(userId);
+		
+		//Then
+		then(userExerciseRepository).should(times(1)).deleteAllByUserIdInQuery(userId);
+	}
+	
+	/*
+	 *  public void deleteAllByExerciseId(Long exerciseId)
+	 */
+	
+	@Test
+	@DisplayName("Exercise Id로 만족하는 UserExercise들 일괄 삭제 -> 정상")
+	public void deleteAllByExerciseIdTest() {
+		//Given
+		Long exerciseId = Long.valueOf(25);
+		
+		//When
+		userExerciseService.deleteAllByExerciseId(exerciseId);
+		
+		//Then
+		then(userExerciseRepository).should(times(1)).deleteAllByExerciseIdInQuery(exerciseId);
+	}
 }

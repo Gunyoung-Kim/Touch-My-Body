@@ -1,10 +1,12 @@
 package com.gunyoung.tmb.repos;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -52,6 +54,25 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "WHERE ep.id = :exercisePostId")
 	public Optional<ExercisePost> findWithCommentsById(@Param("exercisePostId") Long id);
 	
+	/**
+	 * User ID를 만족하는 ExercisePost들 반환
+	 * @param userId 찾으려는 ExercisePost들의 User ID
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT ep FROM ExercisePost ep "
+			+ "INNER JOIN ep.user u "
+			+ "ON u.id = :userId")
+	public List<ExercisePost> findAllByUserIdInQuery(@Param("userId") Long userId);
+	
+	/**
+	 * Exercise ID를 만족하는 ExercisePost들 반환
+	 * @param exerciseId 찾으려는 ExercisePost들의 Exercise ID
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT ep FROM ExercisePost ep "
+			+ "INNER JOIN ep.exercise e "
+			+ "ON e.id = :exerciseId")
+	public List<ExercisePost> findAllByExerciseIdInQuery(@Param("exerciseId") Long exerciseId);
 	
 	/**
 	 * ID로 {@link ExercisePostViewDTO} 필드들 Select후 매핑
@@ -80,7 +101,7 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "INNER JOIN ep.user u "
 			+ "ON u.id = :userId "
 			+ "ORDER BY ep.createdAt ASC")
-	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtASCCustom(@Param("userId") Long userId,Pageable pageable);
+	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtAscInPage(@Param("userId") Long userId, Pageable pageable);
 	
 	/**
 	 * User ID로 만족하는 ExercisePost들 가져오는 쿼리 <br>
@@ -94,7 +115,7 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "INNER JOIN ep.user u "
 			+ "ON u.id = :userId "
 			+ "ORDER BY ep.createdAt DESC")
-	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtDescCustom(@Param("userId") Long userId,Pageable pageable);
+	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtDescInPage(@Param("userId") Long userId, Pageable pageable);
 	
 	/**
 	 * ExercisePost의 필드들로 {@link PostForCommunityViewDTO} 들로 바인딩하여 가져오는 쿼리 <br>
@@ -107,7 +128,7 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "INNER JOIN ep.user u "
 			+ "INNER JOIN ep.exercise e "
 			+ "ORDER BY ep.createdAt DESC")
-	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Pageable pageable);
+	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOrderByCreatedAtDescInPage(Pageable pageable);
 	
 	/**
 	 * ExercisePost의 필드들로 {@link PostForCommunityViewDTO} 들로 바인딩하여 가져오는 쿼리 <br>
@@ -125,7 +146,7 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "OR (ep.contents LIKE %:keyword%) "
 			+ "OR (u.nickName LIKE %:keyword%) "
 			+ "ORDER BY ep.createdAt DESC")
-	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithKeywordByPage(@Param("keyword") String keyword, Pageable pageable);
+	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithKeywordInPage(@Param("keyword") String keyword, Pageable pageable);
 	
 	
 	/**
@@ -134,13 +155,14 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 	 * @param targetExerciePost와 연관된 Exercise의 target
 	 * @param pageable
 	 * @return
+	 * @author kimgun-yeong
 	 */
 	@Query("SELECT new com.gunyoung.tmb.dto.response.PostForCommunityViewDTO (ep.id, e.target, ep.title, u.nickName, e.name, ep.createdAt, ep.viewNum) from ExercisePost ep "
 			+ "INNER JOIN ep.user u "
 			+ "INNER JOIN ep.exercise e "
 			+ "WHERE e.target = :target "
 			+ "ORDER BY ep.createdAt DESC")
-	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetByPage(@Param("target") TargetType target, Pageable pageable);
+	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetInPage(@Param("target") TargetType target, Pageable pageable);
 	
 	/**
 	 * ExercisePost의 필드들로 PostForCommunityViewDTO들로 바인딩하여 가져오는 메소드, 페이징 처리 <br>
@@ -157,7 +179,7 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "WHERE (e.target = :target) AND "
 			+ "((ep.title LIKE %:keyword%) OR (ep.contents LIKE %:keyword%) OR (u.nickName LIKE %:keyword%)) "
 			+ "ORDER BY ep.createdAt DESC")
-	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(@Param("target") TargetType target,@Param("keyword")String keyword ,Pageable pageable);
+	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordInPage(@Param("target") TargetType target, @Param("keyword")String keyword, Pageable pageable);
 		
 	/**
 	 * 해당 User ID를 만족하는 ExercisePost 개수 반환
@@ -204,4 +226,34 @@ public interface ExercisePostRepository extends JpaRepository<ExercisePost,Long>
 			+ "WHERE (e.target = :target) AND "
 			+ "((ep.title LIKE %:keyword%) OR (ep.contents LIKE %:keyword%))")
 	public long countWithTargetAndKeyword(@Param("target") TargetType target, @Param("keyword") String keyword);
+	
+	/**
+	 * ID로 ExercisePost 삭제
+	 * @param exercisePostId 삭제하려는 ExercisePost ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM ExercisePost ep "
+			+ "WHERE ep.id = :exercisePostId")
+	public void deleteByIdInQuery(@Param("exercisePostId") Long exercisePostId);
+	
+	/**
+	 * User Id로 만족하는 ExercisePost들 일괄 삭제
+	 * @param userId 삭제하려는 ExercisePost들의 User ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM ExercisePost ep "
+			+ "WHERE ep.user.id = :userId")
+	public void deleteAllByUserIdInQuery(@Param("userId") Long userId);
+	
+	/**
+	 * Exercise Id로 만족하는 ExercisePost들 일괄 삭제
+	 * @param exerciseId 삭제하려는 ExercisePost들의 Exercise ID
+	 * @author kimgun-yeong
+	 */
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("DELETE FROM ExercisePost ep "
+			+ "WHERE ep.exercise.id = :exerciseId")
+	public void deleteAllByExerciseIdInQuery(@Param("exerciseId") Long exerciseId);
 }

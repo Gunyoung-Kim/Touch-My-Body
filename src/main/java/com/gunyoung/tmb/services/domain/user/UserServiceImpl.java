@@ -10,9 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.repos.UserRepository;
-import com.gunyoung.tmb.utils.PageUtil;
+import com.gunyoung.tmb.services.domain.exercise.CommentService;
+import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
+import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
+import com.gunyoung.tmb.services.domain.like.CommentLikeService;
+import com.gunyoung.tmb.services.domain.like.PostLikeService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +34,16 @@ public class UserServiceImpl implements UserService{
 	private final UserRepository userRepository;
 	
 	private final UserExerciseService userExerciseService;
+	
+	private final PostLikeService postLikeService;
+	
+	private final ExercisePostService exercisePostService;
+	
+	private final CommentLikeService commentLikeService;
+	
+	private final CommentService commentService;
+	
+	private final FeedbackService feedbackService;
 	
 	@Override
 	@Transactional(readOnly=true)
@@ -105,7 +120,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	@Transactional(readOnly=true)
 	public Page<User> findAllByNickNameOrNameInPage(String keyword,Integer pageNumber) {
-		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageUtil.BY_NICKNAME_NAME_PAGE_SIZE);
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageSize.BY_NICKNAME_NAME_PAGE_SIZE.getSize());
 		return userRepository.findAllByNickNameOrName(keyword, pageRequest);
 	}
 
@@ -115,21 +130,26 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
-	public User saveByJoinDTO(UserJoinDTO dto,RoleType role) {
-		User user = User.builder()
-						.email(dto.getEmail())
-						.password(dto.getPassword())
-						.firstName(dto.getFirstName())
-						.lastName(dto.getLastName())
-						.nickName(dto.getNickName())
-						.role(role)
-						.build();
+	public User saveByJoinDTOAndRoleType(UserJoinDTO dto, RoleType role) {
+		User user = dto.createUserInstance();
+		user.setRole(role);
 		return userRepository.save(user);
 	}
 
 	@Override
-	public void deleteUser(User user) {
-		userRepository.delete(user);
+	public void delete(User user) {
+		Long userId = user.getId();
+		deleteAllOneToManyEntityById(userId);
+		userRepository.deleteByIdInQuery(userId);
+	}
+	
+	private void deleteAllOneToManyEntityById(Long userId) {
+		userExerciseService.deleteAllByUserId(userId);
+		commentLikeService.deleteAllByUserId(userId);
+		commentService.deleteAllByUserId(userId);
+		postLikeService.deleteAllByUserId(userId);
+		exercisePostService.deleteAllByUserId(userId);
+		feedbackService.deleteAllByUserId(userId);
 	}
 
 	@Override

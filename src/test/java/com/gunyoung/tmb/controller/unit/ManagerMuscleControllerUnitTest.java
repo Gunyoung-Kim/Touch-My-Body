@@ -29,7 +29,7 @@ import com.gunyoung.tmb.error.exceptions.duplication.MuscleNameDuplicationFounde
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
-import com.gunyoung.tmb.util.MuscleTest;
+import com.gunyoung.tmb.testutil.MuscleTest;
 
 /**
  * {@link ManagerMuscleController} 에 대한 테스트 클래스 <br>

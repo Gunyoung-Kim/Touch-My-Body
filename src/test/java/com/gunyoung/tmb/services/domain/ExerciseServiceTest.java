@@ -1,10 +1,12 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,20 +20,32 @@ import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
+import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
+import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.exercise.Muscle;
+import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
+import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
+import com.gunyoung.tmb.repos.FeedbackRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
+import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
-import com.gunyoung.tmb.util.ExerciseTest;
-import com.gunyoung.tmb.util.MuscleTest;
-import com.gunyoung.tmb.util.TargetTypeTest;
-import com.gunyoung.tmb.utils.PageUtil;
+import com.gunyoung.tmb.testutil.ExerciseMuscleTest;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.FeedbackTest;
+import com.gunyoung.tmb.testutil.MuscleTest;
+import com.gunyoung.tmb.testutil.TargetTypeTest;
+import com.gunyoung.tmb.testutil.UserExerciseTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * ExerciseService에 대한 테스트 클래스 <br>
@@ -39,8 +53,12 @@ import com.gunyoung.tmb.utils.PageUtil;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 public class ExerciseServiceTest {
+	
+	@Autowired
+	UserExerciseRepository userExerciseRepository;
 	
 	@Autowired
 	ExerciseRepository exerciseRepository;
@@ -50,6 +68,12 @@ public class ExerciseServiceTest {
 	
 	@Autowired
 	ExerciseMuscleRepository exerciseMuscleRepository;
+	
+	@Autowired
+	FeedbackRepository feedbackRepository;
+	
+	@Autowired
+	ExercisePostRepository exercisePostRepository;
 	
 	@Autowired
 	ExerciseService exerciseService;
@@ -142,10 +166,10 @@ public class ExerciseServiceTest {
 		long givenExerciseNum = exerciseRepository.count();
 		
 		//When
-		Page<Exercise> result =exerciseService.findAllInPage(pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
+		Page<Exercise> result =exerciseService.findAllInPage(pageNumber, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize());
 		
 		//Then
-		assertEquals(Math.min(givenExerciseNum, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE), result.getContent().size());
+		assertEquals(Math.min(givenExerciseNum, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize()), result.getContent().size());
 	}
 	
 	/*
@@ -165,10 +189,10 @@ public class ExerciseServiceTest {
 		long givenExerciseNum = exerciseRepository.count();
 		
 		//When
-		Page<Exercise> result = exerciseService.findAllWithNameKeywordInPage(keywordForAllExercise, pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
+		Page<Exercise> result = exerciseService.findAllWithNameKeywordInPage(keywordForAllExercise, pageNumber, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize());
 		
 		//Then
-		assertEquals(Math.min(givenExerciseNum, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE), result.getContent().size());
+		assertEquals(Math.min(givenExerciseNum, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize()), result.getContent().size());
 	}
 	
 	@Test
@@ -186,7 +210,7 @@ public class ExerciseServiceTest {
 		exerciseRepository.save(exerciseForOnlyOne);
 		
 		//When
-		Page<Exercise> result = exerciseService.findAllWithNameKeywordInPage(keywordOnlyOneContains, pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
+		Page<Exercise> result = exerciseService.findAllWithNameKeywordInPage(keywordOnlyOneContains, pageNumber, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize());
 		
 		//Then
 		assertEquals(1, result.getContent().size());
@@ -203,7 +227,7 @@ public class ExerciseServiceTest {
 		ExerciseTest.addNewExercisesInDBByNum(5, exerciseRepository);
 		
 		//When
-		Page<Exercise> noResult = exerciseService.findAllWithNameKeywordInPage(noContainsKeyword, pageNumber, PageUtil.EXERCISE_INFO_TABLE_PAGE_SIZE);
+		Page<Exercise> noResult = exerciseService.findAllWithNameKeywordInPage(noContainsKeyword, pageNumber, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize());
 		
 		//Then
 		assertEquals(0, noResult.getContent().size());
@@ -472,9 +496,8 @@ public class ExerciseServiceTest {
 	 */
 	
 	@Test
-	@Transactional
-	@DisplayName("Exercise 삭제하기 -> 정상")
-	public void deleteTest() {
+	@DisplayName("Exercise 삭제하기 -> 정상, Exercise Delete Check")
+	public void deleteTestCheckExerciseDelete() {
 		//Given
 		Long givenExerciseNum = exerciseRepository.count();
 		
@@ -483,6 +506,86 @@ public class ExerciseServiceTest {
 		
 		//Then
 		assertEquals(givenExerciseNum - 1, exerciseRepository.count());
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise 삭제하기 -> 정상, 관련 UserExercise Delete check")
+	public void deleteTestCheckUserExerciseDelete() {
+		//Given
+		Long givenUserExerciseNum = Long.valueOf(9);
+		saveUserExercisesWithExercise(givenUserExerciseNum, exercise);
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		assertEquals(0, userExerciseRepository.count());
+	}
+	
+	private void saveUserExercisesWithExercise(Long givenUserExerciseNum, Exercise exercise) {
+		List<UserExercise> userExercises = new ArrayList<>();
+		for(int i=0; i < givenUserExerciseNum; i++) {
+			UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
+			userExercise.setExercise(exercise);
+			userExercises.add(userExercise);
+		}
+		
+		userExerciseRepository.saveAll(userExercises);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise 삭제하기 -> 정상, Check Feedback Delete")
+	public void deleteTestCheckFeedbackDelete() {
+		//Given
+		Feedback feedback = FeedbackTest.getFeedbackInstance();
+		feedback.setExercise(exercise);
+		feedbackRepository.save(feedback);
+		
+		Long feedbackId = feedback.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		assertFalse(feedbackRepository.existsById(feedbackId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise 삭제하기 -> 정상, Check ExerciseMuscle Delete")
+	public void deleteTestCheckExerciseMuscleDelete() {
+		//Given
+		ExerciseMuscle exerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance();
+		exerciseMuscle.setExercise(exercise);
+		exerciseMuscleRepository.save(exerciseMuscle);
+		
+		Long exerciseMuscleId = exerciseMuscle.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		assertFalse(exerciseMuscleRepository.existsById(exerciseMuscleId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise 삭제하기 -> 정상, Check ExercisePost Delete")
+	public void deleteTestCheckExercisePostDelete() {
+		//Given
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		exercisePost.setExercise(exercise);
+		exercisePostRepository.save(exercisePost);
+		
+		Long exercisePostId = exercisePost.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		assertFalse(exercisePostRepository.existsById(exercisePostId));
 	}
 	
 	/*
@@ -560,7 +663,6 @@ public class ExerciseServiceTest {
 	 */
 	
 	@Test
-	@Transactional
 	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 해당 exercise 없음")
 	public void getExerciseForInfoViewDTOByExerciseIdNonExist() {
 		//Given
@@ -574,11 +676,34 @@ public class ExerciseServiceTest {
 	}
 	
 	@Test
-	@Transactional
-	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 정상")
-	public void getExerciseForInfoViewDTOByExerciseIdTest() {
+	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 정상, ExerciseMuscle 미포함")
+	public void getExerciseForInfoViewDTOByExerciseIdTestWithOutExerciseMuscle() {
 		//Given
 		Long existId = exercise.getId();
+		
+		//When
+		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(existId);
+		
+		//Then
+		assertNotNull(result);
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 정상, ExerciseMuscle 포함")
+	public void getExerciseForInfoViewDTOByExerciseIdTestWithExerciseMuscle() {
+		//Given
+		Long existId = exercise.getId();
+		
+		String mainExerciseMuscleName = "mainMuscle";
+		ExerciseMuscle mainExerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance(mainExerciseMuscleName, true);
+		mainExerciseMuscle.setExercise(exercise);
+		exerciseMuscleRepository.save(mainExerciseMuscle);
+		
+		String subExerciseMuscleName = "subMuscle";
+		ExerciseMuscle subExerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance(subExerciseMuscleName, false);
+		subExerciseMuscle.setExercise(exercise);
+		exerciseMuscleRepository.save(subExerciseMuscle);
 		
 		//When
 		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(existId);

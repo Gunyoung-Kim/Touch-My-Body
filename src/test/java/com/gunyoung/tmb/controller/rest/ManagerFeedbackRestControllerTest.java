@@ -15,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.repos.FeedbackRepository;
-import com.gunyoung.tmb.util.FeedbackTest;
+import com.gunyoung.tmb.testutil.FeedbackTest;
+import com.gunyoung.tmb.testutil.tag.Integration;
 
 /**
  * {@link ManagerFeedbackRestController} 에 대한 테스트 클래스
@@ -24,6 +25,7 @@ import com.gunyoung.tmb.util.FeedbackTest;
  * @author kimgun-yeong
  *
  */
+@Integration
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ManagerFeedbackRestControllerTest {

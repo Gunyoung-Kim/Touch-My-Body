@@ -47,38 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	private final LogoutSuccessHandler logoutSuccessHandler;
 	
 	/**
-	 * 유저의 권한 체계 설정 <br>
-	 * 관리자(ADMIN) > 매니저(MANAGER) > 일반 유저(USER)
-	 * @return RoleHierarchy 객체 - 유저 권환 계급 체계 반환 
-	 * @author kimgun-yeong
-	 */
-	@Bean
-	public RoleHierarchy roleHierarchy() {
-		RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-		
-		Map<String,List<String>> roleHierarchyMap = new HashMap<>();
-		roleHierarchyMap.put("ROLE_ADMIN", Arrays.asList("ROLE_MANAGER"));
-		roleHierarchyMap.put("ROLE_MANAGER", Arrays.asList("ROLE_USER"));
-		
-		String roles = RoleHierarchyUtils.roleHierarchyFromMap(roleHierarchyMap);
-	
-		roleHierarchy.setHierarchy(roles);
-		return roleHierarchy;
-	}
-	
-	/**
-	 * 유저의 권한 체계 추가 
-	 * @return
-	 * @author kimgun-yeong
-	 */
-	@Bean
-	public SecurityExpressionHandler<FilterInvocation> expressionHandler() {
-		DefaultWebSecurityExpressionHandler webSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
-		webSecurityExpressionHandler.setRoleHierarchy(roleHierarchy());
-		return webSecurityExpressionHandler;
-	}
-	
-	/**
 	 * 
 	 * @author kimgun-yeong
 	 */
@@ -101,6 +69,42 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.logoutSuccessHandler(logoutSuccessHandler);
 	}
 	
+	@Override 
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		 auth.authenticationProvider(authenticationProvider());
+	}
+	
+	/**
+	 * 유저의 권한 체계 설정 <br>
+	 * 관리자(ADMIN) > 매니저(MANAGER) > 일반 유저(USER)
+	 * @return RoleHierarchy 객체 - 유저 권환 계급 체계 반환 
+	 * @author kimgun-yeong
+	 */
+	@Bean
+	public RoleHierarchy roleHierarchy() {
+		Map<String,List<String>> roleHierarchyMap = new HashMap<>();
+		roleHierarchyMap.put("ROLE_ADMIN", Arrays.asList("ROLE_MANAGER"));
+		roleHierarchyMap.put("ROLE_MANAGER", Arrays.asList("ROLE_USER"));
+		
+		RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+		String roles = RoleHierarchyUtils.roleHierarchyFromMap(roleHierarchyMap);
+		roleHierarchy.setHierarchy(roles);
+		
+		return roleHierarchy;
+	}
+	
+	/**
+	 * 유저의 권한 체계 추가 
+	 * @return
+	 * @author kimgun-yeong
+	 */
+	@Bean
+	public SecurityExpressionHandler<FilterInvocation> expressionHandler() {
+		DefaultWebSecurityExpressionHandler webSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
+		webSecurityExpressionHandler.setRoleHierarchy(roleHierarchy());
+		return webSecurityExpressionHandler;
+	}
+	
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return new UserDetailsServiceImpl(userService);
@@ -119,12 +123,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	public UserAuthenticationProvider authenticationProvider() {
 		return new UserAuthenticationProvider(userDetailsService(),passwordEncoder());
 	}
-	
-	@Override 
-	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		 auth.authenticationProvider(authenticationProvider());
-	}
-	
 	
 	/**
 	 * Password 암호화 위한 빈

@@ -16,13 +16,13 @@ import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.reqeust.SaveMuscleDTO;
 import com.gunyoung.tmb.dto.response.MuscleForTableDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.MuscleNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
-import com.gunyoung.tmb.utils.PageUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ManagerMuscleController {
 	
-	public static final int MUSCLE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE = PageUtil.MUSCLE_FOR_MANAGE_PAGE_SIZE;
+	public static final int MUSCLE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE = PageSize.MUSCLE_FOR_MANAGE_PAGE_SIZE.getSize();
 	
 	private final MuscleService muscleService;
 	

@@ -6,6 +6,8 @@ import com.gunyoung.tmb.domain.user.User;
 
 public interface CommentLikeService {
 	
+	public static final String EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY = "exsitByUserIdAndCommentId";
+	
 	/**
 	 * ID로 CommentLike 찾기
 	 * @param id 찾으려는 commentLike의 id
@@ -51,6 +53,20 @@ public interface CommentLikeService {
 	 * @author kimgun-yeong
 	 */
 	public void delete(CommentLike commentLike);
+	
+	/**
+	 * User Id를 만족하는 CommentLike들 일괄 삭제
+	 * @param userId 삭제하려는 CommenLike들의 User ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByUserId(Long userId);
+	
+	/**
+	 * Comment Id를 만족하는 CommentLike들 일괄 삭제
+	 * @param commentId 삭제하려는 CommentLike들의 Comment ID
+	 * @author kimgun-yeong
+	 */
+	public void deleteAllByCommentId(Long commentId);
 	
 	/**
 	 * User Id, Comment Id로 CommentLike 존재하는 여부 반환 <br>

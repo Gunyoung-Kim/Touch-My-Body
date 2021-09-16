@@ -13,6 +13,7 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 import com.gunyoung.tmb.repos.CommentRepository;
+import com.gunyoung.tmb.services.domain.like.CommentLikeService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 public class CommentServiceImpl implements CommentService {
 	
 	private final CommentRepository commentRepository;
+	
+	private final CommentLikeService commentLikeService;
 
 	@Override
 	@Transactional(readOnly=true)
@@ -58,21 +61,21 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	@Transactional(readOnly=true)
 	public List<Comment> findAllByExercisePostId(Long postId) {
-		return commentRepository.findAllByExercisePostIdCustom(postId);
+		return commentRepository.findAllByExercisePostIdInQuery(postId);
 	}
 	
 	@Override
 	@Transactional(readOnly= true)
 	public Page<Comment> findAllByUserIdOrderByCreatedAtAsc(Long userId,Integer pageNum, int page_size) {
 		PageRequest pageRequest = PageRequest.of(pageNum-1, page_size);
-		return commentRepository.findAllByUserIdOrderByCreatedAtASCCustom(userId,pageRequest);
+		return commentRepository.findAllByUserIdOrderByCreatedAtAscInPage(userId,pageRequest);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Page<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId,Integer pageNum, int page_size) {
 		PageRequest pageRequest = PageRequest.of(pageNum-1, page_size);
-		return commentRepository.findAllByUserIdOrderByCreatedAtDescCustom(userId,pageRequest);
+		return commentRepository.findAllByUserIdOrderByCreatedAtDescInPage(userId,pageRequest);
 	}
 
 	@Override
@@ -89,10 +92,13 @@ public class CommentServiceImpl implements CommentService {
 		
 		return save(comment);
 	}
-
+	
 	@Override
-	public void delete(Comment comment) {
-		commentRepository.delete(comment);
+	public void checkIsMineAndDelete(Long userId, Long commentId) {
+		Optional<Comment> comment = commentRepository.findByUserIdAndCommentId(userId, commentId);
+		comment.ifPresent((c) -> {
+			delete(c);
+		});
 	}
 	
 	@Override
@@ -104,11 +110,32 @@ public class CommentServiceImpl implements CommentService {
 	}
 	
 	@Override
-	public void checkIsMineAndDelete(Long userId, Long commentId) {
-		Optional<Comment> comment = commentRepository.findByUserIdAndCommentId(userId, commentId);
-		comment.ifPresent((c) -> {
-			delete(c);
-		});
+	public void delete(Comment comment) {
+		deleteAllOneToManyEntityForComment(comment);
+		commentRepository.deleteByIdInQuery(comment.getId());
+	}
+	
+	@Override
+	public void deleteAllByUserId(Long userId) {
+		List<Comment> comments = commentRepository.findAllByUserIdInQuery(userId);
+		for(Comment comment: comments) {
+			deleteAllOneToManyEntityForComment(comment);
+		}
+		commentRepository.deleteAllByUserIdInQuery(userId);
+	}
+	
+	@Override
+	public void deleteAllByExercisePostId(Long exercisePostId) {
+		List<Comment> comments = commentRepository.findAllByExercisePostIdInQuery(exercisePostId);
+		for(Comment comment: comments) {
+			deleteAllOneToManyEntityForComment(comment);
+		}
+		commentRepository.deleteAllByExercisePostIdInQuery(exercisePostId);
+	}
+	
+	private void deleteAllOneToManyEntityForComment(Comment comment) {
+		Long commentId = comment.getId();
+		commentLikeService.deleteAllByCommentId(commentId);
 	}
 	
 	@Override
@@ -122,6 +149,4 @@ public class CommentServiceImpl implements CommentService {
 	public List<CommentForPostViewDTO> getCommentForPostViewDTOsByExercisePostId(Long postId) {
 		return commentRepository.findForCommentForPostViewDTOByExercisePostId(postId);
 	}
-
-
 }

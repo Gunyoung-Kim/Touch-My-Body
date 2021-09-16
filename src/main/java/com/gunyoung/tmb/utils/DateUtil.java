@@ -10,7 +10,13 @@ import java.util.GregorianCalendar;
  */
 public class DateUtil {
 	
-	private DateUtil() {};
+	/**
+	 * 인스턴스화 방지
+	 * @author kimgun-yeong
+	 */
+	private DateUtil() {
+		throw new AssertionError();
+	}
 	
 	/**
 	 * 해당 연,월의 첫째날과 마지막 날을 반환하는 메소드

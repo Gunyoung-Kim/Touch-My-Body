@@ -9,7 +9,13 @@ public class SessionUtil {
 	public static final String LOGIN_USER_ID = "LOGIN_USER_ID";
 	public static final String AFTER_LOGIN_REDIRECTED_URL = "AFTER_LOGIN_REDIRECTED_URL";
 	
-	private SessionUtil() {}
+	/**
+	 * 인스턴스화 방지
+	 * @author kimgun-yeong
+	 */
+	private SessionUtil() {
+		throw new AssertionError();
+	}
 	
 	// ------------------- LOGIN_USER_ID ---------------------------------------
 	

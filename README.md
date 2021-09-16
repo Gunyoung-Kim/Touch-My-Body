@@ -1,6 +1,6 @@
 # Touch-My-Body [![Build Status](https://app.travis-ci.com/Gunyoung-Kim/Touch-My-Body.svg?branch=master)](https://app.travis-ci.com/Gunyoung-Kim/Touch-My-Body)
 
-최신 버전 : ver 0.0.10
+최신 버전 : ver 0.0.11
 
 ## 프로젝트 주 기능
 
@@ -62,6 +62,14 @@
 
         2-2. 쿼리 결과를 양쪽 엔티티에서 필요한 필드들로만 구성된 DTO 객체에 매핑
 
+- 엔티티 삭제 성능 개선 
+
+   1. 해당 내용은 issue에 정리 되어 있다.
+
+   2. Bulk Delete issue: https://github.com/Gunyoung-Kim/Touch-My-Body/issues/27 
+
+   3. CascadeType.Remove issue: https://github.com/Gunyoung-Kim/Touch-My-Body/issues/28
+
 - Cache의 활용
 
    1. Cache Storage로 REDIS 활용
@@ -82,7 +90,7 @@
 
 - 테스트 커버리지 : 100 % - ver 0.0.9 이후 유지
 
-<img width="661" alt="tmb_test_coverage_0_0_9" src="https://user-images.githubusercontent.com/60494603/130346128-9c04f981-04fb-49c7-b545-bb50b11b06e5.png">
+<img width="661" alt="tmb_0_0_11_tc" src="https://user-images.githubusercontent.com/60494603/133609641-8208b686-84a2-43f2-94ce-cf6c6a267388.png">
 
 ---
 
