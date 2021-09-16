@@ -1,6 +1,7 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
+import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
@@ -29,12 +32,16 @@ import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
+import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
+import com.gunyoung.tmb.repos.FeedbackRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.testutil.ExerciseMuscleTest;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
 import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.FeedbackTest;
 import com.gunyoung.tmb.testutil.MuscleTest;
 import com.gunyoung.tmb.testutil.TargetTypeTest;
 import com.gunyoung.tmb.testutil.UserExerciseTest;
@@ -61,6 +68,12 @@ public class ExerciseServiceTest {
 	
 	@Autowired
 	ExerciseMuscleRepository exerciseMuscleRepository;
+	
+	@Autowired
+	FeedbackRepository feedbackRepository;
+	
+	@Autowired
+	ExercisePostRepository exercisePostRepository;
 	
 	@Autowired
 	ExerciseService exerciseService;
@@ -521,6 +534,59 @@ public class ExerciseServiceTest {
 		userExerciseRepository.saveAll(userExercises);
 	}
 	
+	@Test
+	@Transactional
+	@DisplayName("Exercise 삭제하기 -> 정상, Check Feedback Delete")
+	public void deleteTestCheckFeedbackDelete() {
+		//Given
+		Feedback feedback = FeedbackTest.getFeedbackInstance();
+		feedback.setExercise(exercise);
+		feedbackRepository.save(feedback);
+		
+		Long feedbackId = feedback.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		assertFalse(feedbackRepository.existsById(feedbackId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise 삭제하기 -> 정상, Check ExerciseMuscle Delete")
+	public void deleteTestCheckExerciseMuscleDelete() {
+		//Given
+		ExerciseMuscle exerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance();
+		exerciseMuscle.setExercise(exercise);
+		exerciseMuscleRepository.save(exerciseMuscle);
+		
+		Long exerciseMuscleId = exerciseMuscle.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		assertFalse(exerciseMuscleRepository.existsById(exerciseMuscleId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("Exercise 삭제하기 -> 정상, Check ExercisePost Delete")
+	public void deleteTestCheckExercisePostDelete() {
+		//Given
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		exercisePost.setExercise(exercise);
+		exercisePostRepository.save(exercisePost);
+		
+		Long exercisePostId = exercisePost.getId();
+		
+		//When
+		exerciseService.delete(exercise);
+		
+		//Then
+		assertFalse(exercisePostRepository.existsById(exercisePostId));
+	}
 	
 	/*
 	 *  public long countAll()

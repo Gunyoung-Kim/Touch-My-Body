@@ -16,14 +16,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gunyoung.tmb.domain.exercise.Comment;
+import com.gunyoung.tmb.domain.exercise.ExercisePost;
+import com.gunyoung.tmb.domain.exercise.Feedback;
+import com.gunyoung.tmb.domain.like.CommentLike;
+import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
+import com.gunyoung.tmb.repos.CommentLikeRepository;
+import com.gunyoung.tmb.repos.CommentRepository;
+import com.gunyoung.tmb.repos.ExercisePostRepository;
+import com.gunyoung.tmb.repos.FeedbackRepository;
+import com.gunyoung.tmb.repos.PostLikeRepository;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.user.UserService;
+import com.gunyoung.tmb.testutil.CommentLikeTest;
+import com.gunyoung.tmb.testutil.CommentTest;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.FeedbackTest;
+import com.gunyoung.tmb.testutil.PostLikeTest;
 import com.gunyoung.tmb.testutil.UserExerciseTest;
 import com.gunyoung.tmb.testutil.UserTest;
 import com.gunyoung.tmb.testutil.tag.Integration;
@@ -46,6 +61,21 @@ public class UserServiceTest {
 	
 	@Autowired
 	UserExerciseRepository userExerciseRepository;
+	
+	@Autowired
+	PostLikeRepository postLikeRepository;
+	
+	@Autowired
+	ExercisePostRepository exercisePostRepository;
+	
+	@Autowired
+	CommentLikeRepository commentLikeRepository;
+	
+	@Autowired
+	CommentRepository commentRepository;
+	
+	@Autowired
+	FeedbackRepository feedbackRepository;
 	
 	@Autowired
 	EntityManager em;
@@ -246,11 +276,12 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *   public void deleteUser(User user)
+	 *   public void delete(User user)
 	 */
+	
 	@Test
-	@DisplayName("유저 삭제 -> 정상")
-	public void deleteUser() {
+	@DisplayName("유저 삭제 -> 정상, check User Delete")
+	public void deleteUserTestCheckUserDelete() {
 		//Given
 		Long userId = user.getId();
 
@@ -259,6 +290,114 @@ public class UserServiceTest {
 		
 		//Then
 		assertFalse(userRepository.existsById(userId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저 삭제 -> 정상, Check UserExercise Delete")
+	public void deleteTestCheckUserExerciseDelete() {
+		//Given
+		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
+		userExercise.setUser(user);
+		userExerciseRepository.save(userExercise);
+		
+		Long userExerciseId = userExercise.getId();
+		
+		//When
+		userService.delete(user);
+		
+		//Then
+		assertFalse(userExerciseRepository.existsById(userExerciseId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저 삭제 -> 정상, Check CommentLike Delete")
+	public void deleteTestCheckCommentLikeDelete() {
+		//Given
+		CommentLike commentLike = CommentLikeTest.getCommentLikeInstance();
+		commentLike.setUser(user);
+		commentLikeRepository.save(commentLike);
+		
+		Long commentLikeId = commentLike.getId();
+		
+		//When
+		userService.delete(user);
+		
+		//Then
+		assertFalse(commentLikeRepository.existsById(commentLikeId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저 삭제 -> 정상, Check Comment Delete")
+	public void deleteTestCheckCommentDelete() {
+		//Given
+		Comment comment = CommentTest.getCommentInstance();
+		comment.setUser(user);
+		commentRepository.save(comment);
+		
+		Long commentId = comment.getId();
+		
+		//When
+		userService.delete(user);
+		
+		//Then
+		assertFalse(commentRepository.existsById(commentId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저 삭제 -> 정상, Check PostLike Delete")
+	public void deleteTestCheckPostLikeDelete() {
+		//Given
+		PostLike postLike = PostLikeTest.getPostLikeInstance();
+		postLike.setUser(user);
+		postLikeRepository.save(postLike);
+		
+		Long postLikeId = postLike.getId();
+		
+		//When
+		userService.delete(user);
+		
+		//Then
+		assertFalse(postLikeRepository.existsById(postLikeId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저 삭제 -> 정상, Check ExercisePost Delete")
+	public void deleteTestCheckExercisePostDelete() {
+		//Given
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		exercisePost.setUser(user);
+		exercisePostRepository.save(exercisePost);
+		
+		Long exercisePostId = exercisePost.getId();
+		
+		//When
+		userService.delete(user);
+		
+		//Then
+		assertFalse(exercisePostRepository.existsById(exercisePostId));
+	}
+	
+	@Test
+	@Transactional
+	@DisplayName("유저 삭제 -> 정상, Check Feedback Delete")
+	public void deleteTestCheckFeedbackDelete() {
+		//Given
+		Feedback feedback = FeedbackTest.getFeedbackInstance();
+		feedback.setUser(user);
+		feedbackRepository.save(feedback);
+		
+		Long feedbackId = feedback.getId();
+		
+		//When
+		userService.delete(user);
+		
+		//Then
+		assertFalse(feedbackRepository.existsById(feedbackId));
 	}
 	
 	/*
