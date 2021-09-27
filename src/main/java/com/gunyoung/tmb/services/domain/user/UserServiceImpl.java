@@ -49,72 +49,56 @@ public class UserServiceImpl implements UserService{
 	@Transactional(readOnly=true)
 	public User findById(Long id) {
 		Optional<User> result = userRepository.findById(id);
-		if(result.isEmpty()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public User findByEmail(String email) {
 		Optional<User> result = userRepository.findByEmail(email);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithUserExerciseById(Long id) {
 		Optional<User> result = userRepository.findWithUserExercisesById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithFeedbacksById(Long id) {
 		Optional<User> result = userRepository.findWithFeedbacksById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithPostLikesById(Long id) {
 		Optional<User> result = userRepository.findWithPostLikesById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithCommentLikesById(Long id) {
 		Optional<User> result = userRepository.findWithCommentLikesById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithExercisePostsById(Long id) {
 		Optional<User> result = userRepository.findWithExercisePostsById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithCommentsById(Long id) {
 		Optional<User> result = userRepository.findWithCommentsById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override

@@ -39,27 +39,21 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public ExercisePost findById(Long id) {
 		Optional<ExercisePost> result = exercisePostRepository.findById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public ExercisePost findWithPostLikesById(Long id) {
 		Optional<ExercisePost> result = exercisePostRepository.findWithPostLikesById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public ExercisePost findWithCommentsById(Long id) {
 		Optional<ExercisePost> result = exercisePostRepository.findWithCommentsById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
@@ -202,9 +196,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id) {
 		Optional<ExercisePostViewDTO> result = exercisePostRepository.findForExercisePostViewDTOById(id);
-		if(result.isEmpty()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override

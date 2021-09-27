@@ -31,18 +31,14 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	@Transactional(readOnly=true)
 	public CommentLike findById(Long id) {
 		Optional<CommentLike> result = commentLikeRepository.findById(id);
-		if(result.isEmpty()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public CommentLike findByUserIdAndCommentId(Long userId, Long commentId) {
 		Optional<CommentLike> result = commentLikeRepository.findByUserIdAndCommentId(userId, commentId);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override

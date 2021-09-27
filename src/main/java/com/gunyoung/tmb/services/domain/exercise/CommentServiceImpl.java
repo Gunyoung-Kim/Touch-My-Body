@@ -35,27 +35,21 @@ public class CommentServiceImpl implements CommentService {
 	@Transactional(readOnly=true)
 	public Comment findById(Long id) {
 		Optional<Comment> result = commentRepository.findById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Comment findWithUserAndExercisePostById(Long id) {
 		Optional<Comment> result = commentRepository.findWithUserAndExercisePostById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Comment findWithCommentLikesById(Long id) {
 		Optional<Comment> result = commentRepository.findWithCommentLikesById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override

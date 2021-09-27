@@ -31,19 +31,14 @@ public class PostLikeServiceImpl implements PostLikeService {
 	@Transactional(readOnly=true)
 	public PostLike findById(Long id) {
 		Optional<PostLike> result = postLikeRepository.findById(id);
-		if(result.isEmpty()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
 	public PostLike findByUserIdAndExercisePostId(Long userId, Long exercisePostId) {
 		Optional<PostLike> result = postLikeRepository.findByUserIdAndExercisePostId(userId, exercisePostId);
-		if(result.isEmpty())
-			return null;
-		
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override

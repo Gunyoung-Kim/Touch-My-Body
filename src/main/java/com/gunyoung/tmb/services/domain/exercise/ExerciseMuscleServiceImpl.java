@@ -30,9 +30,7 @@ public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 	@Transactional(readOnly=true)
 	public ExerciseMuscle findById(Long id) {
 		Optional<ExerciseMuscle> result = exerciseMuscleRepository.findById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override

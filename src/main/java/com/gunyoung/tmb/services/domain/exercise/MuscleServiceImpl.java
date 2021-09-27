@@ -35,19 +35,14 @@ public class MuscleServiceImpl implements MuscleService {
 	@Transactional(readOnly= true)
 	public Muscle findById(Long id) {
 		Optional<Muscle> result = muscleRepository.findById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Muscle findByName(String name) {
 		Optional<Muscle> result = muscleRepository.findByName(name);
-		if(result.isEmpty())
-			return null;
-		return result.get();
-			
+		return result.orElse(null);
 	}
 	
 	@Override

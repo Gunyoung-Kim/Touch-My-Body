@@ -32,18 +32,14 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Transactional(readOnly=true)
 	public Feedback findById(Long id) {
 		Optional<Feedback> result = feedbackRepository.findById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public FeedbackViewDTO findForFeedbackViewDTOById(Long id) {
 		Optional<FeedbackViewDTO> result = feedbackRepository.findForFeedbackViewDTOById(id);
-		if(result.isEmpty()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override

@@ -55,45 +55,35 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Transactional(readOnly=true)
 	public Exercise findById(Long id) {
 		Optional<Exercise> result = exerciseRepository.findById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findByName(String name) {
 		Optional<Exercise> result = exerciseRepository.findByName(name);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findWithFeedbacksById(Long id) {
 		Optional<Exercise> result = exerciseRepository.findWithFeedbacksById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findWithExercisePostsByName(String name) {
 		Optional<Exercise> result = exerciseRepository.findWithExercisePostsByName(name);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findWithExerciseMusclesById(Long id) {
 		Optional<Exercise> result = exerciseRepository.findWithExerciseMusclesById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
