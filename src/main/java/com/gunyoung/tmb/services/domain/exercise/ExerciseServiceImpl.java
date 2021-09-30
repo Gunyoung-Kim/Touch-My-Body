@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
+import static com.gunyoung.tmb.utils.CacheConstants.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +26,6 @@ import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
-import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -102,7 +103,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	
 	@Override
 	@Transactional(readOnly=true)
-	@Cacheable(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@Cacheable(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Map<String, List<String>> getAllExercisesNamewithSorting() {
 		Map<String, List<String>> result = new HashMap<>();
 		List<ExerciseNameAndTargetDTO> list = exerciseRepository.findAllWithNameAndTarget();
@@ -123,13 +124,13 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Exercise save(Exercise exercise) {
 		return exerciseRepository.save(exercise);
 	}
 	
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Exercise saveWithSaveExerciseDTO(Exercise exercise, SaveExerciseDTO dto) {
 		exercise.setName(dto.getName());
 		exercise.setDescription(dto.getDescription());
@@ -169,7 +170,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void deleteById(Long id) {
 		Exercise exercise = findById(id);
 		if(exercise != null)
@@ -177,7 +178,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void delete(Exercise exercise) {
 		deleteAllOneToManyEntityForExercise(exercise);
 		exerciseRepository.deleteByIdInQuery(exercise.getId());

@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
+import static com.gunyoung.tmb.utils.CacheConstants.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +20,6 @@ import com.gunyoung.tmb.dto.jpa.MuscleNameAndCategoryDTO;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.repos.MuscleRepository;
-import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -61,7 +62,7 @@ public class MuscleServiceImpl implements MuscleService {
 	
 	@Override
 	@Transactional(readOnly =true)
-	@Cacheable(cacheNames=CacheUtil.MUSCLE_SORT_NAME, key= "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@Cacheable(cacheNames=MUSCLE_SORT_NAME, key= "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Map<String, List<String>> getAllMusclesWithSortingByCategory() {
 		Map<String,List<String>> result = new HashMap<>();
 		List<MuscleNameAndCategoryDTO> muscles = muscleRepository.findAllWithNamaAndCategory();
@@ -95,20 +96,20 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_SORT_NAME}, key="#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames= {MUSCLE_SORT_NAME}, key="#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Muscle save(Muscle muscle) {
 		return muscleRepository.save(muscle);
 	}
 
 	@Override
-	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_SORT_NAME}, key="#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames= {MUSCLE_SORT_NAME}, key="#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void delete(Muscle muscle) {
 		exerciseMuscleService.deleteAllByMuscleId(muscle.getId());
 		muscleRepository.delete(muscle);
 	}
 	
 	@Override
-	@CacheEvict(cacheNames= {CacheUtil.MUSCLE_SORT_NAME}, key="#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames= {MUSCLE_SORT_NAME}, key="#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void deleteById(Long id) {
 		Muscle muscle = findById(id);
 		if(muscle!= null)
