@@ -78,12 +78,9 @@ public class ManagerExerciseController {
 	 */
 	@RequestMapping(value="/manager/exercise/add",method = RequestMethod.GET)
 	public ModelAndView addExerciseView(ModelAndView mav) {
-		List<String> targetTypeKoreanNames = new ArrayList<>();
-		for(TargetType t: TargetType.values()) {
-			targetTypeKoreanNames.add(t.getKoreanName());
-		}
+		List<String> koreanNamesForAllTargetType = getKoreanNamesForAllTargetType();
 		
-		mav.addObject("targetTypes", targetTypeKoreanNames);
+		mav.addObject("targetTypes", koreanNamesForAllTargetType);
 		
 		mav.setViewName("addExercise");
 		
@@ -104,19 +101,23 @@ public class ManagerExerciseController {
 		}
 		
 		SaveExerciseDTO addExerciseDTO = SaveExerciseDTO.of(exercise); 
-		
-		List<String> targetTypeKoreanNames = new ArrayList<>();
-		for(TargetType t: TargetType.values()) {
-			targetTypeKoreanNames.add(t.getKoreanName());
-		}
+
+		List<String> koreanNamesForAllTargetType = getKoreanNamesForAllTargetType();
 		
 		mav.addObject("exerciseId", exerciseId);
 		mav.addObject("exerciseInfo", addExerciseDTO);
-		mav.addObject("targetTypes", targetTypeKoreanNames);
+		mav.addObject("targetTypes", koreanNamesForAllTargetType);
 		
 		mav.setViewName("modifyExercise");
 		
 		return mav;
 	}
 	
+	private List<String> getKoreanNamesForAllTargetType() {
+		List<String> koreanNamesForAllTargetType = new ArrayList<>();
+		for(TargetType t: TargetType.values()) {
+			koreanNamesForAllTargetType.add(t.getKoreanName());
+		}
+		return koreanNamesForAllTargetType;
+	}
 }

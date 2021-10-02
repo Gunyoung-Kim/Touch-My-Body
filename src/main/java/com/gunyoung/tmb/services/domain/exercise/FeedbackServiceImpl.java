@@ -77,7 +77,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	}
 
 	@Override
-	public void delete(Feedback feedback) {	
+	public void delete(Feedback feedback) {
 		feedbackRepository.delete(feedback);
 	}
 	
