@@ -1,6 +1,5 @@
 package com.gunyoung.tmb.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -78,7 +77,7 @@ public class ManagerExerciseController {
 	 */
 	@RequestMapping(value="/manager/exercise/add",method = RequestMethod.GET)
 	public ModelAndView addExerciseView(ModelAndView mav) {
-		List<String> koreanNamesForAllTargetType = getKoreanNamesForAllTargetType();
+		List<String> koreanNamesForAllTargetType = TargetType.getKoreanNamesForAllTargetType();
 		
 		mav.addObject("targetTypes", koreanNamesForAllTargetType);
 		
@@ -102,7 +101,7 @@ public class ManagerExerciseController {
 		
 		SaveExerciseDTO addExerciseDTO = SaveExerciseDTO.of(exercise); 
 
-		List<String> koreanNamesForAllTargetType = getKoreanNamesForAllTargetType();
+		List<String> koreanNamesForAllTargetType = TargetType.getKoreanNamesForAllTargetType();
 		
 		mav.addObject("exerciseId", exerciseId);
 		mav.addObject("exerciseInfo", addExerciseDTO);
@@ -111,13 +110,5 @@ public class ManagerExerciseController {
 		mav.setViewName("modifyExercise");
 		
 		return mav;
-	}
-	
-	private List<String> getKoreanNamesForAllTargetType() {
-		List<String> koreanNamesForAllTargetType = new ArrayList<>();
-		for(TargetType t: TargetType.values()) {
-			koreanNamesForAllTargetType.add(t.getKoreanName());
-		}
-		return koreanNamesForAllTargetType;
 	}
 }
