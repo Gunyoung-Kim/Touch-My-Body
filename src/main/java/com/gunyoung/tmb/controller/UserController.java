@@ -196,16 +196,13 @@ public class UserController {
 		return mav;
 	}
 	
-	private Page<Comment> getPageResultForMyCommentListView(String order, Long loginUserId, int page) throws SearchCriteriaInvalidException{
-		Page<Comment> pageResult;
+	private Page<Comment> getPageResultForMyCommentListView(String order, Long loginUserId, int page) throws SearchCriteriaInvalidException {
 		if(order.equals("asc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtAsc(loginUserId, page, MY_COMMENT_LIST_VIEW_PAGE_SIZE);
+			return commentService.findAllByUserIdOrderByCreatedAtAsc(loginUserId, page, MY_COMMENT_LIST_VIEW_PAGE_SIZE);
 		} else if(order.equals("desc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtDesc(loginUserId, page, MY_COMMENT_LIST_VIEW_PAGE_SIZE);
-		} else {
-			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
+			return commentService.findAllByUserIdOrderByCreatedAtDesc(loginUserId, page, MY_COMMENT_LIST_VIEW_PAGE_SIZE);
 		}
-		return pageResult;
+		throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 	}
 	
 	private long getTotalPageNumForMyCommentListView(Long loginUserId) {
@@ -247,16 +244,13 @@ public class UserController {
 		return mav;
 	}
 	
-	private Page<ExercisePost> getPageResultForMyPostListView(String order, Long loginUserId, int page) throws SearchCriteriaInvalidException{
-		Page<ExercisePost> pageResult; 
+	private Page<ExercisePost> getPageResultForMyPostListView(String order, Long loginUserId, int page) throws SearchCriteriaInvalidException {
 		if(order.equals("asc")) {
-			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(loginUserId,page,MY_POST_LIST_VIEW_PAGE_SIZE);
+			return exercisePostService.findAllByUserIdOrderByCreatedAtAsc(loginUserId,page,MY_POST_LIST_VIEW_PAGE_SIZE);
 		} else if(order.equals("desc")) {
-			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(loginUserId,page,MY_POST_LIST_VIEW_PAGE_SIZE);
-		} else {
-			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
+			return exercisePostService.findAllByUserIdOrderByCreatedAtDesc(loginUserId,page,MY_POST_LIST_VIEW_PAGE_SIZE);
 		}
-		return pageResult;
+		throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 	}
 	
 	private long getTotalPageNumForMyPostListView(Long loginUserId) {
