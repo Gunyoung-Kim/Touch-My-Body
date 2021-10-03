@@ -148,7 +148,7 @@ public class ManagerUserController {
 		List<CommentForManageViewDTO> commentListForView = CommentForManageViewDTO.of(pageResult, user);
 		
 		mav.addObject("userId", userId);
-		mav.addObject("username", user.getFullName()+": " +user.getNickName());
+		mav.addObject("username", user.getFullName() + " : " + user.getNickName());
 		mav.setPageNumbers(page, totalPageNum);
 		mav.addObject("commentList", commentListForView);
 		
@@ -158,19 +158,16 @@ public class ManagerUserController {
 	}
 	
 	private Page<Comment> getPageResultForUserCommentListViewForManage(String order, Long userId, int page) throws SearchCriteriaInvalidException {
-		Page<Comment> pageResult;
 		if(order.equals("asc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtAsc(userId, page, USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
+			return commentService.findAllByUserIdOrderByCreatedAtAsc(userId, page, USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
 		} else if(order.equals("desc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtDesc(userId, page, USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
-		} else {
-			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
+			return commentService.findAllByUserIdOrderByCreatedAtDesc(userId, page, USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
 		}
-		return pageResult;
+		throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 	}
 	
 	private long getTotalPageNumForUserCommentListViewForManage(Long userId) {
-		return commentService.countByUserId(userId)/USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE+1;
+		return commentService.countByUserId(userId) / USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE+1;
 	}
 	
 	/**
@@ -181,8 +178,8 @@ public class ManagerUserController {
 	 * @throws SearchCriteriaInvalidException 검색 결과 정렬 방식이 올바르지 못하다면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/manager/usermanage/{user_id}/posts", method = RequestMethod.GET)
-	public ModelAndView managerUserPosts(@PathVariable("user_id") Long userId, @RequestParam(value = "page", required = false, defaultValue = "1") int page
+	@RequestMapping(value = "/manager/usermanage/{userId}/posts", method = RequestMethod.GET)
+	public ModelAndView managerUserPosts(@PathVariable("userId") Long userId, @RequestParam(value = "page", required = false, defaultValue = "1") int page
 			, @RequestParam(value = "order", defaultValue = "desc") String order, ModelAndPageView mav) {
 		User user = userService.findById(userId);
 		if(user == null) {
@@ -209,16 +206,13 @@ public class ManagerUserController {
 		return mav;
 	}
 	
-	private Page<ExercisePost> getPageResultForUserPostListViewForManage(String order, Long userId, Integer page) throws SearchCriteriaInvalidException{
-		Page<ExercisePost> pageResult; 
+	private Page<ExercisePost> getPageResultForUserPostListViewForManage(String order, Long userId, Integer page) throws SearchCriteriaInvalidException {
 		if(order.equals("asc")) {
-			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(userId, page, USER_POST_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
+			return exercisePostService.findAllByUserIdOrderByCreatedAtAsc(userId, page, USER_POST_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
 		} else if(order.equals("desc")) {
-			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtDesc(userId, page, USER_POST_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
-		} else {
-			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
+			return exercisePostService.findAllByUserIdOrderByCreatedAtDesc(userId, page, USER_POST_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
 		}
-		return pageResult;
+		throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 	}
 	
 	private long getTotalPageNumForUserPostListViewForManage(Long userId) {
