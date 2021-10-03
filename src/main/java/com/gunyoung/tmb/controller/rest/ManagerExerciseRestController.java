@@ -91,20 +91,20 @@ public class ManagerExerciseRestController {
 	 */
 	@RequestMapping(value = "/manager/exercise/getmuscles", method = RequestMethod.GET)
 	public List<MuscleInfoBySortDTO> getMusclesSortByCategory() {
-		List<MuscleInfoBySortDTO> response = new ArrayList<>();
-		Map<String,List<String>> muscleSortResultMap = muscleService.getAllMusclesWithSortingByCategory();
+		Map<String, List<String>> classificationOfMuscleNamesByCategory = muscleService.getAllMusclesWithSortingByCategory();
 		
-		for(String category: muscleSortResultMap.keySet()) {
-			MuscleInfoBySortDTO dto = MuscleInfoBySortDTO.builder()
-					.target(category)
-					.muscleNames(muscleSortResultMap.get(category))
-					.build();
-			
-			response.add(dto);
-		}
-		
-		return response;
+		return getListOfMuscleInfoBySortDTOByMapOfMuscleNames(classificationOfMuscleNamesByCategory);
 	}
 	
-	
+	private List<MuscleInfoBySortDTO> getListOfMuscleInfoBySortDTOByMapOfMuscleNames(Map<String, List<String>> classificationOfMuscleNamesByCategory) {
+		List<MuscleInfoBySortDTO> result = new ArrayList<>();
+		for(String category: classificationOfMuscleNamesByCategory.keySet()) {
+			MuscleInfoBySortDTO dto = MuscleInfoBySortDTO.builder()
+					.target(category)
+					.muscleNames(classificationOfMuscleNamesByCategory.get(category))
+					.build();
+			result.add(dto);
+		}
+		return result;
+	}
 }
