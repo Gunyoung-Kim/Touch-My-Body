@@ -65,7 +65,7 @@ public class UserController {
 	 * 메인 화면을 반환하는 메소드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/",method=RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView index(ModelAndView mav) {
 		mav.setViewName("index");
 		
@@ -77,11 +77,11 @@ public class UserController {
 	 * 로그인 화면으로 들어오기전 위치 로그인 성공 후 리다이렉트 위해 세션에 저장
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/login",method=RequestMethod.GET)
-	public ModelAndView loginView(HttpServletRequest request,ModelAndView mav) {
-		String afterLoginRedirectedUrl = request.getHeader("Referer");
-		if(afterLoginRedirectedUrl != null && !afterLoginRedirectedUrl.contains("/login")) {
-			SessionUtil.setAfterLoginRedirectedUrl(session,afterLoginRedirectedUrl);
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public ModelAndView loginView(HttpServletRequest request, ModelAndView mav) {
+		String referer = request.getHeader("Referer");
+		if(isRefererNeedToBeRegisteredForSession(referer)) {
+			SessionUtil.setAfterLoginRedirectedUrl(session, referer);
 		}
 		
 		mav.setViewName("login");
@@ -89,11 +89,15 @@ public class UserController {
 		return mav;
 	}
 	
+	private boolean isRefererNeedToBeRegisteredForSession(String referer) {
+		return referer != null && !referer.contains("/login");
+	}
+	
 	/**
 	 * 회원가입 화면을 반환하는 메소드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/join",method=RequestMethod.GET)
+	@RequestMapping(value = "/join", method = RequestMethod.GET)
 	public ModelAndView joinView(@ModelAttribute("formModel")UserJoinDTO formModel,ModelAndView mav) {
 		mav.setViewName("join");
 		
@@ -108,8 +112,8 @@ public class UserController {
 	 * @throws NickNameDuplicationFoundedException 입력된 nickName이 이미 존재한다면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/join",method=RequestMethod.POST)
-	public ModelAndView join(@ModelAttribute("formModel")UserJoinDTO formModel) {
+	@RequestMapping(value = "/join", method = RequestMethod.POST)
+	public ModelAndView join(@ModelAttribute("formModel") UserJoinDTO formModel) {
 		String email = formModel.getEmail();
 		if(userService.existsByEmail(email)) {
 			throw new EmailDuplicationFoundedException(JoinErrorCode.EMAIL_DUPLICATION_FOUNDED_ERROR.getDescription());
@@ -120,11 +124,18 @@ public class UserController {
 			throw new NickNameDuplicationFoundedException(JoinErrorCode.NICKNAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
-		// 비밀번호 암호화
-		formModel.setPassword(passwordEncoder.encode(formModel.getPassword()));
-		userService.saveByJoinDTOAndRoleType(formModel, RoleType.USER);
+		encodePasswordOfFormModel(formModel);
+		saveNewUserWithUserRole(formModel);
 		
 		return new ModelAndView("redirect:/");
+	}
+	
+	private void encodePasswordOfFormModel(UserJoinDTO formModel) {
+		formModel.setPassword(passwordEncoder.encode(formModel.getPassword()));
+	}
+	
+	private void saveNewUserWithUserRole(UserJoinDTO formModel) {
+		userService.saveByJoinDTOAndRoleType(formModel, RoleType.USER);
 	}
 	
 	/**
@@ -132,7 +143,7 @@ public class UserController {
 	 * @throws UserNotFoundedException 세션에 저장된 Id에 해당하는 User 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/user/profile",method=RequestMethod.GET)
+	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
 	@LoginIdSessionNotNull
 	public ModelAndView profileView(ModelAndView mav) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
@@ -157,10 +168,10 @@ public class UserController {
 	 * @throws SearchCriteriaInvalidException 검색 정렬 조건이 적절치 못하다면 
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/user/profile/mycomments", method=RequestMethod.GET)
+	@RequestMapping(value = "/user/profile/mycomments", method = RequestMethod.GET)
 	@LoginIdSessionNotNull
-	public ModelAndView myCommentsView(ModelAndPageView mav,@RequestParam(value="page", required=false,defaultValue="1") Integer page
-			,@RequestParam(value="order", defaultValue="desc") String order) {
+	public ModelAndView myCommentsView(ModelAndPageView mav, @RequestParam(value = "page", required = false, defaultValue= "1") int page
+			, @RequestParam(value = "order", defaultValue = "desc") String order) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findById(loginUserId);
 		if(user == null) {
@@ -185,7 +196,7 @@ public class UserController {
 		return mav;
 	}
 	
-	private Page<Comment> getPageResultForMyCommentListView(String order, Long loginUserId, Integer page) throws SearchCriteriaInvalidException{
+	private Page<Comment> getPageResultForMyCommentListView(String order, Long loginUserId, int page) throws SearchCriteriaInvalidException{
 		Page<Comment> pageResult;
 		if(order.equals("asc")) {
 			pageResult = commentService.findAllByUserIdOrderByCreatedAtAsc(loginUserId, page, MY_COMMENT_LIST_VIEW_PAGE_SIZE);
@@ -208,10 +219,10 @@ public class UserController {
 	 * @throws SearchCriteriaInvalidException 검색 정렬 조건이 적절치 못하다면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/user/profile/myposts",method=RequestMethod.GET)
+	@RequestMapping(value = "/user/profile/myposts", method = RequestMethod.GET)
 	@LoginIdSessionNotNull
-	public ModelAndView myPostsView(ModelAndPageView mav, @RequestParam(value="page", required=false,defaultValue="1") Integer page,
-			@RequestParam(value="order", defaultValue="desc") String order) {
+	public ModelAndView myPostsView(ModelAndPageView mav, @RequestParam(value = "page", required = false, defaultValue = "1") int page
+			, @RequestParam(value = "order", defaultValue = "desc") String order) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findById(loginUserId);
 		if(user == null) {
@@ -236,7 +247,7 @@ public class UserController {
 		return mav;
 	}
 	
-	private Page<ExercisePost> getPageResultForMyPostListView(String order, Long loginUserId, Integer page) throws SearchCriteriaInvalidException{
+	private Page<ExercisePost> getPageResultForMyPostListView(String order, Long loginUserId, int page) throws SearchCriteriaInvalidException{
 		Page<ExercisePost> pageResult; 
 		if(order.equals("asc")) {
 			pageResult = exercisePostService.findAllByUserIdOrderByCreatedAtAsc(loginUserId,page,MY_POST_LIST_VIEW_PAGE_SIZE);
