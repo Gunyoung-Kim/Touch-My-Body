@@ -61,9 +61,9 @@ public class ManagerUserController {
 	 * @param keyword User 닉네임 검색 키워드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/usermanage",method= RequestMethod.GET)
-	public ModelAndView userManageView(@RequestParam(value="page", required=false,defaultValue="1") Integer page,
-			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
+	@RequestMapping(value = "/manager/usermanage", method = RequestMethod.GET)
+	public ModelAndView userManageView(@RequestParam(value="page", required = false, defaultValue = "1") int page,
+			@RequestParam(value = "keyword", required = false) String keyword, ModelAndPageView mav) {
 		Page<User> pageResult = getPageResultForUserManageView(keyword, page);
 		long totalPageNum = getTotalPageNumForUserManageView(keyword);
 		
@@ -98,7 +98,7 @@ public class ManagerUserController {
 	 * @throws AccessDeniedException 접속자의 권한이 대상 User의 권한보다 낮다면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/usermanage/{user_id}" , method = RequestMethod.GET)
+	@RequestMapping(value = "/manager/usermanage/{user_id}", method = RequestMethod.GET)
 	public ModelAndView manageUserProfileView(@PathVariable("user_id") Long userId, ModelAndView mav) {
 		User targetUser = userService.findById(userId);
 		if(targetUser == null) {
@@ -129,9 +129,9 @@ public class ManagerUserController {
 	 * @throws SearchCriteriaInvalidException 검색 결과 정렬 방식이 올바르지 못하다면 
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/usermanage/{user_id}/comments", method = RequestMethod.GET) 
-	public ModelAndView manageUserComments(@PathVariable("user_id") Long userId,@RequestParam(value="page", required=false,defaultValue="1") Integer page
-			,@RequestParam(value="order", defaultValue="desc") String order , ModelAndPageView mav) {
+	@RequestMapping(value = "/manager/usermanage/{user_id}/comments", method = RequestMethod.GET) 
+	public ModelAndView manageUserComments(@PathVariable("user_id") Long userId, @RequestParam(value = "page", required = false, defaultValue = "1") int page
+			, @RequestParam(value = "order", defaultValue = "desc") String order, ModelAndPageView mav) {
 		User user = userService.findById(userId);
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
@@ -157,12 +157,12 @@ public class ManagerUserController {
 		return mav;
 	}
 	
-	private Page<Comment> getPageResultForUserCommentListViewForManage(String order,Long userId, Integer page) throws SearchCriteriaInvalidException{
+	private Page<Comment> getPageResultForUserCommentListViewForManage(String order, Long userId, int page) throws SearchCriteriaInvalidException {
 		Page<Comment> pageResult;
 		if(order.equals("asc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtAsc(userId,page,USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtAsc(userId, page, USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
 		} else if(order.equals("desc")) {
-			pageResult = commentService.findAllByUserIdOrderByCreatedAtDesc(userId,page,USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
+			pageResult = commentService.findAllByUserIdOrderByCreatedAtDesc(userId, page, USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE);
 		} else {
 			throw new SearchCriteriaInvalidException(SearchCriteriaErrorCode.ORDER_BY_CRITERIA_ERROR.getDescription());
 		}
@@ -181,9 +181,9 @@ public class ManagerUserController {
 	 * @throws SearchCriteriaInvalidException 검색 결과 정렬 방식이 올바르지 못하다면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/usermanage/{user_id}/posts",method=RequestMethod.GET)
-	public ModelAndView managerUserPosts(@PathVariable("user_id") Long userId, @RequestParam(value="page", required=false,defaultValue="1") Integer page
-			,@RequestParam(value="order", defaultValue="desc") String order , ModelAndPageView mav) {
+	@RequestMapping(value = "/manager/usermanage/{user_id}/posts", method = RequestMethod.GET)
+	public ModelAndView managerUserPosts(@PathVariable("user_id") Long userId, @RequestParam(value = "page", required = false, defaultValue = "1") int page
+			, @RequestParam(value = "order", defaultValue = "desc") String order, ModelAndPageView mav) {
 		User user = userService.findById(userId);
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
