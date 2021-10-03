@@ -76,11 +76,11 @@ public class ExercisePostController {
 		Page<PostForCommunityViewDTO> pageResult = getPageResultForExercisePostView(keyword, page);
 		long totalPageNum = getTotalPageNumForExercisePostView(keyword);
 		
-		TargetType[] targetTypes = TargetType.values();
+		TargetType[] allTargetTypes = TargetType.values();
 		
 		mav.addObject("listObject",pageResult);
 		mav.setPageNumbers(page, totalPageNum);
-		mav.addObject("targetNames", targetTypes);
+		mav.addObject("targetNames", allTargetTypes);
 		mav.addObject("category", "전체");
 		
 		mav.setViewName("community");
@@ -122,11 +122,11 @@ public class ExercisePostController {
 		Page<PostForCommunityViewDTO> pageResult = getPageResultForExercisePostViewWithTarget(keyword, type, page);
 		long totalPageNum = getTotalPageNumForExercisePostViewWithTarget(keyword, type);
 		
-		TargetType[] targetTypes = TargetType.values();
+		TargetType[] allTargetTypes = TargetType.values();
 		
 		mav.addObject("listObject",pageResult);
 		mav.setPageNumbers(page, totalPageNum);
-		mav.addObject("targetNames", targetTypes);
+		mav.addObject("targetNames", allTargetTypes);
 		mav.addObject("category", type.getKoreanName());
 		
 		mav.setViewName("community");
@@ -224,21 +224,22 @@ public class ExercisePostController {
 			@RequestParam("isAnonymous") boolean isAnonymous, HttpServletRequest request) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findWithCommentsById(loginUserId);
-		if(user == null)
+		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
+		}
 		
 		ExercisePost exercisePost = exercisePostService.findWithCommentsById(postId);
-		if(exercisePost == null) 
+		if(exercisePost == null) {
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
+		}
 		 
 		String writerIp = HttpRequestUtil.getRemoteHost(request);
-		Comment comment = SaveCommentDTO.toComment(dto, writerIp);
-		comment.setAnonymous(isAnonymous);
+		Comment newComment = SaveCommentDTO.toComment(dto, writerIp);
+		newComment.setAnonymous(isAnonymous);
 		
-		commentService.saveWithUserAndExercisePost(comment, user, exercisePost);
+		commentService.saveWithUserAndExercisePost(newComment, user, exercisePost);
 		
-		return new ModelAndView("redirect:/community/post/" + postId);
-				
+		return new ModelAndView("redirect:/community/post/" + postId);		
 	}
 	
 }

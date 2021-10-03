@@ -1,6 +1,6 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
-import static com.gunyoung.tmb.utils.CacheConstants.*;
+import static com.gunyoung.tmb.utils.CacheConstants.MUSCLE_SORT_NAME;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,6 +80,7 @@ public class MuscleServiceImpl implements MuscleService {
 		return result;
 	}
 	
+	@Override
 	public List<Muscle> getMuscleListFromMuscleNameList(Iterable<String> muscleNames) throws MuscleNotFoundedException {
 		List<Muscle> muscleList = new ArrayList<>();
 		

@@ -38,7 +38,6 @@ public enum TargetType {
 				return tt;
 			}
 		}
-		
 		return null;
 	}
 	
