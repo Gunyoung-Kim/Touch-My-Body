@@ -88,6 +88,6 @@ public class FeedbackController {
 		
 		feedbackService.saveWithUserAndExercise(feedback, user, exercise);
 		
-		return new ModelAndView("redirect:/exercise/about/"+exerciseId+"/addfeedback");
+		return new ModelAndView("redirect:/exercise/about/" + exerciseId + "/addfeedback");
 	}
 }
