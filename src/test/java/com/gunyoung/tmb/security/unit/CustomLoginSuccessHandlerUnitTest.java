@@ -3,7 +3,6 @@ package com.gunyoung.tmb.security.unit;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 
 import java.io.IOException;
@@ -69,22 +68,6 @@ public class CustomLoginSuccessHandlerUnitTest {
 	 */
 	
 	@Test
-	@DisplayName("Authentication 성공 후 처리 -> 성공 후 리다이렉트 주소 세션에 없는 경우, 해당 내용 세션에서 지우지 않음 확인")
-	public void onAuthenticationSuccessTestNoRedirectedURLInSession() throws IOException, ServletException {
-		//Given
-		String loginUserEmail = UserTest.DEFAULT_EMAIL;
-		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
-		
-		mockingSessionForGetAfterLoginRedirectedURL(null);
-		
-		//When
-		customLoginSuccessHandler.onAuthenticationSuccess(request, response, authentication);
-		
-		//Then
-		then(session).should(never()).removeAttribute(SessionUtil.AFTER_LOGIN_REDIRECTED_URL);
-	}
-	
-	@Test
 	@DisplayName("Authentication 성공 후 처리 -> 성공 후 리다이렉트 주소 세션에 있는 경우, 해당 내용 세션에서 지우기 확인 ")
 	public void onAuthenticationSuccessTestRedirectedURLExistInSession() throws IOException, ServletException {
 		//Given
@@ -107,9 +90,6 @@ public class CustomLoginSuccessHandlerUnitTest {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
 		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
-		
-		String redirectedUrlInSession = "/redirected";
-		mockingSessionForGetAfterLoginRedirectedURL(redirectedUrlInSession);
 		
 		mockingRequestGetSessionWithFalseReturnSession();
 		
