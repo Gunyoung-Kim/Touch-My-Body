@@ -106,7 +106,7 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	public void delete(Comment comment) {
-		Objects.requireNonNull(comment);
+		Objects.requireNonNull(comment, "Given comment must not be null!");
 		deleteAllOneToManyEntityForComment(comment);
 		commentRepository.deleteByIdInQuery(comment.getId());
 	}

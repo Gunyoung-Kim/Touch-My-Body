@@ -76,7 +76,7 @@ public interface CommentService {
 	 * Comment 삭제 <br>
 	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param comment 삭제하려는 Comment
-	 * @throws NullPointerException comment = null
+	 * @throws NullPointerException comment == null
 	 * @author kimgun-yeong
 	 */
 	public void delete(Comment comment);
