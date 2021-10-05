@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<User> findAllByNickNameOrNameInPage(String keyword,Integer pageNumber) {
+	public Page<User> findAllByNickNameOrNameInPage(String keyword, Integer pageNumber) {
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageSize.BY_NICKNAME_NAME_PAGE_SIZE.getSize());
 		return userRepository.findAllByNickNameOrName(keyword, pageRequest);
 	}
@@ -162,11 +162,14 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User addUserExercise(User user, UserExercise userExercise) {
-		user.getUserExercises().add(userExercise);
-		
-		userExercise.setUser(user);
+		setRelationBetweenUserAndUserExercise(user, userExercise);
 		userExerciseService.save(userExercise);
 		return user;
+	}
+	
+	private void setRelationBetweenUserAndUserExercise(User user, UserExercise userExercise) {
+		user.getUserExercises().add(userExercise);
+		userExercise.setUser(user);
 	}
 
 	@Override
