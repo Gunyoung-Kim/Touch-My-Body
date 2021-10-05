@@ -64,32 +64,26 @@ public class MuscleServiceImpl implements MuscleService {
 	@Transactional(readOnly =true)
 	@Cacheable(cacheNames=MUSCLE_SORT_NAME, key= "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Map<String, List<String>> getAllMusclesWithSortingByCategory() {
-		Map<String,List<String>> result = new HashMap<>();
-		List<MuscleNameAndCategoryDTO> muscles = muscleRepository.findAllWithNamaAndCategory();
+		List<MuscleNameAndCategoryDTO> listOfDTOFromRepo = muscleRepository.findAllWithNamaAndCategory();
+		Map<String,List<String>> sortingResult = new HashMap<>();
 		
-		for(MuscleNameAndCategoryDTO muscle: muscles) {
-			if(result.containsKey(muscle.getCategory().getKoreanName())) {
-				result.get(muscle.getCategory().getKoreanName()).add(muscle.getName());
-			} else {
-				List<String> newList = new ArrayList<>();
-				newList.add(muscle.getName());
-				result.put(muscle.getCategory().getKoreanName(), newList);
-			}
-		}
+		listOfDTOFromRepo.stream().forEach((dto) -> {
+			String koreanNameOfCategory = dto.getCategory().getKoreanName();
+			String nameOfMuscle = dto.getName();
+			sortingResult.putIfAbsent(koreanNameOfCategory, new ArrayList<>());
+			sortingResult.get(koreanNameOfCategory).add(nameOfMuscle);
+		});
 		
-		return result;
+		return sortingResult;
 	}
 	
 	@Override
 	public List<Muscle> getMuscleListFromMuscleNameList(Iterable<String> muscleNames) throws MuscleNotFoundedException {
 		List<Muscle> muscleList = new ArrayList<>();
-		
 		for(String muscleName: muscleNames) {
 			Muscle muscle = findByName(muscleName);
-			
 			if(muscle == null)
 				throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
-			
 			muscleList.add(muscle);
 		}
 		
