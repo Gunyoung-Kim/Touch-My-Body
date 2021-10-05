@@ -99,6 +99,7 @@ public interface ExerciseService {
 	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제 <br>
 	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param exercise 삭제하려는 Exercise
+	 * @throws NullPointerException exercise == null
 	 * @author kimgun-yeong
 	 */
 	public void delete(Exercise exercise);

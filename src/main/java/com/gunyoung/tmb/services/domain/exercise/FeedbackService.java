@@ -40,7 +40,7 @@ public interface FeedbackService {
 	 * @param exerciseId 찾으려는 Feedback들의 Exercise ID
 	 * @author kimgun-yeong
 	 */
-	public Page<FeedbackManageListDTO> findAllForFeedbackManageListDTOByExerciseIdByPage(Long exerciseId,Integer pageNum, int pageSize);
+	public Page<FeedbackManageListDTO> findAllForFeedbackManageListDTOByExerciseIdByPage(Long exerciseId, Integer pageNum, int pageSize);
 	
 	/**
 	 * Feedback 생성 및 수정
@@ -54,7 +54,7 @@ public interface FeedbackService {
 	 * User와 Exercise객체를 인자로 받아 Feedback 객체 생성 및 연관 관계 설정 후 저장
 	 * @author kimgun-yeong
 	 */
-	public Feedback saveWithUserAndExercise(Feedback feedback,User user, Exercise exercise);
+	public Feedback saveWithUserAndExercise(Feedback feedback, User user, Exercise exercise);
 	
 	/**
 	 * Feedback 삭제

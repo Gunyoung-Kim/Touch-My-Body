@@ -184,6 +184,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Override
 	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void delete(Exercise exercise) {
+		Objects.requireNonNull(exercise);
 		deleteAllOneToManyEntityForExercise(exercise);
 		exerciseRepository.deleteByIdInQuery(exercise.getId());
 	}
@@ -214,9 +215,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 		Exercise exercise = findWithExerciseMusclesById(exerciseId);
 		if(exercise == null)
 			return null;
-		ExerciseForInfoViewDTO dto = ExerciseForInfoViewDTO.of(exercise);
-		
-		return dto;
+		return ExerciseForInfoViewDTO.of(exercise);
 	}
 
 	@Override

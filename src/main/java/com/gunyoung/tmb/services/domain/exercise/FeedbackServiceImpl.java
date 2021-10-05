@@ -63,17 +63,21 @@ public class FeedbackServiceImpl implements FeedbackService {
 	}
 	
 	@Override
-	public Feedback saveWithUserAndExercise(Feedback feedback,User user, Exercise exercise) {
-		// Feedback의 객체 연관 관계 추가
-		feedback.setExercise(exercise);
-		feedback.setUser(user);
-		
-		//User와 Exercise의 객체 연관 관계 추가
-		user.getFeedbacks().add(feedback);
-		exercise.getFeedbacks().add(feedback);
-		
-		//Feedback의 DB연관관계 추가 및 객체 저장 
+	public Feedback saveWithUserAndExercise(Feedback feedback, User user, Exercise exercise) {
+		addRelationBetweenFeedbackAndUser(feedback, user);
+		addRelationBetweenFeedbackAndExercise(feedback, exercise);
+
 		return save(feedback);
+	}
+	
+	private void addRelationBetweenFeedbackAndUser(Feedback feedback, User user) {
+		feedback.setUser(user);
+		user.getFeedbacks().add(feedback);
+	}
+	
+	private void addRelationBetweenFeedbackAndExercise(Feedback feedback, Exercise exercise) {
+		feedback.setExercise(exercise);
+		exercise.getFeedbacks().add(feedback);
 	}
 
 	@Override

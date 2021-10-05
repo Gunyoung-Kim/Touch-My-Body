@@ -406,6 +406,17 @@ public class ExerciseServiceUnitTest {
 	 */
 	
 	@Test
+	@DisplayName("Exercise 삭제 -> 실패, Exercise Null") 
+	public void deleteTestExerciseNull(){
+		//Given
+		
+		//When, Then
+		assertThrows(NullPointerException.class, () -> {
+			exerciseService.delete(null);
+		});
+	}
+	
+	@Test
 	@DisplayName("Exercise 삭제 -> 정상, Check ExerciseRepository")
 	public void deleteTestCheckExerciseRepo() {
 		//Given
