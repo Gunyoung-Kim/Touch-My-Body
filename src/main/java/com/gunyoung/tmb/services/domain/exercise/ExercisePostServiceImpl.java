@@ -208,7 +208,6 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 			return null;
 		
 		exercisePost.increaseViewNum();
-		
 		save(exercisePost);
 		
 		return getExercisePostViewDTOWithExercisePostId(id);

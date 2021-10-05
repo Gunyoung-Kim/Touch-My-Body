@@ -18,7 +18,6 @@ public interface ExerciseService {
 	 * ID로 Exercise 찾기
 	 * @param id 찾으려는 Exercise의 id
 	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public Exercise findById(Long id);
@@ -27,7 +26,6 @@ public interface ExerciseService {
 	 * name으로 Exercise 찾기
 	 * @param name 찾으려는 Exercise의 이름
 	 * @return Exercise, Null(해당 name의 Exercise가 없을때)
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public Exercise findByName(String name);
@@ -36,7 +34,6 @@ public interface ExerciseService {
 	 * ID 로 Feedbacks 페치 조인 후 반환 
 	 * @param id 찾으려는 Exercise의 id
 	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public Exercise findWithFeedbacksById(Long id);
@@ -45,7 +42,6 @@ public interface ExerciseService {
 	 * ID로 ExercisePosts 페치 조인 후 반환
 	 * @param id 찾으려는 Exercise의 id
 	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
-	 * @since 11 
 	 * @author kimgun-yeong
 	 */
 	public Exercise findWithExercisePostsByName(String name);
@@ -54,7 +50,7 @@ public interface ExerciseService {
 	 * ID로 ExerciseMuscles 페치 조인 후 반환
 	 * @param id 찾으려는 Exercise의 id
 	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
-	 * @since 11 
+ 
 	 * @author kimgun-yeong
 	 */
 	public Exercise findWithExerciseMusclesById(Long id);
@@ -63,14 +59,14 @@ public interface ExerciseService {
 	 * 모든 Exercise 페이지로 가져오기 
 	 * @author kimgun-yeong
 	 */
-	public Page<Exercise> findAllInPage(Integer pageNumber,int page_size);
+	public Page<Exercise> findAllInPage(Integer pageNumber, int pageSize);
 	
 	/**
 	 * name에 키워드를 포함하는 모든 Exercise 페이지로 가져오는 메소드
 	 * @param keyword name 검색 키워드 
 	 * @author kimgun-yeong
 	 */
-	public Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber,int page_size);
+	public Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize);
 	
 	/**
 	 * 모든 Exercise들을 target들로 분류해 반환 <br>

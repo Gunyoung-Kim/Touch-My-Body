@@ -1,6 +1,6 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
-import static com.gunyoung.tmb.utils.CacheConstants.*;
+import static com.gunyoung.tmb.utils.CacheConstants.EXERCISE_SORT_NAME;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,15 +89,15 @@ public class ExerciseServiceImpl implements ExerciseService {
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<Exercise> findAllInPage(Integer pageNumber,int page_size) {
-		PageRequest pageRequest = PageRequest.of(pageNumber-1, page_size);
+	public Page<Exercise> findAllInPage(Integer pageNumber, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exerciseRepository.findAll(pageRequest);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int page_size) {
-		PageRequest pageRequest = PageRequest.of(pageNumber-1, page_size);
+	public Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exerciseRepository.findAllWithNameKeyword(keyword, pageRequest);
 	}
 	
@@ -105,22 +105,16 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Transactional(readOnly=true)
 	@Cacheable(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Map<String, List<String>> getAllExercisesNamewithSorting() {
-		Map<String, List<String>> result = new HashMap<>();
-		List<ExerciseNameAndTargetDTO> list = exerciseRepository.findAllWithNameAndTarget();
+		Map<String, List<String>> sortingResult = new HashMap<>();
+		List<ExerciseNameAndTargetDTO> listOfDTOFromRepo = exerciseRepository.findAllWithNameAndTarget();
+		listOfDTOFromRepo.stream().forEach((dto) -> {
+			String koreanNameOfTarget = dto.getTarget().getKoreanName();
+			String nameOfExercise = dto.getName();
+			sortingResult.putIfAbsent(koreanNameOfTarget, new ArrayList<>());
+			sortingResult.get(koreanNameOfTarget).add(nameOfExercise);
+		});
 		
-		for(ExerciseNameAndTargetDTO dto: list) {
-			String target = dto.getTarget().getKoreanName();
-			String name = dto.getName();
-			if(result.containsKey(target)) {
-				result.get(target).add(name);
-			} else {
-				List<String> newList = new ArrayList<>();
-				newList.add(name);
-				result.put(target, newList);
-			}
-		}
-		
-		return result;
+		return sortingResult;
 	}
 
 	@Override
