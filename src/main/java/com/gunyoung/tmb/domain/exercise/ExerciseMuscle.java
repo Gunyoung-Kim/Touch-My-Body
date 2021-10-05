@@ -1,5 +1,8 @@
 package com.gunyoung.tmb.domain.exercise;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -72,5 +75,39 @@ public class ExerciseMuscle extends BaseEntity{
 	@Override
 	public String toString() {
 		return "[ id = " + id + ", isMain = " + isMain + ", muscleName = " + muscleName +" ]";
+	}
+
+	/**
+	 * Exercise, List of Muscle 를 이용해 isMain 필드 값이 true인 ExerciseMuscle List 생성 후 반환하는 정적 팩토리 메서드
+	 * @param exercise 생성 하려는 ExerciseMuscle 들의 Exercise
+	 * @param muscleList 생성 하려는 ExerciseMuscle 들의 Muscle 리스트
+	 * @author kimgun-yeong
+	 */
+	public static List<ExerciseMuscle> mainOf(Exercise exercise, List<Muscle> muscleList) {
+		return of(exercise, muscleList, true);
+	}
+	
+	/**
+	 * Exercise, List of Muscle 를 이용해 isMain 필드 값이 false인 ExerciseMuscle List 생성 후 반환하는 정적 팩토리 메서드
+	 * @param exercise 생성 하려는 ExerciseMuscle 들의 Exercise
+	 * @param muscleList 생성 하려는 ExerciseMuscle 들의 Muscle 리스트
+	 * @author kimgun-yeong
+	 */
+	public static List<ExerciseMuscle> subOf(Exercise exercise, List<Muscle> muscleList) {
+		return of(exercise, muscleList, false);
+	}
+	
+	private static List<ExerciseMuscle> of(Exercise exercise, List<Muscle> muscleList, boolean isMain) {
+		List<ExerciseMuscle> exerciseMuscleList = new ArrayList<>();
+		for(Muscle muscle: muscleList) {
+			ExerciseMuscle em = ExerciseMuscle.builder()
+					.exercise(exercise)
+					.muscleName(muscle.getName())
+					.muscle(muscle)
+					.isMain(isMain)
+					.build();
+			exerciseMuscleList.add(em);
+		}
+		return exerciseMuscleList; 
 	}
 }

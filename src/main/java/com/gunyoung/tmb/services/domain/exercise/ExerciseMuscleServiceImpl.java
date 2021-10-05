@@ -1,15 +1,12 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
-import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -56,22 +53,5 @@ public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 	@Override
 	public void deleteAllByExerciseId(Long exerciseId) {
 		exerciseMuscleRepository.deleteAllByExerciseIdInQuery(exerciseId);
-	}
-
-	@Override
-	public List<ExerciseMuscle> getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(Exercise exercise, List<Muscle> muscleList,boolean isMain) {
-		List<ExerciseMuscle> exerciseMuscleList = new ArrayList<>();
-		for(Muscle muscle: muscleList) {
-			ExerciseMuscle em = ExerciseMuscle.builder()
-					.exercise(exercise)
-					.muscleName(muscle.getName())
-					.muscle(muscle)
-					.isMain(isMain)
-					.build();
-			
-			exerciseMuscleList.add(em);
-		}
-		
-		return exerciseMuscleList; 
 	}
 }

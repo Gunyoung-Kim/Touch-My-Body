@@ -392,8 +392,6 @@ public class ExerciseServiceUnitTest {
 		
 		given(muscleService.getMuscleListFromMuscleNameList(saveExerciseDTO.getMainMuscles())).willReturn(mainMuscles);
 		given(muscleService.getMuscleListFromMuscleNameList(saveExerciseDTO.getSubMuscles())).willReturn(subMucles);
-		given(exerciseMuscleService.getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(exercise, mainMuscles, true)).willReturn(new ArrayList<>());
-		given(exerciseMuscleService.getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(exercise, subMucles, true)).willReturn(new ArrayList<>());
 		
 		//When
 		exerciseService.saveWithSaveExerciseDTO(exercise, saveExerciseDTO);

@@ -154,11 +154,11 @@ public class ExerciseServiceImpl implements ExerciseService {
 		// 생성한 Exercise 객체와 가져온 Muscle 객체로 ExerciseMuscle 객체 생성
 		List<ExerciseMuscle> exerciseMuscles = new ArrayList<>();
 		
-		List<ExerciseMuscle> mainExerciseMuscleList =  exerciseMuscleService.getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(exercise, mainMuscles, true);
+		List<ExerciseMuscle> mainExerciseMuscleList =  ExerciseMuscle.mainOf(exercise, mainMuscles);
 		exerciseMuscles.addAll(mainExerciseMuscleList);
 		exercise.getExerciseMuscles().addAll(mainExerciseMuscleList);
 		
-		List<ExerciseMuscle> subExerciseMuscleList = exerciseMuscleService.getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(exercise, subMuscles, false);
+		List<ExerciseMuscle> subExerciseMuscleList = ExerciseMuscle.subOf(exercise, subMuscles);
 		exerciseMuscles.addAll(subExerciseMuscleList);
 		exercise.getExerciseMuscles().addAll(subExerciseMuscleList);
 		

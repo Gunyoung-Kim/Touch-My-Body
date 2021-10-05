@@ -18,9 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
-import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleServiceImpl;
 
@@ -162,36 +160,5 @@ public class ExerciseMuscleServiceUnitTest {
 		
 		//Then
 		then(exerciseMuscleRepository).should(times(1)).deleteAllByExerciseIdInQuery(exerciseId);
-	}
-	
-	/*
-	 * public List<ExerciseMuscle> getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(Exercise exercise, List<Muscle> muscleList,boolean isMain)
-	 */
-	
-	@Test
-	@DisplayName("Exercise, Muscle List, isMain 인자를 이용해 ExerciseMuscle List 생성 후 반환 -> 정상")
-	public void getExerciseMuscleListFromExerciseAndMuscleListAndIsMain() {
-		//Given
-		Exercise exercise = new Exercise();
-		int muscleNum = 5;
-		
-		List<Muscle> muscles = new ArrayList<>();
-		
-		for(int i=0; i < muscleNum; i++) {
-			Muscle muscle = Muscle.builder()
-					.name("muscle" + i)
-					.build();
-			
-			muscles.add(muscle);
-		}
-		
-		boolean isMain = true;
-		
-		//when
-		List<ExerciseMuscle> result = exerciseMuscleService.getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(exercise, muscles, isMain);
-		
-		//Then
-		
-		assertEquals(muscleNum, result.size());
 	}
 }
