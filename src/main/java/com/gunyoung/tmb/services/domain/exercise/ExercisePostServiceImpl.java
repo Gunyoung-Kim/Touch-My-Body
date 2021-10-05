@@ -207,7 +207,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 		if(exercisePost == null)
 			return null;
 		
-		exercisePost.setViewNum(exercisePost.getViewNum()+1);
+		exercisePost.increaseViewNum();
 		
 		save(exercisePost);
 		

@@ -38,4 +38,22 @@ public class ExercisePostUnitTest {
 	private void verifyString_for_toStringTest(ExercisePost exercisePost, String result) {
 		assertEquals("[ id = " + exercisePost.getId() + ", title = " + exercisePost.getTitle() + ", contents = " + exercisePost.getContents() + ", viewNum = " + exercisePost.getViewNum() + " ]", result);
 	}
+	
+	/*
+	 * public void increaseViewNum()
+	 */
+	
+	@Test
+	@DisplayName("조회수 증가 -> 정상")
+	public void increaseViewNumTest() {
+		//Given
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		int beforeViewNum = exercisePost.getViewNum();
+		
+		//When
+		exercisePost.increaseViewNum();
+		
+		//Then
+		assertEquals(beforeViewNum + 1, exercisePost.getViewNum());
+	}
 }
