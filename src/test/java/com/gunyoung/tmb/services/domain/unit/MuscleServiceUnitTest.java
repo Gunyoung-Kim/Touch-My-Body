@@ -258,6 +258,17 @@ public class MuscleServiceUnitTest {
 	 */
 	
 	@Test
+	@DisplayName("Muscle 삭제 -> 실패, Muscle null")
+	public void deleteTestMuscleNull() {
+		//Given
+		
+		//When, Then
+		assertThrows(NullPointerException.class, () -> {
+			muscleService.delete(null);
+		});
+	}
+	
+	@Test
 	@DisplayName("Muscle 삭제 -> 정상, check muscleRepository")
 	public void deleteTestCheckMuscleRepository() {
 		//Given

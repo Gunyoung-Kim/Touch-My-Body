@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -80,15 +81,15 @@ public class MuscleServiceImpl implements MuscleService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<Muscle> getMuscleListFromMuscleNameList(Iterable<String> muscleNames) throws MuscleNotFoundedException {
-		List<Muscle> muscleList = new ArrayList<>();
+		List<Muscle> listOfMuscle = new ArrayList<>();
 		for(String muscleName: muscleNames) {
 			Muscle muscle = findByName(muscleName);
 			if(muscle == null)
 				throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
-			muscleList.add(muscle);
+			listOfMuscle.add(muscle);
 		}
 		
-		return muscleList;
+		return listOfMuscle;
 	}
 
 	@Override
@@ -100,6 +101,7 @@ public class MuscleServiceImpl implements MuscleService {
 	@Override
 	@CacheEvict(cacheNames= {MUSCLE_SORT_NAME}, key="#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void delete(Muscle muscle) {
+		Objects.requireNonNull(muscle);
 		exerciseMuscleService.deleteAllByMuscleId(muscle.getId());
 		muscleRepository.delete(muscle);
 	}
@@ -108,7 +110,7 @@ public class MuscleServiceImpl implements MuscleService {
 	@CacheEvict(cacheNames= {MUSCLE_SORT_NAME}, key="#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void deleteById(Long id) {
 		Muscle muscle = findById(id);
-		if(muscle!= null)
+		if(muscle != null)
 			delete(muscle);
 	}
 

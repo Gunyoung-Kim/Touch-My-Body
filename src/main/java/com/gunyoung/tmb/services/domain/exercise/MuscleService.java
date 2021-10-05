@@ -69,6 +69,7 @@ public interface MuscleService {
 	 * Muscle 삭제 <br>
 	 * {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제
 	 * @param muscle 삭제하려는 muscle
+	 * @throws NullPointerException muscle == null
 	 * @author kimgun-yeong
 	 */
 	public void delete(Muscle muscle);
