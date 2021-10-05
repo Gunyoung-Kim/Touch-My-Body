@@ -88,6 +88,7 @@ public interface ExerciseService {
 	 * {@link SaveExerciseDTO} 에 담긴 정보로 Exercise save <br>
 	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제
 	 * @param dto 클라이언트로부터 받은 Exercise save하기 위한 {@link SaveExerciseDTO} 객체
+	 * @throws NullPointerException exercise == null || dto == null
 	 * @throws TargetTypeNotFoundedException dto 객체에 담긴 target이 아무런 TargetType의 이름이 아닐때 
 	 * @author kimgun-yeong
 	 */

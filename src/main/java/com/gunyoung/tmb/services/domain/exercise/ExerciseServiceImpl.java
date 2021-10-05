@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -124,43 +125,52 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	@Override
-	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames = EXERCISE_SORT_NAME, key = "#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Exercise saveWithSaveExerciseDTO(Exercise exercise, SaveExerciseDTO dto) {
+		Objects.requireNonNull(exercise, "Given exercise must not be null!");
+		Objects.requireNonNull(dto, "Given saveExerciseDTO must not be null");
+		
 		exercise.setName(dto.getName());
 		exercise.setDescription(dto.getDescription());
 		exercise.setCaution(dto.getCaution());
 		exercise.setMovement(dto.getMovement());
+		setTargetOfExerciseByDTO(exercise, dto);
 		
+		List<ExerciseMuscle> mainExerciseMuscleList =  getListOfMainExerciseMuscle(exercise, dto);
+		List<ExerciseMuscle> subExerciseMuscleList = getListOfSubExerciseMuscle(exercise, dto);
+		
+		List<ExerciseMuscle> exerciseMusclesForSaving = mergeExerciseMuscleList(mainExerciseMuscleList, subExerciseMuscleList);
+		exerciseMuscleService.saveAll(exerciseMusclesForSaving);
+		
+		exercise.getExerciseMuscles().addAll(exerciseMusclesForSaving);
+		save(exercise);
+		
+		return exercise;
+	}
+	
+	private void setTargetOfExerciseByDTO(Exercise exercise, SaveExerciseDTO dto) {
 		TargetType exerciseTarget = TargetType.getFromKoreanName(dto.getTarget());
 		if(exerciseTarget == null) {
 			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
 		}
 		exercise.setTarget(exerciseTarget);
-		
-		// Main Muscle 들 이름으로 Muscle 객체들 가져오기
+	}
+	
+	private List<ExerciseMuscle> getListOfMainExerciseMuscle(Exercise exercise, SaveExerciseDTO dto) {
 		List<String> mainMusclesName = dto.getMainMuscles();
 		List<Muscle> mainMuscles = muscleService.getMuscleListFromMuscleNameList(mainMusclesName);
-		
-		// Sub Muscle 들 이름으로 Muscle 객체들 가져오기
+		return ExerciseMuscle.mainOf(exercise, mainMuscles);
+	}
+	
+	private List<ExerciseMuscle> getListOfSubExerciseMuscle(Exercise exercise, SaveExerciseDTO dto) {
 		List<String> subMusclesName = dto.getSubMuscles();
 		List<Muscle> subMuscles = muscleService.getMuscleListFromMuscleNameList(subMusclesName);
-		
-		// 생성한 Exercise 객체와 가져온 Muscle 객체로 ExerciseMuscle 객체 생성
-		List<ExerciseMuscle> exerciseMuscles = new ArrayList<>();
-		
-		List<ExerciseMuscle> mainExerciseMuscleList =  ExerciseMuscle.mainOf(exercise, mainMuscles);
-		exerciseMuscles.addAll(mainExerciseMuscleList);
-		exercise.getExerciseMuscles().addAll(mainExerciseMuscleList);
-		
-		List<ExerciseMuscle> subExerciseMuscleList = ExerciseMuscle.subOf(exercise, subMuscles);
-		exerciseMuscles.addAll(subExerciseMuscleList);
-		exercise.getExerciseMuscles().addAll(subExerciseMuscleList);
-		
-		save(exercise);
-		
-		exerciseMuscleService.saveAll(exerciseMuscles);
-		
-		return exercise;
+		return ExerciseMuscle.subOf(exercise, subMuscles);
+	}
+	
+	private List<ExerciseMuscle> mergeExerciseMuscleList(List<ExerciseMuscle> mainExerciseMuscleList, List<ExerciseMuscle> subExerciseMuscleList) {
+		mainExerciseMuscleList.addAll(subExerciseMuscleList);
+		return mainExerciseMuscleList;
 	}
 	
 	@Override
