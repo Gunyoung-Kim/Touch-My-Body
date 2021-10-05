@@ -15,7 +15,6 @@ public interface CommentService {
 	 * ID로 Comment 찾기
 	 * @param id 찾으려는 Comment의 id
 	 * @return Comment, Null(해당 id의 Comment가 없을때)
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public Comment findById(Long id);
@@ -24,7 +23,6 @@ public interface CommentService {
 	 * ID로 User와 ExercisePost 페치조인 후 Comment 반환
 	 * @param id 찾으려는 Comment의 id
 	 * @return Comment, Null(해당 id의 Comment가 없을때)
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public Comment findWithUserAndExercisePostById(Long id);
@@ -33,7 +31,6 @@ public interface CommentService {
 	 * ID로 CommentLikes 페치조인 후 Comment 반환
 	 * @param id 찾으려는 Comment의 id
 	 * @return Comment, Null(해당 id의 Comment가 없을때)
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public Comment findWithCommentLikesById(Long id);
@@ -50,14 +47,14 @@ public interface CommentService {
 	 * @param userId Comment들 작성자의 ID
 	 * @author kimgun-yeong
 	 */
-	public Page<Comment> findAllByUserIdOrderByCreatedAtAsc(Long userId,Integer pageNum, int pageSize);
+	public Page<Comment> findAllByUserIdOrderByCreatedAtAsc(Long userId, Integer pageNum, int pageSize);
 	
 	/**
 	 * User ID를 만족하는 Comment들 생성 최신순으로 페이지 반환
 	 * @param userId Comment들 작성자의 ID
 	 * @author kimgun-yeong
 	 */
-	public Page<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId,Integer pageNum, int pageSize);
+	public Page<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId, Integer pageNum, int pageSize);
 	
 	/**
 	 * Comment 생성 및 수정
@@ -73,12 +70,13 @@ public interface CommentService {
 	 * @param exercisePost 댓글이 추가된 ExercisePost
 	 * @author kimgun-yeong
 	 */
-	public Comment saveWithUserAndExercisePost(Comment comment,User user, ExercisePost exercisePost);
+	public Comment saveWithUserAndExercisePost(Comment comment, User user, ExercisePost exercisePost);
 	
 	/**
 	 * Comment 삭제 <br>
 	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param comment 삭제하려는 Comment
+	 * @throws NullPointerException comment = null
 	 * @author kimgun-yeong
 	 */
 	public void delete(Comment comment);
