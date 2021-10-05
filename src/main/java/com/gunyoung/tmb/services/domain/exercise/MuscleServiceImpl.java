@@ -61,7 +61,7 @@ public class MuscleServiceImpl implements MuscleService {
 	}	
 	
 	@Override
-	@Transactional(readOnly =true)
+	@Transactional(readOnly = true)
 	@Cacheable(cacheNames=MUSCLE_SORT_NAME, key= "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Map<String, List<String>> getAllMusclesWithSortingByCategory() {
 		List<MuscleNameAndCategoryDTO> listOfDTOFromRepo = muscleRepository.findAllWithNamaAndCategory();
@@ -78,6 +78,7 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public List<Muscle> getMuscleListFromMuscleNameList(Iterable<String> muscleNames) throws MuscleNotFoundedException {
 		List<Muscle> muscleList = new ArrayList<>();
 		for(String muscleName: muscleNames) {
