@@ -30,12 +30,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 유저가 작성한 개인 운동 기록을 나타내는 Entity
+ * 유저가 작성한 개인 운동 기록을 나타내는 Entity <br>
+ * (userId, date) 다중 컬럼 인덱싱 사용
  * @author kimgun-yeong
  *
  */
 @Entity
-@Table(indexes = @Index(name = "idAndDate", columnList = "user_id, date"))
+@Table(indexes = @Index(name = "uIdAndDate", columnList = "user_id, date"))
 @Getter
 @Setter
 @Builder
