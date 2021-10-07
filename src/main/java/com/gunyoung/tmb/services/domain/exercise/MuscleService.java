@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
-import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 
 public interface MuscleService {
 	
@@ -47,14 +46,14 @@ public interface MuscleService {
 	 * @return key: TargetType.koreanName
 	 * @author kimgun-yeong
 	 */
-	public Map<String,List<String>> getAllMusclesWithSortingByCategory();
+	public Map<String, List<String>> getAllMusclesWithSortingByCategory();
 	
 	/**
-	 * Muscle name들 이용하여 Muscle List 반환 
-	 * @throws MuscleNotFoundedException Muscle name에 해당하는 Muscle 없을 때
+	 * Muscle name들 이용하여 Muscle List 반환 <br>
+	 * name에 대한 결과 값이 없는 경우 해당 Muscle은 제외한 결과를 반환한다.
 	 * @author kimgun-yeong
 	 */
-	public List<Muscle> getMuscleListFromMuscleNameList(Iterable<String> muscleNames) throws MuscleNotFoundedException;
+	public List<Muscle> findAllByNames(List<String> muscleNames);
 	
 	/**
 	 * Muscle 생성 및 수정 <br>

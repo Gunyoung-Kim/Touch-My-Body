@@ -29,7 +29,6 @@ import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
-import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
@@ -312,7 +311,7 @@ public class ExerciseServiceTest {
 	
 	@Test
 	@Transactional
-	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음, MuscleNotFoundedException throw 확인")
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음, 그래도 Exercise 추가 확인")
 	public void saveWithSaveExerciseDTOMuscleNotFoundedCheckMuscleNotFoundedException() {
 		//Given
 		String nonExistMuscleName =  "none";
@@ -320,17 +319,21 @@ public class ExerciseServiceTest {
 		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance("newExericse");
 		dto.getMainMuscles().add(nonExistMuscleName);
 		
-		Exercise exercise = Exercise.builder().build();
+		Exercise exercise = Exercise.builder()
+				.build();
 		
-		//When,Then
-		assertThrows(MuscleNotFoundedException.class, () -> {
-			exerciseService.saveWithSaveExerciseDTO(exercise,dto);
-		});
+		long beforeExerciseNum = exerciseRepository.count();
+		
+		//When
+		exerciseService.saveWithSaveExerciseDTO(exercise,dto);
+		
+		//Then
+		assertEquals(beforeExerciseNum + 1, exerciseRepository.count());
 	}
 	
 	@Test
 	@Transactional
-	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음, Exercise 개수 변화 없음 확인")
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음, 그래도 exercise 추가 확인")
 	public void saveWithSaveExerciseDTOMuscleNotFoundedCheckExerciseNum() {
 		//Given
 		String nonExistMuscleName =  "none";
@@ -338,22 +341,21 @@ public class ExerciseServiceTest {
 		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance("newExericse");
 		dto.getMainMuscles().add(nonExistMuscleName);
 		
-		long givenExerciseNum =  exerciseRepository.count();
+		long beforeExerciseNum =  exerciseRepository.count();
 		
 		Exercise exercise = Exercise.builder().build();
 		
 		//When
-		assertThrows(MuscleNotFoundedException.class, () -> {
-			exerciseService.saveWithSaveExerciseDTO(exercise,dto);
-		});
+		exerciseService.saveWithSaveExerciseDTO(exercise,dto);
+		
 		
 		//Then
-		assertEquals(givenExerciseNum, exerciseRepository.count());
+		assertEquals(beforeExerciseNum + 1, exerciseRepository.count());
 	}
 	
 	@Test
 	@Transactional
-	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음, Exercise 개수 변화 없음 확인")
+	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음, Exercise 개수 추가 확인")
 	public void saveWithSaveExerciseDTOMuscleNotFoundedCheckExerciseMuscleNum() {
 		//Given
 		String nonExistMuscleName =  "none";
@@ -361,17 +363,15 @@ public class ExerciseServiceTest {
 		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance("newExericse");
 		dto.getMainMuscles().add(nonExistMuscleName);
 		
-		long givenExerciseMuscleNum = exerciseMuscleRepository.count();
-		
-		Exercise exercise = Exercise.builder().build();
+		Exercise exercise = Exercise.builder()
+				.build();
 		
 		//When
-		assertThrows(MuscleNotFoundedException.class, () -> {
-			exerciseService.saveWithSaveExerciseDTO(exercise,dto);
-		});
+		exerciseService.saveWithSaveExerciseDTO(exercise, dto);
+		
 		
 		//Then
-		assertEquals(givenExerciseMuscleNum, exerciseMuscleRepository.count());
+		assertNotNull(exercise.getId());
 	}
 	
 	@Test

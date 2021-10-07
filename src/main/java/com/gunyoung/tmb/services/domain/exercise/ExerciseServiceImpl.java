@@ -158,13 +158,13 @@ public class ExerciseServiceImpl implements ExerciseService {
 	
 	private List<ExerciseMuscle> getListOfMainExerciseMuscle(Exercise exercise, SaveExerciseDTO dto) {
 		List<String> mainMusclesName = dto.getMainMuscles();
-		List<Muscle> mainMuscles = muscleService.getMuscleListFromMuscleNameList(mainMusclesName);
+		List<Muscle> mainMuscles = muscleService.findAllByNames(mainMusclesName);
 		return ExerciseMuscle.mainOf(exercise, mainMuscles);
 	}
 	
 	private List<ExerciseMuscle> getListOfSubExerciseMuscle(Exercise exercise, SaveExerciseDTO dto) {
 		List<String> subMusclesName = dto.getSubMuscles();
-		List<Muscle> subMuscles = muscleService.getMuscleListFromMuscleNameList(subMusclesName);
+		List<Muscle> subMuscles = muscleService.findAllByNames(subMusclesName);
 		return ExerciseMuscle.subOf(exercise, subMuscles);
 	}
 	

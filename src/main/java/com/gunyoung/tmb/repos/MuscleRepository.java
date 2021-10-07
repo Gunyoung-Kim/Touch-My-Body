@@ -20,7 +20,16 @@ public interface MuscleRepository extends JpaRepository<Muscle,Long> {
 	 * @return
 	 * @author kimgun-yeong
 	 */
-	public Optional<Muscle> findByName(String name); 
+	public Optional<Muscle> findByName(String name);
+	
+	/**
+	 * Muscle name 리스트에 있는 name의 muscle들 반환
+	 * @param muscleNames 찾으려는 Muscle들의 이름
+	 * @author kimgun-yeong
+	 */
+	@Query("SELECT m FROM Muscle m "
+			+ "WHERE m.name in :muscleNames")
+	public List<Muscle> findAllByNamesInQuery(@Param("muscleNames") List<String> muscleNames);
 	
 	/**
 	 * 해당 키워드를 이름에 포함하는 Muscle들 찾기 <br>
