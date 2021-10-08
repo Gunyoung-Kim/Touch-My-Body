@@ -3,9 +3,9 @@ package com.gunyoung.tmb.controller.rest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.tmb.dto.response.ExerciseInfoBySortDTO;
@@ -29,13 +29,15 @@ public class ExerciseRestController {
 	 * Exercise를 target으로 분류해서 반환
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/user/exercise/getexercises",method=RequestMethod.GET)
+	@GetMapping(value="/user/exercise/getexercises")
 	public List<ExerciseInfoBySortDTO> getExercisesByNameAndTarget() {
 		List<ExerciseInfoBySortDTO> resultList = new ArrayList<>();
 		Map<String ,List<String>> exerciseSortResultMap = exerciseService.getAllExercisesNamewithSorting();
 		
-		for(String targetTypeName: exerciseSortResultMap.keySet()) {
-			resultList.add(new ExerciseInfoBySortDTO(targetTypeName, exerciseSortResultMap.get(targetTypeName)));
+		for(Entry<String, List<String>> entry: exerciseSortResultMap.entrySet()) {
+			String targetTypeName = entry.getKey();
+			List<String> listOfExerciseName = entry.getValue();
+			resultList.add(new ExerciseInfoBySortDTO(targetTypeName, listOfExerciseName));
 		}
 		
 		return resultList;
