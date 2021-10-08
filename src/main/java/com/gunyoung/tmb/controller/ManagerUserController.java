@@ -46,6 +46,8 @@ public class ManagerUserController {
 	public static final int USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE = PageSize.COMMENT_FOR_MANAGE_PAGE_SIZE.getSize();
 	public static final int USER_POST_LIST_VIEW_FOR_MANAGER_PAGE_SIZE = PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize();
 	
+	private static final String ATTRIBUTE_NAME_OF_USER_ID = "userId";
+	
 	private final UserService userService;
 	
 	private final CommentService commentService;
@@ -111,7 +113,7 @@ public class ManagerUserController {
 		Collection<? extends GrantedAuthority> sessionUserAuthorities = authorityService.getSessionUserAuthorities();
 		List<String> myReachableAuthStringList = authorityService.getReachableAuthorityStrings(sessionUserAuthorities);
 		
-		mav.addObject("userId", userId);
+		mav.addObject(ATTRIBUTE_NAME_OF_USER_ID, userId);
 		mav.addObject("userInfo", targetUser);
 		mav.addObject("roleList", myReachableAuthStringList);
 		
@@ -141,7 +143,7 @@ public class ManagerUserController {
 		
 		List<CommentForManageViewDTO> commentListForView = CommentForManageViewDTO.of(pageResult, user);
 		
-		mav.addObject("userId", userId);
+		mav.addObject(ATTRIBUTE_NAME_OF_USER_ID, userId);
 		mav.addObject("username", user.getFullName() + " : " + user.getNickName());
 		mav.setPageNumbers(page, totalPageNum);
 		mav.addObject("commentList", commentListForView);
@@ -185,7 +187,7 @@ public class ManagerUserController {
 		
 		List<ExercisePostForManageViewDTO> postListForView = ExercisePostForManageViewDTO.of(pageResult, user);
 		
-		mav.addObject("userId", userId);
+		mav.addObject(ATTRIBUTE_NAME_OF_USER_ID, userId);
 		mav.addObject("username", user.getFullName()+": " +user.getNickName());
 		mav.setPageNumbers(page, totalPageNum);
 		mav.addObject("postList", postListForView);
