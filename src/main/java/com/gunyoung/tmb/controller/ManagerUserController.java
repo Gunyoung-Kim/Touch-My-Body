@@ -136,12 +136,7 @@ public class ManagerUserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Page<Comment> pageResult;
-		try {
-			pageResult = getPageResultForUserCommentListViewForManage(order, userId, page);
-		} catch(SearchCriteriaInvalidException scie) {
-			throw scie;
-		}
+		Page<Comment> pageResult = getPageResultForUserCommentListViewForManage(order, userId, page);
 		long totalPageNum = getTotalPageNumForUserCommentListViewForManage(userId);
 		
 		List<CommentForManageViewDTO> commentListForView = CommentForManageViewDTO.of(pageResult, user);
@@ -185,12 +180,7 @@ public class ManagerUserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Page<ExercisePost> pageResult; 
-		try {
-			pageResult = getPageResultForUserPostListViewForManage(order, userId, page);
-		} catch(SearchCriteriaInvalidException scie) {
-			throw scie;
-		}
+		Page<ExercisePost> pageResult = getPageResultForUserPostListViewForManage(order, userId, page);
 		long totalPageNum = getTotalPageNumForUserPostListViewForManage(userId);
 		
 		List<ExercisePostForManageViewDTO> postListForView = ExercisePostForManageViewDTO.of(pageResult, user);

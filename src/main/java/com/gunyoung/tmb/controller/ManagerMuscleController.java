@@ -101,12 +101,7 @@ public class ManagerMuscleController {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
-		Muscle newMuscle;
-		try {
-			newMuscle = dto.createMuscle();
-		} catch(TargetTypeNotFoundedException ttfe) {
-			throw ttfe;
-		}
+		Muscle newMuscle = dto.createMuscle();
 		muscleService.save(newMuscle);
 		
 		return new ModelAndView("redirect:/manager/muscle");

@@ -151,7 +151,6 @@ public class UserController {
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
-		
 		UserProfileDTO userProfileDTO = UserProfileDTO.of(user);
 		
 		mav.addObject("profile", userProfileDTO);
@@ -178,14 +177,8 @@ public class UserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Page<Comment> pageResult;
-		try {
-			pageResult = getPageResultForMyCommentListView(order, loginUserId, page);
-		} catch(SearchCriteriaInvalidException scie) {
-			throw scie;
-		}
+		Page<Comment> pageResult = getPageResultForMyCommentListView(order, loginUserId, page);
 		long totalPageNum = getTotalPageNumForMyCommentListView(loginUserId);
-		
 		List<CommentForManageViewDTO> commentListForView = CommentForManageViewDTO.of(pageResult, user);
 
 		mav.setPageNumbers(page, totalPageNum);
@@ -226,14 +219,8 @@ public class UserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Page<ExercisePost> pageResult; 
-		try {
-			pageResult = getPageResultForMyPostListView(order, loginUserId, page);
-		} catch(SearchCriteriaInvalidException scie) {
-			throw scie;
-		}
+		Page<ExercisePost> pageResult = getPageResultForMyPostListView(order, loginUserId, page);
 		long totalPageNum = getTotalPageNumForMyPostListView(loginUserId);
-		
 		List<ExercisePostForManageViewDTO> postListForView = ExercisePostForManageViewDTO.of(pageResult, user);
 		
 		mav.setPageNumbers(page, totalPageNum);
