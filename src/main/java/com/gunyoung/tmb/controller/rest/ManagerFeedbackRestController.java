@@ -1,8 +1,7 @@
 package com.gunyoung.tmb.controller.rest;
 
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.tmb.domain.exercise.Feedback;
@@ -29,7 +28,7 @@ public class ManagerFeedbackRestController {
 	 * @throws FeedbackNotFoundedException 해당 Id의 Feedback 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/manager/exercise/feedback/reflect/{feedbackId}", method = RequestMethod.PATCH)
+	@PatchMapping(value = "/manager/exercise/feedback/reflect/{feedbackId}")
 	public void reflectFeedback(@PathVariable("feedbackId") Long feedbackId) {
 		Feedback feedback = feedbackService.findById(feedbackId);
 		if(feedback == null) {

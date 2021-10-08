@@ -6,9 +6,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,7 +39,7 @@ public class UserExcerciseRestController {
 	 * @param date year,month,date 포함하는 dto
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/user/exercise/calendar/records",method=RequestMethod.GET)
+	@GetMapping(value="/user/exercise/calendar/records")
 	@LoginIdSessionNotNull
 	public List<UserExerciseWithDateDTO> getExerciseRecords(@ModelAttribute DateDTO date) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
@@ -58,13 +57,11 @@ public class UserExcerciseRestController {
 	 * @param month 검색하려는 월
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/user/exercise/calendar/isdone",method=RequestMethod.GET)
+	@GetMapping(value="/user/exercise/calendar/isdone")
 	@LoginIdSessionNotNull
 	public List<UserExerciseIsDoneDTO> getIsDoneList(@RequestParam("year") int year, @RequestParam("month") int month) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
-		List<UserExerciseIsDoneDTO> isDoneList = userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(loginUserId, year, month);
-		
-		return isDoneList;
+		return userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(loginUserId, year, month);
 	}
 }

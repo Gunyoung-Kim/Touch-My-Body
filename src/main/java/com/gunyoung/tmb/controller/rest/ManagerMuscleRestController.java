@@ -1,9 +1,9 @@
 package com.gunyoung.tmb.controller.rest;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,23 +36,16 @@ public class ManagerMuscleRestController {
 	 * @throws TargetTypeNotFoundedException dto에 담긴 category을 한국이름으로 갖는 TargetType 없을 때
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.PUT)
+	@PutMapping(value="/manager/muscle/modify/{muscleId}")
 	public void modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute SaveMuscleDTO dto) {
 		Muscle muscle = muscleService.findById(muscleId);
-		
 		if(muscle == null) {
 			throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
 		}
-		
 		if(!muscle.getName().equals(dto.getName()) && muscleService.existsByName(dto.getName())) {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
-		
-		try {
-			muscle = SaveMuscleDTO.updateMuscleBySaveMuscleDTO(muscle, dto);
-		} catch(TargetTypeNotFoundedException ex) {
-			throw ex;
-		}
+		muscle = SaveMuscleDTO.updateMuscleBySaveMuscleDTO(muscle, dto);
 		
 		muscleService.save(muscle);
 	}
@@ -63,7 +56,7 @@ public class ManagerMuscleRestController {
 	 * @param muscleId 삭제하려는 대상 Muscle의 Id
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/muscle/remove" ,method = RequestMethod.DELETE)
+	@DeleteMapping(value="/manager/muscle/remove")
 	public void removeMuscle(@RequestParam("muscleId") Long muscleId) {
 		muscleService.deleteById(muscleId);
 	}	
