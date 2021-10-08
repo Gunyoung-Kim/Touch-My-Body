@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,10 +35,10 @@ public class ManagerExercisePostController {
 	 * @param keyword title,contents 검색 키워드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/community", method = RequestMethod.GET)
+	@GetMapping(value="/manager/community")
 	public ModelAndView manageCommunityView(@RequestParam(value="page", defaultValue="1") int page,
 			@RequestParam(value ="keyword", required=false) String keyword, ModelAndPageView mav) {
-		Page<PostForCommunityViewDTO> pageResult = new PageImpl<PostForCommunityViewDTO>(new ArrayList<>());
+		Page<PostForCommunityViewDTO> pageResult = new PageImpl<>(new ArrayList<>());
 		long totalPageNum = 1;
 		
 		if(keyword != null) {

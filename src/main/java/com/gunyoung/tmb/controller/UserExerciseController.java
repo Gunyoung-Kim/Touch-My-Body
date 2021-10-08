@@ -3,9 +3,9 @@ package com.gunyoung.tmb.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
@@ -42,7 +42,7 @@ public class UserExerciseController {
 	 * User의 그간의 운동 기록을 보여주는 캘린더 화면 반환하는 메소드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/user/exercise/calendar", method = RequestMethod.GET)
+	@GetMapping(value = "/user/exercise/calendar")
 	public ModelAndView calendarView(ModelAndView mav) {
 		mav.setViewName("exerciseCalendar");
 		
@@ -53,7 +53,7 @@ public class UserExerciseController {
 	 * User의 오늘의 운동 기록을 추가하는 화면 반환하는 메소드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/user/exercise/calendar/addrecord", method = RequestMethod.GET)
+	@GetMapping(value = "/user/exercise/calendar/addrecord")
 	public ModelAndView addUserExerciseView(ModelAndView mav) {
 		mav.setViewName("addRecord");
 		
@@ -66,7 +66,7 @@ public class UserExerciseController {
 	 * @throws ExerciseNotFoundedException 해당 이름을 만족하는 Exercise 가 없을 때
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/user/exercise/calendar/addrecord", method = RequestMethod.POST)
+	@PostMapping(value = "/user/exercise/calendar/addrecord")
 	@LoginIdSessionNotNull
 	public ModelAndView addUserExercise(@ModelAttribute("formModel") SaveUserExerciseDTO formModel) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
