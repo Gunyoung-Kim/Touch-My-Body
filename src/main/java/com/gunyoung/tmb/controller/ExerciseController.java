@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,7 +40,7 @@ public class ExerciseController {
 	 * @param keyword 찾고자 하는 운동 이름 키워드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/exercise",method = RequestMethod.GET)
+	@GetMapping(value="/exercise")
 	public ModelAndView exerciseInfoMainView(@RequestParam(value="page", required=false, defaultValue="1") Integer page,
 			@RequestParam(value="keyword", required=false) String keyword, ModelAndPageView mav) {
 		Page<Exercise> pageResult = getPageResultForExerciseListView(keyword, page);
@@ -75,7 +76,7 @@ public class ExerciseController {
 	 * @throws ExerciseNotFoundedException 해당 id 의 Exercise 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/exercise/about/{exercise_id}", method = RequestMethod.GET)
+	@GetMapping(value="/exercise/about/{exercise_id}")
 	public ModelAndView exerciseInfoDetailView(@PathVariable("exercise_id") Long exerciseId, ModelAndView mav) {
 		ExerciseForInfoViewDTO exerciseforInfoViewDTO = exerciseService.getExerciseForInfoViewDTOByExerciseId(exerciseId);
 		if(exerciseforInfoViewDTO == null) {

@@ -37,7 +37,7 @@ public class LogAspect {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		Map<String, String[]> paramMap = request.getParameterMap();
 		String params = "";
-		if(paramMap.isEmpty() == false) {
+		if(!paramMap.isEmpty()) {
 			params = "[ " + paramMapToString(paramMap) + "]";
 		}
 		

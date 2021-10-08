@@ -46,8 +46,7 @@ public class RedisSessionConfig {
 	 */
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
-		LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisSessionHost,redisSessionPort);
-		return lettuceConnectionFactory;
+		return new LettuceConnectionFactory(redisSessionHost,redisSessionPort);
 	}
 	
 	/**

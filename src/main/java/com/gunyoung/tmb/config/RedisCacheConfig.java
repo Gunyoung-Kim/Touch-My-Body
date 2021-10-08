@@ -52,8 +52,7 @@ public class RedisCacheConfig {
 	 */
 	@Bean(name="redisCacheConnectionFactory")
 	public RedisConnectionFactory redisConnectionFactory() {
-		LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisCacheHost,redisCachePort);
-		return lettuceConnectionFactory;	
+		return  new LettuceConnectionFactory(redisCacheHost,redisCachePort);	
 	}
 	
 	/**
@@ -64,13 +63,11 @@ public class RedisCacheConfig {
 	 */
 	@Bean
 	public CacheManager redisCacheManager(@Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionfactorty) {
-		RedisCacheManager redisCacheManager = RedisCacheManager.RedisCacheManagerBuilder
+		return RedisCacheManager.RedisCacheManagerBuilder
 				.fromConnectionFactory(redisConnectionfactorty)
 				.cacheDefaults(redisCacheConfiguration())
 				.withInitialCacheConfigurations(detailCacheConfigurations())
 				.build();
-		
-		return redisCacheManager;
 	}
 	
 	/**
