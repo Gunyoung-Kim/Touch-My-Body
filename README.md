@@ -1,6 +1,6 @@
 # Touch-My-Body [![Build Status](https://app.travis-ci.com/Gunyoung-Kim/Touch-My-Body.svg?branch=master)](https://app.travis-ci.com/Gunyoung-Kim/Touch-My-Body)
 
-최신 버전 : ver 0.0.11
+최신 버전 : ver 0.0.12
 
 ## 프로젝트 주 기능
 
@@ -64,11 +64,13 @@
 
 - 엔티티 삭제 성능 개선 
 
-   1. 해당 내용은 issue에 정리 되어 있다.
+   1. Bulk Delete issue: https://github.com/Gunyoung-Kim/Touch-My-Body/issues/27 
 
-   2. Bulk Delete issue: https://github.com/Gunyoung-Kim/Touch-My-Body/issues/27 
+   2. CascadeType.Remove issue: https://github.com/Gunyoung-Kim/Touch-My-Body/issues/28
 
-   3. CascadeType.Remove issue: https://github.com/Gunyoung-Kim/Touch-My-Body/issues/28
+- DB Index를 활용한 성능 개선 
+
+   1. https://github.com/Gunyoung-Kim/Touch-My-Body/issues/32
 
 - Cache의 활용
 
@@ -89,6 +91,17 @@
 ### 테스트 
 
 - 테스트 커버리지 : 100 % - ver 0.0.9 이후 유지
+
+- How to
+
+```bash
+
+# 통합 테스트 + 단위 테스트 -> instructions: 100%, branches: 100%
+$ ./mvnw clean package
+
+# 단위 테스트 -> instructions: 100%, branches: 100%
+$ ./mvnw clean package -DexcludedGruops=integration
+```
 
 <img width="661" alt="tmb_0_0_11_tc" src="https://user-images.githubusercontent.com/60494603/133609641-8208b686-84a2-43f2-94ce-cf6c6a267388.png">
 
