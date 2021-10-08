@@ -18,7 +18,6 @@ public interface UserService {
 	 * ID로 User 찾기
 	 * @param id 찾으려는 유저의 id
 	 * @return User, null(해당 id의 유저가 존재하지 않을때)
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public User findById(Long id);
@@ -27,7 +26,6 @@ public interface UserService {
 	 * email로 User 찾기
 	 * @param email 찾으려는 유저의 email
 	 * @return User, null(해당 email의 유저가 존재하지 않을때)
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public User findByEmail(String email);
@@ -35,7 +33,6 @@ public interface UserService {
 	/**
 	 * UserExercises 페치 조인해서 가져오는 메소드 
 	 * @param id User의 ID
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public User findWithUserExerciseById(Long id);
@@ -43,7 +40,6 @@ public interface UserService {
 	/**
 	 * Feedbacks 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public User findWithFeedbacksById(Long id);
@@ -51,7 +47,6 @@ public interface UserService {
 	/**
 	 * PostLikes 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public User findWithPostLikesById(Long id);
@@ -59,7 +54,6 @@ public interface UserService {
 	/**
 	 * CommentLikes 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public User findWithCommentLikesById(Long id);
@@ -67,7 +61,6 @@ public interface UserService {
 	/**
 	 * ExercisePosts 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public User findWithExercisePostsById(Long id);
@@ -75,7 +68,6 @@ public interface UserService {
 	/**
 	 * Comments 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public User findWithCommentsById(Long id);
@@ -83,15 +75,14 @@ public interface UserService {
 	/**
 	 * User name, nickName 검색 키워드에 해당하는 User들 페이지 반환 
 	 * @param keyword User name, nickName 검색 키워드 	
-	 * @return
 	 * @author kimgun-yeong
 	 */
-	public Page<User> findAllByNickNameOrNameInPage(String keyword,Integer pageNumber);
+	public Page<User> findAllByNickNameOrNameInPage(String keyword, Integer pageNumber);
 	
 	/**
 	 * User 생성 및 수정
 	 * @param user 저장하려는 User 객체
-	 * @return User
+	 * @return user 저장된 User
 	 * @author kimgun-yeong
 	 */
 	public User save(User user);
@@ -103,7 +94,7 @@ public interface UserService {
 	 * @return 저장된 객체
 	 * @author kimgun-yeong
 	 */
-	public User saveByJoinDTOAndRoleType(UserJoinDTO dto,RoleType role);
+	public User saveByJoinDTOAndRoleType(UserJoinDTO dto, RoleType role);
 	
 	/**
 	 * User 삭제 <br>
@@ -150,7 +141,7 @@ public interface UserService {
 	 * @param userExercise 추가하려는 UserExercise
 	 * @author kimgun-yeong
 	 */
-	public User addUserExercise(User user,UserExercise userExercise);
+	public User addUserExercise(User user, UserExercise userExercise);
 	
 	/**
 	 * User 객체에서 UserExercise 삭제하는 메소드

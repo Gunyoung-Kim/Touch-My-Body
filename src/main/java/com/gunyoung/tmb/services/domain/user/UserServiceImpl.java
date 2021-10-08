@@ -49,77 +49,61 @@ public class UserServiceImpl implements UserService{
 	@Transactional(readOnly=true)
 	public User findById(Long id) {
 		Optional<User> result = userRepository.findById(id);
-		if(result.isEmpty()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public User findByEmail(String email) {
 		Optional<User> result = userRepository.findByEmail(email);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithUserExerciseById(Long id) {
 		Optional<User> result = userRepository.findWithUserExercisesById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithFeedbacksById(Long id) {
 		Optional<User> result = userRepository.findWithFeedbacksById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithPostLikesById(Long id) {
 		Optional<User> result = userRepository.findWithPostLikesById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithCommentLikesById(Long id) {
 		Optional<User> result = userRepository.findWithCommentLikesById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithExercisePostsById(Long id) {
 		Optional<User> result = userRepository.findWithExercisePostsById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithCommentsById(Long id) {
 		Optional<User> result = userRepository.findWithCommentsById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<User> findAllByNickNameOrNameInPage(String keyword,Integer pageNumber) {
+	public Page<User> findAllByNickNameOrNameInPage(String keyword, Integer pageNumber) {
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageSize.BY_NICKNAME_NAME_PAGE_SIZE.getSize());
 		return userRepository.findAllByNickNameOrName(keyword, pageRequest);
 	}
@@ -178,11 +162,14 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User addUserExercise(User user, UserExercise userExercise) {
-		user.getUserExercises().add(userExercise);
-		
-		userExercise.setUser(user);
+		setRelationBetweenUserAndUserExercise(user, userExercise);
 		userExerciseService.save(userExercise);
 		return user;
+	}
+	
+	private void setRelationBetweenUserAndUserExercise(User user, UserExercise userExercise) {
+		user.getUserExercises().add(userExercise);
+		userExercise.setUser(user);
 	}
 
 	@Override

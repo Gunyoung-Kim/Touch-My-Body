@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.config;
 
+import static com.gunyoung.tmb.utils.CacheConstants.*;
+
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +20,6 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -81,7 +81,7 @@ public class RedisCacheConfig {
 	@Bean
 	public RedisCacheConfiguration redisCacheConfiguration() {
 		return RedisCacheConfiguration.defaultCacheConfig()
-				.entryTtl(Duration.ofMinutes(CacheUtil.CACHE_DEFAULT_EXPIRE_MIN))
+				.entryTtl(Duration.ofMinutes(CACHE_DEFAULT_EXPIRE_MIN))
 				.disableCachingNullValues()
 				.serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
 				.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
@@ -98,10 +98,10 @@ public class RedisCacheConfig {
 	@Bean
 	public Map<String,RedisCacheConfiguration> detailCacheConfigurations() {
 		Map<String,RedisCacheConfiguration> cacheConfigurations= new HashMap<>();
-		cacheConfigurations.put(CacheUtil.MUSCLE_SORT_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.MUSCLE_SORT_EXPIRE_MIN)));
-		cacheConfigurations.put(CacheUtil.EXERCISE_SORT_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.EXERCISE_SORT_EXPIRE_MIN)));
-		cacheConfigurations.put(CacheUtil.COMMENT_LIKE_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.COMMENT_LIKE_EXPIRE_MIN)));
-		cacheConfigurations.put(CacheUtil.POST_LIKE_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(CacheUtil.POST_LIKE_EXPIRE_MIN)));
+		cacheConfigurations.put(MUSCLE_SORT_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(MUSCLE_SORT_EXPIRE_MIN)));
+		cacheConfigurations.put(EXERCISE_SORT_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(EXERCISE_SORT_EXPIRE_MIN)));
+		cacheConfigurations.put(COMMENT_LIKE_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(COMMENT_LIKE_EXPIRE_MIN)));
+		cacheConfigurations.put(POST_LIKE_NAME, RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(POST_LIKE_EXPIRE_MIN)));
 		return cacheConfigurations;
 	}
 }

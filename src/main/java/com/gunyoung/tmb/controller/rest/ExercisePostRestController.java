@@ -61,23 +61,23 @@ public class ExercisePostRestController {
 	 * @throws LikeAlreadyExistException 해당 ExercisePost에 User의 PostLike가 이미 존재한다면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/{postId}/addLike",method = RequestMethod.POST)
+	@RequestMapping(value = "/community/post/{postId}/addLike", method = RequestMethod.POST)
 	@LoginIdSessionNotNull
 	public void addLikeToExercisePost(@PathVariable("postId") Long postId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
-		
 		User user = userService.findWithPostLikesById(loginUserId);
-		
-		if(user == null)
+		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
+		}
 		
 		ExercisePost exercisePost = exercisePostService.findWithPostLikesById(postId);
-		
-		if(exercisePost == null) 
+		if(exercisePost == null) { 
 			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
+		}
 		
-		if(postLikeService.existsByUserIdAndExercisePostId(loginUserId, postId)) 
+		if(postLikeService.existsByUserIdAndExercisePostId(loginUserId, postId)) { 
 			throw new LikeAlreadyExistException(LikeErrorCode.LIKE_ALREADY_EXIST_ERROR.getDescription());
+		}
 		
 		postLikeService.createAndSaveWithUserAndExercisePost(user, exercisePost);
 	}
@@ -88,15 +88,14 @@ public class ExercisePostRestController {
 	 * @throws LikeNotFoundedException 세션의 저장된 UserId와 postId를 만족하는 PostLike 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/{postId}/removelike",method = RequestMethod.DELETE)
+	@RequestMapping(value = "/community/post/{postId}/removelike", method = RequestMethod.DELETE)
 	@LoginIdSessionNotNull
 	public void removeLikeToExercisePost(@PathVariable("postId") Long postId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
-		
 		PostLike postLike = postLikeService.findByUserIdAndExercisePostId(loginUserId, postId);
-		
-		if(postLike == null) 
+		if(postLike == null) {
 			throw new LikeNotFoundedException(LikeErrorCode.LIKE_NOT_FOUNDED_ERROR.getDescription());
+		}
 		
 		postLikeService.delete(postLike);
 	}
@@ -110,25 +109,23 @@ public class ExercisePostRestController {
 	 * @throws LikeAlreadyExistException 해당 유저가 댓글에 이미 좋아요 추가했으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/{postId}/comment/addlike",method = RequestMethod.POST)
+	@RequestMapping(value = "/community/post/{postId}/comment/addlike", method = RequestMethod.POST)
 	@LoginIdSessionNotNull
 	public void addLikeToComment(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId) {
-		// 세션에 저장된 현재 접속자의 id 가져와서 이를 통해 User 객체 가져옴
 		Long loginUserId = SessionUtil.getLoginUserId(session);
-		
 		User user = userService.findWithCommentLikesById(loginUserId);
-		
-		if(user == null) 
+		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
+		}
 		
-		// commentId로 comment 가져옴
 		Comment comment = commentService.findWithCommentLikesById(commentId);
-		
-		if(comment == null) 
+		if(comment == null) { 
 			throw new CommentNotFoundedException(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getDescription());
+		}
 		
-		if(commentLikeService.existsByUserIdAndCommentId(loginUserId, commentId)) 
+		if(commentLikeService.existsByUserIdAndCommentId(loginUserId, commentId)) { 
 			throw new LikeAlreadyExistException(LikeErrorCode.LIKE_ALREADY_EXIST_ERROR.getDescription());
+		}
 		
 		commentLikeService.createAndSaveWithUserAndComment(user, comment);
 	}
@@ -140,15 +137,14 @@ public class ExercisePostRestController {
 	 * @throws LikeNotFoundedException 해당 유저가 해당 댓글에 좋아요 추가하지 않았었으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/{postId}/comment/removelike",method = RequestMethod.DELETE)
+	@RequestMapping(value = "/community/post/{postId}/comment/removelike", method = RequestMethod.DELETE)
 	@LoginIdSessionNotNull
 	public void removeLikeToComment(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId) { 
 		Long loginUserId = SessionUtil.getLoginUserId(session);	
-		
 		CommentLike commentLike = commentLikeService.findByUserIdAndCommentId(loginUserId, commentId);
-		
-		if(commentLike == null) 
+		if(commentLike == null) {
 			throw new LikeNotFoundedException(LikeErrorCode.LIKE_NOT_FOUNDED_ERROR.getDescription());
+		}
 		
 		commentLikeService.delete(commentLike);
 	}
@@ -159,9 +155,9 @@ public class ExercisePostRestController {
 	 * @param commentId 삭제하려는 대상 Comment의 ID
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/{postId}/removeComment",method = RequestMethod.DELETE)
+	@RequestMapping(value = "/community/post/{postId}/removeComment", method = RequestMethod.DELETE)
 	@LoginIdSessionNotNull
-	public void removeCommentToExercisePost(@PathVariable("postId") Long postId,@RequestParam("commentId") Long commentId) {
+	public void removeCommentToExercisePost(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		
 		commentService.checkIsMineAndDelete(loginUserId, commentId);

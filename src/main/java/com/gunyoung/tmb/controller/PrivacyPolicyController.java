@@ -23,9 +23,9 @@ public class PrivacyPolicyController {
 	 *  가장 최근에 적용된 개인정보 처리방침 문서 화면 반환하는 메소드
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value="/privacypolicy", method = RequestMethod.GET)
+	@RequestMapping(value = "/privacypolicy", method = RequestMethod.GET)
 	public ModelAndView privacyPolicyLastest(ModelAndView mav) {
-		mav.setViewName("privacyPolicy_" +LATEST_POLICY_VERSION);
+		mav.setViewName("privacyPolicy_" + LATEST_POLICY_VERSION);
 		
 		return mav;
 	}
@@ -36,9 +36,9 @@ public class PrivacyPolicyController {
 	 *  @throws PrivacyPolicyNotFoundedException 해당 버전의 개인정보 처리방침 없으면
 	 *  @author kimgun-yeong
 	 */
-	@RequestMapping(value="/privacypolicy/{version}", method = RequestMethod.GET)
-	public ModelAndView privacyPolicyWithVersion(@PathVariable("version") int version,ModelAndView mav) {
-		if(version <=0 || version > LATEST_POLICY_VERSION) {
+	@RequestMapping(value = "/privacypolicy/{version}", method = RequestMethod.GET)
+	public ModelAndView privacyPolicyWithVersion(@PathVariable("version") int version, ModelAndView mav) {
+		if(version <= 0 || version > LATEST_POLICY_VERSION) {
 			throw new PrivacyPolicyNotFoundedException(PrivacyPolicyErrorCode.PRIVACY_NOT_FOUNDED_ERROR.getDescription());
 		}
 		mav.setViewName("privacyPolicy_" +version);

@@ -2,10 +2,15 @@ package com.gunyoung.tmb.domain.exercise.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
+import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.testutil.ExerciseMuscleTest;
 
 /**
@@ -36,5 +41,85 @@ public class ExerciseMuscleUnitTest {
 	
 	private void verifyString_for_toStringTest(ExerciseMuscle exerciseMuscle, String result) {
 		assertEquals("[ id = " + exerciseMuscle.getId() + ", isMain = " + exerciseMuscle.isMain() + ", muscleName = " + exerciseMuscle.getMuscleName() +" ]", result);
+	}
+	
+	/*
+	 * public List<ExerciseMuscle> mainOf(Exercise exercise, List<Muscle> muscleList)
+	 */
+	
+	@Test
+	@DisplayName("Exercise, List of Muscle 를 이용해 isMain 필드 값이 true인 ExerciseMuscle List 생성 후 반환 -> 정상")
+	public void mainOfTest() {
+		//Given
+		Exercise exercise = new Exercise();
+		int muscleNum = 5;
+		
+		List<Muscle> muscles = new ArrayList<>();
+		
+		for(int i=0; i < muscleNum; i++) {
+			Muscle muscle = Muscle.builder()
+					.name("muscle" + i)
+					.build();
+			
+			muscles.add(muscle);
+		}
+		
+		//when
+		List<ExerciseMuscle> result = ExerciseMuscle.mainOf(exercise, muscles);
+		
+		//Then
+		verifyResultFor_mainOfTest(exercise, muscles, result);
+	}
+	
+	private void verifyResultFor_mainOfTest(Exercise exercise, List<Muscle> listOfMuscle, List<ExerciseMuscle> result) {
+		verifyExerciseForExerciseMuscles(exercise, result);
+		assertEquals(listOfMuscle.size(), result.size());
+		verifyAllExerciseMusclesIsMain(true, result);
+	}
+	
+	/*
+	 * public List<ExerciseMuscle> subOf(Exercise exercise, List<Muscle> muscleList)
+	 */
+	
+	@Test
+	@DisplayName("Exercise, List of Muscle 를 이용해 isMain 필드 값이 false인 ExerciseMuscle List 생성 후 반환 -> 정상")
+	public void subOfTest() {
+		//Given
+		Exercise exercise = new Exercise();
+		int muscleNum = 5;
+		
+		List<Muscle> muscles = new ArrayList<>();
+		
+		for(int i=0; i < muscleNum; i++) {
+			Muscle muscle = Muscle.builder()
+					.name("muscle" + i)
+					.build();
+			
+			muscles.add(muscle);
+		}
+		
+		//when
+		List<ExerciseMuscle> result = ExerciseMuscle.subOf(exercise, muscles);
+		
+		//Then
+		verifyResultFor_subOfTest(exercise, muscles, result);
+	}
+	
+	private void verifyResultFor_subOfTest(Exercise exercise, List<Muscle> listOfMuscle, List<ExerciseMuscle> result) {
+		verifyExerciseForExerciseMuscles(exercise, result);
+		assertEquals(listOfMuscle.size(), result.size());
+		verifyAllExerciseMusclesIsMain(false, result);
+	}
+	
+	private void verifyExerciseForExerciseMuscles(Exercise exercise, List<ExerciseMuscle> result) {
+		for(ExerciseMuscle em: result) {
+			assertEquals(exercise, em.getExercise());
+		}
+	}
+	
+	private void verifyAllExerciseMusclesIsMain(boolean wantedIsMainValue, List<ExerciseMuscle> result) {
+		for(ExerciseMuscle em: result) {
+			assertEquals(wantedIsMainValue, em.isMain());
+		}
 	}
 }

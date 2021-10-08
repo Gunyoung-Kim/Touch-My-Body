@@ -40,14 +40,14 @@ public class ManagerExerciseRestController {
 	 * @throws ExerciseNameDuplicationFoundedException 입력된 이름의 Exercise 이미 존재하면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/exercise/add" ,method = RequestMethod.POST)
+	@RequestMapping(value = "/manager/exercise/add", method = RequestMethod.POST)
 	public void addExercise(@ModelAttribute SaveExerciseDTO dto) {
 		if(exerciseService.existsByName(dto.getName())) {
 			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getDescription());
 		}
 		
-		Exercise exercise = new Exercise();
-		exerciseService.saveWithSaveExerciseDTO(exercise,dto);
+		Exercise newExercise = Exercise.builder().build();
+		exerciseService.saveWithSaveExerciseDTO(newExercise,dto);
 	}
 	
 	/**
@@ -57,19 +57,21 @@ public class ManagerExerciseRestController {
 	 * @throws ExerciseNameDuplicationFoundedException 변경된 이름이 다른 Exercise의 이름과 일치하면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/exercise/modify/{exerciseId}",method=RequestMethod.PUT)
+	@RequestMapping(value = "/manager/exercise/modify/{exerciseId}", method = RequestMethod.PUT)
 	public void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute SaveExerciseDTO dto) {
 		Exercise exercise = exerciseService.findWithExerciseMusclesById(exerciseId);
-		
 		if(exercise == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
-		
-		if(!exercise.getName().equals(dto.getName()) && exerciseService.existsByName(dto.getName())) {
+		if(isNameChangedAndDuplicatedWithNamesOfOtherThings(exercise, dto)) {
 			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getDescription());
 		}
 		
 		exerciseService.saveWithSaveExerciseDTO(exercise, dto);
+	}
+	
+	private boolean isNameChangedAndDuplicatedWithNamesOfOtherThings(Exercise exercise, SaveExerciseDTO dto) {
+		return !exercise.getName().equals(dto.getName()) && exerciseService.existsByName(dto.getName());
 	}
 	
 	/**
@@ -77,7 +79,7 @@ public class ManagerExerciseRestController {
 	 * @param exerciseId 삭제하려는 대상 Exercise의 Id
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/exercise/remove" ,method = RequestMethod.DELETE)
+	@RequestMapping(value = "/manager/exercise/remove", method = RequestMethod.DELETE)
 	public void deleteExercise(@RequestParam("exerciseId") Long exerciseId) {
 		exerciseService.deleteById(exerciseId);
 	}
@@ -87,22 +89,22 @@ public class ManagerExerciseRestController {
 	 * Muscle을 category로 분류해서 전송
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/exercise/getmuscles",method = RequestMethod.GET)
+	@RequestMapping(value = "/manager/exercise/getmuscles", method = RequestMethod.GET)
 	public List<MuscleInfoBySortDTO> getMusclesSortByCategory() {
-		List<MuscleInfoBySortDTO> response = new ArrayList<>();
-		Map<String,List<String>> muscleSortResultMap = muscleService.getAllMusclesWithSortingByCategory();
+		Map<String, List<String>> classificationOfMuscleNamesByCategory = muscleService.getAllMusclesWithSortingByCategory();
 		
-		for(String category: muscleSortResultMap.keySet()) {
-			MuscleInfoBySortDTO dto = MuscleInfoBySortDTO.builder()
-					.target(category)
-					.muscleNames(muscleSortResultMap.get(category))
-					.build();
-			
-			response.add(dto);
-		}
-		
-		return response;
+		return getListOfMuscleInfoBySortDTOByMapOfMuscleNames(classificationOfMuscleNamesByCategory);
 	}
 	
-	
+	private List<MuscleInfoBySortDTO> getListOfMuscleInfoBySortDTOByMapOfMuscleNames(Map<String, List<String>> classificationOfMuscleNamesByCategory) {
+		List<MuscleInfoBySortDTO> result = new ArrayList<>();
+		for(String category: classificationOfMuscleNamesByCategory.keySet()) {
+			MuscleInfoBySortDTO dto = MuscleInfoBySortDTO.builder()
+					.target(category)
+					.muscleNames(classificationOfMuscleNamesByCategory.get(category))
+					.build();
+			result.add(dto);
+		}
+		return result;
+	}
 }

@@ -29,7 +29,6 @@ public class UserAuthenticationProvider implements AuthenticationProvider{
 		String inputPassword = (String) authentication.getCredentials();
 		
 		UserDetails userDetailsByDB = userDetailsService.loadUserByUsername(inputUsername);
-		
 		if(!passwordEncoder.matches(inputPassword, userDetailsByDB.getPassword())) {
 			throw new BadCredentialsException(inputUsername);
 		}

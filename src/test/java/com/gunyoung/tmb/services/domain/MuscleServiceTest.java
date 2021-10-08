@@ -3,7 +3,6 @@ package com.gunyoung.tmb.services.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
-import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.MuscleService;
@@ -245,12 +243,11 @@ public class MuscleServiceTest {
 			muscleNameList.add(muscleList.get(i).getName());
 		}
 		
-		//When, Then 
-		assertThrows(MuscleNotFoundedException.class, () -> {
-			muscleService.getMuscleListFromMuscleNameList(muscleNameList);
-			
-		});
+		//When 
+		List<Muscle> result = muscleService.findAllByNames(muscleNameList);
 		
+		//Then
+		assertEquals(muscleRepository.count(), result.size());
 	}
 	
 	@Test
@@ -269,7 +266,7 @@ public class MuscleServiceTest {
 		}
 		
 		//When
-		List<Muscle> result = muscleService.getMuscleListFromMuscleNameList(muscleNameList);
+		List<Muscle> result = muscleService.findAllByNames(muscleNameList);
 		
 		//Then
 		assertEquals(givenMuscleNum, result.size());

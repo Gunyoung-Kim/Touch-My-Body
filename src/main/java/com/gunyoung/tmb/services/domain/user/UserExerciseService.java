@@ -24,7 +24,7 @@ public interface UserExerciseService {
 	 * @return 조건을 만족하는 운동 기록들
 	 * @author kimgun-yeong
 	 */
-	public List<UserExercise> findByUserIdAndDate(Long userId,Calendar date);
+	public List<UserExercise> findByUserIdAndDate(Long userId, Calendar date);
 	
 	/**
 	 * 특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환하는 메소드

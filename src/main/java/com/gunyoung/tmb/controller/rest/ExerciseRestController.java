@@ -3,7 +3,6 @@ package com.gunyoung.tmb.controller.rest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,9 +34,8 @@ public class ExerciseRestController {
 		List<ExerciseInfoBySortDTO> resultList = new ArrayList<>();
 		Map<String ,List<String>> exerciseSortResultMap = exerciseService.getAllExercisesNamewithSorting();
 		
-		Set<String> keySet = exerciseSortResultMap.keySet();
-		for(String key: keySet) {
-			resultList.add(new ExerciseInfoBySortDTO(key,exerciseSortResultMap.get(key)));
+		for(String targetTypeName: exerciseSortResultMap.keySet()) {
+			resultList.add(new ExerciseInfoBySortDTO(targetTypeName, exerciseSortResultMap.get(targetTypeName)));
 		}
 		
 		return resultList;

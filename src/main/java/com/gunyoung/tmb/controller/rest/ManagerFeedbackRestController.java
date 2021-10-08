@@ -29,7 +29,7 @@ public class ManagerFeedbackRestController {
 	 * @throws FeedbackNotFoundedException 해당 Id의 Feedback 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/exercise/feedback/reflect/{feedbackId}", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/manager/exercise/feedback/reflect/{feedbackId}", method = RequestMethod.PATCH)
 	public void reflectFeedback(@PathVariable("feedbackId") Long feedbackId) {
 		Feedback feedback = feedbackService.findById(feedbackId);
 		if(feedback == null) {

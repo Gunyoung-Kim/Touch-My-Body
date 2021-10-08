@@ -1,5 +1,7 @@
 package com.gunyoung.tmb.services.domain.like;
 
+import static com.gunyoung.tmb.utils.CacheConstants.*;
+
 import java.util.Optional;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -11,7 +13,6 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.repos.PostLikeRepository;
-import com.gunyoung.tmb.utils.CacheUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,30 +32,25 @@ public class PostLikeServiceImpl implements PostLikeService {
 	@Transactional(readOnly=true)
 	public PostLike findById(Long id) {
 		Optional<PostLike> result = postLikeRepository.findById(id);
-		if(result.isEmpty()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
 	public PostLike findByUserIdAndExercisePostId(Long userId, Long exercisePostId) {
 		Optional<PostLike> result = postLikeRepository.findByUserIdAndExercisePostId(userId, exercisePostId);
-		if(result.isEmpty())
-			return null;
-		
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME, 
+	@CacheEvict(cacheNames=POST_LIKE_NAME, 
 	key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#postLike.user.id).concat(':').concat(#postLike.exercisePost.id)")
 	public PostLike save(PostLike postLike) {
 		return postLikeRepository.save(postLike);
 	}
 	
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME,
+	@CacheEvict(cacheNames=POST_LIKE_NAME,
 	key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#user.id).concat(':').concat(#exercisePost.id)")
 	public PostLike createAndSaveWithUserAndExercisePost(User user, ExercisePost exercisePost) {
 		PostLike postLike = PostLike.builder()
@@ -69,7 +65,7 @@ public class PostLikeServiceImpl implements PostLikeService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames=CacheUtil.POST_LIKE_NAME, 
+	@CacheEvict(cacheNames=POST_LIKE_NAME, 
 	key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#postLike.user.id).concat(':').concat(#postLike.exercisePost.id)")
 	public void delete(PostLike postLike) {
 		postLikeRepository.delete(postLike);
@@ -87,7 +83,7 @@ public class PostLikeServiceImpl implements PostLikeService {
 	
 	@Override
 	@Transactional(readOnly=true)
-	@Cacheable(cacheNames=CacheUtil.POST_LIKE_NAME,
+	@Cacheable(cacheNames=POST_LIKE_NAME,
 		key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#userId).concat(':').concat(#exercisePostId)",
 		unless="#result != true")
 	public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId) {

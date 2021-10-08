@@ -24,7 +24,15 @@ public class UserDetailsVO implements UserDetails{
 	//유저의 권환 
 	private Collection<? extends GrantedAuthority> authorities;
 	
-	public UserDetailsVO(User user) {
+	/**
+	 * User 객체를 통해 UserDetailsVO 인스턴스 생성 및 반환
+	 * @author kimgun-yeong
+	 */
+	public static UserDetailsVO of(User user) {
+		return new UserDetailsVO(user);
+	}
+	
+	private UserDetailsVO(User user) {
 		email = user.getEmail();
 		password = user.getPassword();
 		this.authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString()));

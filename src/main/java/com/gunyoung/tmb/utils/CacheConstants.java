@@ -5,13 +5,13 @@ package com.gunyoung.tmb.utils;
  * @author kimgun-yeong
  *
  */
-public class CacheUtil {
+public class CacheConstants {
 	
 	/**
 	 * 인스턴스화 방지
 	 * @author kimgun-yeong
 	 */
-	private CacheUtil() {
+	private CacheConstants() {
 		throw new AssertionError();
 	}
 	

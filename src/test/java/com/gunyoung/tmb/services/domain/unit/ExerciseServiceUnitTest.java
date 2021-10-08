@@ -390,10 +390,8 @@ public class ExerciseServiceUnitTest {
 		List<Muscle> mainMuscles = new ArrayList<>();
 		List<Muscle> subMucles = new ArrayList<>();
 		
-		given(muscleService.getMuscleListFromMuscleNameList(saveExerciseDTO.getMainMuscles())).willReturn(mainMuscles);
-		given(muscleService.getMuscleListFromMuscleNameList(saveExerciseDTO.getSubMuscles())).willReturn(subMucles);
-		given(exerciseMuscleService.getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(exercise, mainMuscles, true)).willReturn(new ArrayList<>());
-		given(exerciseMuscleService.getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(exercise, subMucles, true)).willReturn(new ArrayList<>());
+		given(muscleService.findAllByNames(saveExerciseDTO.getMainMuscles())).willReturn(mainMuscles);
+		given(muscleService.findAllByNames(saveExerciseDTO.getSubMuscles())).willReturn(subMucles);
 		
 		//When
 		exerciseService.saveWithSaveExerciseDTO(exercise, saveExerciseDTO);
@@ -406,6 +404,17 @@ public class ExerciseServiceUnitTest {
 	/*
 	 * public void delete(Exercise exercise) 
 	 */
+	
+	@Test
+	@DisplayName("Exercise 삭제 -> 실패, Exercise Null") 
+	public void deleteTestExerciseNull(){
+		//Given
+		
+		//When, Then
+		assertThrows(NullPointerException.class, () -> {
+			exerciseService.delete(null);
+		});
+	}
 	
 	@Test
 	@DisplayName("Exercise 삭제 -> 정상, Check ExerciseRepository")

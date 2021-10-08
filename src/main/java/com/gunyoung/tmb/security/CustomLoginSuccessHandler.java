@@ -42,39 +42,41 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-		String redirectedUrl = DEFAULT_REDIRECTED_URL_AFTER_LOGIN_SUCCESS;
 		HttpSession session = request.getSession();
+		setUserIdInSessionFromAuthentication(session, authentication);
+		String redirectedURL = getRedirectedURLFromRequestAndResponse(request, response);
 		
-		//세션에 로그인 유저의 ID 값 저장 
+		SessionUtil.removeAfterLoginRedirectedUrl(session);
+		SessionUtil.removeAuthenticationExceptionAttributes(session);
+		
+		response.sendRedirect(redirectedURL);
+	}
+	
+	private void setUserIdInSessionFromAuthentication(HttpSession session, Authentication authentication) {
 		String username = authentication.getName();
 		Long userId = userService.findByEmail(username).getId();
 		SessionUtil.setLoginUserId(session, userId);
-		
-		/*
-		 *  로그인 성공 이후 리다이렉트 될 주소 구하는 로직
-		 */
-		
-		RequestCache requestCache = new HttpSessionRequestCache();
-		SavedRequest savedRequest = requestCache.getRequest(request, response);
-		
-		String redirectedUrlFromSession = SessionUtil.getAfterLoginRedirectedUrl(session);
-		if(redirectedUrlFromSession != null) {
-			SessionUtil.removeAfterLoginRedirectedUrl(session);
-		}
-		
-		if(savedRequest != null) {
-			redirectedUrl = savedRequest.getRedirectUrl();
-			requestCache.removeRequest(request, response);
-		} else if(redirectedUrlFromSession != null && !redirectedUrlFromSession.equals("")) {
-			redirectedUrl = redirectedUrlFromSession;
-		}
-		
-		// 세션에서 로그인 실패 기록 삭제 
-		SessionUtil.removeAuthenticationExceptionAttributes(session);
-		
-		response.sendRedirect(redirectedUrl);
 	}
 	
-
+	private String getRedirectedURLFromRequestAndResponse(HttpServletRequest request, HttpServletResponse response) {
+		RequestCache requestCache = new HttpSessionRequestCache();
+		SavedRequest savedRequest = requestCache.getRequest(request, response);
+		if(savedRequest != null) {
+			String redirectUrlFromSavedRequest = savedRequest.getRedirectUrl();
+			requestCache.removeRequest(request, response);
+			return redirectUrlFromSavedRequest; 
+		}
+		
+		HttpSession session = request.getSession();
+		String redirectedURLFromSession = SessionUtil.getAfterLoginRedirectedUrl(session);
+		if(isRedirectedURLFromSessionNonNullAndNonEmpty(redirectedURLFromSession)) {
+			return redirectedURLFromSession;
+		}
+		
+		return DEFAULT_REDIRECTED_URL_AFTER_LOGIN_SUCCESS;
+	}
 	
+	private boolean isRedirectedURLFromSessionNonNullAndNonEmpty(String redirectedURLFromSession) {
+		return redirectedURLFromSession != null && !redirectedURLFromSession.equals("");
+	}
 }

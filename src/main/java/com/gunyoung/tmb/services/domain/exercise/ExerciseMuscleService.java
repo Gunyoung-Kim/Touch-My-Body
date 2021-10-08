@@ -2,9 +2,7 @@ package com.gunyoung.tmb.services.domain.exercise;
 
 import java.util.List;
 
-import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
-import com.gunyoung.tmb.domain.exercise.Muscle;
 
 public interface ExerciseMuscleService {
 	
@@ -12,7 +10,6 @@ public interface ExerciseMuscleService {
 	 * ID로 ExerciseMuscle 찾기
 	 * @param id 찾으려는 ExerciseMuscle의 id
 	 * @return ExerciseMuscle, Null(해당 id의 ExerciseMuscle없을때)
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public ExerciseMuscle findById(Long id);
@@ -52,13 +49,4 @@ public interface ExerciseMuscleService {
 	 * @author kimgun-yeong
 	 */
 	public void deleteAllByExerciseId(Long exerciseId);
-	
-	/**
-	 * Exercise, Muscle List, isMain 인자를 이용해 ExerciseMuscle List 생성 후 반환
-	 * @param exercise 생성 하려는 ExerciseMuscle 들의 Exercise
-	 * @param muscleList 생성 하려는 ExerciseMuscle 들의 Muscle 들
-	 * @param isMain 생성 하려는 ExerciseMuscle 들의 isMain (주 자극 근육인지 여부)
-	 * @author kimgun-yeong
-	 */
-	public List<ExerciseMuscle> getExerciseMuscleListFromExerciseAndMuscleListAndIsMain(Exercise exercise, List<Muscle> muscleList,boolean isMain);
 }

@@ -2,6 +2,7 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -275,6 +276,17 @@ public class CommentServiceUnitTest {
 	/*
 	 * public void delete(Comment comment)
 	 */
+	
+	@Test
+	@DisplayName("Comment 삭제 -> null 값 들어옴")
+	public void deleteTestNullComment() {
+		//Given
+		
+		//When, Then
+		assertThrows(NullPointerException.class, () -> {
+			commentService.delete(null);
+		});
+	}
 	
 	@Test
 	@DisplayName("Comment 삭제 -> 정상, check CommentRepository")

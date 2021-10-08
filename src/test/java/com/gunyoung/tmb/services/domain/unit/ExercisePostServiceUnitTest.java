@@ -2,6 +2,7 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -316,6 +317,17 @@ public class ExercisePostServiceUnitTest {
 	/*
 	 * public void delete(ExercisePost exercisePost)
 	 */
+	
+	@Test
+	@DisplayName("ExercisePost 삭제 -> 실패, exercisePost == null")
+	public void deleteTestExercisePostNull() {
+		//Given
+		
+		//When, Then
+		assertThrows(NullPointerException.class, () -> {
+			exercisePostService.delete(null);
+		});
+	}
 	
 	@Test
 	@DisplayName("ExercisePost 삭제 -> 정상, check ExercisePostRepository")

@@ -106,4 +106,12 @@ public class ExercisePost extends BaseEntity {
 	public String toString() {
 		return "[ id = " + id + ", title = " + title + ", contents = " + contents + ", viewNum = " + viewNum + " ]";
 	}
+	
+	/**
+	 * 해당 객체의 viewNum 필드 값을 1 증가 시킴
+	 * @author kimgun-yeong
+	 */
+	public void increaseViewNum() {
+		this.viewNum++;
+	}
 }

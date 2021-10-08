@@ -26,18 +26,18 @@ import com.gunyoung.tmb.testutil.UserTest;
 public class UserDetailsVOUnitTest {
 	
 	/*
-	 * public UserDetailsVO(User user)
+	 * public of(User user)
 	 */
 	
 	@Test
 	@DisplayName("User 객체를 통한 생성자 -> 정상, Authority확인")
-	public void UserDetailsVOByUserTest() {
+	public void ofTest() {
 		//Given
 		RoleType userRole = RoleType.MANAGER;
 		User user = UserTest.getUserInstance(userRole);
 		
 		//When
-		UserDetailsVO userDetails = new UserDetailsVO(user);
+		UserDetailsVO userDetails = UserDetailsVO.of(user);
 		
 		//Then
 		assertTrue( userDetails.getAuthorities().stream().anyMatch(a -> {

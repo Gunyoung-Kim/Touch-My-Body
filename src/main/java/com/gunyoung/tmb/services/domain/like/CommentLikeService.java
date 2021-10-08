@@ -12,7 +12,6 @@ public interface CommentLikeService {
 	 * ID로 CommentLike 찾기
 	 * @param id 찾으려는 commentLike의 id
 	 * @return CommentLike, Null(해당 id의 commentLike 없을때)
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public CommentLike findById(Long id);
@@ -22,7 +21,6 @@ public interface CommentLikeService {
 	 * @param userId 찾으려는 CommenLike의 User ID
 	 * @param commentId 찾으려는 CommentLike의 Comment ID
 	 * @return CommentLike, Null (해당 조건을 만족하는 CommentLike 없을때)
-	 * @since 11
 	 * @author kimgun-yeong
 	 */
 	public CommentLike findByUserIdAndCommentId(Long userId, Long commentId);

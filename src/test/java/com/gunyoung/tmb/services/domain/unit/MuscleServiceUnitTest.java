@@ -27,7 +27,6 @@ import org.springframework.data.domain.PageRequest;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.jpa.MuscleNameAndCategoryDTO;
 import com.gunyoung.tmb.enums.TargetType;
-import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
 import com.gunyoung.tmb.services.domain.exercise.MuscleServiceImpl;
@@ -204,36 +203,22 @@ public class MuscleServiceUnitTest {
 	 */
 	
 	@Test
-	@DisplayName("Muscle name List 이용하여 Muscle List 반환 -> 해당 이름의 Muscle 없을 때")
-	public void getMuscleListFromMuscleNameListNonExist() {
-		//Given
-		String nonExistName = "nonExist";
-		List<String> muscleNames = new ArrayList<>();
-		muscleNames.add(nonExistName);
-		
-		given(muscleRepository.findByName(nonExistName)).willReturn(Optional.empty());
-		
-		//When, Then
-		assertThrows(MuscleNotFoundedException.class, () -> {
-			muscleService.getMuscleListFromMuscleNameList(muscleNames);
-		});
-	}
-	
-	@Test
 	@DisplayName("Muscle name List 이용하여 Muscle List 반환 -> 정상")
 	public void getMuscleListFromMuscleNameListTest() {
 		//Given
 		String muscleName = "muscle";
 		List<String> muscleNames = new ArrayList<>();
 		muscleNames.add(muscleName);
+		List<Muscle> muscles = new ArrayList<>();
+		muscles.add(muscle);
 		
-		given(muscleRepository.findByName(muscleName)).willReturn(Optional.of(muscle));
+		given(muscleRepository.findAllByNamesInQuery(muscleNames)).willReturn(muscles);
 		
 		//When
-		List<Muscle> result = muscleService.getMuscleListFromMuscleNameList(muscleNames);
+		List<Muscle> result = muscleService.findAllByNames(muscleNames);
 		
 		//Then
-		assertEquals(muscle, result.get(0));
+		assertEquals(muscles, result);
 	}
 	
 	/*
@@ -256,6 +241,17 @@ public class MuscleServiceUnitTest {
 	/*
 	 * public void delete(Muscle muscle)
 	 */
+	
+	@Test
+	@DisplayName("Muscle 삭제 -> 실패, Muscle null")
+	public void deleteTestMuscleNull() {
+		//Given
+		
+		//When, Then
+		assertThrows(NullPointerException.class, () -> {
+			muscleService.delete(null);
+		});
+	}
 	
 	@Test
 	@DisplayName("Muscle 삭제 -> 정상, check muscleRepository")

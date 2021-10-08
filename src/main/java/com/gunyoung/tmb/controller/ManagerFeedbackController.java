@@ -44,17 +44,15 @@ public class ManagerFeedbackController {
 	 * @author kimgun-yeong
 	 */
 	@RequestMapping(value="/manager/exercise/feedback/{exerciseId}" ,method= RequestMethod.GET) 
-	public ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId,@RequestParam(value="page", defaultValue="1") int page
-			,ModelAndPageView mav) {
+	public ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId, @RequestParam(value="page", defaultValue="1") int page
+			, ModelAndPageView mav) {
 		Exercise exercise = exerciseService.findById(exerciseId);
 		if(exercise == null) {
 			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		int pageSize = FEEDBACK_FOR_MANAGE_PAGE_SIZE;
-		
-		Page<FeedbackManageListDTO> pageResult = feedbackService.findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, page, pageSize);
-		long totalPageNum = feedbackService.countByExerciseId(exerciseId)/pageSize +1;
+		Page<FeedbackManageListDTO> pageResult = feedbackService.findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, page, FEEDBACK_FOR_MANAGE_PAGE_SIZE);
+		long totalPageNum = feedbackService.countByExerciseId(exerciseId)/FEEDBACK_FOR_MANAGE_PAGE_SIZE +1;
 		
 		mav.addObject("listObject", pageResult);
 		mav.addObject("exerciseName", exercise.getName());

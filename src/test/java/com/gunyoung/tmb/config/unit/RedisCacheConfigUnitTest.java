@@ -19,7 +19,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 
 import com.gunyoung.tmb.config.RedisCacheConfig;
-import com.gunyoung.tmb.utils.CacheUtil;
+import com.gunyoung.tmb.utils.CacheConstants;
 
 /**
  * {@link RedisCacheConfig} 에 대한 테스트 클래스 <br>
@@ -86,7 +86,7 @@ public class RedisCacheConfigUnitTest {
 	@DisplayName("Redis Cahce에 대한 설정 확인 -> default ttl 확인")
 	public void redisCacheConfigurationTestTtl() {
 		//Given
-		Duration entryTtl = Duration.ofMinutes(CacheUtil.CACHE_DEFAULT_EXPIRE_MIN);
+		Duration entryTtl = Duration.ofMinutes(CacheConstants.CACHE_DEFAULT_EXPIRE_MIN);
 		
 		//When
 		RedisCacheConfiguration result = redisCacheConfig.redisCacheConfiguration();

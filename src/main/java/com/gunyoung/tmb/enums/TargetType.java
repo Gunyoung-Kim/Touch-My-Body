@@ -1,5 +1,8 @@
 package com.gunyoung.tmb.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 
 /**
@@ -35,7 +38,18 @@ public enum TargetType {
 				return tt;
 			}
 		}
-		
 		return null;
+	}
+	
+	/**
+	 * 모든 TargetType의 koreanName들 반환 
+	 * @author kimgun-yeong
+	 */
+	public static List<String> getKoreanNamesForAllTargetType() {
+		List<String> koreanNamesForAllTargetType = new ArrayList<>();
+		for(TargetType t: TargetType.values()) {
+			koreanNamesForAllTargetType.add(t.getKoreanName());
+		}
+		return koreanNamesForAllTargetType;
 	}
 }

@@ -1,6 +1,7 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -39,46 +40,40 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public ExercisePost findById(Long id) {
 		Optional<ExercisePost> result = exercisePostRepository.findById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public ExercisePost findWithPostLikesById(Long id) {
 		Optional<ExercisePost> result = exercisePostRepository.findWithPostLikesById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public ExercisePost findWithCommentsById(Long id) {
 		Optional<ExercisePost> result = exercisePostRepository.findWithCommentsById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtAsc(Long userId,Integer pageNumber, int pageSize) {
+	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtAsc(Long userId, Integer pageNumber, int pageSize) {
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exercisePostRepository.findAllByUserIdOrderByCreatedAtAscInPage(userId,pageRequest);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtDesc(Long userId,Integer pageNumber, int pageSize) {
+	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtDesc(Long userId, Integer pageNumber, int pageSize) {
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exercisePostRepository.findAllByUserIdOrderByCreatedAtDescInPage(userId,pageRequest);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(Integer pageNumber,int pageSize) {
+	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(Integer pageNumber, int pageSize) {
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exercisePostRepository.findAllForPostForCommunityViewDTOOrderByCreatedAtDescInPage(pageRequest);
 	}
@@ -140,6 +135,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	
 	@Override
 	public void delete(ExercisePost exercisePost) {
+		Objects.requireNonNull(exercisePost, "Given exercisePost must not be null!");
 		deleteAllOneToManyEntityForExercisePost(exercisePost);
 		exercisePostRepository.deleteByIdInQuery(exercisePost.getId());
 	}
@@ -202,9 +198,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id) {
 		Optional<ExercisePostViewDTO> result = exercisePostRepository.findForExercisePostViewDTOById(id);
-		if(result.isEmpty()) 
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 
 	@Override
@@ -213,8 +207,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 		if(exercisePost == null)
 			return null;
 		
-		exercisePost.setViewNum(exercisePost.getViewNum()+1);
-		
+		exercisePost.increaseViewNum();
 		save(exercisePost);
 		
 		return getExercisePostViewDTOWithExercisePostId(id);

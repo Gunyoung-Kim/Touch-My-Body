@@ -1,6 +1,7 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -35,27 +36,21 @@ public class CommentServiceImpl implements CommentService {
 	@Transactional(readOnly=true)
 	public Comment findById(Long id) {
 		Optional<Comment> result = commentRepository.findById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Comment findWithUserAndExercisePostById(Long id) {
 		Optional<Comment> result = commentRepository.findWithUserAndExercisePostById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Comment findWithCommentLikesById(Long id) {
 		Optional<Comment> result = commentRepository.findWithCommentLikesById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override
@@ -66,14 +61,14 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	@Transactional(readOnly= true)
-	public Page<Comment> findAllByUserIdOrderByCreatedAtAsc(Long userId,Integer pageNum, int page_size) {
+	public Page<Comment> findAllByUserIdOrderByCreatedAtAsc(Long userId, Integer pageNum, int page_size) {
 		PageRequest pageRequest = PageRequest.of(pageNum-1, page_size);
 		return commentRepository.findAllByUserIdOrderByCreatedAtAscInPage(userId,pageRequest);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId,Integer pageNum, int page_size) {
+	public Page<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId, Integer pageNum, int page_size) {
 		PageRequest pageRequest = PageRequest.of(pageNum-1, page_size);
 		return commentRepository.findAllByUserIdOrderByCreatedAtDescInPage(userId,pageRequest);
 	}
@@ -105,12 +100,13 @@ public class CommentServiceImpl implements CommentService {
 	public void deleteById(Long id) {
 		Comment comment = findById(id);
 		if(comment == null) 
-			return ;
+			return;
 		delete(comment);
 	}
 	
 	@Override
 	public void delete(Comment comment) {
+		Objects.requireNonNull(comment, "Given comment must not be null!");
 		deleteAllOneToManyEntityForComment(comment);
 		commentRepository.deleteByIdInQuery(comment.getId());
 	}

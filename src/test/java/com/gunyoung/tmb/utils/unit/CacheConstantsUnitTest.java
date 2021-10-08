@@ -8,15 +8,15 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.gunyoung.tmb.utils.CacheUtil;
+import com.gunyoung.tmb.utils.CacheConstants;
 
 /**
-* {@link CacheUtil} 에 대한 테스트 클래스 <br>
+* {@link CacheConstants} 에 대한 테스트 클래스 <br>
 * 테스트 범위: (단위 테스트) CacheUtil only
 * @author kimgun-yeong
 *
 */
-public class CacheUtilUnitTest {
+public class CacheConstantsUnitTest {
 	
 	/*
 	 * constructor
@@ -26,7 +26,7 @@ public class CacheUtilUnitTest {
 	@DisplayName("생성자 호출시 예외 발생 확인")
 	public void constructorTestThrowsAssertionError() throws NoSuchMethodException {
 		//Given
-		Constructor<CacheUtil> constructor = CacheUtil.class.getDeclaredConstructor();
+		Constructor<CacheConstants> constructor = CacheConstants.class.getDeclaredConstructor();
 		constructor.setAccessible(true);
 		
 		//When, Then

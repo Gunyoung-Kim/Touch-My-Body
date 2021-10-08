@@ -8,8 +8,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Max;
@@ -28,11 +30,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 유저가 작성한 개인 운동 기록을 나타내는 Entity
+ * 유저가 작성한 개인 운동 기록을 나타내는 Entity <br>
+ * (userId, date) 다중 컬럼 인덱싱 사용
  * @author kimgun-yeong
  *
  */
 @Entity
+@Table(indexes = @Index(name = "uIdAndDate", columnList = "user_id, date"))
 @Getter
 @Setter
 @Builder
@@ -44,8 +48,8 @@ public class UserExercise extends BaseEntity {
 	 * id 값
 	 */
 	@Id
-	@Column(name="user_exercise_id")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "user_exercise_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	/**
@@ -80,7 +84,7 @@ public class UserExercise extends BaseEntity {
 	 * 해당 운동을 몇년 몇월 며칠에 했는지
 	 */
 	@NotNull
-	@Temporal(value=TemporalType.DATE)
+	@Temporal(value = TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Calendar date;
 	
@@ -88,8 +92,8 @@ public class UserExercise extends BaseEntity {
 	 * 해당 운동 기록을 작성한 User
 	 * fetch: 지연로딩
 	 */
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="user_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	/**
@@ -97,7 +101,7 @@ public class UserExercise extends BaseEntity {
 	 * fetch: 지연로딩
 	 */
 	@ManyToOne
-	@JoinColumn(name="exercise_id")
+	@JoinColumn(name = "exercise_id")
 	private Exercise exercise;
 	
 	/**

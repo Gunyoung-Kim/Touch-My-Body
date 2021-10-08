@@ -31,9 +31,7 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 	@Transactional(readOnly=true)
 	public UserExercise findById(Long id) {
 		Optional<UserExercise> result = userExerciseRepository.findById(id);
-		if(result.isEmpty())
-			return null;
-		return result.get();
+		return result.orElse(null);
 	}
 	
 	@Override

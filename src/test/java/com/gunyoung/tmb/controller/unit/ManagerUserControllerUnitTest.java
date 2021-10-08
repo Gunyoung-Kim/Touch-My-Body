@@ -270,7 +270,7 @@ public class ManagerUserControllerUnitTest {
 	
 	private void verifyMapvForManageUserCommentsDescCheckMav(Long userId, User user, Long givenCommentNum) {
 		then(mapv).should(times(1)).addObject("userId", userId);
-		then(mapv).should(times(1)).addObject("username", user.getFullName()+": " +user.getNickName());
+		then(mapv).should(times(1)).addObject("username", user.getFullName()+ " : " + user.getNickName());
 		then(mapv).should(times(1)).setPageNumbers(defaultPageNum, givenCommentNum / ManagerUserController.USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE + 1);
 		then(mapv).should(times(1)).setViewName("userCommentList");
 	}
