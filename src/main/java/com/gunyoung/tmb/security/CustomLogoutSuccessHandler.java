@@ -31,7 +31,6 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 			throws IOException, ServletException {
 		HttpSession session = request.getSession();
-		
 		SessionUtil.clearSession(session);
 		response.sendRedirect(REDIRECRED_URL_AFTER_LOGOUT_SUCCESS);
 	}

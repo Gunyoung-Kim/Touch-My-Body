@@ -31,8 +31,6 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		User user = userService.findByEmail(username);
 		if(user == null) 
 			throw new UsernameNotFoundException("User not found with: " + username);
-		UserDetails userDetails = UserDetailsVO.of(user);
-		
-		return userDetails;
+		return UserDetailsVO.of(user);
 	}
 }
