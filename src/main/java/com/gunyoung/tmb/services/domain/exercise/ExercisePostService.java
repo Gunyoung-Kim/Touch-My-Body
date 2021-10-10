@@ -89,7 +89,7 @@ public interface ExercisePostService {
 	 * User, Exercise와 연관 관계 추가 후 ExercisePost 저장
 	 * @author kimgun-yeong
 	 */
-	public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exericse);
+	public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exercise);
 	
 	/**
 	 * ExercisePost 삭제 

@@ -108,7 +108,7 @@ public class ExerciseServiceImpl implements ExerciseService {
 	public Map<String, List<String>> getAllExercisesNamewithSorting() {
 		Map<String, List<String>> sortingResult = new HashMap<>();
 		List<ExerciseNameAndTargetDTO> listOfDTOFromRepo = exerciseRepository.findAllWithNameAndTarget();
-		listOfDTOFromRepo.stream().forEach((dto) -> {
+		listOfDTOFromRepo.stream().forEach( dto -> {
 			String koreanNameOfTarget = dto.getTarget().getKoreanName();
 			String nameOfExercise = dto.getName();
 			sortingResult.putIfAbsent(koreanNameOfTarget, new ArrayList<>());

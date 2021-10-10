@@ -108,14 +108,21 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	}
 
 	@Override
-	public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exericse) {
-		user.getExercisePosts().add(exercisePost);
-		exericse.getExercisePosts().add(exercisePost);
-		
-		exercisePost.setUser(user);
-		exercisePost.setExercise(exericse);
+	public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exercise) {
+		setRelationBetweenPostAndUser(exercisePost, user);
+		setRelationBetweenPostAndExercise(exercisePost, exercise);
 		
 		return save(exercisePost);
+	}
+	
+	private void setRelationBetweenPostAndUser(ExercisePost exercisePost, User user) {
+		user.getExercisePosts().add(exercisePost);
+		exercisePost.setUser(user);
+	}
+	
+	private void setRelationBetweenPostAndExercise(ExercisePost exercisePost, Exercise exericse) {
+		exericse.getExercisePosts().add(exercisePost);
+		exercisePost.setExercise(exericse);
 	}
 	
 	@Override
@@ -128,9 +135,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Override
 	public void checkIsMineAndDelete(Long userId, Long exercisePostId) {
 		Optional<ExercisePost> exercisePost = exercisePostRepository.findByUserIdAndExercisePostId(userId, exercisePostId);
-		exercisePost.ifPresent((ep)-> {
-			delete(ep);
-		});
+		exercisePost.ifPresent(this::delete);
 	}
 	
 	@Override

@@ -66,7 +66,7 @@ public class MuscleServiceImpl implements MuscleService {
 		List<MuscleNameAndCategoryDTO> listOfDTOFromRepo = muscleRepository.findAllWithNamaAndCategory();
 		Map<String,List<String>> sortingResult = new HashMap<>();
 		
-		listOfDTOFromRepo.stream().forEach((dto) -> {
+		listOfDTOFromRepo.stream().forEach( dto -> {
 			String koreanNameOfCategory = dto.getCategory().getKoreanName();
 			String nameOfMuscle = dto.getName();
 			sortingResult.putIfAbsent(koreanNameOfCategory, new ArrayList<>());
