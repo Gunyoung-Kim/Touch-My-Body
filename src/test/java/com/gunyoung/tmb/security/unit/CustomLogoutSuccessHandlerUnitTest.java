@@ -29,18 +29,18 @@ import com.gunyoung.tmb.security.CustomLogoutSuccessHandler;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class CustomLogoutSuccessHandlerUnitTest {
+class CustomLogoutSuccessHandlerUnitTest {
 	
 	@InjectMocks 
 	CustomLogoutSuccessHandler customLogoutSuccessHandler;
 	
 	/*
-	 * public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+	 * void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 	 */
 	
 	@Test
 	@DisplayName("로그 아웃 성공 시 처리 로직 -> 정상, 세션 삭제 확인")
-	public void onLogoutSuccessTestCheckSessionClear() throws IOException, ServletException {
+	void onLogoutSuccessTestCheckSessionClear() throws IOException, ServletException {
 		//Given
 		HttpSession session = mock(HttpSession.class);
 		HttpServletRequest request = mock(HttpServletRequest.class);
@@ -58,7 +58,7 @@ public class CustomLogoutSuccessHandlerUnitTest {
 	
 	@Test
 	@DisplayName("로그 아웃 성공 시 처리 로직 -> 정상, 리다이렉트 주소 확인")
-	public void onLogoutSuccessTestCheckRedirect() throws IOException, ServletException {
+	void onLogoutSuccessTestCheckRedirect() throws IOException, ServletException {
 		//Given
 		HttpSession session = mock(HttpSession.class);
 		HttpServletRequest request = mock(HttpServletRequest.class);

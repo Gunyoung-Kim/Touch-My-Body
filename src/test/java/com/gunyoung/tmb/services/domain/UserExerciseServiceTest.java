@@ -40,7 +40,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
  */
 @Integration
 @SpringBootTest
-public class UserExerciseServiceTest {
+class UserExerciseServiceTest {
 	
 	private static final Calendar DEFAULT_CALENDAR = new GregorianCalendar(1999,Calendar.JANUARY,16);
 	
@@ -70,11 +70,11 @@ public class UserExerciseServiceTest {
 	}
 	
 	/*
-	 *   public UserExerciseService findById(Long id)
+	 *   UserExerciseService findById(Long id)
 	 */
 	@Test
 	@DisplayName("Id로 해당 UserExercise 찾기 -> 해당 Id 존재하지 않음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		long nonExistId = UserExerciseTest.getNonExistUserExerciseId(userExerciseRepository);
 		
@@ -87,7 +87,7 @@ public class UserExerciseServiceTest {
 	
 	@Test
 	@DisplayName("Id로 해당 UserExercise 찾기 ->  정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		 Long existId = userExercise.getId();
 		
@@ -99,13 +99,13 @@ public class UserExerciseServiceTest {
 	}
 	
 	/*
-	 * public List<UserExercise> findByUserIdAndDate(Long userId, Calendar date)
+	 * List<UserExercise> findByUserIdAndDate(Long userId, Calendar date)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("유저Id와 날짜로 운동 기록 찾기 ->정상")
-	public void findByUserIdAndDateTest() {
+	void findByUserIdAndDateTest() {
 		//Given
 		User user = UserTest.getUserInstance();
 		user = userRepository.save(user);
@@ -129,13 +129,13 @@ public class UserExerciseServiceTest {
 	}
 	
 	/*
-	 * public List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year,int month)
+	 * List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year,int month)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("유저 id, 년, 월로 날짜에 운동 했는지 여부 -> 정상, isDone 확인")
-	public void findIsDoneDTOByUserIdAndYearAndMonthCheckIsDone() {
+	void findIsDoneDTOByUserIdAndYearAndMonthCheckIsDone() {
 		//Given
 		User user = UserTest.getUserInstance();
 		user = userRepository.save(user);
@@ -152,13 +152,13 @@ public class UserExerciseServiceTest {
 		List<UserExerciseIsDoneDTO> result = userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId,existYear,existMonth);
 		
 		//Then
-		assertEquals(result.get(existDay-1).isDone(),true);
+		assertTrue(result.get(existDay-1).isDone());
 	}
 	
 	@Test
 	@Transactional
 	@DisplayName("유저 id, 년, 월로 날짜에 운동 했는지 여부 -> 정상, date 확인")
-	public void findIsDoneDTOByUserIdAndYearAndMonthCheckDate() {
+	void findIsDoneDTOByUserIdAndYearAndMonthCheckDate() {
 		//Given
 		User user = UserTest.getUserInstance();
 		user = userRepository.save(user);
@@ -179,13 +179,13 @@ public class UserExerciseServiceTest {
 	}
 	
 	/*
-	 *   public UserExercise save(UserExercise userExercise)
+	 *   UserExercise save(UserExercise userExercise)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("UserExercise 정보 수정 -> 정상, 변화 확인")
-	public void mergeTestCheckChange() {
+	void mergeTestCheckChange() {
 		//Given
 		String changeDescription = "Changed Description"; 
 		Long userExerciseId = userExercise.getId();
@@ -201,7 +201,7 @@ public class UserExerciseServiceTest {
 	
 	@Test
 	@DisplayName("UserExercise 정보 수정 -> 정상, 개수 동일 확인")
-	public void mergeTestCheckCount() {
+	void mergeTestCheckCount() {
 		//Given
 		String changeDescription = "Changed Description"; 
 		userExercise.setDescription(changeDescription);
@@ -218,7 +218,7 @@ public class UserExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("UserExercise 추가 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance(DEFAULT_CALENDAR);
 		Long givenUserExerciseNum = userExerciseRepository.count();
@@ -231,13 +231,13 @@ public class UserExerciseServiceTest {
 	}
 	
 	/*
-	 *  public void delete(UserExercise userExercise)
+	 *  void delete(UserExercise userExercise)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("UserExercise 삭제 -> 정상")
-	public void deleteTest() {
+	void deleteTest() {
 		//Given
 		Long userExerciseId = userExercise.getId();
 		
@@ -250,13 +250,13 @@ public class UserExerciseServiceTest {
 	}
 	
 	/*
-	 *  public void deleteAllByExerciseId(Long exerciseId)
+	 *  void deleteAllByExerciseId(Long exerciseId)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("Exercise Id로 만족하는 UserExercise들 일괄 삭제 -> 정상")
-	public void deleteAllByExerciseIdTest() {
+	void deleteAllByExerciseIdTest() {
 		//Given
 		int newUserExercisesNum = 10;
 		addUserExercises(newUserExercisesNum);

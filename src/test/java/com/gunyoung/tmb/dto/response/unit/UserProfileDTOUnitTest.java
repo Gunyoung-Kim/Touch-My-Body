@@ -15,15 +15,15 @@ import com.gunyoung.tmb.testutil.UserTest;
  * @author kimgun-yeong
  *
  */
-public class UserProfileDTOUnitTest {
+class UserProfileDTOUnitTest {
 	
 	/*
-	 * public static UserProfileDTO of(User user)
+	 * static UserProfileDTO of(User user)
 	 */
 	
 	@Test
 	@DisplayName("User을 UserManagerListDTO객체로 변환 -> 정상")
-	public void ofTest() {
+	void ofTest() {
 		//Given
 		Long userId = Long.valueOf(24);
 		User user = UserTest.getUserInstance();

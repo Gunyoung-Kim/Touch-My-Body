@@ -18,15 +18,15 @@ import com.gunyoung.tmb.testutil.UserTest;
  * @author kimgun-yeong
  *
  */
-public class UserProfileForManagerDTOUnitTest {
+class UserProfileForManagerDTOUnitTest {
 
 	/*
-	 * public static User mergeUserWithUserProfileForManagerDTO(User user, UserProfileForManagerDTO dto) throws RoleNotFoundedException 
+	 * static User mergeUserWithUserProfileForManagerDTO(User user, UserProfileForManagerDTO dto) throws RoleNotFoundedException 
 	 */
 	
 	@Test
 	@DisplayName("UserProfileForManagerDTO 정보를 통해 User 정보 수정 -> dto에 담긴 role에 해당하는 RoleType 없을 때")
-	public void mergeUserWithUserProfileForManagerDTOInvalidRole() {
+	void mergeUserWithUserProfileForManagerDTOInvalidRole() {
 		//Given
 		User user = UserTest.getUserInstance();
 		UserProfileForManagerDTO userProfileForManagerDTO = UserProfileForManagerDTO.builder()
@@ -41,7 +41,7 @@ public class UserProfileForManagerDTOUnitTest {
 	
 	@Test
 	@DisplayName("UserProfileForManagerDTO 정보를 통해 User 정보 수정 -> 정상, 변화된 Role 확인")
-	public void mergeUserWithUserProfileForManagerDTOTestCheckRole() {
+	void mergeUserWithUserProfileForManagerDTOTestCheckRole() {
 		//Given
 		User user = UserTest.getUserInstance();
 		user.setRole(RoleType.USER);

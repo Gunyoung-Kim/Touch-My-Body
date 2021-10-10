@@ -14,14 +14,14 @@ import com.gunyoung.tmb.testutil.CommentLikeTest;
 * @author kimgun-yeong
 *
 */
-public class CommentLikeUnitTest {
+class CommentLikeUnitTest {
 	/*
-	 *  public String toString()
+	 *  String toString()
 	 */
 	
 	@Test
 	@DisplayName("toString Test -> 정상")
-	public void toStringTest() {
+	void toStringTest() {
 		//Given
 		Long commentLikeId = Long.valueOf(42);
 		CommentLike commentLike = CommentLikeTest.getCommentLikeInstance();

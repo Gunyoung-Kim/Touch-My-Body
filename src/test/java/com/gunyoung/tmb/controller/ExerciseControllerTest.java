@@ -37,7 +37,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ExerciseControllerTest {
+class ExerciseControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -47,13 +47,13 @@ public class ExerciseControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/exercise",method = RequestMethod.GET)
-	 * public ModelAndView exerciseInfoMainView(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav)
+	 * ModelAndView exerciseInfoMainView(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("운동 메인 화면 반환 -> 정상, 키워드 없음")
-	public void exerciseInfoMainViewTestNoKeyword() throws Exception {
+	void exerciseInfoMainViewTestNoKeyword() throws Exception {
 		//Given
 		List<Exercise> exerciseList = new LinkedList<>();
 		TargetType[] targetTypes = TargetType.values();
@@ -81,7 +81,7 @@ public class ExerciseControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("운동 메인 화면 반환 -> 정상, 모든 Exercise가 만족하는 키워드")
-	public void exerciseInfoMainViewTestKeywordForAll() throws Exception {
+	void exerciseInfoMainViewTestKeywordForAll() throws Exception {
 		//Given
 		String keywordForAllExercise = ExerciseTest.DEFAULT_NAME;
 		int givenExerciseNum = 10;
@@ -106,7 +106,7 @@ public class ExerciseControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("운동 메인 화면 반환 -> 정상, 어떤 Exercise도 만족하지 않는 키워드")
-	public void exerciseInfoMainViewTestKeywordForNothing() throws Exception {
+	void exerciseInfoMainViewTestKeywordForNothing() throws Exception {
 		//Given
 		String keywordForNothing = "nothing!!";
 		int givenExerciseNum = 10;
@@ -130,13 +130,13 @@ public class ExerciseControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/exercise/about/{exercise_id}", method = RequestMethod.GET)
-	 * public ModelAndView exerciseInfoDetailView(@PathVariable("exercise_id") Long exerciseId,ModelAndView mav)
+	 * ModelAndView exerciseInfoDetailView(@PathVariable("exercise_id") Long exerciseId,ModelAndView mav)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("특정 Exercise 상세 정보 화면 반환 -> 해당 ID의 Exercise 없을 때")
-	public void exerciseInfoMainViewNonExist() throws Exception {
+	void exerciseInfoMainViewNonExist() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance("exericse",TargetType.ARM);
 		exerciseRepository.save(exercise);
@@ -151,7 +151,7 @@ public class ExerciseControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 Exercise 상세 정보 화면 반환 -> 정상")
-	public void exerciseInfoDetailViewTest() throws Exception {
+	void exerciseInfoDetailViewTest() throws Exception {
 		//Given
 		String name = "exercise";
 		TargetType target = TargetType.ARM;

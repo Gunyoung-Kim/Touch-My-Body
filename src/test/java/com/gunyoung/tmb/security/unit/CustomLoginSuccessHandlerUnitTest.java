@@ -38,7 +38,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class CustomLoginSuccessHandlerUnitTest {
+class CustomLoginSuccessHandlerUnitTest {
 	
 	@Mock
 	UserService userService;
@@ -63,13 +63,13 @@ public class CustomLoginSuccessHandlerUnitTest {
 	}
 	
 	/*
-	 * public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+	 * void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException 
 	 */
 	
 	@Test
 	@DisplayName("Authentication 성공 후 처리 -> 성공 후 리다이렉트 주소 세션에 있는 경우, 해당 내용 세션에서 지우기 확인 ")
-	public void onAuthenticationSuccessTestRedirectedURLExistInSession() throws IOException, ServletException {
+	void onAuthenticationSuccessTestRedirectedURLExistInSession() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
 		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
@@ -86,7 +86,7 @@ public class CustomLoginSuccessHandlerUnitTest {
 	
 	@Test
 	@DisplayName("Authentication 성공 후 처리 -> SavedRequest not null (spring security에 의해 인터셉트돼서 로그인 페이지로 간 경우)")
-	public void onAuthenticationSuccessTestSavedRequestNotNull() throws IOException, ServletException {
+	void onAuthenticationSuccessTestSavedRequestNotNull() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
 		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
@@ -105,7 +105,7 @@ public class CustomLoginSuccessHandlerUnitTest {
 	
 	@Test
 	@DisplayName("Authentication 성공 후 처리 -> SavedRequest null, redirectedUrlFromSession not null and not empty")
-	public void onAuthenticationSuccessTestSavedRequestNullAndURLFromSessionNotNullNotEmpty() throws IOException, ServletException {
+	void onAuthenticationSuccessTestSavedRequestNullAndURLFromSessionNotNullNotEmpty() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
 		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
@@ -125,7 +125,7 @@ public class CustomLoginSuccessHandlerUnitTest {
 	
 	@Test
 	@DisplayName("Authentication 성공 후 처리 -> SavedRequest null, redirectedUrlFromSession not null and empty")
-	public void onAuthenticationSuccessTestSavedRequestNullAndURLFromSessionNotNullEmpty() throws IOException, ServletException {
+	void onAuthenticationSuccessTestSavedRequestNullAndURLFromSessionNotNullEmpty() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
 		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
@@ -145,7 +145,7 @@ public class CustomLoginSuccessHandlerUnitTest {
 	
 	@Test
 	@DisplayName("Authentication 성공 후 처리 ->  SavedRequest null, redirectedUrlFromSession null")
-	public void onAuthenticationSuccessTestSavedRequestNullAndURLFromSessionNull() throws IOException, ServletException {
+	void onAuthenticationSuccessTestSavedRequestNullAndURLFromSessionNull() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
 		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);
@@ -162,7 +162,7 @@ public class CustomLoginSuccessHandlerUnitTest {
 	
 	@Test
 	@DisplayName("Authentication 성공 후 처리 -> 세션에서 로그인 실패 기록 삭제 확인")
-	public void onAuthenticationSuccessTestCheckRemoveAuthenticationExceptionAttributes() throws IOException, ServletException {
+	void onAuthenticationSuccessTestCheckRemoveAuthenticationExceptionAttributes() throws IOException, ServletException {
 		//Given
 		String loginUserEmail = UserTest.DEFAULT_EMAIL;
 		mockingReqeustAuthenticationUserServiceForBeforeLoginUserIDInSession(loginUserEmail);

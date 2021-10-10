@@ -23,20 +23,20 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ManagerControllerTest {
+class ManagerControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
 	
 	/*
 	 *  @RequestMapping(value="/manager",method = RequestMethod.GET)
-     * public ModelAndView managerView(ModelAndView mav
+     * ModelAndView managerView(ModelAndView mav
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@DisplayName("매니저 메인 화면 반환 -> 정상")
-	public void managerViewTest() throws Exception {
+	void managerViewTest() throws Exception {
 		//Given
 		
 		//When

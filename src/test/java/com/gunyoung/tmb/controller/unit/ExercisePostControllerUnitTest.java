@@ -58,7 +58,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ExercisePostControllerUnitTest {
+class ExercisePostControllerUnitTest {
 	
 	@Mock
 	ExercisePostService exercisePostService;
@@ -90,13 +90,13 @@ public class ExercisePostControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") Integer page,
+	 * ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") Integer page,
 	 *		@RequestParam(value="keyword",required=false)String keyword, ModelAndPageView mav)
 	 */
 	
 	@Test
 	@DisplayName("커뮤니티 메인 화면 반환 -> 키워드 없음, exercisePost check")
-	public void exercisePostViewTestNoKeyword() {
+	void exercisePostViewTestNoKeyword() {
 		//Given
 		
 		//When
@@ -109,7 +109,7 @@ public class ExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("커뮤니티 메인 화면 반환 -> 키워드 있음, exercisePost check")
-	public void exercisePostViewTestWithKeyword() {
+	void exercisePostViewTestWithKeyword() {
 		//Given
 		String keyword = "keyword";
 		
@@ -123,7 +123,7 @@ public class ExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("커뮤니티 메인 화면 반환 -> 정상, ModelAndPageView check")
-	public void exercisePostViewTestCheckMapv() {
+	void exercisePostViewTestCheckMapv() {
 		//Given
 		Page<PostForCommunityViewDTO> pageResult = new PageImpl<>(new ArrayList<>());
 		given(exercisePostService.findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(defaultPageNum, ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE)).willReturn(pageResult);
@@ -146,13 +146,13 @@ public class ExercisePostControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView exercisePostViewWithTarget(@RequestParam(value="page", required = false,defaultValue="1") Integer page
+	 * ModelAndView exercisePostViewWithTarget(@RequestParam(value="page", required = false,defaultValue="1") Integer page
 	 *		, @RequestParam(value="keyword",required=false)String keyword, ModelAndPageView mav, @PathVariable("target") String targetName)
 	 */
 	
 	@Test
 	@DisplayName("특정 부류 게시글만 반환 -> 요청 카테고리가 존재하지 않을 때")
-	public void exercisePostViewWithTargetTestTargetTypeNotFounded() {
+	void exercisePostViewWithTargetTestTargetTypeNotFounded() {
 		//Given
 		String nonExistTargetTypeString = "nonExist";
 		
@@ -164,7 +164,7 @@ public class ExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 부류 게시글만 반환 -> 키워드 없음, exercisePostService check")
-	public void exercisePostViewWithTargetTestNoKeywordCheckExercisePostService() {
+	void exercisePostViewWithTargetTestNoKeywordCheckExercisePostService() {
 		//Given
 		TargetType target = TargetType.ARM;
 		String targetName = target.toString();
@@ -179,7 +179,7 @@ public class ExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 부류 게시글만 반환 -> 키워드 있음, exercisePostService check")
-	public void exercisePostViewWithTargetTestYesKeywordCheckExercisePostService() {
+	void exercisePostViewWithTargetTestYesKeywordCheckExercisePostService() {
 		//Given
 		TargetType target = TargetType.ARM;
 		String targetName = target.toString();
@@ -196,7 +196,7 @@ public class ExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 부류 게시글만 반환 -> 정상, ModelAndPageView check")
-	public void exercisePostViewWithTargetTestCheckMapv() {
+	void exercisePostViewWithTargetTestCheckMapv() {
 		//Given
 		TargetType target = TargetType.ARM;
 		String targetName = target.toString();
@@ -222,12 +222,12 @@ public class ExercisePostControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId, ModelAndView mav)
+	 * ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("게시글을 보여주는 뷰 반환 -> 해당 ID의 ExercisePost 없으면")
-	public void exercisePostDetailViewExercisePostNonExist() {
+	void exercisePostDetailViewExercisePostNonExist() {
 		//Given
 		Long nonExistExercisePostId = Long.valueOf(24);
 		
@@ -239,7 +239,7 @@ public class ExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("게시글을 보여주는 뷰 반환 -> 정상, CommentService check")
-	public void exercisePostDetailViewCheckCommentService() {
+	void exercisePostDetailViewCheckCommentService() {
 		//Given
 		Long exercisePostId = Long.valueOf(57);
 		stubbingExercisePostServiceGetExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(exercisePostId);
@@ -253,7 +253,7 @@ public class ExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("게시글을 보여주는 뷰 반환 -> 정상, ModelAndView check")
-	public void exercisePostDetailViewCheckModelAndView() {
+	void exercisePostDetailViewCheckModelAndView() {
 		//Given
 		Long exercisePostId = Long.valueOf(57);
 		ExercisePostViewDTO exercisePostViewDTO = stubbingExercisePostServiceGetExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(exercisePostId);
@@ -281,12 +281,12 @@ public class ExercisePostControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView addExercisePostView(ModelAndView mav)
+	 * ModelAndView addExercisePostView(ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("게시글 작성하는 화면 반환 -> 정상, ModelAndView check")
-	public void addExercisePostViewTestCheckModelAndView() {
+	void addExercisePostViewTestCheckModelAndView() {
 		//Given
 		
 		//When
@@ -297,12 +297,12 @@ public class ExercisePostControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView addExercisePost(@ModelAttribute SaveExercisePostDTO dto, ModelAndView mav)
+	 * ModelAndView addExercisePost(@ModelAttribute SaveExercisePostDTO dto, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("게시글 추가 처리 -> 세션에 저장된 ID에 해당하는 User 없으면")
-	public void addExercisePostTestUserNonExist() {
+	void addExercisePostTestUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(95);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
@@ -319,7 +319,7 @@ public class ExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("게시글 추가 처리 -> exerciseName에 해당하는 Exercise 없으면")
-	public void addExercisePostTestExerciseNonExist() {
+	void addExercisePostTestExerciseNonExist() {
 		//Given
 		Long loginIdInSession = Long.valueOf(59);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -338,7 +338,7 @@ public class ExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("게시글 추가 처리 -> 정상, exercisePostService check")
-	public void addExercisePostTestCheckExercisePostService() {
+	void addExercisePostTestCheckExercisePostService() {
 		//Given
 		Long loginIdInSession = Long.valueOf(59);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -363,7 +363,7 @@ public class ExercisePostControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute SaveCommentDTO dto,
+	 * ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute SaveCommentDTO dto,
 	 *		@RequestParam("isAnonymous") boolean isAnonymous, HttpServletRequest request)
 	 */
 	
@@ -371,7 +371,7 @@ public class ExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저가 게시글에 댓글 추가할때 처리 -> 세션에 저장된 ID에 해당하는 User 없으면")
-	public void addCommentToExercisePostUserNonExist() {
+	void addCommentToExercisePostUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(95);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
@@ -388,7 +388,7 @@ public class ExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저가 게시글에 댓글 추가할때 처리 -> 해당 ID의 ExercisePost 없으면")
-	public void addCommentToExercisePostExercisePostNonExist() {
+	void addCommentToExercisePostExercisePostNonExist() {
 		//Given
 		Long loginIdInSession = Long.valueOf(24);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -407,7 +407,7 @@ public class ExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저가 게시글에 댓글 추가할때 처리 -> 정상, comment CommentService Test")
-	public void addCommentToExercisePostTestCheckCommentService() {
+	void addCommentToExercisePostTestCheckCommentService() {
 		//Given
 		Long loginIdInSession = Long.valueOf(24);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);

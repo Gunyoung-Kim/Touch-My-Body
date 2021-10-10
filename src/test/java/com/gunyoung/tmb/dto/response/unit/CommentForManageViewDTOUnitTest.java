@@ -20,15 +20,15 @@ import com.gunyoung.tmb.testutil.UserTest;
  * @author kimgun-yeong
  *
  */
-public class CommentForManageViewDTOUnitTest {
+class CommentForManageViewDTOUnitTest {
 	
 	/*
-	 * public static List<CommentForManageViewDTO> of(Iterable<Comment> comments, User user)
+	 * static List<CommentForManageViewDTO> of(Iterable<Comment> comments, User user)
 	 */
 	
 	@Test
 	@DisplayName("Comment들과 User를 통해 CommentForManageViewDTO 리스트 반환 -> 정상")
-	public void ofCommentsAndUserTest() {
+	void ofCommentsAndUserTest() {
 		//Given
 		int givenCommentNum = 62;
 		Iterable<Comment> comments = getComments(givenCommentNum);

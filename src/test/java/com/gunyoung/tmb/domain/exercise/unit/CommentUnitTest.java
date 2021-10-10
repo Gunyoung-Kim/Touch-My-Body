@@ -14,15 +14,15 @@ import com.gunyoung.tmb.testutil.CommentTest;
 * @author kimgun-yeong
 *
 */
-public class CommentUnitTest {
+class CommentUnitTest {
 	
 	/*
-	 *  public String toString()
+	 *  String toString()
 	 */
 	
 	@Test
 	@DisplayName("toString Test -> 정상") 
-	public void toStringTest() {
+	void toStringTest() {
 		//Given
 		Long commentId = Long.valueOf(25);
 		Comment comment = CommentTest.getCommentInstance();

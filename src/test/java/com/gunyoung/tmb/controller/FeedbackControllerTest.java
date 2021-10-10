@@ -39,7 +39,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class FeedbackControllerTest {
+class FeedbackControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -68,13 +68,13 @@ public class FeedbackControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.GET)
-	 * public ModelAndView addFeedbackView(@PathVariable("exercise_id") Long exerciseId,ModelAndView mav)
+	 * ModelAndView addFeedbackView(@PathVariable("exercise_id") Long exerciseId,ModelAndView mav)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("Feedback 추가 화면 반환 -> 해당 ID의 Exercise 없을 때")
-	public void addFeedbackViewNonExist() throws Exception {
+	void addFeedbackViewNonExist() throws Exception {
 		//Given
 		Long nonExistExerciseId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
@@ -88,7 +88,7 @@ public class FeedbackControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Feedback 추가 화면 반환 -> 정상")
-	public void addFeedbackViewTest() throws Exception {
+	void addFeedbackViewTest() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);
@@ -103,13 +103,13 @@ public class FeedbackControllerTest {
 	/*
 	 * @RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.POST)
 	 * @LoginIdSessionNotNull
-	 * public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId,@ModelAttribute SaveFeedbackDTO dto)
+	 * ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId,@ModelAttribute SaveFeedbackDTO dto)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("Feedback 추가 처리 -> 세션에 저장된 ID의 User 없을 때")
-	public void addFeedbackUserNonExist() throws Exception {
+	void addFeedbackUserNonExist() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);
@@ -128,7 +128,7 @@ public class FeedbackControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Feedback 추가 처리 -> 해당 ID에 해당하는 Exercise 없을 때")
-	public void addFeedbackNonExist() throws Exception {
+	void addFeedbackNonExist() throws Exception {
 		//Given
 		Long nonExistExerciseId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		//When
@@ -145,7 +145,7 @@ public class FeedbackControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Feedback 추가 처리 -> 정상")
-	public void addFeedbackTest() throws Exception {
+	void addFeedbackTest() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);

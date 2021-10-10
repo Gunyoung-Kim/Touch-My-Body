@@ -36,7 +36,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ExerciseRestControllerTest {
+class ExerciseRestControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -48,14 +48,14 @@ public class ExerciseRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/user/exercise/getexercises",method=RequestMethod.GET)
-	 * public List<ExerciseInfoBySortDTO> getExercisesByNameAndTarget()
+	 * List<ExerciseInfoBySortDTO> getExercisesByNameAndTarget()
 	 */
 	
 	@WithMockUser
 	@Test
 	@Transactional
 	@DisplayName("운동 종류별로 분류 후 반환하기 -> 정상")
-	public void getExercisesByNameAndTargetTest() throws Exception {
+	void getExercisesByNameAndTargetTest() throws Exception {
 		//Given
 		List<Exercise> exerciseList = new LinkedList<>();
 		TargetType[] targetTypes = TargetType.values();

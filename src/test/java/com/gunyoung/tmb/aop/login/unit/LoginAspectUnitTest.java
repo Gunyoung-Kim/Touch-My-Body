@@ -26,7 +26,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class LoginAspectUnitTest {
+class LoginAspectUnitTest {
 	
 	@Mock
 	HttpSession session;
@@ -35,12 +35,12 @@ public class LoginAspectUnitTest {
 	LoginAspect loginAspect;
 	
 	/*
-	 * public void checkLoginIdSessionIsNotNull(JoinPoint dp)
+	 * void checkLoginIdSessionIsNotNull(JoinPoint dp)
 	 */
 	
 	@Test
 	@DisplayName("세션에 로그인 유저 ID 값 없으면 예외 발생 -> 없었다고한다")
-	public void checkLoginIdSessionIsNotNullNoSuchSession() {
+	void checkLoginIdSessionIsNotNullNoSuchSession() {
 		//Given
 		JoinPoint dp = mock(JoinPoint.class);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(null);
@@ -53,7 +53,7 @@ public class LoginAspectUnitTest {
 	
 	@Test
 	@DisplayName("세션에 로그인 유저 ID 값 없으면 예외 발생 -> 있었다고 한다.")
-	public void checkLoginIdSessionIsNotNullTest() {
+	void checkLoginIdSessionIsNotNullTest() {
 		//Given
 		JoinPoint dp = mock(JoinPoint.class);
 		

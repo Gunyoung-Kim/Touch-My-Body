@@ -28,7 +28,7 @@ import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ManagerExercisePostControllerUnitTest {
+class ManagerExercisePostControllerUnitTest {
 	
 	@Mock
 	ExercisePostService exercisePostService;
@@ -44,13 +44,13 @@ public class ManagerExercisePostControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView manageCommunityView(@RequestParam(value="page", defaultValue="1") int page,
+	 * ModelAndView manageCommunityView(@RequestParam(value="page", defaultValue="1") int page,
      *			@RequestParam(value ="keyword", required=false) String keyword,ModelAndPageView mav)
 	 */
 	
 	@Test
 	@DisplayName("ExercisePost 리스트 화면 반환 -> 정상, 키워드 포함")
-	public void manageCommunityViewTestWithKeyword() {
+	void manageCommunityViewTestWithKeyword() {
 		//Given
 		int pageNum = 1;
 		String keyword = "keyword";
@@ -65,7 +65,7 @@ public class ManagerExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("ExercisePost 리스트 화면 반환 -> 정상, 키워드 없을 때")
-	public void manageCommunityViewTestNoKeyword() {
+	void manageCommunityViewTestNoKeyword() {
 		//Given
 		int pageNum = 1;
 		
@@ -84,7 +84,7 @@ public class ManagerExercisePostControllerUnitTest {
 	
 	@Test
 	@DisplayName("ExercisePost 리스트 화면 반환 -> 정상, View name 확인")
-	public void manageCommunityViewTestCheckViewName() {
+	void manageCommunityViewTestCheckViewName() {
 		//Given
 		int pageNum = 1;
 		String keyword = "keyword";

@@ -28,7 +28,7 @@ import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ExerciseRestControllerUnitTest {
+class ExerciseRestControllerUnitTest {
 	
 	@Mock
 	ExerciseService exerciseService;
@@ -37,12 +37,12 @@ public class ExerciseRestControllerUnitTest {
 	ExerciseRestController exerciseRestController;
 	
 	/*
-	 * public List<ExerciseInfoBySortDTO> getExercisesByNameAndTarget()
+	 * List<ExerciseInfoBySortDTO> getExercisesByNameAndTarget()
 	 */
 	
 	@Test
 	@DisplayName("각 부위별 운동 종류 반환 -> 정상")
-	public void getExercisesByNameAndTargetTest() {
+	void getExercisesByNameAndTargetTest() {
 		//Given
 		Map<String ,List<String>> exerciseNamesSortMap = new HashMap<>();
 		

@@ -51,7 +51,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
  */
 @Integration
 @SpringBootTest
-public class UserServiceTest {
+class UserServiceTest {
 	
 	@Autowired
 	UserService userService;
@@ -94,12 +94,12 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *   public User findById(Long id)
+	 *   User findById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("Id로 유저 찾기 -> 해당하는 Id의 유저 없음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
@@ -112,7 +112,7 @@ public class UserServiceTest {
 	
 	@Test
 	@DisplayName("Id로 유저 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long existId = user.getId();
 		
@@ -124,12 +124,12 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *  public User findByEmail(String email)
+	 *  User findByEmail(String email)
 	 */
 	
 	@Test
 	@DisplayName("Email로 유저 찾기 -> 해당 email의 유저 없음")
-	public void findByEmailNonExist() {
+	void findByEmailNonExist() {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
 		
@@ -142,7 +142,7 @@ public class UserServiceTest {
 	
 	@Test
 	@DisplayName("Email로 유저 찾기 -> 정상")
-	public void findByEmailTest() {
+	void findByEmailTest() {
 		//Given
 		String existEmail = user.getEmail();
 		
@@ -154,12 +154,12 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *  public Page<User> findAllByNickNameOrNameInPage(String keyword)
+	 *  Page<User> findAllByNickNameOrNameInPage(String keyword)
 	 */
 	
 	@Test
 	@DisplayName("키워드로 유저 페이지 찾기 -> 정상, 모든 유저가 만족하는 키워드")
-	public void findAllByNickNameOrNameInPageAll() {
+	void findAllByNickNameOrNameInPageAll() {
 		//Given
 		String keywordForAllUser = UserTest.DEFAULT_NICKNAME;
 		
@@ -176,7 +176,7 @@ public class UserServiceTest {
 	
 	@Test
 	@DisplayName("키워드로 유저 페이지 찾기 -> 정상, 오직 한 유저만 만족하는 키워드")
-	public void findAllByNickNameOrNameInPageOnlyOne() {
+	void findAllByNickNameOrNameInPageOnlyOne() {
 		//Given
 		String keywordForOnlyOne = "onlyone";
 		User onlyOneUser = UserTest.getUserInstance("onlyone@test.com", keywordForOnlyOne);
@@ -193,7 +193,7 @@ public class UserServiceTest {
 	
 	@Test
 	@DisplayName("키워드로 유저 페이지 찾기 -> 정상, 어떠한 유저도 만족하지 않는 키워드")
-	public void findAllByNickNameOrNameInPageNothing() {
+	void findAllByNickNameOrNameInPageNothing() {
 		//Given
 		String keywordForNothing = "noone@test.com";
 		
@@ -207,12 +207,12 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *   public User save(User user)
+	 *   User save(User user)
 	 */
 	
 	@Test
 	@DisplayName("유저 필드 값 수정하기 -> 정상, 변화 확인")
-	public void mergeTestCheckChange() {
+	void mergeTestCheckChange() {
 		//Given
 		String changeEmail = "changed@test.com";
 		user.setEmail(changeEmail);
@@ -228,7 +228,7 @@ public class UserServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("유저 필드 값 수정하기 -> 정상, 개수 동일 확인")
-	public void mergeTestCheckCount() {
+	void mergeTestCheckCount() {
 		//Given
 		String changeEmail = "changed@test.com";
 		user.setEmail(changeEmail);
@@ -245,7 +245,7 @@ public class UserServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("새로운 유저 저장 -> 정상")
-	public void addTest() {
+	void addTest() {
 		//Given
 		User newUser = UserTest.getUserInstance("newUser@test.com", "newby");
 		
@@ -259,11 +259,11 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *  public User saveByJoinDTO(UserJoinDTO dto,RoleType role)
+	 *  User saveByJoinDTO(UserJoinDTO dto,RoleType role)
 	 */
 	@Test
 	@DisplayName("새로운 유저 저장 by UserJoinDTO -> 정상")
-	public void saveByJoinDTOTest() {
+	void saveByJoinDTOTest() {
 		//Given
 		String newUserEmail = "newUser@test.com";
 		UserJoinDTO dto = UserTest.getUserJoinDTOInstance("newUser@test.com", "newby");
@@ -276,12 +276,12 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *   public void delete(User user)
+	 *   void delete(User user)
 	 */
 	
 	@Test
 	@DisplayName("유저 삭제 -> 정상, check User Delete")
-	public void deleteUserTestCheckUserDelete() {
+	void deleteUserTestCheckUserDelete() {
 		//Given
 		Long userId = user.getId();
 
@@ -295,7 +295,7 @@ public class UserServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("유저 삭제 -> 정상, Check UserExercise Delete")
-	public void deleteTestCheckUserExerciseDelete() {
+	void deleteTestCheckUserExerciseDelete() {
 		//Given
 		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
 		userExercise.setUser(user);
@@ -313,7 +313,7 @@ public class UserServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("유저 삭제 -> 정상, Check CommentLike Delete")
-	public void deleteTestCheckCommentLikeDelete() {
+	void deleteTestCheckCommentLikeDelete() {
 		//Given
 		CommentLike commentLike = CommentLikeTest.getCommentLikeInstance();
 		commentLike.setUser(user);
@@ -331,7 +331,7 @@ public class UserServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("유저 삭제 -> 정상, Check Comment Delete")
-	public void deleteTestCheckCommentDelete() {
+	void deleteTestCheckCommentDelete() {
 		//Given
 		Comment comment = CommentTest.getCommentInstance();
 		comment.setUser(user);
@@ -349,7 +349,7 @@ public class UserServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("유저 삭제 -> 정상, Check PostLike Delete")
-	public void deleteTestCheckPostLikeDelete() {
+	void deleteTestCheckPostLikeDelete() {
 		//Given
 		PostLike postLike = PostLikeTest.getPostLikeInstance();
 		postLike.setUser(user);
@@ -367,7 +367,7 @@ public class UserServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("유저 삭제 -> 정상, Check ExercisePost Delete")
-	public void deleteTestCheckExercisePostDelete() {
+	void deleteTestCheckExercisePostDelete() {
 		//Given
 		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		exercisePost.setUser(user);
@@ -385,7 +385,7 @@ public class UserServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("유저 삭제 -> 정상, Check Feedback Delete")
-	public void deleteTestCheckFeedbackDelete() {
+	void deleteTestCheckFeedbackDelete() {
 		//Given
 		Feedback feedback = FeedbackTest.getFeedbackInstance();
 		feedback.setUser(user);
@@ -401,11 +401,11 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *   public boolean existsByEmail(String email)
+	 *   boolean existsByEmail(String email)
 	 */
 	@Test
 	@DisplayName("Email로 유저 존재 확인 하기 -> 정상, True")
-	public void existsByEmailTestTrue() {
+	void existsByEmailTestTrue() {
 		//Given
 		String existEmail = user.getEmail();
 		
@@ -418,7 +418,7 @@ public class UserServiceTest {
 	
 	@Test
 	@DisplayName("Email로 유저 존재 확인 하기 -> 정상, False")
-	public void existsByEmailTestFalse() {
+	void existsByEmailTestFalse() {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
 		
@@ -430,12 +430,12 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *   public boolean existsByNickName(String nickName)
+	 *   boolean existsByNickName(String nickName)
 	 */
 	
 	@Test
 	@DisplayName("NickName으로 유저 존재확인하기 ->정상, True")
-	public void existsByNickNameTestTrue() {
+	void existsByNickNameTestTrue() {
 		//Given
 		String existNickName = user.getNickName();
 		
@@ -448,7 +448,7 @@ public class UserServiceTest {
 	
 	@Test
 	@DisplayName("NickName으로 유저 존재확인하기 ->정상, False")
-	public void existsByNickNameTestFalse() {
+	void existsByNickNameTestFalse() {
 		//Given
 		String nonExitNickName = "nonExist";
 		
@@ -460,11 +460,11 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *   public long countAll()
+	 *   long countAll()
 	 */
 	@Test
 	@DisplayName("모든 유저 수 구하기 -> 정상")
-	public void countAllTest() {
+	void countAllTest() {
 		//Given
 		UserTest.addNewUsersInDBByNum(10, userRepository);
 		
@@ -478,11 +478,11 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 *  public long countAllByNickNameOrName(String keyword)
+	 *  long countAllByNickNameOrName(String keyword)
 	 */
 	@Test
 	@DisplayName("닉네임이나 네임이 키워드를 만족하는 모든 User 수 구하기-> 정상, 모든 유저가 만족하는 키워드")
-	public void countAllByNickNameOrNameTestAll() {
+	void countAllByNickNameOrNameTestAll() {
 		//Given
 		String nickNameForAllUser = UserTest.DEFAULT_NICKNAME;
 		
@@ -499,7 +499,7 @@ public class UserServiceTest {
 	
 	@Test
 	@DisplayName("닉네임이나 네임이 키워드를 만족하는 모든 User 수 구하기-> 정상, 오직 한 유저만 만족하는 키워드")
-	public void countAllByNickNameOrNameTestOnlyOne() {
+	void countAllByNickNameOrNameTestOnlyOne() {
 		//Given
 		String nickNameForOnlyOne = "onlyone";
 		User onlyOneUser = UserTest.getUserInstance("onlyone@test.com", nickNameForOnlyOne);
@@ -516,7 +516,7 @@ public class UserServiceTest {
 	
 	@Test
 	@DisplayName("닉네임이나 네임이 키워드를 만족하는 모든 User 수 구하기-> 정상, 어느 유저도 만족하지 않는 키워드")
-	public void countAllByNickNameOrNameTest() {
+	void countAllByNickNameOrNameTest() {
 		//Given
 		String nickNameForNothing = "noOne";
 		
@@ -531,13 +531,13 @@ public class UserServiceTest {
 	
 	
 	/**
-	 * public User addUserExercise(User user, UserExercise userExercise) 
+	 * User addUserExercise(User user, UserExercise userExercise) 
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("유저의 운동 기록 추가, 기록 삭제 -> 정상, 개수 추가 확인")
-	public void addUserExerciseTestCheckCount() {
+	void addUserExerciseTestCheckCount() {
 		//Given
 		long givenUserExerciseNum = userExerciseRepository.count();
 		
@@ -553,7 +553,7 @@ public class UserServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("유저의 운동 기록 추가, 기록 삭제 -> 정상, User와 연관 관계 확인")
-	public void addUserExerciseTestCheckWithUser() {
+	void addUserExerciseTestCheckWithUser() {
 		//Given		
 		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
 		
@@ -565,13 +565,13 @@ public class UserServiceTest {
 	}
 	
 	/*
-	 * public void deleteUserExercise(User user, UserExercise userExercise)
+	 * void deleteUserExercise(User user, UserExercise userExercise)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("유저의 운동 기록 삭제 -> 정상")
-	public void deleteUserExerciseTest() {
+	void deleteUserExerciseTest() {
 		//Given
 		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
 		userExercise.setUser(user);

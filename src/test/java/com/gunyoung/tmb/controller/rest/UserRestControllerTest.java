@@ -38,7 +38,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserRestControllerTest {
+class UserRestControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -54,13 +54,13 @@ public class UserRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="join/emailverification",method=RequestMethod.GET)
-	 * public boolean emailVerification(@RequestParam("email") String email)
+	 * boolean emailVerification(@RequestParam("email") String email)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("email 중복 여부 확인 -> true and false")
-	public void emailVerificationTest() throws Exception {
+	void emailVerificationTest() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
@@ -91,13 +91,13 @@ public class UserRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="join/nickNameverification",method=RequestMethod.GET)
-	 * public boolean nickNameVerification(@RequestParam("nickName")String nickName)
+	 * boolean nickNameVerification(@RequestParam("nickName")String nickName)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("nickName 중복 여부 확인 -> true and false")
-	public void nickNameVerificationTest() throws Exception {
+	void nickNameVerificationTest() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
@@ -128,14 +128,14 @@ public class UserRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/user/profile/mycomments/remove", method=RequestMethod.DELETE)
-	 * public void removeMyComments(@RequestParam("commentId") Long commentId)
+	 * void removeMyComments(@RequestParam("commentId") Long commentId)
 	 */
 	
 	@WithMockUser
 	@Test
 	@Transactional
 	@DisplayName("자신이 작성한 특정 댓글 삭제 -> 내 댓글 아님")
-	public void removeMyCommentsNotMine() throws Exception {
+	void removeMyCommentsNotMine() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		
@@ -159,7 +159,7 @@ public class UserRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("자신이 작성한 특정댓글 삭제 -> 정상")
-	public void removeMyCommentsTest() throws Exception {
+	void removeMyCommentsTest() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		
@@ -182,14 +182,14 @@ public class UserRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/user/profile/myposts/remove",method=RequestMethod.DELETE) 
-	 * public void removeMyPosts(@RequestParam("postId") Long postId)
+	 * void removeMyPosts(@RequestParam("postId") Long postId)
 	 */
 	
 	@WithMockUser
 	@Test
 	@Transactional
 	@DisplayName("자신이 작성한 특정 댓글 삭제 -> 내 댓글 아님")
-	public void removeMyPostsNotMine() throws Exception {
+	void removeMyPostsNotMine() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		
@@ -214,7 +214,7 @@ public class UserRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("자신이 작성한 특정댓글 삭제 -> 정상")
-	public void removeMyPostsTest() throws Exception {
+	void removeMyPostsTest() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		

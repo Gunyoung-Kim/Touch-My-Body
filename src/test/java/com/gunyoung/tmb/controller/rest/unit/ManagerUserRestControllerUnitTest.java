@@ -35,7 +35,7 @@ import com.gunyoung.tmb.testutil.UserTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ManagerUserRestControllerUnitTest {
+class ManagerUserRestControllerUnitTest {
 	
 	@Mock
 	UserService userService;
@@ -53,12 +53,12 @@ public class ManagerUserRestControllerUnitTest {
 	ManagerUserRestController managerUserRestController;
 	
 	/*
-	 * public void manageUserProfile(@PathVariable("userId") Long userId,@ModelAttribute UserProfileForManagerDTO dto)
+	 * void manageUserProfile(@PathVariable("userId") Long userId,@ModelAttribute UserProfileForManagerDTO dto)
 	 */
 	
 	@Test
 	@DisplayName("User의 정보 수정 요청 처리 -> 해당 Id의 유저 없을 때")
-	public void manageUserProfileTestUserNonExist() {
+	void manageUserProfileTestUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(52);
 		given(userService.findById(nonExistUserId)).willReturn(null);
@@ -72,7 +72,7 @@ public class ManagerUserRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("User의 정보 수정 요청 처리 -> 접속자가 대상 User보다 권한 낮음")
-	public void manageUserProfileTestAccessDenied() {
+	void manageUserProfileTestAccessDenied() {
 		//Given
 		Long userId = Long.valueOf(73);
 		User user = mockingUserServiceFindById(userId);
@@ -89,7 +89,7 @@ public class ManagerUserRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("User의 정보 수정 요청 처리 -> dto를 통해 유저 정보 처리하는 과정에서 예외 밣생")
-	public void manageUserProfileTestMergeError() {
+	void manageUserProfileTestMergeError() {
 		//Given
 		Long userId = Long.valueOf(73);
 		User user = mockingUserServiceFindById(userId);
@@ -106,7 +106,7 @@ public class ManagerUserRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("User의 정보 수정 요청 처리 -> 정상, UserService check")
-	public void manageUserProfileTestCheckUserService() {
+	void manageUserProfileTestCheckUserService() {
 		//Given
 		Long userId = Long.valueOf(36);
 		User user = mockingUserServiceFindById(userId);
@@ -125,7 +125,7 @@ public class ManagerUserRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("User의 정보 수정 요청 처리 -> 정상, Role 변화 확인")
-	public void manageUserProfileTestCheckChangedRole() {
+	void manageUserProfileTestCheckChangedRole() {
 		//Given
 		Long userId = Long.valueOf(72);
 		User user = mockingUserServiceFindById(userId);
@@ -150,12 +150,12 @@ public class ManagerUserRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void removeCommentByManager(@PathVariable("user_id") Long userId,@RequestParam("comment_id") Long commentId) {
+	 * void removeCommentByManager(@PathVariable("user_id") Long userId,@RequestParam("comment_id") Long commentId) {
 	 */
 	
 	@Test
 	@DisplayName("특정 유저가 작성한 댓글 삭제 요청 처리 -> 정상, CommentService check")
-	public void removeCommentByManagerTestCheckCommentService() {
+	void removeCommentByManagerTestCheckCommentService() {
 		//Given
 		Long userId = Long.valueOf(74);
 		Long commentId = Long.valueOf(66);
@@ -168,12 +168,12 @@ public class ManagerUserRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void removePostByManager(@PathVariable("user_id") Long userId,@RequestParam("comment_id") Long commentId) {
+	 * void removePostByManager(@PathVariable("user_id") Long userId,@RequestParam("comment_id") Long commentId) {
 	 */
 	
 	@Test
 	@DisplayName("특정 유저가 작성한 댓글 삭제 요청 처리 -> 정상, PostService check")
-	public void removePostByManagerTestCheckPostService() {
+	void removePostByManagerTestCheckPostService() {
 		//Given
 		Long userId = Long.valueOf(25);
 		Long exercisePostId = Long.valueOf(47);

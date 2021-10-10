@@ -30,7 +30,7 @@ import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleServiceImpl;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ExerciseMuscleServiceUnitTest {
+class ExerciseMuscleServiceUnitTest {
 	
 	@Mock
 	ExerciseMuscleRepository exerciseMuscleRepository;
@@ -46,12 +46,12 @@ public class ExerciseMuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public ExerciseMuscle findById(Long id)
+	 * ExerciseMuscle findById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 ExerciseMuscle 찾기 -> 존재하지 않음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistExerciseMuscleId = Long.valueOf(1);
 		given(exerciseMuscleRepository.findById(nonExistExerciseMuscleId)).willReturn(Optional.empty());
@@ -65,7 +65,7 @@ public class ExerciseMuscleServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 ExerciseMuscle 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long exerciseMuscleId = Long.valueOf(1);
 		given(exerciseMuscleRepository.findById(exerciseMuscleId)).willReturn(Optional.of(exerciseMuscle));
@@ -78,12 +78,12 @@ public class ExerciseMuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public ExerciseMuscle save(ExerciseMuscle exerciseMuscle)
+	 * ExerciseMuscle save(ExerciseMuscle exerciseMuscle)
 	 */
 	
 	@Test
 	@DisplayName("ExerciseMuscle 저장 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		given(exerciseMuscleRepository.save(exerciseMuscle)).willReturn(exerciseMuscle);
 		
@@ -95,12 +95,12 @@ public class ExerciseMuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public List<ExerciseMuscle> saveAll(Iterable<ExerciseMuscle> exerciseMuscles)
+	 * List<ExerciseMuscle> saveAll(Iterable<ExerciseMuscle> exerciseMuscles)
 	 */
 	
 	@Test
 	@DisplayName("다수의 ExerciseMuscle 생성 및 수정 -> 정상")
-	public void saveAllTest() {
+	void saveAllTest() {
 		//Given
 		List<ExerciseMuscle> exerciseMuscleList = new ArrayList<>();
 		given(exerciseMuscleRepository.saveAll(exerciseMuscleList)).willReturn(exerciseMuscleList);
@@ -113,12 +113,12 @@ public class ExerciseMuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public void delete(ExerciseMuscle exerciseMuscle)
+	 * void delete(ExerciseMuscle exerciseMuscle)
 	 */
 	
 	@Test
 	@DisplayName("ExerciseMuscle 삭제 -> 정상")
-	public void deleteTest() {
+	void deleteTest() {
 		//Given
 		
 		//When
@@ -129,12 +129,12 @@ public class ExerciseMuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteAllByMuscleId(Long muscleId)
+	 * void deleteAllByMuscleId(Long muscleId)
 	 */
 	
 	@Test
 	@DisplayName("Muscle ID를 통한 ExerciseMuscle 모두 삭제 -> 정상, check repository")
-	public void deleteAllByMuscleIdTestCheckRepo() {
+	void deleteAllByMuscleIdTestCheckRepo() {
 		//Given
 		Long muscleId = Long.valueOf(52);
 		
@@ -146,12 +146,12 @@ public class ExerciseMuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteAllByExerciseId(Long exerciseId)
+	 * void deleteAllByExerciseId(Long exerciseId)
 	 */
 	
 	@Test
 	@DisplayName("Exercise ID를 통한 ExerciseMuscle 모두 삭제 -> 정상, check repository")
-	public void deleteAllByExerciseIdTestCheckRepo() {
+	void deleteAllByExerciseIdTestCheckRepo() {
 		//Given
 		Long exerciseId = Long.valueOf(52);
 		

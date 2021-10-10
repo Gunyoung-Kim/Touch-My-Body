@@ -14,15 +14,15 @@ import com.gunyoung.tmb.dto.reqeust.SaveUserExerciseDTO;
  * @author kimgun-yeong
  *
  */
-public class SaveUserExerciseDTOUnitTest {
+class SaveUserExerciseDTOUnitTest {
 	
 	/*
-	 * public static UserExercise toUserExercise(SaveUserExerciseDTO dto)
+	 * static UserExercise toUserExercise(SaveUserExerciseDTO dto)
 	 */
 	
 	@Test
 	@DisplayName("SaveUserExerciseDTO에 담긴 정보를 통해 UserExercise 생성 후 반환 -> 정상")
-	public void toUserExerciseTest() {
+	void toUserExerciseTest() {
 		//Given
 		SaveUserExerciseDTO saveUserExerciseDTO = SaveUserExerciseDTO.builder()
 				.laps(1)

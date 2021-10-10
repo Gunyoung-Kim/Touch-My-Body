@@ -32,7 +32,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ManagerMuscleRestControllerTest {
+class ManagerMuscleRestControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -42,14 +42,14 @@ public class ManagerMuscleRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.PUT)
-	 * public void modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute SaveMuscleDTO dto)
+	 * void modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute SaveMuscleDTO dto)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Muscle 수정 -> 해당 ID의 Muscle 없을 때")
-	public void modifyMuscleNonExist() throws Exception {
+	void modifyMuscleNonExist() throws Exception {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		String existingName = muscle.getName();
@@ -72,7 +72,7 @@ public class ManagerMuscleRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Muscle 수정 -> 수정된 이름의 다른 Muscle 이미 존재")
-	public void modifyMuscleAlreadyExist() throws Exception {
+	void modifyMuscleAlreadyExist() throws Exception {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		String existingName = muscle.getName();
@@ -99,7 +99,7 @@ public class ManagerMuscleRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Muscle 수정 -> 정상, category(중복되도 되는것)가 변경")
-	public void modifyMuscleCategoryTest() throws Exception {
+	void modifyMuscleCategoryTest() throws Exception {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		muscleRepository.save(muscle);
@@ -122,7 +122,7 @@ public class ManagerMuscleRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Muscle 수정 -> 정상, 이름(중복되면 안되는것)이 변경")
-	public void modifyMuscleNameTest() throws Exception {
+	void modifyMuscleNameTest() throws Exception {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		muscleRepository.save(muscle);
@@ -143,14 +143,14 @@ public class ManagerMuscleRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/muscle/remove" ,method = RequestMethod.DELETE)
-	 * public void removeMuscle(@RequestParam("muscleId") Long muscleId)
+	 * void removeMuscle(@RequestParam("muscleId") Long muscleId)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Muscle 삭제 -> 정상")
-	public void removeMuscleTest() throws Exception {
+	void removeMuscleTest() throws Exception {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		muscleRepository.save(muscle);

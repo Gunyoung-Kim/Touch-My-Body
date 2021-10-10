@@ -16,15 +16,15 @@ import com.gunyoung.tmb.testutil.UserExerciseTest;
 * @author kimgun-yeong
 *
 */
-public class UserExerciseUnitTest {
+class UserExerciseUnitTest {
 	
 	/*
-	 *  public String toString()
+	 *  String toString()
 	 */
 	
 	@Test
 	@DisplayName("toString Test -> 정상") 
-	public void toStringTest() {
+	void toStringTest() {
 		//Given
 		Long userExerciseId = Long.valueOf(736);
 		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();

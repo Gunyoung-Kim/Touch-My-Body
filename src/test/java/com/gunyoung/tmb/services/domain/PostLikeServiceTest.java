@@ -34,7 +34,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
  */
 @Integration
 @SpringBootTest
-public class PostLikeServiceTest {
+class PostLikeServiceTest {
 	
 	@Autowired
 	PostLikeRepository postLikeRepository;
@@ -62,11 +62,11 @@ public class PostLikeServiceTest {
 	}
 	
 	/*
-	 *  public PostLike findById(Long id)
+	 *  PostLike findById(Long id)
 	 */
 	@Test
 	@DisplayName("id로 PostLike 찾기 -> 해당 id의 PostLike없음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		long nonExistId = PostLikeTest.getNonExistPostLikeId(postLikeRepository);
 		
@@ -79,7 +79,7 @@ public class PostLikeServiceTest {
 	
 	@Test
 	@DisplayName("id로 PostLike 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long existId = postLike.getId();
 		
@@ -91,7 +91,7 @@ public class PostLikeServiceTest {
 	}
 	
 	/*
-	 *   public PostLike save(PostLike postLike)
+	 *   PostLike save(PostLike postLike)
 	 *   
 	 *   변경할 필드 없어서 패스
 	 */
@@ -99,7 +99,7 @@ public class PostLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("PostLike 수정 -> 정상")
-	public void mergerTest() {
+	void mergeTest() {
 		//Given
 		
 		//When
@@ -112,7 +112,7 @@ public class PostLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("PostLike 추가 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		PostLike newPostLike = PostLikeTest.getPostLikeInstance();
 		Long givenPostLikeNum = postLikeRepository.count();
@@ -125,13 +125,13 @@ public class PostLikeServiceTest {
 	}
 	
 	/*
-	 *  public PostLike saveWithUserAndExercisePost(User user, ExercisePost exercisePost)
+	 *  PostLike saveWithUserAndExercisePost(User user, ExercisePost exercisePost)
 	 */
 
 	@Test
 	@Transactional
 	@DisplayName("User, ExercisePost의 PostLike 추가 -> 정상, PostLike 개수 확인")
-	public void saveWithUserAndExercisePostTestCheckCount() {
+	void saveWithUserAndExercisePostTestCheckCount() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -151,7 +151,7 @@ public class PostLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User, ExercisePost의 PostLike 추가 -> 정상, User와의 연관관계 확인")
-	public void saveWithUserAndExercisePostTestCheckWithUser() {
+	void saveWithUserAndExercisePostTestCheckWithUser() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -169,7 +169,7 @@ public class PostLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User, ExercisePost의 PostLike 추가 -> 정상, ExercisePost와의 연관관계 확인")
-	public void saveWithUserAndExercisePostTestCheckWithExercisePost() {
+	void saveWithUserAndExercisePostTestCheckWithExercisePost() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -185,13 +185,13 @@ public class PostLikeServiceTest {
 	}
 	
 	/* 
-	 *  public void delete(PostLike postLike)
+	 *  void delete(PostLike postLike)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("PostLike 삭제 ->  정상")
-	public void deleteTest() {
+	void deleteTest() {
 		//Given
 		Long givenPostLikeNum = postLikeRepository.count();
 		
@@ -203,13 +203,13 @@ public class PostLikeServiceTest {
 	}
 	
 	/*
-	 * public PostLike findByUserIdAndExercisePostId(Long userId, Long exercisePostId)
+	 * PostLike findByUserIdAndExercisePostId(Long userId, Long exercisePostId)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("유저 Id와 게시글 Id로 PostLike 찾기 -> 해당 PostLike 없음")
-	public void findByUserIdAndExercisePostIdNonExist() {
+	void findByUserIdAndExercisePostIdNonExist() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -230,7 +230,7 @@ public class PostLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("유저 Id와 게시글 Id로 PostLike 찾기 -> 정상")
-	public void test() {
+	void findByUserIdAndExercisePostIdTest() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -251,13 +251,13 @@ public class PostLikeServiceTest {
 	}
 	
 	/*
-	 *  public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId);
+	 *  boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId);
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("유저 ID와 게시글 ID로 존재여부 확인 ->정상 , true")
-	public void  existsByUserIdAndExercisePostIdTestTrue() {
+	void existsByUserIdAndExercisePostIdTestTrue() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -279,7 +279,7 @@ public class PostLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("유저 ID와 게시글 ID로 존재여부 확인 ->정상 , false")
-	public void  existsByUserIdAndExercisePostIdTestFalse() {
+	void existsByUserIdAndExercisePostIdTestFalse() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);

@@ -13,15 +13,15 @@ import com.gunyoung.tmb.controller.util.ModelAndPageView;
  * @author kimgun-yeong
  *
  */
-public class ModelAndPageViewUnitTest {
+class ModelAndPageViewUnitTest {
 	
 	/*
-	 * public void setPageNumbers(Integer currentPage, Integer pageSize, Long totalPageNum)
+	 * void setPageNumbers(Integer currentPage, Integer pageSize, Long totalPageNum)
 	 */
 	
 	@Test
 	@DisplayName("페이지 넘버 세팅 -> 현재: 1, 페이지당 인덱스 개수: 5, 총 페이지 개수: 7 ( 1 2 3 4 5), 시작 인덱스 확인")
-	public void setPageNumbersTestStartToLastSameToSizeCheckStartIndex() {
+	void setPageNumbersTestStartToLastSameToSizeCheckStartIndex() {
 		//Given
 		int currentPage = 1;
 		long totalPage = 7;
@@ -37,7 +37,7 @@ public class ModelAndPageViewUnitTest {
 	
 	@Test
 	@DisplayName("페이지 넘버 세팅 -> 현재: 1, 페이지당 인덱스 개수: 5, 총 페이지 개수: 7 ( 1 2 3 4 5), 마지막 인덱스 확인")
-	public void setPageNumbersTestStartToLastSameToSizeCheckLastIndex() {
+	void setPageNumbersTestStartToLastSameToSizeCheckLastIndex() {
 		//Given
 		int currentPage = 1;
 		long totalPage = 7;
@@ -53,7 +53,7 @@ public class ModelAndPageViewUnitTest {
 	
 	@Test
 	@DisplayName("페이지 넘버 세팅 -> 현재: 6, 페이지당 인덱스 개수: 5, 총 페이지 개수: 7 (6 7), 시작 인덱스 확인")
-	public void setPageNumbersTestStartToLastLessThenSizeCheckStartIndex() {
+	void setPageNumbersTestStartToLastLessThenSizeCheckStartIndex() {
 		//Given
 		int currentPage = 6;
 		long totalPage = 7;
@@ -69,7 +69,7 @@ public class ModelAndPageViewUnitTest {
 	
 	@Test
 	@DisplayName("페이지 넘버 세팅 -> 현재: 6, 페이지당 인덱스 개수: 5, 총 페이지 개수: 7 (6 7), 마지막 인덱스 확인")
-	public void setPageNumbersTestStartToLastLessThenSize() {
+	void setPageNumbersTestStartToLastLessThenSize() {
 		//Given
 		int currentPage = 6;
 		long totalPage = 7;

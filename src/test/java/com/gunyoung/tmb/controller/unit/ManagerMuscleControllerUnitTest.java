@@ -39,7 +39,7 @@ import com.gunyoung.tmb.testutil.MuscleTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ManagerMuscleControllerUnitTest {
+class ManagerMuscleControllerUnitTest {
 	
 	@Mock
 	MuscleService muscleService;
@@ -59,13 +59,13 @@ public class ManagerMuscleControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView muscleViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,
+	 * ModelAndView muscleViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,
 	 *		ModelAndPageView mav)
 	 */
 	
 	@Test
 	@DisplayName("Muscle의 리스트 화면 반환 -> 정상, 키워드 없음, muscleService check")
-	public void muscleViewForManagerTestNoKeywordCheckMuscleService() {
+	void muscleViewForManagerTestNoKeywordCheckMuscleService() {
 		//Given
 		stubbingMuscleServiceFindAllInPageWithEmptyPage();
 		
@@ -84,7 +84,7 @@ public class ManagerMuscleControllerUnitTest {
 	
 	@Test
 	@DisplayName("Muscle의 리스트 화면 반환 -> 정상, 키워드 있음, muscleService check")
-	public void muscleViewForManagerTestYesKeywordCheckMuscleService() {
+	void muscleViewForManagerTestYesKeywordCheckMuscleService() {
 		//Given
 		String keyword = "keyword";
 		stubbingMuscleServiceFindAllWithNameKeywordInPage(keyword);
@@ -99,7 +99,7 @@ public class ManagerMuscleControllerUnitTest {
 	
 	@Test
 	@DisplayName("Muscle의 리스트 화면 반환 -> 정상, ModelAndPageView Check")
-	public void muscleViewForManagerTestCheckMapv() {
+	void muscleViewForManagerTestCheckMapv() {
 		//Given
 		String keyword = "keyword";
 		stubbingMuscleServiceFindAllWithNameKeywordInPage(keyword);
@@ -121,12 +121,12 @@ public class ManagerMuscleControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView addMuscleView(ModelAndView mav)
+	 * ModelAndView addMuscleView(ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("근육 추가 화면 반환 -> 정상, ModelAndView Check")
-	public void addMuscleViewTestCheckMav() {
+	void addMuscleViewTestCheckMav() {
 		//Given
 		
 		//When
@@ -137,12 +137,12 @@ public class ManagerMuscleControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView addMuscle(@ModelAttribute SaveMuscleDTO dto)
+	 * ModelAndView addMuscle(@ModelAttribute SaveMuscleDTO dto)
 	 */
 	
 	@Test
 	@DisplayName("근육 추가 처리 -> 추가하려는 Muscle의 Name이 중복된다면")
-	public void addMuscleTestNameDuplicated() {
+	void addMuscleTestNameDuplicated() {
 		//Given
 		String existMuscleName = "exist";
 		given(muscleService.existsByName(existMuscleName)).willReturn(true);
@@ -156,7 +156,7 @@ public class ManagerMuscleControllerUnitTest {
 	
 	@Test
 	@DisplayName("근육 추가 처리 -> 추가하려는 Muscle의 category와 일치하는 TargetType 없으면")
-	public void addMuscleTestTargetTypeNonExist() {
+	void addMuscleTestTargetTypeNonExist() {
 		//Given
 		String newMuscleName = "newMuscle";
 		given(muscleService.existsByName(newMuscleName)).willReturn(false);
@@ -172,7 +172,7 @@ public class ManagerMuscleControllerUnitTest {
 	
 	@Test
 	@DisplayName("근육 추가 처리 -> 정상, MuscleService check")
-	public void addMuscleTestCheckMuscleService() {
+	void addMuscleTestCheckMuscleService() {
 		//Given
 		String newMuscleName = "newMuscle";
 		given(muscleService.existsByName(newMuscleName)).willReturn(false);
@@ -189,12 +189,12 @@ public class ManagerMuscleControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView modifyMuscleView(@PathVariable("muscleId") Long muscleId, ModelAndView mav)
+	 * ModelAndView modifyMuscleView(@PathVariable("muscleId") Long muscleId, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("Muscle 정보 수정 화면 반환 -> 해당 Id의 Muscle 없으면")
-	public void modifyMuscleViewTestMuscleNonExist() {
+	void modifyMuscleViewTestMuscleNonExist() {
 		//Given
 		Long nonExistMuscleId = Long.valueOf(35);
 		given(muscleService.findById(nonExistMuscleId)).willReturn(null);
@@ -207,7 +207,7 @@ public class ManagerMuscleControllerUnitTest {
 	
 	@Test
 	@DisplayName("Muscle 정보 수정 화면 반환 -> 정상, ModelAndView check")
-	public void modifyMuscleViewTestCheckMav() {
+	void modifyMuscleViewTestCheckMav() {
 		//Given
 		Long muscleId = Long.valueOf(78);
 		Muscle muscle = MuscleTest.getMuscleInstance();

@@ -29,7 +29,7 @@ import com.gunyoung.tmb.utils.CacheConstants;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class RedisCacheConfigUnitTest {
+class RedisCacheConfigUnitTest {
 	
 	@InjectMocks
 	RedisCacheConfig redisCacheConfig;
@@ -39,12 +39,12 @@ public class RedisCacheConfigUnitTest {
 	private int redisCachePort = 6379;
 	
 	/*
-	 * public RedisConnectionFactory redisConnectionFactory()
+	 * RedisConnectionFactory redisConnectionFactory()
 	 */
 	
 	@Test
 	@DisplayName("RedisConnectionFactory 생성 -> LettuceConnectionFactory 생성")
-	public void redisConnectionFactoryTestLettuce() throws NoSuchFieldException, IllegalAccessException {
+	void redisConnectionFactoryTestLettuce() throws NoSuchFieldException, IllegalAccessException {
 		//Given
 		Field redisCacheHostField = redisCacheConfig.getClass().getDeclaredField("redisCacheHost");
 		redisCacheHostField.setAccessible(true);
@@ -62,12 +62,12 @@ public class RedisCacheConfigUnitTest {
 	}
 	
 	/*
-	 * public CacheManager redisCacheManager(@Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionfactorty)
+	 * CacheManager redisCacheManager(@Qualifier("redisCacheConnectionFactory") RedisConnectionFactory redisConnectionfactorty)
 	 */
 	
 	@Test
 	@DisplayName("RedisCacheManager 빈 생성 -> RedisCacheManager 인지 확인")
-	public void redisCacheManagerTest() {
+	void redisCacheManagerTest() {
 		//Given
 		RedisConnectionFactory redisConnectionFactory = mock(RedisConnectionFactory.class);
 		
@@ -79,12 +79,12 @@ public class RedisCacheConfigUnitTest {
 	}
 	
 	/*
-	 * public RedisCacheConfiguration redisCacheConfiguration()
+	 * RedisCacheConfiguration redisCacheConfiguration()
 	 */
 	
 	@Test
 	@DisplayName("Redis Cahce에 대한 설정 확인 -> default ttl 확인")
-	public void redisCacheConfigurationTestTtl() {
+	void redisCacheConfigurationTestTtl() {
 		//Given
 		Duration entryTtl = Duration.ofMinutes(CacheConstants.CACHE_DEFAULT_EXPIRE_MIN);
 		
@@ -97,7 +97,7 @@ public class RedisCacheConfigUnitTest {
 	
 	@Test
 	@DisplayName("Redis Cahce에 대한 설정 확인 -> null값 캐싱 불가능 확인")
-	public void redisCacheConfigurationTestIsNullValueAllowed() {
+	void redisCacheConfigurationTestIsNullValueAllowed() {
 		//Given
 		boolean isNullValueAllowed = false;
 		

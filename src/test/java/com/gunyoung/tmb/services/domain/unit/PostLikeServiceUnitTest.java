@@ -33,7 +33,7 @@ import com.gunyoung.tmb.testutil.UserTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class PostLikeServiceUnitTest {
+class PostLikeServiceUnitTest {
 	
 	@Mock
 	PostLikeRepository postLikeRepository;
@@ -50,12 +50,12 @@ public class PostLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public PostLike findById(Long id)
+	 * PostLike findById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 PostLike 찾기 -> 존재하지 않음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
@@ -70,7 +70,7 @@ public class PostLikeServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 PostLike 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long postLikeId = Long.valueOf(1);
 		
@@ -84,12 +84,12 @@ public class PostLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public PostLike findByUserIdAndExercisePostId(Long userId, Long exercisePostId)
+	 * PostLike findByUserIdAndExercisePostId(Long userId, Long exercisePostId)
 	 */
 	
 	@Test
 	@DisplayName("User Id, ExercisePost Id 로 PostLike 찾기 -> 존재하지 않음")
-	public void findByUserIdAndExercisePostIdNonExist() {
+	void findByUserIdAndExercisePostIdNonExist() {
 		//Given
 		Long userId = Long.valueOf(1);
 		Long exercisePostId = Long.valueOf(1);
@@ -105,7 +105,7 @@ public class PostLikeServiceUnitTest {
 	
 	@Test
 	@DisplayName("User Id, ExercisePost Id 로 PostLike 찾기 -> 정상")
-	public void findByUserIdAndExercisePostIdTest() {
+	void findByUserIdAndExercisePostIdTest() {
 		//Given
 		Long userId = Long.valueOf(1);
 		Long exercisePostId = Long.valueOf(1);
@@ -120,12 +120,12 @@ public class PostLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public PostLike save(PostLike postLike) 
+	 * PostLike save(PostLike postLike) 
 	 */
 	
 	@Test
 	@DisplayName("PostLike 저장 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		given(postLikeRepository.save(postLike)).willReturn(postLike);
 		
@@ -137,12 +137,12 @@ public class PostLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public PostLike createAndSaveWithUserAndPost(User user, Post post) 
+	 * PostLike createAndSaveWithUserAndPost(User user, Post post) 
 	 */
 	
 	@Test
 	@DisplayName("PostLike 생성 및 User, Post 와 연관 관계 추가 후 저장 -> 정상, 저장 확인")
-	public void createAndSaveWithUserAndPostTestCheckSave() {
+	void createAndSaveWithUserAndPostTestCheckSave() {
 		//Given
 		User user = UserTest.getUserInstance();
 		ExercisePost exercisepost = ExercisePostTest.getExercisePostInstance();
@@ -155,12 +155,12 @@ public class PostLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public void delete(PostLike postLike)
+	 * void delete(PostLike postLike)
 	 */
 	
 	@Test
 	@DisplayName("PostLike 삭제 -> 정상")
-	public void deleteTest() {
+	void deleteTest() {
 		//Given
 		
 		//When
@@ -171,12 +171,12 @@ public class PostLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteAllByUserId(Long userId) 
+	 * void deleteAllByUserId(Long userId) 
 	 */
 	
 	@Test
 	@DisplayName("User ID로 PostLike 일괄 삭제 -> 정상 ,check Repo") 
-	public void deleteAllByUserIdTestCheckRepo() {
+	void deleteAllByUserIdTestCheckRepo() {
 		//Given
 		Long userId = Long.valueOf(24);
 		
@@ -188,12 +188,12 @@ public class PostLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteAllByExercisePostId(Long exercisePostId) 
+	 * void deleteAllByExercisePostId(Long exercisePostId) 
 	 */
 	
 	@Test
 	@DisplayName("ExercisePost ID로 PostLike 일괄 삭제 -> 정상 ,check Repo") 
-	public void deleteAllByExercisePostIdTestCheckRepo() {
+	void deleteAllByExercisePostIdTestCheckRepo() {
 		//Given
 		Long exercisePostId = Long.valueOf(24);
 		
@@ -205,12 +205,12 @@ public class PostLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId)
+	 * boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId)
 	 */
 	
 	@Test
 	@DisplayName("User Id, ExercisePost Id로 PostLike 존재 여부 반환 -> 정상")
-	public void existsByUserIdAndExercisePostIdTest() {
+	void existsByUserIdAndExercisePostIdTest() {
 		//Given
 		Long userId = Long.valueOf(1);
 		Long exercisePostId = Long.valueOf(1);

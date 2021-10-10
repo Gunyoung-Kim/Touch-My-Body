@@ -50,7 +50,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerTest {
+class UserControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -79,12 +79,12 @@ public class UserControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/",method=RequestMethod.GET)
-	 * public ModelAndView index(ModelAndView mav)
+	 * ModelAndView index(ModelAndView mav)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("메인 화면 반환 -> 정상")
-	public void indexTest() throws Exception {
+	void indexTest() throws Exception {
 		//Given
 		
 		//When
@@ -96,13 +96,13 @@ public class UserControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/login",method=RequestMethod.GET)
-	 * public ModelAndView loginView(HttpServletRequest request,ModelAndView mav)
+	 * ModelAndView loginView(HttpServletRequest request,ModelAndView mav)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("로그인 화면 반환 -> 정상, Referer에 아무것도 없음,로그인 후 리다이렉트 주소 세션에 저장 x")
-	public void loginViewTestNotReferer() throws Exception {
+	void loginViewTestNotReferer() throws Exception {
 		//Given
 		
 		//When
@@ -120,7 +120,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("로그인 화면 반환 -> 정상, Referer에 /login, 로그인 후 리다이렉트 주소 세션에 저장 x")
-	public void loginViewTestRefererIsLogin() throws Exception {
+	void loginViewTestRefererIsLogin() throws Exception {
 		//Given
 		String referer = "/login";
 		
@@ -140,7 +140,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("로그인 화면 반환 -> 정상, 로그인 후 리다이렉트 주소 세션에 저장")
-	public void loginViewTestSaveReferer() throws Exception {
+	void loginViewTestSaveReferer() throws Exception {
 		//Given
 		String afterLoginRedirectedUrl = "/";
 		
@@ -159,13 +159,13 @@ public class UserControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/join",method=RequestMethod.GET)
-	 * public ModelAndView joinView(@ModelAttribute("formModel")UserJoinDTO formModel,ModelAndView mav)
+	 * ModelAndView joinView(@ModelAttribute("formModel")UserJoinDTO formModel,ModelAndView mav)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("회원 가입 화면 -> 정상")
-	public void joinViewTest() throws Exception {
+	void joinViewTest() throws Exception {
 		//Given
 		
 		//When
@@ -177,13 +177,13 @@ public class UserControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/join",method=RequestMethod.POST)
-	 * public ModelAndView join(@ModelAttribute("formModel")UserJoinDTO formModel)
+	 * ModelAndView join(@ModelAttribute("formModel")UserJoinDTO formModel)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("회원 가입 처리 -> email 중복")
-	public void joinEmailDuplication() throws Exception {
+	void joinEmailDuplication() throws Exception {
 		//Given
 		String newNickName = "nonExistNickName";
 		MultiValueMap<String, String> paramMap = UserTest.getUserJoinDTOMap(user.getEmail(),newNickName);
@@ -201,7 +201,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("회원 가입 처리 -> nickName 중복")
-	public void joinNickNameDuplication() throws Exception {
+	void joinNickNameDuplication() throws Exception {
 		//Given
 		String newEmail = "nonexist@test.net";
 		MultiValueMap<String, String> paramMap = UserTest.getUserJoinDTOMap(newEmail,user.getNickName());
@@ -219,7 +219,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("회원 가입 처리 -> 정상")
-	public void joinTest() throws Exception {
+	void joinTest() throws Exception {
 		//Given
 		String newNickName = "second";
 		String newEmail = "nonexist@test.net";
@@ -238,14 +238,14 @@ public class UserControllerTest {
 	/*
 	 * @RequestMapping(value="/user/profile",method=RequestMethod.GET)
 	 * @LoginIdSessionNotNull
-	 * public ModelAndView profileView(ModelAndView mav)
+	 * ModelAndView profileView(ModelAndView mav)
 	 */
 	
 	@WithMockUser
 	@Test
 	@Transactional
 	@DisplayName("내 프로필 화면 반환하기 -> 세션에 저장된 ID가 없을 때")
-	public void profileViewLoginIdSessionNull() throws Exception{
+	void profileViewLoginIdSessionNull() throws Exception{
 		//Given
 		
 		//When
@@ -259,7 +259,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("내 프로필 화면 반환하기 -> 세션에 저장된 ID의 User 없을 때")
-	public void profileViewNonExist() throws Exception {
+	void profileViewNonExist() throws Exception {
 		//Given
 		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
@@ -275,7 +275,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("내 프로필 화면 반환하기 -> 정상")
-	public void profileViewTest() throws Exception {
+	void profileViewTest() throws Exception {
 		//Given
 		Long userId = user.getId();
 		
@@ -290,7 +290,7 @@ public class UserControllerTest {
 	/*
 	 * @RequestMapping(value="/user/profile/mycomments", method=RequestMethod.GET)
 	 * @LoginIdSessionNotNull
-	 * public ModelAndView myCommentsView(ModelAndView mav,@RequestParam(value="page", required=false,defaultValue="1") Integer page
+	 * ModelAndView myCommentsView(ModelAndView mav,@RequestParam(value="page", required=false,defaultValue="1") Integer page
 	 *		,@RequestParam(value="order", defaultValue="desc") String order)
 	 */
 	
@@ -298,7 +298,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("접속자 본인이 작성한 댓글 목록 화면 반환 -> 세션에 저장된 Id에 해당하는 User 없을때")
-	public void myCommentsViewUserNonExist() throws Exception {
+	void myCommentsViewUserNonExist() throws Exception {
 		//Given
 		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
@@ -314,7 +314,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("접속자 본인이 작성한 댓글 목록 화면 반환 -> 잘못된 검색 정렬 조건")
-	public void myCommentsViewBadCriteria() throws Exception {
+	void myCommentsViewBadCriteria() throws Exception {
 		//Given
 		String badOrder = "badbad";
 		
@@ -330,7 +330,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("접속자 본인이 작성한 댓글 목록 화면 반환 -> 정상, 정렬 최신순")
-	public void myCommentsViewTestSortDesc() throws Exception {
+	void myCommentsViewTestSortDesc() throws Exception {
 		//Given
 		int givenCommentNum = 10;
 		CommentTest.addCommentsInDBWithSettingUser(givenCommentNum, user, commentRepository);
@@ -353,7 +353,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("접속자 본인이 작성한 댓글 목록 화면 반환 -> 정상, 정렬 오래된순")
-	public void myCommentsViewTestSortAsc() throws Exception {
+	void myCommentsViewTestSortAsc() throws Exception {
 		//Given
 		int givenCommentNum = 10;
 		CommentTest.addCommentsInDBWithSettingUser(givenCommentNum, user, commentRepository);
@@ -376,7 +376,7 @@ public class UserControllerTest {
 	/*
 	 * @RequestMapping(value="/user/profile/myposts",method=RequestMethod.GET)
 	 * @LoginIdSessionNotNull
-	 * public ModelAndView myPostsView(ModelAndView mav, @RequestParam(value="page", required=false,defaultValue="1") Integer page
+	 * ModelAndView myPostsView(ModelAndView mav, @RequestParam(value="page", required=false,defaultValue="1") Integer page
 	 *		,@RequestParam(value="order", defaultValue="desc") String order )
 	 */
 	
@@ -384,7 +384,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("접속자 본인이 작성한 게시글 목록 화면 반환 -> 세션에 저장된 ID의 User 없을 때")
-	public void myPostsViewUserNonExist() throws Exception {
+	void myPostsViewUserNonExist() throws Exception {
 		//Given
 		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
@@ -400,7 +400,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("접속자 본인이 작성한 게시글 목록 화면 반환 -> 잘못된 검색 정렬 조건")
-	public void myPostsViewBadCriteria() throws Exception {
+	void myPostsViewBadCriteria() throws Exception {
 		//Given
 		String badOrder = "badbad";
 		
@@ -416,7 +416,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("접속자 본인이 작성한 게시글 목록 화면 반환 -> 정상, 정렬 최신순으로")
-	public void myPostsViewTestSortDesc() throws Exception {
+	void myPostsViewTestSortDesc() throws Exception {
 		//Given
 		int givenExercisePostNum = 10;
 		ExercisePostTest.addNewExercisePostsInDBWithSettingUser(givenExercisePostNum, user, exercisePostRepository);
@@ -440,7 +440,7 @@ public class UserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("접속자 본인이 작성한 게시글 목록 화면 반환 -> 정상, 정렬 오래된순")
-	public void myPostsViewTestSortAsc() throws Exception {
+	void myPostsViewTestSortAsc() throws Exception {
 		//Given
 		int givenExercisePostNum = 10;
 		ExercisePostTest.addNewExercisePostsInDBWithSettingUser(givenExercisePostNum, user, exercisePostRepository);

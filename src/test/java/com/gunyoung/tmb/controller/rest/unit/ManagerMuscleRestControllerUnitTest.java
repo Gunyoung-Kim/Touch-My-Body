@@ -32,7 +32,7 @@ import com.gunyoung.tmb.testutil.TargetTypeTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ManagerMuscleRestControllerUnitTest {
+class ManagerMuscleRestControllerUnitTest {
 	
 	@Mock
 	MuscleService muscleService;
@@ -41,12 +41,12 @@ public class ManagerMuscleRestControllerUnitTest {
 	ManagerMuscleRestController managerMuscleRestController;
 	
 	/*
-	 * public void modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute SaveMuscleDTO dto)
+	 * void modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute SaveMuscleDTO dto)
 	 */
 	
 	@Test
 	@DisplayName("Muscle 정보 수정 요청 처리 -> 해당 Id의 Muscle 없으면")
-	public void modifyMuscleMuscleNonExist() {
+	void modifyMuscleMuscleNonExist() {
 		//Given
 		Long nonExistMuscleId = Long.valueOf(1);
 		given(muscleService.findById(nonExistMuscleId)).willReturn(null);
@@ -61,7 +61,7 @@ public class ManagerMuscleRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("Muscle 정보 수정 요청 처리 -> 수정된 이름이 이미 존재하는 Muscle의 이름과 일치한다면")
-	public void modifyMuscleNameDuplicated() {
+	void modifyMuscleNameDuplicated() {
 		//Given
 		Long muscleId = Long.valueOf(1);
 		stubbingMuscleServiceFindById(muscleId);
@@ -79,7 +79,7 @@ public class ManagerMuscleRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("Muscle 정보 수정 요청 처리 -> dto에 담긴 category을 한국이름으로 갖는 TargetType 없을 때")
-	public void modifyMuscleTargetTypeNonExist() {
+	void modifyMuscleTargetTypeNonExist() {
 		//Given
 		Long muscleId = Long.valueOf(1);
 		stubbingMuscleServiceFindById(muscleId);
@@ -98,7 +98,7 @@ public class ManagerMuscleRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("Muscle 정보 수정 요청 처리 -> 정상, 이름 변경 확인")
-	public void modifyMuscleTestCheckName() {
+	void modifyMuscleTestCheckName() {
 		//Given
 		Long muscleId = Long.valueOf(1);
 		Muscle muscle = stubbingMuscleServiceFindById(muscleId);
@@ -118,7 +118,7 @@ public class ManagerMuscleRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("Muscle 정보 수정 요청 처리 -> 정상, 카테고리 변경 확인")
-	public void modifyMuscleTestCheckCategory() {
+	void modifyMuscleTestCheckCategory() {
 		//Given
 		Long muscleId = Long.valueOf(1);
 		Muscle muscle = stubbingMuscleServiceFindById(muscleId);
@@ -137,7 +137,7 @@ public class ManagerMuscleRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("Muscle 정보 수정 요청 처리 -> 정상, 저장 확인")
-	public void modifyMuscleTestCheckSave() {
+	void modifyMuscleTestCheckSave() {
 		//Given
 		Long muscleId = Long.valueOf(1);
 		Muscle muscle = stubbingMuscleServiceFindById(muscleId);
@@ -161,12 +161,12 @@ public class ManagerMuscleRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void removeMuscle(@RequestParam("muscleId") Long muscleId)
+	 * void removeMuscle(@RequestParam("muscleId") Long muscleId)
 	 */
 	
 	@Test
 	@DisplayName("Muscle의 삭제 요철 처리 -> 정상, check Service")
-	public void removeMuscleTestCheckService() {
+	void removeMuscleTestCheckService() {
 		//Given
 		Long muscleId = Long.valueOf(24);
 		

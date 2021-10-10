@@ -33,7 +33,7 @@ import com.gunyoung.tmb.services.domain.user.UserExerciseServiceImpl;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class UserExerciseServiceUnitTest {
+class UserExerciseServiceUnitTest {
 	
 	@Mock
 	UserExerciseRepository userExerciseRepository;
@@ -50,12 +50,12 @@ public class UserExerciseServiceUnitTest {
 	}
 	
 	/*
-	 * public UserExercise findById(Long id)
+	 * UserExercise findById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 UserExercise 찾기 -> 존재하지 않음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
@@ -70,7 +70,7 @@ public class UserExerciseServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 UserExercise 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long userExerciseId = Long.valueOf(1);
 		
@@ -84,12 +84,12 @@ public class UserExerciseServiceUnitTest {
 	}
 	
 	/*
-	 * public List<UserExercise> findByUserIdAndDate(Long userId, Calendar date)
+	 * List<UserExercise> findByUserIdAndDate(Long userId, Calendar date)
 	 */
 	
 	@Test
 	@DisplayName("User Id, UserExercise date 로 UserExercise들 찾기 -> 정상")
-	public void findByUserIdAndDateTest() {
+	void findByUserIdAndDateTest() {
 		//Given
 		Long userId = Long.valueOf(1);
 		Calendar date = new GregorianCalendar(1999,Calendar.JANUARY,16);
@@ -102,12 +102,12 @@ public class UserExerciseServiceUnitTest {
 	}
 	
 	/*
-	 * public List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year,int month)
+	 * List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year,int month)
 	 */
 	
 	@Test
 	@DisplayName("특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환하는 메소드 -> 정상")
-	public void findIsDoneDTOByUserIdAndYearAndMonthTest() {
+	void findIsDoneDTOByUserIdAndYearAndMonthTest() {
 		//Given
 		Long userId = Long.valueOf(1);
 		List<Calendar> calendarList = new ArrayList<>();
@@ -135,12 +135,12 @@ public class UserExerciseServiceUnitTest {
 	}
 	
 	/*
-	 * public UserExercise save(UserExercise userExercise)
+	 * UserExercise save(UserExercise userExercise)
 	 */
 	
 	@Test
 	@DisplayName("UserExercise 생성 및 수정 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		given(userExerciseRepository.save(userExercise)).willReturn(userExercise);
 		
@@ -152,12 +152,12 @@ public class UserExerciseServiceUnitTest {
 	}
 	
 	/*
-	 * public void delete(UserExercise userExercise)
+	 * void delete(UserExercise userExercise)
 	 */
 	
 	@Test
 	@DisplayName("UserExercise 삭제 - 정상")
-	public void deleteTest() {
+	void deleteTest() {
 		//Given
 		
 		//When
@@ -168,12 +168,12 @@ public class UserExerciseServiceUnitTest {
 	}
 	
 	/*
-	 *  public void deleteAllByExerciseId(Long exerciseId)
+	 *  void deleteAllByExerciseId(Long exerciseId)
 	 */
 	
 	@Test
 	@DisplayName("User Id로 만족하는 UserExercise들 일괄 삭제 -> 정상")
-	public void deleteAllByUserIdTest() {
+	void deleteAllByUserIdTest() {
 		//Given
 		Long userId = Long.valueOf(25);
 		
@@ -185,12 +185,12 @@ public class UserExerciseServiceUnitTest {
 	}
 	
 	/*
-	 *  public void deleteAllByExerciseId(Long exerciseId)
+	 *  void deleteAllByExerciseId(Long exerciseId)
 	 */
 	
 	@Test
 	@DisplayName("Exercise Id로 만족하는 UserExercise들 일괄 삭제 -> 정상")
-	public void deleteAllByExerciseIdTest() {
+	void deleteAllByExerciseIdTest() {
 		//Given
 		Long exerciseId = Long.valueOf(25);
 		

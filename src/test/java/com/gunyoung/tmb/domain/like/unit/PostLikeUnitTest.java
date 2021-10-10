@@ -14,15 +14,15 @@ import com.gunyoung.tmb.testutil.PostLikeTest;
 * @author kimgun-yeong
 *
 */
-public class PostLikeUnitTest {
+class PostLikeUnitTest {
 	
 	/*
-	 *  public String toString()
+	 *  String toString()
 	 */
 	
 	@Test
 	@DisplayName("toString Test -> 정상")
-	public void toStringTest() {
+	void toStringTest() {
 		//Given
 		Long postLikeId = Long.valueOf(42);
 		PostLike postLike = PostLikeTest.getPostLikeInstance();

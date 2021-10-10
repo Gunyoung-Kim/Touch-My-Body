@@ -25,7 +25,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
 * @author kimgun-yeong
 *
 */
-public class SessionUtilUnitTest {
+class SessionUtilUnitTest {
 	
 	private HttpSession session;
 	
@@ -40,7 +40,7 @@ public class SessionUtilUnitTest {
 	
 	@Test
 	@DisplayName("생성자 호출시 예외 발생 확인")
-	public void constructorTestThrowsAssertionError() throws NoSuchMethodException {
+	void constructorTestThrowsAssertionError() throws NoSuchMethodException {
 		//Given
 		Constructor<SessionUtil> constructor = SessionUtil.class.getDeclaredConstructor();
 		constructor.setAccessible(true);
@@ -52,12 +52,12 @@ public class SessionUtilUnitTest {
 	}
 	
 	/*
-	 * public static void setLoginUserId(HttpSession session, Long id)
+	 * static void setLoginUserId(HttpSession session, Long id)
 	 */
 	
 	@Test
 	@DisplayName("로그인한 유저의 id 값(User_id)을 세션에 저장 -> 정상")
-	public void setLoginUserIdTest() {
+	void setLoginUserIdTest() {
 		//Given
 		Long loginUserId = Long.valueOf(25);
 		
@@ -69,12 +69,12 @@ public class SessionUtilUnitTest {
 	}
 	
 	/*
-	 * public static Long getLoginUserId(HttpSession session)
+	 * static Long getLoginUserId(HttpSession session)
 	 */
 	
 	@Test
 	@DisplayName("세션에서 로그인한 유저의 id 값(User_id)를 반환 -> 정상")
-	public void getLoginUserIdTest() {
+	void getLoginUserIdTest() {
 		//Given
 		Long loginUserId = Long.valueOf(24);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginUserId);
@@ -87,12 +87,12 @@ public class SessionUtilUnitTest {
 	}
 	
 	/*
-	 * public static void setAfterLoginRedirectedUrl(HttpSession session,String url) 
+	 * static void setAfterLoginRedirectedUrl(HttpSession session,String url) 
 	 */
 	
 	@Test
 	@DisplayName("로그인 후 리다이렉트 될 주소 세션에 저장 -> 정상")
-	public void setAfterLoginRedirectedUrlTest() {
+	void setAfterLoginRedirectedUrlTest() {
 		//Given
 		String redirectedURL = "touchmyBody.com";
 		
@@ -104,12 +104,12 @@ public class SessionUtilUnitTest {
 	}
 	
 	/*
-	 * public static String getAfterLoginRedirectedUrl(HttpSession session)
+	 * static String getAfterLoginRedirectedUrl(HttpSession session)
 	 */
 	
 	@Test
 	@DisplayName("로그인 후 리다이렉트 될 주소 반환 -> 정상")
-	public void getAfterLoginRedirectedUrlTest() {
+	void getAfterLoginRedirectedUrlTest() {
 		//Given
 		String redirectedURL = "touchmyBody.com";
 		given(session.getAttribute(SessionUtil.AFTER_LOGIN_REDIRECTED_URL)).willReturn(redirectedURL);
@@ -122,12 +122,12 @@ public class SessionUtilUnitTest {
 	}
 	
 	/*
-	 * public static void removeAfterLoginRedirectedUrl(HttpSession session) 
+	 * static void removeAfterLoginRedirectedUrl(HttpSession session) 
 	 */
 	
 	@Test
 	@DisplayName("세션에서 로그인 후 리다이렉트 될 주소 삭제 -> 정상")
-	public void removeAfterLoginRedirectedUrl() {
+	void removeAfterLoginRedirectedUrl() {
 		//When
 		SessionUtil.removeAfterLoginRedirectedUrl(session);
 		
@@ -136,12 +136,12 @@ public class SessionUtilUnitTest {
 	}
 	
 	/*
-	 * public static void removeAuthenticationExceptionAttributes(HttpSession session)
+	 * static void removeAuthenticationExceptionAttributes(HttpSession session)
 	 */
 	
 	@Test
 	@DisplayName("로그인 실패 기록 삭제 -> 정상")
-	public void removeAuthenticationExceptionAttributesTest() {
+	void removeAuthenticationExceptionAttributesTest() {
 		//When
 		SessionUtil.removeAuthenticationExceptionAttributes(session);
 		
@@ -150,12 +150,12 @@ public class SessionUtilUnitTest {
 	}
 	
 	/*
-	 * public static void clearSession(HttpSession session) 
+	 * static void clearSession(HttpSession session) 
 	 */
 	
 	@Test
 	@DisplayName("현재 세션에 있는 모든 정보들 삭제 -> 정상")
-	public void clearSessionTest() {
+	void clearSessionTest() {
 		//When
 		SessionUtil.clearSession(session);
 		

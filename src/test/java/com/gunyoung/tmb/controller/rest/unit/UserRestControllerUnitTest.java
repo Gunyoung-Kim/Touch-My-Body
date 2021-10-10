@@ -28,7 +28,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class UserRestControllerUnitTest {
+class UserRestControllerUnitTest {
 	
 	@Mock
 	UserService userService;
@@ -46,12 +46,12 @@ public class UserRestControllerUnitTest {
 	UserRestController userRestController;
 	
 	/*
-	 * public boolean emailVerification(@RequestParam("email") String email)
+	 * boolean emailVerification(@RequestParam("email") String email)
 	 */
 	
 	@Test
 	@DisplayName("email 중복여부 반환 -> 정상, True")
-	public void emailVerificationTestTrue() {
+	void emailVerificationTestTrue() {
 		//Given
 		String existEmail = "test@test.com";
 		boolean isExist = true;
@@ -66,7 +66,7 @@ public class UserRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("email 중복여부 반환 -> 정상, False")
-	public void emailVerificationTestFalse() {
+	void emailVerificationTestFalse() {
 		//Given
 		String nonExistEmail = "nonExist@test.com";
 		boolean isExist = false;
@@ -80,12 +80,12 @@ public class UserRestControllerUnitTest {
 	}
 	
 	/*
-	 * public boolean nickNameVerification(@RequestParam("nickName") String nickName)
+	 * boolean nickNameVerification(@RequestParam("nickName") String nickName)
 	 */
 	
 	@Test
 	@DisplayName("nickName 중복여부 반환 -> 정상, True")
-	public void nickNameVerificationTestTrue() {
+	void nickNameVerificationTestTrue() {
 		//Given
 		String existNickName = "exist";
 		boolean isExist = true;
@@ -100,7 +100,7 @@ public class UserRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("nickName 중복여부 반환 -> 정상, False")
-	public void nickNameVerificationTestFalse() {
+	void nickNameVerificationTestFalse() {
 		//Given
 		String nonExistNickName = "nonExist";
 		boolean isExist = false;
@@ -114,12 +114,12 @@ public class UserRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void removeMyComments(@RequestParam("commentId") Long commentId)
+	 * void removeMyComments(@RequestParam("commentId") Long commentId)
 	 */
 	
 	@Test
 	@DisplayName("접속자가 자신이 작성한 특정 댓글 삭제 요청 처리 -> 정상")
-	public void removeMyCommentsTest() {
+	void removeMyCommentsTest() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -134,12 +134,12 @@ public class UserRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void removeMyPosts(@RequestParam("postId") Long postId)
+	 * void removeMyPosts(@RequestParam("postId") Long postId)
 	 */
 	
 	@Test
 	@DisplayName("접속자가 자신이 작성한 특정 게시글 삭제 요청 -> 정상")
-	public void removeMyPostsTest() {
+	void removeMyPostsTest() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);

@@ -54,17 +54,17 @@ import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ErrorControllerUnitTest {
+class ErrorControllerUnitTest {
 	
 	@InjectMocks
 	private ErrorController errorController;
 	
 	/*
-	 * public ErrorMsg emailDuplicated(EmailDuplicationFoundedException e)
+	 * ErrorMsg emailDuplicated(EmailDuplicationFoundedException e)
 	 */
 	
 	@Test
-	public void emailDuplicatedTest() {
+	void emailDuplicatedTest() {
 		//Given
 		String errorMsg = "email Duplicated";
 		EmailDuplicationFoundedException exception = new EmailDuplicationFoundedException(errorMsg);
@@ -78,11 +78,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg nickNameDuplicated(NickNameDuplicationFoundedException e)
+	 * ErrorMsg nickNameDuplicated(NickNameDuplicationFoundedException e)
 	 */
 	
 	@Test
-	public void nickNameDuplicatedTest() {
+	void nickNameDuplicatedTest() {
 		//Given
 		String errorMsg = "nickName Duplicated";
 		NickNameDuplicationFoundedException exception = new NickNameDuplicationFoundedException(errorMsg);
@@ -96,11 +96,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg exerciseNameDuplicated(ExerciseNameDuplicationFoundedException e)
+	 * ErrorMsg exerciseNameDuplicated(ExerciseNameDuplicationFoundedException e)
 	 */
 	
 	@Test
-	public void exerciseNameDuplicatedTest() {
+	void exerciseNameDuplicatedTest() {
 		//Given
 		String errorMsg = "exercise name Duplicated";
 		ExerciseNameDuplicationFoundedException exception = new ExerciseNameDuplicationFoundedException(errorMsg);
@@ -114,11 +114,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg muscleNameDuplicated(MuscleNameDuplicationFoundedException e)
+	 * ErrorMsg muscleNameDuplicated(MuscleNameDuplicationFoundedException e)
 	 */
 	
 	@Test
-	public void muscleNameDuplicatedTest() {
+	void muscleNameDuplicatedTest() {
 		//Given
 		String errorMsg = "muscle name Duplicated";
 		MuscleNameDuplicationFoundedException exception = new MuscleNameDuplicationFoundedException(errorMsg);
@@ -132,11 +132,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg likeAlreadyExisst(LikeAlreadyExistException e)
+	 * ErrorMsg likeAlreadyExisst(LikeAlreadyExistException e)
 	 */
 	
 	@Test
-	public void likeAlreadyExisstTest() {
+	void likeAlreadyExisstTest() {
 		//Given
 		String errorMsg = "like Already Exist";
 		LikeAlreadyExistException exception = new LikeAlreadyExistException(errorMsg);
@@ -150,11 +150,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg userNotFounded(UserNotFoundedException e)
+	 * ErrorMsg userNotFounded(UserNotFoundedException e)
 	 */
 	
 	@Test
-	public void userNotFoundedTest() {
+	void userNotFoundedTest() {
 		//Given
 		String errorMsg = "user not founded";
 		UserNotFoundedException exception = new UserNotFoundedException(errorMsg);
@@ -168,11 +168,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg exerciseNotFounded(UserNotFoundedException e)
+	 * ErrorMsg exerciseNotFounded(UserNotFoundedException e)
 	 */
 	
 	@Test
-	public void exerciseNotFoundedTest() {
+	void exerciseNotFoundedTest() {
 		//Given
 		String errorMsg = "exercise not founded";
 		ExerciseNotFoundedException exception = new ExerciseNotFoundedException(errorMsg);
@@ -186,11 +186,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg muscleNotFounded(MuscleNotFoundedException e)
+	 * ErrorMsg muscleNotFounded(MuscleNotFoundedException e)
 	 */
 	
 	@Test
-	public void muscleNotFoundedTest() {
+	void muscleNotFoundedTest() {
 		//Given
 		String errorMsg = "muscle not founded";
 		MuscleNotFoundedException exception = new MuscleNotFoundedException(errorMsg);
@@ -204,11 +204,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg exercisePostNotFounded(ExercisePostNotFoundedException e) 
+	 * ErrorMsg exercisePostNotFounded(ExercisePostNotFoundedException e) 
 	 */
 	
 	@Test
-	public void exercisePostNotFoundedTest() {
+	void exercisePostNotFoundedTest() {
 		//Given
 		String errorMsg = "muscle not founded";
 		ExercisePostNotFoundedException exception = new ExercisePostNotFoundedException(errorMsg);
@@ -222,11 +222,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg targetTypeNotFounded(TargetTypeNotFoundedException e)
+	 * ErrorMsg targetTypeNotFounded(TargetTypeNotFoundedException e)
 	 */
 	
 	@Test
-	public void targetTypeNotFoundedTest() {
+	void targetTypeNotFoundedTest() {
 		//Given
 		String errorMsg = "muscle not founded";
 		TargetTypeNotFoundedException exception = new TargetTypeNotFoundedException(errorMsg);
@@ -240,11 +240,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg likeNotFounded(LikeNotFoundedException e)
+	 * ErrorMsg likeNotFounded(LikeNotFoundedException e)
 	 */
 	
 	@Test
-	public void likeNotFoundedTest() {
+	void likeNotFoundedTest() {
 		//Given
 		String errorMsg = "like not founded";
 		LikeNotFoundedException exception = new LikeNotFoundedException(errorMsg);
@@ -258,11 +258,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg commentNotFounded(CommentNotFoundedException e)
+	 * ErrorMsg commentNotFounded(CommentNotFoundedException e)
 	 */
 	
 	@Test
-	public void commentNotFoundedTest() {
+	void commentNotFoundedTest() {
 		//Given
 		String errorMsg = "comment not founded";
 		CommentNotFoundedException exception = new CommentNotFoundedException(errorMsg);
@@ -276,11 +276,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg feedbackNotFounded(FeedbackNotFoundedException e)
+	 * ErrorMsg feedbackNotFounded(FeedbackNotFoundedException e)
 	 */
 	
 	@Test
-	public void feedbackNotFoundedTest() {
+	void feedbackNotFoundedTest() {
 		//Given
 		String errorMsg = "feedback not founded";
 		FeedbackNotFoundedException exception = new FeedbackNotFoundedException(errorMsg);
@@ -294,11 +294,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg privacyPolicyNotFounded(PrivacyPolicyNotFoundedException e)
+	 * ErrorMsg privacyPolicyNotFounded(PrivacyPolicyNotFoundedException e)
 	 */
 	
 	@Test
-	public void privacyPolicyNotFoundedTest() {
+	void privacyPolicyNotFoundedTest() {
 		//Given
 		String errorMsg = "privacy policy not founded";
 		PrivacyPolicyNotFoundedException exception = new PrivacyPolicyNotFoundedException(errorMsg);
@@ -312,11 +312,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg roleNotFounded(RoleNotFoundedException e)
+	 * ErrorMsg roleNotFounded(RoleNotFoundedException e)
 	 */
 	
 	@Test
-	public void roleNotFoundedTest() {
+	void roleNotFoundedTest() {
 		//Given
 		String errorMsg = "role not founded";
 		RoleNotFoundedException exception = new RoleNotFoundedException(errorMsg);
@@ -330,11 +330,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg searchCriteriaInvalid(SearchCriteriaInvalidException e)
+	 * ErrorMsg searchCriteriaInvalid(SearchCriteriaInvalidException e)
 	 */
 	
 	@Test
-	public void searchCriteriaInvalidTest() {
+	void searchCriteriaInvalidTest() {
 		//Given
 		String errorMsg = "search criteria is invalid";
 		SearchCriteriaInvalidException exception = new SearchCriteriaInvalidException(errorMsg);
@@ -348,11 +348,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public ErrorMsg accessDenied(AccessDeniedException e)
+	 * ErrorMsg accessDenied(AccessDeniedException e)
 	 */
 	
 	@Test
-	public void accessDeniedTest() {
+	void accessDeniedTest() {
 		//Given
 		String errorMsg = "access denied";
 		AccessDeniedException exception = new AccessDeniedException(errorMsg);
@@ -366,11 +366,11 @@ public class ErrorControllerUnitTest {
 	}
 	
 	/*
-	 * public void sessionAttributesNotFounded(SessionAttributesNotFoundedException e, HttpServletResponse response) throws IOException 
+	 * void sessionAttributesNotFounded(SessionAttributesNotFoundedException e, HttpServletResponse response) throws IOException 
 	 */
 	
 	@Test
-	public void sessionAttributesNotFoundedTest() throws IOException{
+	void sessionAttributesNotFoundedTest() throws IOException{
 		//Given
 		String errorMsg = "session attributes not founded";
 		SessionAttributesNotFoundedException exception = new SessionAttributesNotFoundedException(errorMsg);

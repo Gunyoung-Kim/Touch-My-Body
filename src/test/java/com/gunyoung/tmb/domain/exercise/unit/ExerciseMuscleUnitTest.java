@@ -19,14 +19,14 @@ import com.gunyoung.tmb.testutil.ExerciseMuscleTest;
 * @author kimgun-yeong
 *
 */
-public class ExerciseMuscleUnitTest {
+class ExerciseMuscleUnitTest {
 	/*
-	 *  public String toString()
+	 *  String toString()
 	 */
 	
 	@Test
 	@DisplayName("toString Test -> 정상") 
-	public void toStringTest() {
+	void toStringTest() {
 		//Given
 		Long exerciseMuscleId = Long.valueOf(75);
 		ExerciseMuscle exerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance();
@@ -44,12 +44,12 @@ public class ExerciseMuscleUnitTest {
 	}
 	
 	/*
-	 * public List<ExerciseMuscle> mainOf(Exercise exercise, List<Muscle> muscleList)
+	 * List<ExerciseMuscle> mainOf(Exercise exercise, List<Muscle> muscleList)
 	 */
 	
 	@Test
 	@DisplayName("Exercise, List of Muscle 를 이용해 isMain 필드 값이 true인 ExerciseMuscle List 생성 후 반환 -> 정상")
-	public void mainOfTest() {
+	void mainOfTest() {
 		//Given
 		Exercise exercise = new Exercise();
 		int muscleNum = 5;
@@ -78,12 +78,12 @@ public class ExerciseMuscleUnitTest {
 	}
 	
 	/*
-	 * public List<ExerciseMuscle> subOf(Exercise exercise, List<Muscle> muscleList)
+	 * List<ExerciseMuscle> subOf(Exercise exercise, List<Muscle> muscleList)
 	 */
 	
 	@Test
 	@DisplayName("Exercise, List of Muscle 를 이용해 isMain 필드 값이 false인 ExerciseMuscle List 생성 후 반환 -> 정상")
-	public void subOfTest() {
+	void subOfTest() {
 		//Given
 		Exercise exercise = new Exercise();
 		int muscleNum = 5;

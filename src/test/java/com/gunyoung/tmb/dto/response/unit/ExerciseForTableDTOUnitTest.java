@@ -18,15 +18,15 @@ import com.gunyoung.tmb.testutil.ExerciseTest;
  * @author kimgun-yeong
  *
  */
-public class ExerciseForTableDTOUnitTest {
+class ExerciseForTableDTOUnitTest {
 	
 	/*
-	 * public static ExerciseForTableDTO of(Exercise exercise) 
+	 * static ExerciseForTableDTO of(Exercise exercise) 
 	 */
 	
 	@Test
 	@DisplayName("Exercise 인스턴스를 통해 ExerciseForTableDTO 객체 생성 후 반환 -> 정상")
-	public void ofTest() {
+	void ofTest() {
 		//Given
 		Long exerciseId = Long.valueOf(23);
 		Exercise exercise = ExerciseTest.getExerciseInstance();
@@ -40,12 +40,12 @@ public class ExerciseForTableDTOUnitTest {
 	}
 	
 	/*
-	 * public static List<ExerciseForTableDTO> of(Iterable<Exercise> exercises)
+	 * static List<ExerciseForTableDTO> of(Iterable<Exercise> exercises)
 	 */
 	
 	@Test
 	@DisplayName("Exercise 컬렉션을 통해 ExerciseForTableDTO 리스트 생성 후 반환 -> 정상")
-	public void ofListTest() {
+	void ofListTest() {
 		//Given
 		List<Exercise> exercises = new ArrayList<>();
 		int givenExerciseNum = 10;

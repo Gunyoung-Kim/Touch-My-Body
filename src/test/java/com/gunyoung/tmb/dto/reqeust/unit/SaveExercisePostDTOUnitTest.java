@@ -14,15 +14,15 @@ import com.gunyoung.tmb.dto.reqeust.SaveExercisePostDTO;
  * @author kimgun-yeong
  *
  */
-public class SaveExercisePostDTOUnitTest {
+class SaveExercisePostDTOUnitTest {
 	
 	/*
-	 * public ExercisePost createExercisePost() 
+	 * ExercisePost createExercisePost() 
 	 */
 	
 	@Test
 	@DisplayName("이 객체를 통해 ExercisePost 생성 후 반환 -> 정상, 필드 값 체크")
-	public void createExercisePostTestCheckField() {
+	void createExercisePostTestCheckField() {
 		//Given
 		SaveExercisePostDTO saveExercisePostDTO = SaveExercisePostDTO.builder()
 				.title("title")

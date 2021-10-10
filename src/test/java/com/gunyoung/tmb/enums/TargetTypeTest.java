@@ -15,19 +15,18 @@ import org.junit.jupiter.api.Test;
  * @author kimgun-yeong
  *
  */
-public class TargetTypeTest {
+class TargetTypeTest {
 	
 	/*
-	 * public static TargetType getFromKoreanName(String koreanName)
+	 * static TargetType getFromKoreanName(String koreanName)
 	 */
 	@Test
 	@DisplayName("한국이름으로 TargetType 찾기 -> 해당하는 TargetType 없음")
-	public void getFromKoreanNameNonExist() {
+	void getFromKoreanNameNonExist() {
 		//Given
 		String nonExistKoreanName = "아무개";
 		
 		//When
-		
 		TargetType result = TargetType.getFromKoreanName(nonExistKoreanName);
 		
 		//Then
@@ -36,13 +35,12 @@ public class TargetTypeTest {
 	
 	@Test
 	@DisplayName("한국이름으로 TargetType 찾기 -> 해당하는 TargetType 없음")
-	public void getFromKoreanNameTest() {
+	void getFromKoreanNameTest() {
 		//Given
 		TargetType targetType = TargetType.ARM;
 		String existKoreanName = targetType.getKoreanName();
 		
 		//When
-		
 		TargetType result = TargetType.getFromKoreanName(existKoreanName);
 		
 		//Then
@@ -50,12 +48,12 @@ public class TargetTypeTest {
 	}
 	
 	/*
-	 * public static List<String> getKoreanNamesForAllTargetType()
+	 * static List<String> getKoreanNamesForAllTargetType()
 	 */
 	
 	@Test
 	@DisplayName("모든 TargetType의 koreanName들 반환 -> 정상")
-	public void getKoreanNamesForAllTargetTypeTest() {
+	void getKoreanNamesForAllTargetTypeTest() {
 		//Given
 		
 		//When

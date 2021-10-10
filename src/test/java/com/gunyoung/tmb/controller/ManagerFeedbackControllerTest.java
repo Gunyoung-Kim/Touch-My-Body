@@ -45,7 +45,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ManagerFeedbackControllerTest {
+class ManagerFeedbackControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -61,7 +61,7 @@ public class ManagerFeedbackControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/exercise/feedback/{exerciseId}" ,method= RequestMethod.GET) 
-	 * public ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId,@RequestParam(value="page", defaultValue="1") int page
+	 * ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId,@RequestParam(value="page", defaultValue="1") int page
 	 *		,ModelAndView mav)
 	 */
 	
@@ -69,7 +69,7 @@ public class ManagerFeedbackControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 운동 정보에 대한 피드백들 리스트 화면 반환 -> 해당 ID의 Exercise 없을때")
-	public void feedbackListViewNonExist() throws Exception {
+	void feedbackListViewNonExist() throws Exception {
 		//Given
 		Long nonExistExerciseId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
@@ -84,7 +84,7 @@ public class ManagerFeedbackControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 운동 정보에 대한 피드백들 리스트 화면 반환 -> 정상")
-	public void feedbackListViewTest() throws Exception {
+	void feedbackListViewTest() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
@@ -121,14 +121,14 @@ public class ManagerFeedbackControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/exercise/feedback/detail/{feedbackId}" ,method = RequestMethod.GET) 
-	 * public ModelAndView feedbackView(@PathVariable("feedbackId") Long feedbackId, ModelAndView mav)
+	 * ModelAndView feedbackView(@PathVariable("feedbackId") Long feedbackId, ModelAndView mav)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("특정 Feedback 상세화면 반환 -> 해당 ID의 Feedback 없을 때")
-	public void feedbackViewNonExist() throws Exception {
+	void feedbackViewNonExist() throws Exception {
 		//Given
 		Long nonExistFeedbackId = FeedbackTest.getNonExistFeedbackId(feedbackRepository);
 		
@@ -143,7 +143,7 @@ public class ManagerFeedbackControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 Feedback 상세화면 반환 -> 정상")
-	public void feedbackViewTest() throws Exception {
+	void feedbackViewTest() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);

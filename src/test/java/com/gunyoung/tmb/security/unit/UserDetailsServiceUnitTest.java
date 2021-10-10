@@ -27,7 +27,7 @@ import com.gunyoung.tmb.testutil.UserTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class UserDetailsServiceUnitTest {
+class UserDetailsServiceUnitTest {
 	
 	@InjectMocks
 	UserDetailsServiceImpl userDetailsService;
@@ -36,12 +36,12 @@ public class UserDetailsServiceUnitTest {
 	UserService userService;
 	
 	/**
-	 *   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException
+	 *   UserDetails loadUserByUsername(String email) throws UsernameNotFoundException
 	 */
 	
 	@Test
 	@DisplayName("DB에서 가져온 User 정보로 UserDetails 반환 -> Userservice에서 가져온 User가 없을 때")
-	public void loadUserByUsernameNonExist() {
+	void loadUserByUsernameNonExist() {
 		//Given
 		String nonExistEmail = "nonExist@test.com";
 		given(userService.findByEmail(nonExistEmail)).willReturn(null);
@@ -54,7 +54,7 @@ public class UserDetailsServiceUnitTest {
 	
 	@Test
 	@DisplayName("관리자 권한의 UserDetails 반환 -> 정상")
-	public void loadUserByUsernameForAdminTest() {
+	void loadUserByUsernameForAdminTest() {
 		//Given
 		String adminEmail = "admin@test.com";
 		User user = UserTest.getUserInstance(adminEmail,RoleType.ADMIN);
@@ -71,7 +71,7 @@ public class UserDetailsServiceUnitTest {
 	
 	@Test
 	@DisplayName("매니저 권한의 UserDetials 반환 -> 정상")
-	public void loadUserByUsernameForManagerTest() {
+	void loadUserByUsernameForManagerTest() {
 		//Given
 		String managerEmail = "manager@test.com";
 		User user = UserTest.getUserInstance(managerEmail,RoleType.MANAGER);
@@ -88,7 +88,7 @@ public class UserDetailsServiceUnitTest {
 	
 	@Test
 	@DisplayName("일반 유저 권한의 UserDetials 반환 -> 정상")
-	public void loadUserByUsernameForUserTest() {
+	void loadUserByUsernameForUserTest() {
 		//Given
 		String userEmail ="user@test.com";
 		User user = UserTest.getUserInstance(userEmail,RoleType.USER);

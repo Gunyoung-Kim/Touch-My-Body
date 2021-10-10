@@ -20,15 +20,15 @@ import com.gunyoung.tmb.testutil.UserExerciseTest;
  * @author kimgun-yeong
  *
  */
-public class UserExerciseWithDateDTOUnitTest {
+class UserExerciseWithDateDTOUnitTest {
 	
 	/*
-	 * public static List<UserExerciseWithDateDTO> of(List<UserExercise> list)
+	 * static List<UserExerciseWithDateDTO> of(List<UserExercise> list)
 	 */
 	
 	@Test
 	@DisplayName("UserExercise List 객체를 UserExerciseWithDateDTO 로 변환 -> 정상")
-	public void ofTestList() {
+	void ofTestList() {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		
@@ -48,12 +48,12 @@ public class UserExerciseWithDateDTOUnitTest {
 	}
 	
 	/*
-	 * public static UserExerciseWithDateDTO of(UserExercise userExercise)
+	 * static UserExerciseWithDateDTO of(UserExercise userExercise)
 	 */
 	
 	@Test
 	@DisplayName("UserExercise 객체를 UserExerciseWithDateDTO로 변환 -> 정상")
-	public void ofTest() {
+	void ofTest() {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		
