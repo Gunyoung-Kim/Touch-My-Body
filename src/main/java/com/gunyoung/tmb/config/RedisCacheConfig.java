@@ -52,7 +52,7 @@ public class RedisCacheConfig {
 	 */
 	@Bean(name="redisCacheConnectionFactory")
 	public RedisConnectionFactory redisConnectionFactory() {
-		return  new LettuceConnectionFactory(redisCacheHost,redisCachePort);	
+		return new LettuceConnectionFactory(redisCacheHost,redisCachePort);	
 	}
 	
 	/**

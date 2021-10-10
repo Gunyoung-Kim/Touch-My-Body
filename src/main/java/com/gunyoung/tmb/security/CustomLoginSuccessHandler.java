@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 	
-	public static final String DEFAULT_REDIRECTED_URL_AFTER_LOGIN_SUCCESS = "/";
+	private static final String DEFAULT_REDIRECTED_URL_AFTER_LOGIN_SUCCESS = "/";
 
 	private final UserService userService;
 	
