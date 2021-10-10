@@ -61,15 +61,15 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	@Transactional(readOnly= true)
-	public Page<Comment> findAllByUserIdOrderByCreatedAtAsc(Long userId, Integer pageNum, int page_size) {
-		PageRequest pageRequest = PageRequest.of(pageNum-1, page_size);
+	public Page<Comment> findAllByUserIdOrderByCreatedAtAsc(Long userId, Integer pageNum, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNum-1, pageSize);
 		return commentRepository.findAllByUserIdOrderByCreatedAtAscInPage(userId,pageRequest);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId, Integer pageNum, int page_size) {
-		PageRequest pageRequest = PageRequest.of(pageNum-1, page_size);
+	public Page<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId, Integer pageNum, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNum-1, pageSize);
 		return commentRepository.findAllByUserIdOrderByCreatedAtDescInPage(userId,pageRequest);
 	}
 
@@ -80,20 +80,26 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	public Comment saveWithUserAndExercisePost(Comment comment, User user, ExercisePost exercisePost) {
-		comment.setUser(user);
-		comment.setExercisePost(exercisePost);
-		user.getComments().add(comment);
-		exercisePost.getComments().add(comment);
+		setRelationBetweenCommentAndUser(comment, user);
+		setRelationBetweenCommentAndPost(comment, exercisePost);
 		
 		return save(comment);
+	}
+	
+	private void setRelationBetweenCommentAndUser(Comment comment, User user) {
+		comment.setUser(user);
+		user.getComments().add(comment);
+	}
+	
+	private void setRelationBetweenCommentAndPost(Comment comment, ExercisePost exercisePost) {
+		comment.setExercisePost(exercisePost);
+		exercisePost.getComments().add(comment);
 	}
 	
 	@Override
 	public void checkIsMineAndDelete(Long userId, Long commentId) {
 		Optional<Comment> comment = commentRepository.findByUserIdAndCommentId(userId, commentId);
-		comment.ifPresent((c) -> {
-			delete(c);
-		});
+		comment.ifPresent(this::delete);
 	}
 	
 	@Override
