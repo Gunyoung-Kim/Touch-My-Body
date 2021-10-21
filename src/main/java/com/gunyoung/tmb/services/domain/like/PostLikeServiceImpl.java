@@ -53,15 +53,11 @@ public class PostLikeServiceImpl implements PostLikeService {
 	@CacheEvict(cacheNames=POST_LIKE_NAME,
 	key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#user.id).concat(':').concat(#exercisePost.id)")
 	public PostLike createAndSaveWithUserAndExercisePost(User user, ExercisePost exercisePost) {
-		PostLike postLike = PostLike.builder()
-				.user(user)
-				.exercisePost(exercisePost)
-				.build();
+		PostLike newPostLike = PostLike.of(user, exercisePost);
+		user.getPostLikes().add(newPostLike);
+		exercisePost.getPostLikes().add(newPostLike);
 		
-		user.getPostLikes().add(postLike);
-		exercisePost.getPostLikes().add(postLike);
-		
-		return save(postLike);
+		return save(newPostLike);
 	}
 
 	@Override

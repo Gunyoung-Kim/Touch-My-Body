@@ -5,8 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.like.CommentLike;
+import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.testutil.CommentLikeTest;
+import com.gunyoung.tmb.testutil.CommentTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
 * {@link CommentLike} 에 대한 테스트 클래스 <br>
@@ -15,6 +19,7 @@ import com.gunyoung.tmb.testutil.CommentLikeTest;
 *
 */
 class CommentLikeUnitTest {
+	
 	/*
 	 *  String toString()
 	 */
@@ -36,5 +41,24 @@ class CommentLikeUnitTest {
 	
 	private void verifyString_for_toStringTest(CommentLike commentLike, String result) {
 		assertEquals("[ id = " + commentLike.getId() + " ]", result);
+	}
+	
+	/*
+	 * public static CommentLike of(User user, Comment comment) 
+	 */
+	
+	@Test
+	@DisplayName("User와 Comment로 CommentLike 생성 후 반환 -> 정상")
+	void ofUserAndCommentTest() {
+		//Given
+		User user = UserTest.getUserInstance();
+		Comment comment = CommentTest.getCommentInstance();
+		
+		//When
+		CommentLike result = CommentLike.of(user, comment);
+		
+		//Then
+		assertEquals(user, result.getUser());
+		assertEquals(comment, result.getComment());
 	}
 }

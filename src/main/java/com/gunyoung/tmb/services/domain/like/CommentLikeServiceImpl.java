@@ -53,15 +53,11 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	@CacheEvict(cacheNames=COMMENT_LIKE_NAME, 
 	key="#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#user.id).concat(':').concat(#comment.id)")
 	public CommentLike createAndSaveWithUserAndComment(User user, Comment comment) {
-		CommentLike commentLike = CommentLike.builder()
-				.user(user)
-				.comment(comment)
-				.build();
+		CommentLike newCommentLike = CommentLike.of(user, comment);
+		user.getCommentLikes().add(newCommentLike);
+		comment.getCommentLikes().add(newCommentLike);
 		
-		user.getCommentLikes().add(commentLike);
-		comment.getCommentLikes().add(commentLike);
-		
-		return save(commentLike);		
+		return save(newCommentLike);		
 	}
 	
 	@Override
