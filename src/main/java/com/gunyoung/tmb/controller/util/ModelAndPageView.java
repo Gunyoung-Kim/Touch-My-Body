@@ -9,12 +9,11 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class ModelAndPageView extends ModelAndView {
 	
-	//한 페이지 당 인덱스 개수
-	public static int INDEX_NUM_PER_PAGE = 5;
+	public static final int INDEX_NUM_PER_PAGE = 5;
 	
-	public static String CURRENT_PAGE = "currentPage";
-	public static String START_INDEX = "startIndex";
-	public static String LAST_INDEX = "lastIndex";
+	public static final String CURRENT_PAGE = "currentPage";
+	public static final String START_INDEX = "startIndex";
+	public static final String LAST_INDEX = "lastIndex";
 	
 	/**
 	 * Page View 에서 Page의 index 들 설정하는 메소드
