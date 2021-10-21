@@ -141,7 +141,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Override
 	public void delete(ExercisePost exercisePost) {
 		Objects.requireNonNull(exercisePost, "Given exercisePost must not be null!");
-		deleteAllOneToManyEntityForExercisePost(exercisePost);
+		deleteAllWeakEntityForExercisePost(exercisePost);
 		exercisePostRepository.deleteByIdInQuery(exercisePost.getId());
 	}
 	
@@ -149,7 +149,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	public void deleteAllByUserId(Long userId) {
 		List<ExercisePost> exercisePosts = exercisePostRepository.findAllByUserIdInQuery(userId);
 		for(ExercisePost exercisePost: exercisePosts) {
-			deleteAllOneToManyEntityForExercisePost(exercisePost);
+			deleteAllWeakEntityForExercisePost(exercisePost);
 		}
 		exercisePostRepository.deleteAllByUserIdInQuery(userId);
 	}
@@ -158,12 +158,12 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	public void deleteAllByExerciseId(Long exerciseId) {
 		List<ExercisePost> exercisePosts = exercisePostRepository.findAllByExerciseIdInQuery(exerciseId);
 		for(ExercisePost exercisePost: exercisePosts) {
-			deleteAllOneToManyEntityForExercisePost(exercisePost);
+			deleteAllWeakEntityForExercisePost(exercisePost);
 		}
 		exercisePostRepository.deleteAllByExerciseIdInQuery(exerciseId);
 	}
 	
-	private void deleteAllOneToManyEntityForExercisePost(ExercisePost exercisePost) {
+	private void deleteAllWeakEntityForExercisePost(ExercisePost exercisePost) {
 		Long exercisePostId = exercisePost.getId();
 		postLikeService.deleteAllByExercisePostId(exercisePostId);
 		commentService.deleteAllByExercisePostId(exercisePostId);

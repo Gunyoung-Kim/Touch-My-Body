@@ -113,7 +113,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public void delete(Comment comment) {
 		Objects.requireNonNull(comment, "Given comment must not be null!");
-		deleteAllOneToManyEntityForComment(comment);
+		deleteAllWeakEntityForComment(comment);
 		commentRepository.deleteByIdInQuery(comment.getId());
 	}
 	
@@ -121,7 +121,7 @@ public class CommentServiceImpl implements CommentService {
 	public void deleteAllByUserId(Long userId) {
 		List<Comment> comments = commentRepository.findAllByUserIdInQuery(userId);
 		for(Comment comment: comments) {
-			deleteAllOneToManyEntityForComment(comment);
+			deleteAllWeakEntityForComment(comment);
 		}
 		commentRepository.deleteAllByUserIdInQuery(userId);
 	}
@@ -130,12 +130,12 @@ public class CommentServiceImpl implements CommentService {
 	public void deleteAllByExercisePostId(Long exercisePostId) {
 		List<Comment> comments = commentRepository.findAllByExercisePostIdInQuery(exercisePostId);
 		for(Comment comment: comments) {
-			deleteAllOneToManyEntityForComment(comment);
+			deleteAllWeakEntityForComment(comment);
 		}
 		commentRepository.deleteAllByExercisePostIdInQuery(exercisePostId);
 	}
 	
-	private void deleteAllOneToManyEntityForComment(Comment comment) {
+	private void deleteAllWeakEntityForComment(Comment comment) {
 		Long commentId = comment.getId();
 		commentLikeService.deleteAllByCommentId(commentId);
 	}

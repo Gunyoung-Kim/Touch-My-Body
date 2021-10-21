@@ -42,7 +42,7 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 	
 	@Override
 	@Transactional(readOnly=true)
-	public List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year,int month) {
+	public List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year, int month) {
 		Calendar[] firstAndLastDay = DateUtil.calendarForStartAndEndOfYearAndMonth(year, month);
 		boolean[] isDoneArr = getIsDoneArrayFromRepository(userId, firstAndLastDay);
 		

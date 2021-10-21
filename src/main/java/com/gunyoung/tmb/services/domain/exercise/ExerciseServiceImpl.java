@@ -185,11 +185,11 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void delete(Exercise exercise) {
 		Objects.requireNonNull(exercise);
-		deleteAllOneToManyEntityForExercise(exercise);
+		deleteAllWeakEntityForExercise(exercise);
 		exerciseRepository.deleteByIdInQuery(exercise.getId());
 	}
 	
-	private void deleteAllOneToManyEntityForExercise(Exercise exercise) {
+	private void deleteAllWeakEntityForExercise(Exercise exercise) {
 		Long exerciseId = exercise.getId();
 		userExerciseService.deleteAllByExerciseId(exerciseId);
 		feedbackService.deleteAllByExerciseId(exerciseId);
