@@ -21,7 +21,7 @@ import com.gunyoung.tmb.utils.HttpRequestUtil;
 * @author kimgun-yeong
 *
 */
-public class HttpRequestUtilUnitTest {
+class HttpRequestUtilUnitTest {
 	
 	/*
 	 * constructor
@@ -29,7 +29,7 @@ public class HttpRequestUtilUnitTest {
 	
 	@Test
 	@DisplayName("생성자 호출시 예외 발생 확인")
-	public void constructorTestThrowsAssertionError() throws NoSuchMethodException {
+	void constructorTestThrowsAssertionError() throws NoSuchMethodException {
 		//Given
 		Constructor<HttpRequestUtil> constructor = HttpRequestUtil.class.getDeclaredConstructor();
 		constructor.setAccessible(true);
@@ -41,12 +41,12 @@ public class HttpRequestUtilUnitTest {
 	}
 	
 	/*
-	 *  public static String getRemoteHost(HttpServletRequest request)
+	 *  static String getRemoteHost(HttpServletRequest request)
 	 */
 	
 	@Test
 	@DisplayName("HttpRequest의 RemoteHost를 반환 -> 'X-Real-IP' 헤더 있음")
-	public void getRemoteHostTestWithX_REAL_IP() {
+	void getRemoteHostTestWithX_REAL_IP() {
 		//Given
 		String remoteHostFromX_REAL_IP = "66.72.22.1";
 		HttpServletRequest request = mock(HttpServletRequest.class);
@@ -61,7 +61,7 @@ public class HttpRequestUtilUnitTest {
 	
 	@Test
 	@DisplayName("HttpRequest의 RemoteHost를 반환 -> 'X-Real-IP' 헤더 없음")
-	public void getRemoteHostTestNoX_REAL_IP() {
+	void getRemoteHostTestNoX_REAL_IP() {
 		//Given
 		String remoteHost = "66.72.22.1";
 		HttpServletRequest request = mock(HttpServletRequest.class);

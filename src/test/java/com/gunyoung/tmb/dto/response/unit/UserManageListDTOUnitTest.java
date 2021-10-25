@@ -18,15 +18,15 @@ import com.gunyoung.tmb.testutil.UserTest;
  * @author kimgun-yeong
  *
  */
-public class UserManageListDTOUnitTest {
+class UserManageListDTOUnitTest {
 	
 	/*
-	 * public static UserManageListDTO of(User user)
+	 * static UserManageListDTO of(User user)
 	 */
 	
 	@Test
 	@DisplayName("User을 UserManagerListDTO객체로 변환 -> 정상")
-	public void ofTest() {
+	void ofTest() {
 		//Given
 		Long userId = Long.valueOf(24);
 		User user = UserTest.getUserInstance();
@@ -48,12 +48,12 @@ public class UserManageListDTOUnitTest {
 	}
 	
 	/*
-	 * public static List<UserManageListDTO> of(Iterable<User> users)
+	 * static List<UserManageListDTO> of(Iterable<User> users)
 	 */
 	
 	@Test
 	@DisplayName("User 컬렉션을 통해 UserManageListDTO 리스트 반환 -> 정상")
-	public void ofListTest() {
+	void ofListTest() {
 		//Given
 		List<User> users = new ArrayList<>();
 		int givenUserNum = 29;

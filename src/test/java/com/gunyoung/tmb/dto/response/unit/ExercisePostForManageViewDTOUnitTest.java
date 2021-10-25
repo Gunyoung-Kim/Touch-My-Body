@@ -20,15 +20,15 @@ import com.gunyoung.tmb.testutil.UserTest;
  * @author kimgun-yeong
  *
  */
-public class ExercisePostForManageViewDTOUnitTest {
+class ExercisePostForManageViewDTOUnitTest {
 	
 	/*
-	 * public static List<ExercisePostForManageViewDTO> of(Iterable<ExercisePost> exercisePosts, User user) 
+	 * static List<ExercisePostForManageViewDTO> of(Iterable<ExercisePost> exercisePosts, User user) 
 	 */
 	
 	@Test
 	@DisplayName("ExercisePost 컬렉션과 User를 통해 ExercisePostForManageViewDTO 리스트 반환 -> 정상")
-	public void ofListAndUserTest() {
+	void ofListAndUserTest() {
 		//Given
 		int givenExercisePostNum = 15;
 		Iterable<ExercisePost> exercisePosts =  getExercisePosts(givenExercisePostNum);

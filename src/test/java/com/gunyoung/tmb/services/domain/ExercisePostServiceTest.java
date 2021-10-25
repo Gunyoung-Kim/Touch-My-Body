@@ -49,7 +49,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
  */
 @Integration
 @SpringBootTest
-public class ExercisePostServiceTest {
+class ExercisePostServiceTest {
 	
 	@Autowired
 	ExercisePostRepository exercisePostRepository;
@@ -83,12 +83,12 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 *  public ExercisePost findById(Long id)
+	 *  ExercisePost findById(Long id)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("id로 ExercisePost 찾기 -> 해당 id의 exercisePost 없음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		long nonExistExercisePostId = ExercisePostTest.getNonExistExercisePostId(exercisePostRepository);
 		
@@ -102,7 +102,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("id로 ExercisePost 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long exercisePostId = exercisePost.getId();
 		
@@ -114,12 +114,12 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 *  public List<ExercisePost> findAllByUserIdOrderByCreatedAtASCCustom(Long userId)
+	 *  List<ExercisePost> findAllByUserIdOrderByCreatedAtASCCustom(Long userId)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("User ID로 ExercisePost들 오래된 순으로 찾기 ->정상, 개수 확인")
-	public void findAllByUserIdOrderByCreatedAtASCCustomTestCheckCount() {
+	void findAllByUserIdOrderByCreatedAtASCCustomTestCheckCount() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -141,7 +141,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User ID로 ExercisePost들 오래된 순으로 찾기 ->정상, 정렬 순서 확인")
-	public void findAllByUserIdOrderByCreatedAtASCCustomTestCheckSorting() {
+	void findAllByUserIdOrderByCreatedAtASCCustomTestCheckSorting() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -162,12 +162,12 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 * public List<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId)
+	 * List<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("User ID로 ExercisePost들 최신 순으로 찾기 ->정상, 개수 확인")
-	public void findAllByUserIdOrderByCreatedAtDescTestCheckCount() {
+	void findAllByUserIdOrderByCreatedAtDescTestCheckCount() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -189,7 +189,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User ID로 ExercisePost들 최신 순으로 찾기 ->정상, 정렬 확인")
-	public void findAllByUserIdOrderByCreatedAtDescTestCheckSorting() {
+	void findAllByUserIdOrderByCreatedAtDescTestCheckSorting() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -210,13 +210,13 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOrderByCreatedAtDESCByPage(Integer pageNumber)
+	 *  Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOrderByCreatedAtDESCByPage(Integer pageNumber)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 가져오기 -> 정상, 개수 확인")
-	public void findAllForPostForCommunityViewDTOByPageTestCheckSize() {
+	void findAllForPostForCommunityViewDTOByPageTestCheckSize() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -242,14 +242,14 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 * public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithKeywordByPage(String keyword,
+	 * Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithKeywordByPage(String keyword,
 			Integer pageNumber)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 키워드로 가져오기 -> 정상, 키워드가 모든 ExercisePost 만족")
-	public void findAllForPostForCommunityViewDTOWithKeywordByPageTestKeywordForAll() {
+	void findAllForPostForCommunityViewDTOWithKeywordByPageTestKeywordForAll() {
 		//Given
 		String contentsForAllExercisePost = ExercisePostTest.getExercisePostInstance().getContents();
 		String keywordForAllExercisePostInDB = contentsForAllExercisePost.substring(0,contentsForAllExercisePost.length() -2);
@@ -282,7 +282,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 키워드로 가져오기 -> 정상, 키워드가 하나도 만족하지 않음")
-	public void findAllForPostForCommunityViewDTOWithKeywordByPageTest() {
+	void findAllForPostForCommunityViewDTOWithKeywordByPageTest() {
 		//Given
 		String keywordForNothing = "nonExist!!!!";
 		
@@ -311,13 +311,13 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetByPage(TargetType target,
+	 *  Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetByPage(TargetType target,
 			Pageable pageable)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 객체들 특정 target만 가져오기 -> 정상")
-	public void  findAllForPostForCommunityViewDTOWithTargetByPage() {
+	void  findAllForPostForCommunityViewDTOWithTargetByPage() {
 		//Given
 		TargetType targetTypeForAllExercisePost = ExerciseTest.getExerciseInstance().getTarget();
 		User user = UserTest.getUserInstance();
@@ -344,14 +344,14 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 *  public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType target,
+	 *  Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType target,
 			String keyword, Integer pageNumber)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 키워드로 객체들 특정 target만 가져오기 -> 정상, 모두 target만 일치, 키워드는 모두 불일치")
-	public void findAllForPostForCommunityViewDTOWithTargetAndKeywordByPageTestAllTargetNoneKeyword() {
+	void findAllForPostForCommunityViewDTOWithTargetAndKeywordByPageTestAllTargetNoneKeyword() {
 		//Given
 		String keywordForNothing = "nonExist!!!!";
 		TargetType targetTypeForAllExercisePost = ExerciseTest.getExerciseInstance().getTarget();
@@ -381,7 +381,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("커뮤니티에 보여질 PostForCommunityViewDTO 키워드로 객체들 특정 target만 가져오기 -> 정상, 모두 target 일치, 키워드 모두 일치")
-	public void findAllForPostForCommunityViewDTOWithTargetAndKeywordByPageTestAllTargetAllKeyword() {
+	void findAllForPostForCommunityViewDTOWithTargetAndKeywordByPageTestAllTargetAllKeyword() {
 		//Given
 		String contentsForAllExercisePost = ExercisePostTest.getExercisePostInstance().getContents();
 		String keywordForAllExercisePostInDB = contentsForAllExercisePost.substring(0,contentsForAllExercisePost.length() -2);
@@ -411,12 +411,12 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 *  public ExercisePost save(ExercisePost exercisePost)
+	 *  ExercisePost save(ExercisePost exercisePost)
 	 */
 	
 	@Test
 	@DisplayName("ExercisePost 수정하기 -> 정상, 변화 확인")
-	public void mergeTestCheckChanged() {
+	void mergeTestCheckChanged() {
 		//Given
 		String changeTitle = "Changed Title";
 		Long exercisePostId = exercisePost.getId();
@@ -432,7 +432,7 @@ public class ExercisePostServiceTest {
 	
 	@Test
 	@DisplayName("ExercisePost 수정하기 -> 정상, 개수 확인")
-	public void mergeTestCheckCount() {
+	void mergeTestCheckCount() {
 		//Given
 		String changeTitle = "Changed Title";
 		exercisePost.setTitle(changeTitle);
@@ -449,7 +449,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("ExercisePost 추가하기 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		ExercisePost newExercisePost = ExercisePostTest.getExercisePostInstance();
 		Long givenExercisePostNum = exercisePostRepository.count();
@@ -462,13 +462,13 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 * public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exericse)
+	 * ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exericse)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("User, Exercise와 연결 짓고 저장하기 ->정상, 개수 확인")
-	public void saveWithUserAndExerciseTestCheckCount() {
+	void saveWithUserAndExerciseTestCheckCount() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -491,7 +491,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User, Exercise와 연결 짓고 저장하기 ->정상, User와의 연관관계 확인")
-	public void saveWithUserAndExerciseTestCheckWithUser() {
+	void saveWithUserAndExerciseTestCheckWithUser() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -511,7 +511,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User, Exercise와 연결 짓고 저장하기 ->정상, Exercise와의 연관관계 확인")
-	public void saveWithUserAndExerciseTestCheckWithExercise() {
+	void saveWithUserAndExerciseTestCheckWithExercise() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -529,13 +529,13 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 *  public void delete(ExercisePost exercisePost)
+	 *  void delete(ExercisePost exercisePost)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("ExercisePost 삭제하기 -> 정상, Check ExercisePost Delete")
-	public void deleteTestCheckExercisePostDelete() {
+	void deleteTestCheckExercisePostDelete() {
 		//Given
 		Long givenExercisePostNum = exercisePostRepository.count();
 		
@@ -549,7 +549,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("ExercisePost 삭제하기 -> 정상, Check PostLike Delete")
-	public void deleteTestCheckPostLikeDelete() {
+	void deleteTestCheckPostLikeDelete() {
 		//Given
 		PostLike postLike = PostLikeTest.getPostLikeInstance();
 		postLike.setExercisePost(exercisePost);
@@ -567,7 +567,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("ExercisePost 삭제하기 -> 정상, Check Comment Delete")
-	public void deleteTestCheckCommentDelete() {
+	void deleteTestCheckCommentDelete() {
 		//Given
 		Comment comment = CommentTest.getCommentInstance();
 		comment.setExercisePost(exercisePost);
@@ -583,13 +583,13 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 * public void checkIsMineAndDelete(Long userId, Long exercisePostId) {
+	 * void checkIsMineAndDelete(Long userId, Long exercisePostId) {
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("User ID, ExercisePost ID로 찾고 존재하면 삭제 -> 존재하지 않음")
-	public void checkIsMineAndDeleteNotMine() {
+	void checkIsMineAndDeleteNotMine() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -610,7 +610,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User ID, ExercisePost ID로 찾고 존재하면 삭제 -> 정상 삭제")
-	public void checkIsMineAndDeleteTest() {
+	void checkIsMineAndDeleteTest() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -629,13 +629,13 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 * public void deleteAllByUserId(Long userId)
+	 * void deleteAllByUserId(Long userId)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("User ID로 ExercisePost 일괄 삭제 -> 정상 ,Check ExercisePosts Delete")
-	public void deleteAllByUserIdTestCheckExercisePostsDelete() {
+	void deleteAllByUserIdTestCheckExercisePostsDelete() {
 		//Given
 		int addExercisePostNum = 5;
 		addExercisePostNum(addExercisePostNum);
@@ -664,7 +664,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User ID로 ExercisePost 일괄 삭제 -> 정상 ,Check PostLikes Delete")
-	public void deleteAllByUserIdTestCheckPostLikesDelete() {
+	void deleteAllByUserIdTestCheckPostLikesDelete() {
 		//Given
 		int addExercisePostNum = 10;
 		addExercisePostNum(addExercisePostNum);
@@ -700,7 +700,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User ID로 ExercisePost 일괄 삭제 -> 정상 ,Check Comments Delete")
-	public void deleteAllByUserIdTestCheckCommentsDelete() {
+	void deleteAllByUserIdTestCheckCommentsDelete() {
 		//Given
 		int addExercisePostNum = 10;
 		addExercisePostNum(addExercisePostNum);
@@ -734,13 +734,13 @@ public class ExercisePostServiceTest {
 	}
 
 	/*
-	 * public void deleteAllByExerciseId(Long exerciseId)
+	 * void deleteAllByExerciseId(Long exerciseId)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("Exercise ID로 ExercisePost 일괄 삭제 -> 정상 ,Check ExercisePosts Delete")
-	public void deleteAllByExerciseIdTestCheckExercisePostsDelete() {
+	void deleteAllByExerciseIdTestCheckExercisePostsDelete() {
 		//Given
 		int addExercisePostNum = 5;
 		addExercisePostNum(addExercisePostNum);
@@ -769,7 +769,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise ID로 ExercisePost 일괄 삭제 -> 정상 ,Check PostLikes Delete")
-	public void deleteAllByExerciseIdTestCheckPostLikesDelete() {
+	void deleteAllByExerciseIdTestCheckPostLikesDelete() {
 		//Given
 		int addExercisePostNum = 10;
 		addExercisePostNum(addExercisePostNum);
@@ -805,7 +805,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise ID로 ExercisePost 일괄 삭제 -> 정상 ,Check Comments Delete")
-	public void deleteAllByExerciseIdTestCheckCommentsDelete() {
+	void deleteAllByExerciseIdTestCheckCommentsDelete() {
 		//Given
 		int addExercisePostNum = 10;
 		addExercisePostNum(addExercisePostNum);
@@ -849,13 +849,13 @@ public class ExercisePostServiceTest {
 	
 	
 	/*
-	 *  public long countWithUserId(Long userId)
+	 *  long countWithUserId(Long userId)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("User ID 만족하는 ExercisePost 개수 반환 -> 정상")
-	public void countWithUserIdTest() {
+	void countWithUserIdTest() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -877,13 +877,13 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 *  public long countWithTitleAndContentsKeyword(String keyword)
+	 *  long countWithTitleAndContentsKeyword(String keyword)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("키워드(제목, 내용)를 만족하는 게시글 개수 반환 -> 정상, 모두 반환")
-	public void countWithTitleAndContentsKeywordTestEvery() {
+	void countWithTitleAndContentsKeywordTestEvery() {
 		//Given
 		String keywordEveryHas = ExercisePostTest.getExercisePostInstance().getTitle();
 		
@@ -901,7 +901,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("키워드(제목, 내용)를 만족하는 게시글 개수 반환 -> 정상, 0개 반환")
-	public void countWithTitleAndContentsKeywordTestNone() {
+	void countWithTitleAndContentsKeywordTestNone() {
 		//Given
 		String keywordNoOneHas = "none!!!!";
 		
@@ -913,13 +913,13 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 *  public long countWithTarget(TargetType target)
+	 *  long countWithTarget(TargetType target)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("해당 부위에 해당하는 Post만 개수 반환 -> 정상, 모든 ExercisePost 개수")
-	public void countWithTargetTestAll() {
+	void countWithTargetTestAll() {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
@@ -945,7 +945,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("해당 부위에 해당하는 Post만 개수 반환 -> 정상, 만족하는 ExercisePost 없음")
-	public void countWithTargetTestNone() {
+	void countWithTargetTestNone() {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
@@ -968,13 +968,13 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 *  public long countWithTargetAndKeyword(TargetType target, String keyword)
+	 *  long countWithTargetAndKeyword(TargetType target, String keyword)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("해당 부위에 해당하고 이름과 제목에 키워드 포함하는 게시글 개수 반환 ->정상, 키워드 모두 불만족, target은 모두 만족")
-	public void countWithTargetAndKeywordTestAllTargetNonekeyword() {
+	void countWithTargetAndKeywordTestAllTargetNonekeyword() {
 		//Given
 		String keywordForNothing = "nothing!!!";
 		
@@ -999,7 +999,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("해당 부위에 해당하고 이름과 제목에 키워드 포함하는 게시글 개수 반환 ->정상 , 키워드 target 모두 만족")
-	public void countWithTargetAndKeywordTestAll() {
+	void countWithTargetAndKeywordTestAll() {
 		//Given
 		String contentsForAllExercisePost = ExercisePostTest.getExercisePostInstance().getContents();
 		String keywordForAllExercisePostInDB = contentsForAllExercisePost.substring(0,contentsForAllExercisePost.length() -2);
@@ -1025,13 +1025,13 @@ public class ExercisePostServiceTest {
 	}
 	
 	/*
-	 *  public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id)
+	 *  ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("ExercisePost id로 ExercisePost 가져와서 이를 통해 ExercisePostViewDTO 생성 및 반환 -> 해당 id의 ExercisePost 없음")
-	public void getExercisePostViewDTOWithExercisePostIdNonExist() {
+	void getExercisePostViewDTOWithExercisePostIdNonExist() {
 		//Given
 		Long nonExistId = ExercisePostTest.getNonExistExercisePostId(exercisePostRepository);
 		
@@ -1045,7 +1045,7 @@ public class ExercisePostServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("ExercisePost id로 ExercisePost 가져와서 이를 통해 ExercisePostViewDTO 생성 및 반환 ->  정상")
-	public void getExercisePostViewDTOWithExercisePostIdTest() {
+	void getExercisePostViewDTOWithExercisePostIdTest() {
 		//Given
 		Long exercisePostId = exercisePost.getId();
 		

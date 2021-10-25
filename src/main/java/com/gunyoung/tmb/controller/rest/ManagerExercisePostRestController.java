@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.controller.rest;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +24,7 @@ public class ManagerExercisePostRestController {
 	 * @param postId 삭제하려는 대상 ExercisePost의 Id
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/community/remove/post", method = RequestMethod.DELETE)
+	@DeleteMapping(value="/manager/community/remove/post")
 	public void removeExercisePostByManager(@RequestParam("postId") Long postId) {
 		exercisePostService.deleteById(postId);
 	}

@@ -7,10 +7,10 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -70,7 +70,7 @@ public class ExercisePostController {
 	 * @param keyword ExercisePost 제목 및 내용의 검색 키워드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community",method=RequestMethod.GET)
+	@GetMapping(value="/community")
 	public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") Integer page,
 			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
 		Page<PostForCommunityViewDTO> pageResult = getPageResultForExercisePostView(keyword, page);
@@ -109,7 +109,7 @@ public class ExercisePostController {
 	 * @throws TargetTypeNotFoundedException 요청 카테고리가 존재하지 않을 때
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/{target}",method = RequestMethod.GET)
+	@GetMapping(value="/community/{target}")
 	public ModelAndView exercisePostViewWithTarget(@RequestParam(value="page", required = false,defaultValue="1") Integer page
 			, @RequestParam(value="keyword",required=false)String keyword, ModelAndPageView mav, @PathVariable("target") String targetName) {
 		TargetType type;
@@ -154,7 +154,7 @@ public class ExercisePostController {
 	 * @throws ExercisePostNotFoundedException 해당 ID의 ExercisePost 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/{post_id}" ,method = RequestMethod.GET)
+	@GetMapping(value="/community/post/{post_id}")
 	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId, ModelAndView mav) {
 		ExercisePostViewDTO postViewDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(postId);
 		if(postViewDTO == null) {
@@ -175,7 +175,7 @@ public class ExercisePostController {
 	 * 게시글 작성하는 화면 반환하는 메소드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/addpost", method = RequestMethod.GET)
+	@GetMapping(value="/community/post/addpost")
 	public ModelAndView addExercisePostView(ModelAndView mav) {
 		mav.setViewName("addExercisePost");
 		
@@ -189,7 +189,7 @@ public class ExercisePostController {
 	 * @throws ExerciseNotFoundedException dto의 exerciseName에 해당하는 Exercise 없으면 
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/addpost", method = RequestMethod.POST)
+	@PostMapping(value="/community/post/addpost")
 	@LoginIdSessionNotNull
 	public ModelAndView addExercisePost(@ModelAttribute SaveExercisePostDTO dto, ModelAndView mav) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
@@ -218,7 +218,7 @@ public class ExercisePostController {
 	 * @throws ExercisePostNotFoundedException 해당 ID의 ExercisePost 없으면 
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/community/post/{post_id}/addComment",method = RequestMethod.POST)
+	@PostMapping(value="/community/post/{post_id}/addComment")
 	@LoginIdSessionNotNull
 	public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId, @ModelAttribute SaveCommentDTO dto,
 			@RequestParam("isAnonymous") boolean isAnonymous, HttpServletRequest request) {

@@ -35,7 +35,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
  */
 @Integration
 @SpringBootTest
-public class FeedbackServiceTest {
+class FeedbackServiceTest {
 	
 	@Autowired
 	FeedbackRepository feedbackRepository;
@@ -63,12 +63,12 @@ public class FeedbackServiceTest {
 	}
 	
 	/*
-	 *  public Feedback findById(Long id)
+	 *  Feedback findById(Long id)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("id로 Feedback 찾기 -> 해당 id의 feedback 없음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		long nonExistFeedbackId = FeedbackTest.getNonExistFeedbackId(feedbackRepository);
 		
@@ -82,7 +82,7 @@ public class FeedbackServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("id로 Feedback 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long existFeedbackId = feedback.getId();
 		
@@ -95,12 +95,12 @@ public class FeedbackServiceTest {
 	}
 	
 	/*
-	 * public Page<Feedback> findAllByExerciseIdByPage(Long exerciseId, Integer pageNum, int pageSize)
+	 * Page<Feedback> findAllByExerciseIdByPage(Long exerciseId, Integer pageNum, int pageSize)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("Exercise ID로 Feedback 페이징 처리해서 찾기 -> 정상")
-	public void findAllByExerciseIdByPageTest() {
+	void findAllByExerciseIdByPageTest() {
 		//Given
 		int pageSize = PageSize.FEEDBACK_FOR_MANAGE_PAGE_SIZE.getSize();
 		Exercise exercise = ExerciseTest.getExerciseInstance();
@@ -123,12 +123,12 @@ public class FeedbackServiceTest {
 	}
 	
 	/*
-	 *  public Feedback save(Feedback feedback)
+	 *  Feedback save(Feedback feedback)
 	 */
 	
 	@Test
 	@DisplayName("Feedback 수정하기 -> 정상, 변화 확인")
-	public void mergeTestCheckChange() {
+	void mergeTestCheckChange() {
 		//Given
 		String changeTitle = "Changed Title";
 		Long feedbackId = feedback.getId();
@@ -144,7 +144,7 @@ public class FeedbackServiceTest {
 	
 	@Test
 	@DisplayName("Feedback 수정하기 -> 정상, 개수 변화 없음 확인")
-	public void mergeTestCheckCount() {
+	void mergeTestCheckCount() {
 		//Given
 		String changeTitle = "Changed Title";
 		feedback.setTitle(changeTitle);
@@ -161,7 +161,7 @@ public class FeedbackServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Feedback 추가하기 -> 정상")
-	public void addTest() {
+	void addTest() {
 		//Given
 		Feedback newFeedback = FeedbackTest.getFeedbackInstance();
 		Long givenFeedbackNum = feedbackRepository.count();
@@ -174,12 +174,12 @@ public class FeedbackServiceTest {
 	}
 	
 	/*
-	 * public Feedback saveWithUserAndExercise(User user, Exercise exercise)
+	 * Feedback saveWithUserAndExercise(User user, Exercise exercise)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("User와 Exercise로 Feedback 추가하기 -> 정상, Feedback 개수 추가 확인")
-	public void saveWithUserAndExerciseTestCheckCount() {
+	void saveWithUserAndExerciseTestCheckCount() {
 		//Given
 		Feedback feedback = FeedbackTest.getFeedbackInstance();
 		
@@ -201,7 +201,7 @@ public class FeedbackServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User와 Exercise로 Feedback 추가하기 -> 정상, User와의 연관관계 확인")
-	public void saveWithUserAndExerciseTestCheckWithUser() {
+	void saveWithUserAndExerciseTestCheckWithUser() {
 		//Given
 		Feedback feedback = FeedbackTest.getFeedbackInstance();
 		
@@ -221,7 +221,7 @@ public class FeedbackServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User와 Exercise로 Feedback 추가하기 -> 정상, Exercise와의 연관관계 확인")
-	public void saveWithUserAndExerciseTestCheckWithExercise() {
+	void saveWithUserAndExerciseTestCheckWithExercise() {
 		//Given
 		Feedback feedback = FeedbackTest.getFeedbackInstance();
 		
@@ -239,13 +239,13 @@ public class FeedbackServiceTest {
 	}
 	
 	/*
-	 *  public void delete(Feedback feedback)
+	 *  void delete(Feedback feedback)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("Feedback 삭제하기 -> 정상")
-	public void deleteTest() {
+	void deleteTest() {
 		//Given
 		Long givenFeedbackNum = feedbackRepository.count();
 		

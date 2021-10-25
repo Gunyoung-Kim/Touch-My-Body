@@ -61,15 +61,15 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	@Transactional(readOnly= true)
-	public Page<Comment> findAllByUserIdOrderByCreatedAtAsc(Long userId, Integer pageNum, int page_size) {
-		PageRequest pageRequest = PageRequest.of(pageNum-1, page_size);
+	public Page<Comment> findAllByUserIdOrderByCreatedAtAsc(Long userId, Integer pageNum, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNum-1, pageSize);
 		return commentRepository.findAllByUserIdOrderByCreatedAtAscInPage(userId,pageRequest);
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Page<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId, Integer pageNum, int page_size) {
-		PageRequest pageRequest = PageRequest.of(pageNum-1, page_size);
+	public Page<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId, Integer pageNum, int pageSize) {
+		PageRequest pageRequest = PageRequest.of(pageNum-1, pageSize);
 		return commentRepository.findAllByUserIdOrderByCreatedAtDescInPage(userId,pageRequest);
 	}
 
@@ -80,20 +80,26 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	public Comment saveWithUserAndExercisePost(Comment comment, User user, ExercisePost exercisePost) {
-		comment.setUser(user);
-		comment.setExercisePost(exercisePost);
-		user.getComments().add(comment);
-		exercisePost.getComments().add(comment);
+		setRelationBetweenCommentAndUser(comment, user);
+		setRelationBetweenCommentAndPost(comment, exercisePost);
 		
 		return save(comment);
+	}
+	
+	private void setRelationBetweenCommentAndUser(Comment comment, User user) {
+		comment.setUser(user);
+		user.getComments().add(comment);
+	}
+	
+	private void setRelationBetweenCommentAndPost(Comment comment, ExercisePost exercisePost) {
+		comment.setExercisePost(exercisePost);
+		exercisePost.getComments().add(comment);
 	}
 	
 	@Override
 	public void checkIsMineAndDelete(Long userId, Long commentId) {
 		Optional<Comment> comment = commentRepository.findByUserIdAndCommentId(userId, commentId);
-		comment.ifPresent((c) -> {
-			delete(c);
-		});
+		comment.ifPresent(this::delete);
 	}
 	
 	@Override
@@ -107,7 +113,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public void delete(Comment comment) {
 		Objects.requireNonNull(comment, "Given comment must not be null!");
-		deleteAllOneToManyEntityForComment(comment);
+		deleteAllWeakEntityForComment(comment);
 		commentRepository.deleteByIdInQuery(comment.getId());
 	}
 	
@@ -115,7 +121,7 @@ public class CommentServiceImpl implements CommentService {
 	public void deleteAllByUserId(Long userId) {
 		List<Comment> comments = commentRepository.findAllByUserIdInQuery(userId);
 		for(Comment comment: comments) {
-			deleteAllOneToManyEntityForComment(comment);
+			deleteAllWeakEntityForComment(comment);
 		}
 		commentRepository.deleteAllByUserIdInQuery(userId);
 	}
@@ -124,12 +130,12 @@ public class CommentServiceImpl implements CommentService {
 	public void deleteAllByExercisePostId(Long exercisePostId) {
 		List<Comment> comments = commentRepository.findAllByExercisePostIdInQuery(exercisePostId);
 		for(Comment comment: comments) {
-			deleteAllOneToManyEntityForComment(comment);
+			deleteAllWeakEntityForComment(comment);
 		}
 		commentRepository.deleteAllByExercisePostIdInQuery(exercisePostId);
 	}
 	
-	private void deleteAllOneToManyEntityForComment(Comment comment) {
+	private void deleteAllWeakEntityForComment(Comment comment) {
 		Long commentId = comment.getId();
 		commentLikeService.deleteAllByCommentId(commentId);
 	}

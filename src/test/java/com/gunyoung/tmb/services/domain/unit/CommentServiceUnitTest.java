@@ -40,7 +40,7 @@ import com.gunyoung.tmb.testutil.CommentTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class CommentServiceUnitTest {
+class CommentServiceUnitTest {
 	
 	@Mock
 	CommentRepository commentRepository;
@@ -61,11 +61,11 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public Comment findById(Long id)
+	 * Comment findById(Long id)
 	 */
 	@Test
 	@DisplayName("ID로 Comment 찾기 -> 존재하지 않음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		given(commentRepository.findById(nonExistId)).willReturn(Optional.empty());
@@ -79,7 +79,7 @@ public class CommentServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Comment 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long commentId = Long.valueOf(1);
 		given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
@@ -92,12 +92,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public Comment findWithUserAndExercisePostById(Long id) 
+	 * Comment findWithUserAndExercisePostById(Long id) 
 	 */
 	
 	@Test
 	@DisplayName("ID로 User와 ExercisePost 페치조인 후 Comment 반환 -> 존재하지 않음")
-	public void findWithUserAndExercisePostByIdNonExist() {
+	void findWithUserAndExercisePostByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		given(commentRepository.findWithUserAndExercisePostById(nonExistId)).willReturn(Optional.empty());
@@ -111,7 +111,7 @@ public class CommentServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 User와 ExercisePost 페치조인 후 Comment 반환 -> 정상")
-	public void findWithUserAndExercisePostById() {
+	void findWithUserAndExercisePostById() {
 		//Given
 		Long commentId = Long.valueOf(1);
 		given(commentRepository.findWithUserAndExercisePostById(commentId)).willReturn(Optional.of(comment));
@@ -124,12 +124,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public Comment findWithCommentLikesById(Long id)
+	 * Comment findWithCommentLikesById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 CommentLikes 페치조인 후 Comment 반환 -> 존재하지 않음")
-	public void findWithCommentLikesByIdNonExist() {
+	void findWithCommentLikesByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		given(commentRepository.findWithCommentLikesById(nonExistId)).willReturn(Optional.empty());
@@ -143,7 +143,7 @@ public class CommentServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 CommentLikes 페치조인 후 Comment 반환 -> 정상")
-	public void findWithCommentLikesByIdTest() {
+	void findWithCommentLikesByIdTest() {
 		//Given
 		Long commentId = Long.valueOf(1);
 		given(commentRepository.findWithCommentLikesById(commentId)).willReturn(Optional.of(comment));
@@ -156,12 +156,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 *  public List<Comment> findAllByExercisePostId(Long postId)
+	 *  List<Comment> findAllByExercisePostId(Long postId)
 	 */
 	
 	@Test
 	@DisplayName("ExercisePost ID를 만족하는 Comment들 반환 -> 정상")
-	public void findAllByExercisePostIdTest() {
+	void findAllByExercisePostIdTest() {
 		//Given
 		Long postId = Long.valueOf(1);
 		List<Comment> commentList = new ArrayList<>();
@@ -175,12 +175,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public Page<Comment> findAllByUserIdOrderByCreatedAtASC(Long userId,Integer pageNum, int page_size)
+	 * Page<Comment> findAllByUserIdOrderByCreatedAtASC(Long userId,Integer pageNum, int page_size)
 	 */
 	
 	@Test
 	@DisplayName("User ID를 만족하는 Comment들 생성 오래된순으로 페이지 반환 -> 정상")
-	public void findAllByUserIdOrderByCreatedAtASCTest() {
+	void findAllByUserIdOrderByCreatedAtASCTest() {
 		//Given
 		Long userId = Long.valueOf(1);
 		int pageNum = 1;
@@ -199,12 +199,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public Page<Comment> findAllByUserIdOrderByCreatedAtDESC(Long userId,Integer pageNum, int page_size)
+	 * Page<Comment> findAllByUserIdOrderByCreatedAtDESC(Long userId,Integer pageNum, int page_size)
 	 */
 	
 	@Test
 	@DisplayName("User ID를 만족하는 Comment들 생성 최신순으로 페이지 반환 -> 정상")
-	public void findAllByUserIdOrderByCreatedAtDESCTest() {
+	void findAllByUserIdOrderByCreatedAtDESCTest() {
 		//Given
 		Long userId = Long.valueOf(1);
 		int pageNum = 1;
@@ -223,12 +223,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public Comment save(Comment comment)
+	 * Comment save(Comment comment)
 	 */
 	
 	@Test
 	@DisplayName("Comment 저장")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		given(commentRepository.save(comment)).willReturn(comment);
 		
@@ -240,12 +240,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public Comment saveWithUserAndExercisePost(Comment comment, User user, ExercisePost exercisePost) 
+	 * Comment saveWithUserAndExercisePost(Comment comment, User user, ExercisePost exercisePost) 
 	 */
 	
 	@Test
 	@DisplayName("User, ExercisePost 와 연관관계 생성 후 저장 -> 연관 관계 확인")
-	public void saveWithUserAndExercisePostTest() {
+	void saveWithUserAndExercisePostTest() {
 		//Given
 		User user = new User();
 		ExercisePost exercisePost = new ExercisePost();
@@ -260,7 +260,7 @@ public class CommentServiceUnitTest {
 	
 	@Test
 	@DisplayName("User, ExercisePost 와 연관관계 생성 후 저장 -> 저장 확인")
-	public void saveWithUserAndExercisePostSaveTest() {
+	void saveWithUserAndExercisePostSaveTest() {
 		//Given
 		User user = new User();
 		ExercisePost exercisePost = new ExercisePost();
@@ -274,12 +274,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public void delete(Comment comment)
+	 * void delete(Comment comment)
 	 */
 	
 	@Test
 	@DisplayName("Comment 삭제 -> null 값 들어옴")
-	public void deleteTestNullComment() {
+	void deleteTestNullComment() {
 		//Given
 		
 		//When, Then
@@ -290,7 +290,7 @@ public class CommentServiceUnitTest {
 	
 	@Test
 	@DisplayName("Comment 삭제 -> 정상, check CommentRepository")
-	public void deleteTestCheckCommentRepo() {
+	void deleteTestCheckCommentRepo() {
 		//Given
 		
 		//When
@@ -302,7 +302,7 @@ public class CommentServiceUnitTest {
 	
 	@Test
 	@DisplayName("Comment 삭제 -> 정상, check CommentLikeService")
-	public void deleteTestCheckCommentLikeService() {
+	void deleteTestCheckCommentLikeService() {
 		//Given
 		Long commentId = Long.valueOf(24);
 		comment.setId(commentId);
@@ -315,12 +315,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteById(Long id)
+	 * void deleteById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("Comment ID로 찾고 삭제 -> Comment 없음")
-	public void deleteByIdNonExist() {
+	void deleteByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		given(commentRepository.findById(nonExistId)).willReturn(Optional.empty());
@@ -334,7 +334,7 @@ public class CommentServiceUnitTest {
 	
 	@Test
 	@DisplayName("Comment ID로 찾고 삭제 -> 정상")
-	public void deleteByIdTest() {
+	void deleteByIdTest() {
 		//Given
 		Long commentId = Long.valueOf(1);
 		given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
@@ -347,12 +347,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public void checkIsMineAndDelete(Long userId, Long commentId)
+	 * void checkIsMineAndDelete(Long userId, Long commentId)
 	 */
 	
 	@Test
 	@DisplayName("해당 Comment ID의 Comment 작성자의 ID가 userID와 일치하면 삭제 -> 일치하지 않음")
-	public void checkIsMineAndDeleteNotMatch() {
+	void checkIsMineAndDeleteNotMatch() {
 		//Given
 		Long userId = Long.valueOf(1), commentId = Long.valueOf(1);
 		given(commentRepository.findByUserIdAndCommentId(userId, commentId)).willReturn(Optional.empty());
@@ -366,7 +366,7 @@ public class CommentServiceUnitTest {
 	
 	@Test
 	@DisplayName("해당 Comment ID의 Comment 작성자의 ID가 userID와 일치하면 삭제 -> 정상")
-	public void checkIsMineAndDeleteTest() {
+	void checkIsMineAndDeleteTest() {
 		//Given
 		Long userId = Long.valueOf(1), commentId = Long.valueOf(1);
 		given(commentRepository.findByUserIdAndCommentId(userId, commentId)).willReturn(Optional.of(comment));
@@ -379,12 +379,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteAllByUserId(Long userId)
+	 * void deleteAllByUserId(Long userId)
 	 */
 	
 	@Test
 	@DisplayName("User ID에 해당하는 Comment 일괄 삭제 -> 정상, No OneToMany Delete,check CommentRepository") 
-	public void deleteAllByUserIdTestNoOneToManyCheckCommentRepo() {
+	void deleteAllByUserIdTestNoOneToManyCheckCommentRepo() {
 		//Given
 		Long userId = Long.valueOf(52);
 		List<Comment> comments = new ArrayList<>();
@@ -399,7 +399,7 @@ public class CommentServiceUnitTest {
 	
 	@Test
 	@DisplayName("User ID에 해당하는 Comment 일괄 삭제 -> 정상, check CommentLikeService")
-	public void deleteAllByUserIdTestCheckCommentLikeService() {
+	void deleteAllByUserIdTestCheckCommentLikeService() {
 		//Given
 		List<Comment> comments = new ArrayList<>();
 		Long commentsId = Long.valueOf(65);
@@ -421,12 +421,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteAllByExercisePostId(Long exercisePostId)
+	 * void deleteAllByExercisePostId(Long exercisePostId)
 	 */
 	
 	@Test
 	@DisplayName("ExercisePost ID에 해당하는 Comment 일괄 삭제 -> 정상, No OneToMany Delete ,check CommentRepository") 
-	public void deleteAllByExercisePostIdTestNoOneToManyCheckCommentRepo() {
+	void deleteAllByExercisePostIdTestNoOneToManyCheckCommentRepo() {
 		//Given
 		Long exercisePostId = Long.valueOf(52);
 		List<Comment> comments = new ArrayList<>();
@@ -441,7 +441,7 @@ public class CommentServiceUnitTest {
 	
 	@Test
 	@DisplayName("ExercisePost ID에 해당하는 Comment 일괄 삭제 -> 정상, check CommentLikeService")
-	public void deleteAllByExercisePostIdTestCheckCommentLikeService() {
+	void deleteAllByExercisePostIdTestCheckCommentLikeService() {
 		//Given
 		List<Comment> comments = new ArrayList<>();
 		Long commentsId = Long.valueOf(24);
@@ -463,12 +463,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public long countByUserId(Long userId)
+	 * long countByUserId(Long userId)
 	 */
 	
 	@Test
 	@DisplayName("User ID 만족하는 Comment들 개수 반환 -> 정상")
-	public void countByUserIdTest() {
+	void countByUserIdTest() {
 		//Given
 		Long userId = Long.valueOf(1);
 		//When
@@ -479,12 +479,12 @@ public class CommentServiceUnitTest {
 	}
 	
 	/*
-	 * public List<CommentForPostViewDTO> getCommentForPostViewDTOsByExercisePostId(Long postId)
+	 * List<CommentForPostViewDTO> getCommentForPostViewDTOsByExercisePostId(Long postId)
 	 */
 	
 	@Test
 	@DisplayName("해당 exercisePost id 를 만족하는 Comment 객체들을 CommentForPostViewDTO로 변환해서 반환 -> 정상")
-	public void getCommentForPostViewDTOsByExercisePostIdTest() {
+	void getCommentForPostViewDTOsByExercisePostIdTest() {
 		//Given
 		Long exerciePostId = Long.valueOf(1);
 		

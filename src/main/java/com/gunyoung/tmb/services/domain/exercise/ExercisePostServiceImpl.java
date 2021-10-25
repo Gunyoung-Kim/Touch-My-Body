@@ -108,14 +108,21 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	}
 
 	@Override
-	public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exericse) {
-		user.getExercisePosts().add(exercisePost);
-		exericse.getExercisePosts().add(exercisePost);
-		
-		exercisePost.setUser(user);
-		exercisePost.setExercise(exericse);
+	public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exercise) {
+		setRelationBetweenPostAndUser(exercisePost, user);
+		setRelationBetweenPostAndExercise(exercisePost, exercise);
 		
 		return save(exercisePost);
+	}
+	
+	private void setRelationBetweenPostAndUser(ExercisePost exercisePost, User user) {
+		user.getExercisePosts().add(exercisePost);
+		exercisePost.setUser(user);
+	}
+	
+	private void setRelationBetweenPostAndExercise(ExercisePost exercisePost, Exercise exericse) {
+		exericse.getExercisePosts().add(exercisePost);
+		exercisePost.setExercise(exericse);
 	}
 	
 	@Override
@@ -128,15 +135,13 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Override
 	public void checkIsMineAndDelete(Long userId, Long exercisePostId) {
 		Optional<ExercisePost> exercisePost = exercisePostRepository.findByUserIdAndExercisePostId(userId, exercisePostId);
-		exercisePost.ifPresent((ep)-> {
-			delete(ep);
-		});
+		exercisePost.ifPresent(this::delete);
 	}
 	
 	@Override
 	public void delete(ExercisePost exercisePost) {
 		Objects.requireNonNull(exercisePost, "Given exercisePost must not be null!");
-		deleteAllOneToManyEntityForExercisePost(exercisePost);
+		deleteAllWeakEntityForExercisePost(exercisePost);
 		exercisePostRepository.deleteByIdInQuery(exercisePost.getId());
 	}
 	
@@ -144,7 +149,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	public void deleteAllByUserId(Long userId) {
 		List<ExercisePost> exercisePosts = exercisePostRepository.findAllByUserIdInQuery(userId);
 		for(ExercisePost exercisePost: exercisePosts) {
-			deleteAllOneToManyEntityForExercisePost(exercisePost);
+			deleteAllWeakEntityForExercisePost(exercisePost);
 		}
 		exercisePostRepository.deleteAllByUserIdInQuery(userId);
 	}
@@ -153,12 +158,12 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	public void deleteAllByExerciseId(Long exerciseId) {
 		List<ExercisePost> exercisePosts = exercisePostRepository.findAllByExerciseIdInQuery(exerciseId);
 		for(ExercisePost exercisePost: exercisePosts) {
-			deleteAllOneToManyEntityForExercisePost(exercisePost);
+			deleteAllWeakEntityForExercisePost(exercisePost);
 		}
 		exercisePostRepository.deleteAllByExerciseIdInQuery(exerciseId);
 	}
 	
-	private void deleteAllOneToManyEntityForExercisePost(ExercisePost exercisePost) {
+	private void deleteAllWeakEntityForExercisePost(ExercisePost exercisePost) {
 		Long exercisePostId = exercisePost.getId();
 		postLikeService.deleteAllByExercisePostId(exercisePostId);
 		commentService.deleteAllByExercisePostId(exercisePostId);

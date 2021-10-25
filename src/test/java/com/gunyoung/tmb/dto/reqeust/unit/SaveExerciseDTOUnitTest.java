@@ -17,16 +17,15 @@ import com.gunyoung.tmb.testutil.ExerciseTest;
  * @author kimgun-yeong
  *
  */
-public class SaveExerciseDTOUnitTest {
-	
+class SaveExerciseDTOUnitTest {
 	
 	/*
-	 * public static SaveExerciseDTO of(Exercise exercise) 
+	 * static SaveExerciseDTO of(Exercise exercise) 
 	 */
 	
 	@Test
 	@DisplayName("Exercise 객체를 통해 SaveExerciseDTO 객체 생성 및 반환, mainMuscles 개수 확인")
-	public void ofTestCheckMainMusclesNum() {
+	void ofTestCheckMainMusclesNum() {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		
@@ -43,7 +42,7 @@ public class SaveExerciseDTOUnitTest {
 	
 	@Test
 	@DisplayName("Exercise 객체를 통해 SaveExerciseDTO 객체 생성 및 반환, subMuscles 개수 확인")
-	public void ofTestCheckSubMusclesNum() {
+	void ofTestCheckSubMusclesNum() {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		

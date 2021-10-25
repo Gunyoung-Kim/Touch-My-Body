@@ -44,7 +44,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ManagerExercisePostControllerTest {
+class ManagerExercisePostControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -60,7 +60,7 @@ public class ManagerExercisePostControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/community", method = RequestMethod.GET)
-	 * public ModelAndView manageCommunityView(@RequestParam(value="page", defaultValue="1") int page,
+	 * ModelAndView manageCommunityView(@RequestParam(value="page", defaultValue="1") int page,
 	 *		@RequestParam(value ="keyword", required=false) String keyword,ModelAndView mav)
 	 */
 	
@@ -68,7 +68,7 @@ public class ManagerExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("커뮤니티 매니징 메인 화면 반환 -> 정상, 모든 ExercisePost가 만족하는 키워드")
-	public void manageCommunityViewTestKeywordForAll() throws Exception {
+	void manageCommunityViewTestKeywordForAll() throws Exception {
 		//Given
 		String keywordForAllExercisePost = ExercisePostTest.DEFAULT_TITLE;
 		User user = UserTest.getUserInstance(RoleType.USER);
@@ -107,7 +107,7 @@ public class ManagerExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("커뮤니티 매니징 메인 화면 반환 -> 정상, 어떤 ExercisePost도 만족하지 않는 키워드")
-	public void manageCommunityViewTestKeywordForNothing() throws Exception {
+	void manageCommunityViewTestKeywordForNothing() throws Exception {
 		//Given
 		String keywordForNothing = "nothing!!";
 		User user = UserTest.getUserInstance(RoleType.USER);
@@ -145,7 +145,7 @@ public class ManagerExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("커뮤니티 매니징 메인 화면 반환 -> 정상, 키워드 없음")
-	public void manageCommunityViewTestNoKeyword() throws Exception {
+	void manageCommunityViewTestNoKeyword() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);

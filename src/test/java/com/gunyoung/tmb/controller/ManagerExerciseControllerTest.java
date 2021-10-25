@@ -36,7 +36,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ManagerExerciseControllerTest {
+class ManagerExerciseControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -46,14 +46,14 @@ public class ManagerExerciseControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/exercise",method= RequestMethod.GET)
-	 * public ModelAndView exerciseViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav)
+	 * ModelAndView exerciseViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Exercise 리스트 화면 반환 -> 정상, 키워드 없음")
-	public void exerciseViewForManagerTestNoKeyword() throws Exception {
+	void exerciseViewForManagerTestNoKeyword() throws Exception {
 		//Given
 		int givenExerciseNum = 10;
 		ExerciseTest.addNewExercisesInDBByNum(givenExerciseNum, exerciseRepository);
@@ -76,7 +76,7 @@ public class ManagerExerciseControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise 리스트 화면 반환 -> 정상, 어느 Muscle도 만족하지 않는 키워드")
-	public void exerciseViewForManagerTestKeywordForNothing() throws Exception {
+	void exerciseViewForManagerTestKeywordForNothing() throws Exception {
 		//Given
 		String keywordForNothing = "nothing!!";
 		
@@ -102,7 +102,7 @@ public class ManagerExerciseControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise 리스트 화면 반환 -> 정상, 모든 Muscle이 만족하는 키워드")
-	public void exerciseViewForManagerTest() throws Exception {
+	void exerciseViewForManagerTest() throws Exception {
 		//Given
 		String keywordForAllExercise = ExerciseTest.DEFAULT_NAME;
 		int givenExerciseNum = 10;
@@ -125,14 +125,14 @@ public class ManagerExerciseControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/exercise/add",method = RequestMethod.GET)
-	 * public ModelAndView addExerciseView(ModelAndView mav)
+	 * ModelAndView addExerciseView(ModelAndView mav)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Exercise 추가 화면 반환 -> 정상")
-	public void addExerciseViewTest() throws Exception {
+	void addExerciseViewTest() throws Exception {
 		//Given
 		
 		//When
@@ -144,14 +144,14 @@ public class ManagerExerciseControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/exercise/modify/{exerciseId}", method = RequestMethod.GET) 
-	 * public ModelAndView modifyExerciseView(@PathVariable("exerciseId") Long exerciseId, ModelAndView mav)
+	 * ModelAndView modifyExerciseView(@PathVariable("exerciseId") Long exerciseId, ModelAndView mav)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Exercise 수정 화면 반환 -> 해당 ID의 Exercise 없을 때")
-	public void modifyExerciseViewNonExist() throws Exception {
+	void modifyExerciseViewNonExist() throws Exception {
 		//Given
 		Long nonExistExerciseId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
@@ -166,7 +166,7 @@ public class ManagerExerciseControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise 수정 화면 반환 -> 정상")
-	public void modifyExerciseViewTest() throws Exception {
+	void modifyExerciseViewTest() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);

@@ -3,11 +3,14 @@ package com.gunyoung.tmb.controller.rest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,7 +43,7 @@ public class ManagerExerciseRestController {
 	 * @throws ExerciseNameDuplicationFoundedException 입력된 이름의 Exercise 이미 존재하면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/manager/exercise/add", method = RequestMethod.POST)
+	@PostMapping(value = "/manager/exercise/add")
 	public void addExercise(@ModelAttribute SaveExerciseDTO dto) {
 		if(exerciseService.existsByName(dto.getName())) {
 			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getDescription());
@@ -57,7 +60,7 @@ public class ManagerExerciseRestController {
 	 * @throws ExerciseNameDuplicationFoundedException 변경된 이름이 다른 Exercise의 이름과 일치하면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/manager/exercise/modify/{exerciseId}", method = RequestMethod.PUT)
+	@PutMapping(value = "/manager/exercise/modify/{exerciseId}")
 	public void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute SaveExerciseDTO dto) {
 		Exercise exercise = exerciseService.findWithExerciseMusclesById(exerciseId);
 		if(exercise == null) {
@@ -79,7 +82,7 @@ public class ManagerExerciseRestController {
 	 * @param exerciseId 삭제하려는 대상 Exercise의 Id
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/manager/exercise/remove", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/manager/exercise/remove")
 	public void deleteExercise(@RequestParam("exerciseId") Long exerciseId) {
 		exerciseService.deleteById(exerciseId);
 	}
@@ -89,7 +92,7 @@ public class ManagerExerciseRestController {
 	 * Muscle을 category로 분류해서 전송
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/manager/exercise/getmuscles", method = RequestMethod.GET)
+	@GetMapping(value = "/manager/exercise/getmuscles")
 	public List<MuscleInfoBySortDTO> getMusclesSortByCategory() {
 		Map<String, List<String>> classificationOfMuscleNamesByCategory = muscleService.getAllMusclesWithSortingByCategory();
 		
@@ -98,10 +101,12 @@ public class ManagerExerciseRestController {
 	
 	private List<MuscleInfoBySortDTO> getListOfMuscleInfoBySortDTOByMapOfMuscleNames(Map<String, List<String>> classificationOfMuscleNamesByCategory) {
 		List<MuscleInfoBySortDTO> result = new ArrayList<>();
-		for(String category: classificationOfMuscleNamesByCategory.keySet()) {
+		for(Entry<String, List<String>> entry: classificationOfMuscleNamesByCategory.entrySet()) {
+			String category = entry.getKey();
+			List<String> listOfMuscleName = entry.getValue();
 			MuscleInfoBySortDTO dto = MuscleInfoBySortDTO.builder()
 					.target(category)
-					.muscleNames(classificationOfMuscleNamesByCategory.get(category))
+					.muscleNames(listOfMuscleName)
 					.build();
 			result.add(dto);
 		}

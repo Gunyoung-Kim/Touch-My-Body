@@ -34,7 +34,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
  */
 @Integration
 @SpringBootTest
-public class CommentLikeServiceTest {
+class CommentLikeServiceTest {
 	
 	@Autowired
 	CommentLikeRepository commentLikeRepository;
@@ -63,13 +63,13 @@ public class CommentLikeServiceTest {
 	}
 	
 	/*
-	 *   public Comment findById(Long id)
+	 *   Comment findById(Long id)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("id로 commentLike 찾기 -> 해당 id의 commentLike 없음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistCommentLikeId = CommentLikeTest.getNonExistCommentLikeId(commentLikeRepository);
 		
@@ -83,7 +83,7 @@ public class CommentLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("id로 commentLike 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long existCommentLikeId = commentLike.getId();
 		
@@ -95,12 +95,12 @@ public class CommentLikeServiceTest {
 	}
 	
 	/*
-	 *  public CommentLike findByUserIdAndCommentId(Long userId, Long commentId)
+	 *  CommentLike findByUserIdAndCommentId(Long userId, Long commentId)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("유저 id와 댓글 id로 찾기 -> 해당 조건 만족의 CommentLike 없음")
-	public void findByUserIdAndCommentIdNonExist() {
+	void findByUserIdAndCommentIdNonExist() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -118,7 +118,7 @@ public class CommentLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("유저 id와 댓글 id로 찾기 -> 정상")
-	public void findByUserIdAndCommentIdTest() {
+	void findByUserIdAndCommentIdTest() {
 		//Given
 		User user = UserTest.getUserInstance();
 	
@@ -142,7 +142,7 @@ public class CommentLikeServiceTest {
 	}
 	
 	/*
-	 *   public Comment save(Comment comment)
+	 *   Comment save(Comment comment)
 	 *   
 	 *   아직 변경할 필드 없어서 패스
 	 */
@@ -150,7 +150,7 @@ public class CommentLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("commentLike 수정하기 -> 정상")
-	public void mergerTest() {
+	void mergerTest() {
 		//Given
 		
 		//When
@@ -162,7 +162,7 @@ public class CommentLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("commentLike 추가하기 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		CommentLike newCommentLike = CommentLikeTest.getCommentLikeInstance();
 		Long givenCommentLikeNum = commentLikeRepository.count();
@@ -175,13 +175,13 @@ public class CommentLikeServiceTest {
 	}
 	
 	/* 
-	 *  public CommentLike createAndSaveWithUserAndComment(User user, Comment comment)
+	 *  CommentLike createAndSaveWithUserAndComment(User user, Comment comment)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("User와 Comment로 CommentLike 생성 후 저장 -> 정상, 개수 추가 확인")
-	public void  createAndSaveWithUserAndCommentTestCheckCount() {
+	void  createAndSaveWithUserAndCommentTestCheckCount() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -201,7 +201,7 @@ public class CommentLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User와 Comment로 CommentLike 생성 후 저장 -> 정상, User와 연관 관계 추가 확인")
-	public void  createAndSaveWithUserAndCommentTestCheckUser() {
+	void  createAndSaveWithUserAndCommentTestCheckUser() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -219,7 +219,7 @@ public class CommentLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User와 Comment로 CommentLike 생성 후 저장 -> 정상, Comment와 연관 관계 추가 확인")
-	public void  createAndSaveWithUserAndCommentTestCheckComment() {
+	void  createAndSaveWithUserAndCommentTestCheckComment() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -235,13 +235,13 @@ public class CommentLikeServiceTest {
 	}
 	
 	/*
-	 *  public void delete(Comment comment)
+	 *  void delete(Comment comment)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("commentLike 삭제 -> 정상")
-	public void deleteTest() {
+	void deleteTest() {
 		//Given
 		Long givenCommentLikeNum = commentLikeRepository.count();
 		
@@ -253,12 +253,12 @@ public class CommentLikeServiceTest {
 	}
 	
 	/*
-	 *  public boolean existsByUserIdAndCommentId(Long userId, Long commentId);
+	 *  boolean existsByUserIdAndCommentId(Long userId, Long commentId);
 	 */
 	@Test
 	@Transactional
 	@DisplayName("User ID, Comment ID로 존재여부 확인 ->정상 , True")
-	public void existsByUserIdAndCommentIdTestTrue() {
+	void existsByUserIdAndCommentIdTestTrue() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -288,7 +288,7 @@ public class CommentLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User ID, Comment ID로 존재여부 확인 ->정상, False")
-	public void existsByUserIdAndCommentIdTestFalse() {
+	void existsByUserIdAndCommentIdTestFalse() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);

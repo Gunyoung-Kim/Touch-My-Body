@@ -38,7 +38,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ManagerUserRestControllerTest {
+class ManagerUserRestControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -54,14 +54,14 @@ public class ManagerUserRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/usermanage/{user_id}", method = RequestMethod.PUT)
-	 * public void manageUserProfile(@PathVariable("user_id") Long userId,@ModelAttribute UserProfileForManagerDTO dto)
+	 * void manageUserProfile(@PathVariable("user_id") Long userId,@ModelAttribute UserProfileForManagerDTO dto)
 	 */
 	
 	@WithMockUser(roles= {"ADMIN"})
 	@Test
 	@Transactional
 	@DisplayName("유저의 정보(권한) 수정 -> 해당 ID의 USER 없을 때")
-	public void manageUserProfileNonExist() throws Exception {
+	void manageUserProfileNonExist() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
@@ -83,7 +83,7 @@ public class ManagerUserRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("유저의 정보(권한) 수정 -> 접속자가 대상 User보다 권한이 낮을 때")
-	public void manageUserProfileAccessDenied() throws Exception {
+	void manageUserProfileAccessDenied() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.ADMIN);
 		userRepository.save(user);
@@ -104,7 +104,7 @@ public class ManagerUserRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("유저의 정보(권한) 수정 -> 리퀘스트 파라미터에 잘못된 role 값")
-	public void manageUserProfileTestInvalidRole() throws Exception {
+	void manageUserProfileTestInvalidRole() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
@@ -127,7 +127,7 @@ public class ManagerUserRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("유저의 정보(권한) 수정 -> 정상")
-	public void manageUserProfileTest() throws Exception {
+	void manageUserProfileTest() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
@@ -146,14 +146,14 @@ public class ManagerUserRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/usermanage/{user_id}/comments/remove", method = RequestMethod.DELETE)
-	 * public void removeCommentByManager(@PathVariable("user_id") Long userId,@RequestParam("comment_id") Long commentId)
+	 * void removeCommentByManager(@PathVariable("user_id") Long userId,@RequestParam("comment_id") Long commentId)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("특정 유저의 댓글 삭제하기 -> 정상")
-	public void removeCommentByManagerTest() throws Exception {
+	void removeCommentByManagerTest() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
@@ -174,13 +174,13 @@ public class ManagerUserRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/usermanage/{user_id}/posts/remove",method = RequestMethod.DELETE) 
-	 * public void removePostByManager(@PathVariable("user_id") Long userId,@RequestParam("post_id") Long postId)
+	 * void removePostByManager(@PathVariable("user_id") Long userId,@RequestParam("post_id") Long postId)
 	 */
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("특정 유저의 게시글 삭제 -> 정상")
-	public void removePostByManager() throws Exception {
+	void removePostByManager() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);

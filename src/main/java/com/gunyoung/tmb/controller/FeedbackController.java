@@ -3,10 +3,10 @@ package com.gunyoung.tmb.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.gunyoung.tmb.aop.annotations.LoginIdSessionNotNull;
@@ -48,7 +48,7 @@ public class FeedbackController {
 	 * @throws ExerciseNotFoundedException 해당 ID의 Exercise 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.GET)
+	@GetMapping(value="/exercise/about/{exercise_id}/addfeedback")
 	public ModelAndView addFeedbackView(@PathVariable("exercise_id") Long exerciseId, ModelAndView mav) {
 		Exercise exercise = exerciseService.findById(exerciseId);
 		if(exercise == null) {
@@ -70,7 +70,7 @@ public class FeedbackController {
 	 * @throws ExerciseNotFoundedException 해당 ID에 해당하는 Exercise 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/exercise/about/{exercise_id}/addfeedback",method=RequestMethod.POST)
+	@PostMapping(value="/exercise/about/{exercise_id}/addfeedback")
 	@LoginIdSessionNotNull
 	public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId, @ModelAttribute SaveFeedbackDTO dto) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);

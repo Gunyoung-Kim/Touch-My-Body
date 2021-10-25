@@ -2,9 +2,8 @@ package com.gunyoung.tmb.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -43,7 +42,7 @@ public class ManagerFeedbackController {
 	 * @throws ExerciseNotFoundedException 해당 Id의 Exercise 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/exercise/feedback/{exerciseId}" ,method= RequestMethod.GET) 
+	@GetMapping(value="/manager/exercise/feedback/{exerciseId}") 
 	public ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId, @RequestParam(value="page", defaultValue="1") int page
 			, ModelAndPageView mav) {
 		Exercise exercise = exerciseService.findById(exerciseId);
@@ -70,7 +69,7 @@ public class ManagerFeedbackController {
 	 * @throws FeedbackNotFoundedException 해당 Id의 Feedback 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/exercise/feedback/detail/{feedbackId}" ,method = RequestMethod.GET) 
+	@GetMapping(value="/manager/exercise/feedback/detail/{feedbackId}") 
 	public ModelAndView feedbackView(@PathVariable("feedbackId") Long feedbackId, ModelAndView mav) {
 		FeedbackViewDTO feedbackViewDTO = feedbackService.findForFeedbackViewDTOById(feedbackId);
 		if(feedbackViewDTO == null) {

@@ -45,7 +45,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ExercisePostRestControllerUnitTest {
+class ExercisePostRestControllerUnitTest {
 	
 	@Mock
 	HttpSession session;
@@ -69,12 +69,12 @@ public class ExercisePostRestControllerUnitTest {
 	ExercisePostRestController exercisePostRestController;
 	
 	/*
-	 * public void addLikeToExercisePost(@PathVariable("postId") Long postId)
+	 * void addLikeToExercisePost(@PathVariable("postId") Long postId)
 	 */
 	
 	@Test
 	@DisplayName("유저가 게시글에 좋아요 추가했을때 처리 -> 세션에 저장된 Id에 해당하는 User 없음")
-	public void addLikeToExercisePostNonExistUser() {
+	void addLikeToExercisePostNonExistUser() {
 		//Given
 		Long nonExistUserId = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(nonExistUserId);
@@ -91,7 +91,7 @@ public class ExercisePostRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저가 게시글에 좋아요 추가했을때 처리 -> 해당 Id의 ExercisePost 없으면")
-	public void addLikeToExercisePostNonExistExercisePost() {
+	void addLikeToExercisePostNonExistExercisePost() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(loginIdInSession);
@@ -108,7 +108,7 @@ public class ExercisePostRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저가 게시글에 좋아요 추가했을때 처리 -> 해당 ExercisePost에 User의 PostLike가 이미 존재")
-	public void addLikeToExercisePostAlredyExist() {
+	void addLikeToExercisePostAlredyExist() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(loginIdInSession);
@@ -127,7 +127,7 @@ public class ExercisePostRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저가 게시글에 좋아요 추가했을때 처리 -> 정상")
-	public void addLikeToExercisePostTest() {
+	void addLikeToExercisePostTest() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(loginIdInSession);
@@ -158,12 +158,12 @@ public class ExercisePostRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void removeLikeToExercisePost(@PathVariable("postId") Long postId) 
+	 * void removeLikeToExercisePost(@PathVariable("postId") Long postId) 
 	 */
 	
 	@Test
 	@DisplayName("유저가 게시글에 좋아요 취소했을때 처리 -> 세션의 저장된 UserId와 postId를 만족하는 PostLike 없음")
-	public void removeLikeToExercisePostPostLikeNonExist() {
+	void removeLikeToExercisePostPostLikeNonExist() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(loginIdInSession);
@@ -179,7 +179,7 @@ public class ExercisePostRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저가 게시글에 좋아요 취소했을때 처리 -> 정상")
-	public void removeLikeToExercisePostTest() {
+	void removeLikeToExercisePostTest() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(loginIdInSession);
@@ -196,12 +196,12 @@ public class ExercisePostRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void addLikeToComment(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId)
+	 * void addLikeToComment(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId)
 	 */
 	
 	@Test
 	@DisplayName("유저가 댓글에 좋아요 추가 요청 처리 -> 세션에 저장된 Id의 User 없음")
-	public void addLikeToCommentUserNonExist() {
+	void addLikeToCommentUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(nonExistUserId);
@@ -218,7 +218,7 @@ public class ExercisePostRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저가 댓글에 좋아요 추가 요청 처리 -> 해당 Id의 Comment 없으면")
-	public void addLikeToCommentCommentNonExist() {
+	void addLikeToCommentCommentNonExist() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(loginIdInSession);
@@ -236,7 +236,7 @@ public class ExercisePostRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저가 댓글에 좋아요 추가 요청 처리 -> 해당 유저가 댓글에 이미 좋아요 추가했으면")
-	public void addLikeToCommentAlreadyExist() {
+	void addLikeToCommentAlreadyExist() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(loginIdInSession);
@@ -256,7 +256,7 @@ public class ExercisePostRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저가 댓글에 좋아요 추가 요청 처리 -> 정상")
-	public void addLikeToCommentTest() {
+	void addLikeToCommentTest() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(loginIdInSession);
@@ -287,12 +287,12 @@ public class ExercisePostRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void removeLikeToComment(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId)
+	 * void removeLikeToComment(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId)
 	 */
 	
 	@Test
 	@DisplayName("유저가 댓글에 좋아요 취소 요청 처리 -> 해당 유저가 해당 댓글에 좋아요 추가하지 않았었으면")
-	public void removeLikeToCommentCommentLikeNonExist() {
+	void removeLikeToCommentCommentLikeNonExist() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(loginIdInSession);
@@ -309,7 +309,7 @@ public class ExercisePostRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("유저가 댓글에 좋아요 취소 요청 처리 -> 정상")
-	public void removeLikeToCommentTest() {
+	void removeLikeToCommentTest() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(loginIdInSession);
@@ -328,12 +328,12 @@ public class ExercisePostRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void removeCommentToExercisePost(@PathVariable("postId") Long postId,@RequestParam("commentId") Long commentId)
+	 * void removeCommentToExercisePost(@PathVariable("postId") Long postId,@RequestParam("commentId") Long commentId)
 	 */
 	
 	@Test
 	@DisplayName("유저가 게시글에 댓글 삭제할때 처리 -> 정상")
-	public void removeCommentToExercisePostTest() {
+	void removeCommentToExercisePostTest() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(loginIdInSession);

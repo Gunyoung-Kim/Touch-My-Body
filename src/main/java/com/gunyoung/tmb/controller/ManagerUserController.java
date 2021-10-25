@@ -8,9 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -47,6 +46,8 @@ public class ManagerUserController {
 	public static final int USER_COMMENT_LIST_VIEW_FOR_MANAGER_PAGE_SIZE = PageSize.COMMENT_FOR_MANAGE_PAGE_SIZE.getSize();
 	public static final int USER_POST_LIST_VIEW_FOR_MANAGER_PAGE_SIZE = PageSize.POST_FOR_MANAGE_PAGE_SIZE.getSize();
 	
+	private static final String ATTRIBUTE_NAME_OF_USER_ID = "userId";
+	
 	private final UserService userService;
 	
 	private final CommentService commentService;
@@ -61,7 +62,7 @@ public class ManagerUserController {
 	 * @param keyword User 닉네임 검색 키워드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/manager/usermanage", method = RequestMethod.GET)
+	@GetMapping(value = "/manager/usermanage")
 	public ModelAndView userManageView(@RequestParam(value="page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "keyword", required = false) String keyword, ModelAndPageView mav) {
 		Page<User> pageResult = getPageResultForUserManageView(keyword, page);
@@ -79,7 +80,7 @@ public class ManagerUserController {
 	
 	private Page<User> getPageResultForUserManageView(String keyword, Integer page) {
 		if(keyword == null) {
-			return new PageImpl<User>(new ArrayList<>());
+			return new PageImpl<>(new ArrayList<>());
 		}
 		return userService.findAllByNickNameOrNameInPage(keyword, page);
 	}
@@ -98,7 +99,7 @@ public class ManagerUserController {
 	 * @throws AccessDeniedException 접속자의 권한이 대상 User의 권한보다 낮다면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/manager/usermanage/{user_id}", method = RequestMethod.GET)
+	@GetMapping(value = "/manager/usermanage/{user_id}")
 	public ModelAndView manageUserProfileView(@PathVariable("user_id") Long userId, ModelAndView mav) {
 		User targetUser = userService.findById(userId);
 		if(targetUser == null) {
@@ -112,7 +113,7 @@ public class ManagerUserController {
 		Collection<? extends GrantedAuthority> sessionUserAuthorities = authorityService.getSessionUserAuthorities();
 		List<String> myReachableAuthStringList = authorityService.getReachableAuthorityStrings(sessionUserAuthorities);
 		
-		mav.addObject("userId", userId);
+		mav.addObject(ATTRIBUTE_NAME_OF_USER_ID, userId);
 		mav.addObject("userInfo", targetUser);
 		mav.addObject("roleList", myReachableAuthStringList);
 		
@@ -129,7 +130,7 @@ public class ManagerUserController {
 	 * @throws SearchCriteriaInvalidException 검색 결과 정렬 방식이 올바르지 못하다면 
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/manager/usermanage/{user_id}/comments", method = RequestMethod.GET) 
+	@GetMapping(value = "/manager/usermanage/{user_id}/comments") 
 	public ModelAndView manageUserComments(@PathVariable("user_id") Long userId, @RequestParam(value = "page", required = false, defaultValue = "1") int page
 			, @RequestParam(value = "order", defaultValue = "desc") String order, ModelAndPageView mav) {
 		User user = userService.findById(userId);
@@ -137,17 +138,12 @@ public class ManagerUserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Page<Comment> pageResult;
-		try {
-			pageResult = getPageResultForUserCommentListViewForManage(order, userId, page);
-		} catch(SearchCriteriaInvalidException scie) {
-			throw scie;
-		}
+		Page<Comment> pageResult = getPageResultForUserCommentListViewForManage(order, userId, page);
 		long totalPageNum = getTotalPageNumForUserCommentListViewForManage(userId);
 		
 		List<CommentForManageViewDTO> commentListForView = CommentForManageViewDTO.of(pageResult, user);
 		
-		mav.addObject("userId", userId);
+		mav.addObject(ATTRIBUTE_NAME_OF_USER_ID, userId);
 		mav.addObject("username", user.getFullName() + " : " + user.getNickName());
 		mav.setPageNumbers(page, totalPageNum);
 		mav.addObject("commentList", commentListForView);
@@ -178,7 +174,7 @@ public class ManagerUserController {
 	 * @throws SearchCriteriaInvalidException 검색 결과 정렬 방식이 올바르지 못하다면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/manager/usermanage/{userId}/posts", method = RequestMethod.GET)
+	@GetMapping(value = "/manager/usermanage/{userId}/posts")
 	public ModelAndView managerUserPosts(@PathVariable("userId") Long userId, @RequestParam(value = "page", required = false, defaultValue = "1") int page
 			, @RequestParam(value = "order", defaultValue = "desc") String order, ModelAndPageView mav) {
 		User user = userService.findById(userId);
@@ -186,17 +182,12 @@ public class ManagerUserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Page<ExercisePost> pageResult; 
-		try {
-			pageResult = getPageResultForUserPostListViewForManage(order, userId, page);
-		} catch(SearchCriteriaInvalidException scie) {
-			throw scie;
-		}
+		Page<ExercisePost> pageResult = getPageResultForUserPostListViewForManage(order, userId, page);
 		long totalPageNum = getTotalPageNumForUserPostListViewForManage(userId);
 		
 		List<ExercisePostForManageViewDTO> postListForView = ExercisePostForManageViewDTO.of(pageResult, user);
 		
-		mav.addObject("userId", userId);
+		mav.addObject(ATTRIBUTE_NAME_OF_USER_ID, userId);
 		mav.addObject("username", user.getFullName()+": " +user.getNickName());
 		mav.setPageNumbers(page, totalPageNum);
 		mav.addObject("postList", postListForView);

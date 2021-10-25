@@ -32,7 +32,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
  */
 @Integration
 @SpringBootTest
-public class ExerciseMuscleServiceTest {
+class ExerciseMuscleServiceTest {
 	
 	@Autowired
 	MuscleRepository muscleRepository;
@@ -57,12 +57,12 @@ public class ExerciseMuscleServiceTest {
 	}
 	
 	/*
-	 *  public ExerciseMuscle findById(Long id)
+	 *  ExerciseMuscle findById(Long id)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("id로 ExerciseMuscle 찾기 -> 해당 id의 exerciseMuscle 없음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		long nonExistExerciseMuscleId = ExerciseMuscleTest.getNonExistExerciseMuscleId(exerciseMuscleRepository);
 		
@@ -76,7 +76,7 @@ public class ExerciseMuscleServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("id로 ExerciseMuscle 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long exerciseMuscleId = exerciseMuscle.getId();
 		
@@ -89,13 +89,13 @@ public class ExerciseMuscleServiceTest {
 	}
 	
 	/*
-	 *  public ExerciseMuscle save(ExerciseMuscle exerciseMuscle)
+	 *  ExerciseMuscle save(ExerciseMuscle exerciseMuscle)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("ExerciseMuscle 수정하기 -> 정상")
-	public void mergeTest() {
+	void mergeTest() {
 		//Given
 		Long exerciseMuscleId = exerciseMuscle.getId();
 		boolean givenExerciseMuscleIsMain = exerciseMuscle.isMain();
@@ -112,7 +112,7 @@ public class ExerciseMuscleServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("ExerciseMuscle 추가하기 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		ExerciseMuscle newExerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance();
 		Long givenExerciseMuscleNum = exerciseMuscleRepository.count();
@@ -125,13 +125,13 @@ public class ExerciseMuscleServiceTest {
 	}
 	
 	/*
-	 *  public void delete(ExerciseMuscle exerciseMuscle)
+	 *  void delete(ExerciseMuscle exerciseMuscle)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("ExerciseMuscle 삭제하기 -> 정상")
-	public void deleteTest() {
+	void deleteTest() {
 		//Given
 		ExerciseMuscle existExerciseMuscle = exerciseMuscleRepository.findAll().get(0);
 		Long givenExerciseMuscleNum = exerciseMuscleRepository.count();
@@ -144,13 +144,13 @@ public class ExerciseMuscleServiceTest {
 	}
 	
 	/*
-	 * public void deleteAllByMuscleId(Long muscleId)
+	 * void deleteAllByMuscleId(Long muscleId)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("Muscle ID를 통한 ExerciseMuscle 모두 삭제 -> 정상")
-	public void deleteAllByMuscleIdTest() {
+	void deleteAllByMuscleIdTest() {
 		//Given
 		Long addExerciseMuscleNum = Long.valueOf(6);
 		addExerciseMuscles(addExerciseMuscleNum);

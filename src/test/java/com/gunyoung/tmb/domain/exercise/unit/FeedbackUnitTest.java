@@ -14,14 +14,15 @@ import com.gunyoung.tmb.testutil.FeedbackTest;
 * @author kimgun-yeong
 *
 */
-public class FeedbackUnitTest {
+class FeedbackUnitTest {
+	
 	/*
-	 *  public String toString()
+	 *  String toString()
 	 */
 	
 	@Test
 	@DisplayName("toString Test -> 정상") 
-	public void toStringTest() {
+	void toStringTest() {
 		//Given
 		Long feedbackId = Long.valueOf(81);
 		Feedback feedback = FeedbackTest.getFeedbackInstance();

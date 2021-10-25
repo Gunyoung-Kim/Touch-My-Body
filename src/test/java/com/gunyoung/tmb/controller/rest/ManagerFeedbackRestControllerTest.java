@@ -28,7 +28,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ManagerFeedbackRestControllerTest {
+class ManagerFeedbackRestControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -38,14 +38,14 @@ public class ManagerFeedbackRestControllerTest {
 
 	/*
 	 * @RequestMapping(value="/manager/exercise/feedback/reflect/{feedbackId}", method = RequestMethod.PATCH)
-	 * public void reflectFeedback(@PathVariable("feedbackId") Long feedbackId)
+	 * void reflectFeedback(@PathVariable("feedbackId") Long feedbackId)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("매니저의 피드백 반영 처리 -> 해당 ID의 Feedback 없을 때")
-	public void reflectFeedbackNonExist() throws Exception {
+	void reflectFeedbackNonExist() throws Exception {
 		//Given
 		Feedback feedback = FeedbackTest.getFeedbackInstance();
 		
@@ -64,7 +64,7 @@ public class ManagerFeedbackRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("매니저의 피드백 반영 처리 -> 정상")
-	public void reflectFeedbackTest() throws Exception {
+	void reflectFeedbackTest() throws Exception {
 		//Given
 		Feedback feedback = FeedbackTest.getFeedbackInstance();
 		

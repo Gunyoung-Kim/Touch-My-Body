@@ -28,7 +28,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ManagerExercisePostRestControllerTest {
+class ManagerExercisePostRestControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -38,13 +38,13 @@ public class ManagerExercisePostRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/community/remove/post", method = RequestMethod.DELETE)
-	 * public void removeExercisePostByManager(@RequestParam("postId") Long postId)
+	 * void removeExercisePostByManager(@RequestParam("postId") Long postId)
 	 */
 	@WithMockUser(roles = {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("매니저의 게시글 삭제 -> 정상")
-	public void removeExercisePostByManagerTest() throws Exception {
+	void removeExercisePostByManagerTest() throws Exception {
 		//Given
 		ExercisePost ep = ExercisePostTest.getExercisePostInstance();
 		

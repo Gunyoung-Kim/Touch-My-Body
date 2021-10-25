@@ -18,7 +18,7 @@ import com.gunyoung.tmb.utils.DateUtil;
 * @author kimgun-yeong
 *
 */
-public class DateUtilUnitTest {
+class DateUtilUnitTest {
 	
 	/*
 	 * constructor
@@ -26,7 +26,7 @@ public class DateUtilUnitTest {
 	
 	@Test
 	@DisplayName("생성자 호출시 예외 발생 확인")
-	public void constructorTestThrowsAssertionError() throws NoSuchMethodException {
+	void constructorTestThrowsAssertionError() throws NoSuchMethodException {
 		//Given
 		Constructor<DateUtil> constructor = DateUtil.class.getDeclaredConstructor();
 		constructor.setAccessible(true);
@@ -38,12 +38,12 @@ public class DateUtilUnitTest {
 	}
 	
 	/*
-	 * public static Calendar[] calendarForStartAndEndOfYearAndMonth(int year, int month)
+	 * static Calendar[] calendarForStartAndEndOfYearAndMonth(int year, int month)
 	 */
 	
 	@Test
 	@DisplayName("해당 연,월의 첫째날과 마지막 날을 반환 -> 2020년 1월")
-	public void calendarForStartAndEndOfYearAndMonth202001() {
+	void calendarForStartAndEndOfYearAndMonth202001() {
 		//Given
 		int year = 2020;
 		int month = Calendar.JANUARY;
@@ -62,7 +62,7 @@ public class DateUtilUnitTest {
 	
 	@Test
 	@DisplayName("해당 연,월의 첫째날과 마지막 날을 반환 -> 2020년 2월 (윤년)")
-	public void calendarForStartAndEndOfYearAndMonth202002() {
+	void calendarForStartAndEndOfYearAndMonth202002() {
 		//Given
 		int year = 2020;
 		int month = Calendar.FEBRUARY;
@@ -81,7 +81,7 @@ public class DateUtilUnitTest {
 	
 	@Test
 	@DisplayName("해당 연,월의 첫째날과 마지막 날을 반환 -> 2020년 4월")
-	public void calendarForStartAndEndOfYearAndMonth202004() {
+	void calendarForStartAndEndOfYearAndMonth202004() {
 		//Given
 		int year = 2020;
 		int month = Calendar.APRIL;
@@ -100,7 +100,7 @@ public class DateUtilUnitTest {
 	
 	@Test
 	@DisplayName("해당 연,월의 첫째날과 마지막 날을 반환 -> 2020년 12월")
-	public void calendarForStartAndEndOfYearAndMonth202012() {
+	void calendarForStartAndEndOfYearAndMonth202012() {
 		//Given
 		int year = 2020;
 		int month = Calendar.DECEMBER;

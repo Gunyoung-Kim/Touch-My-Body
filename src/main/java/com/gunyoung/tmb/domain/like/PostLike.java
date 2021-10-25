@@ -63,4 +63,15 @@ public class PostLike extends Like {
 	public String toString() {
 		return "[ id = " + id + " ]";
 	}
+	
+	/**
+	 * User와 ExercisePost로 PostLike 생성 후 반환하는 정적 팩토리 메서드
+	 * @author kimgun-yeong
+	 */
+	public static PostLike of(User user, ExercisePost exercisePost) {
+		return builder()
+				.user(user)
+				.exercisePost(exercisePost)
+				.build();
+	}
 }

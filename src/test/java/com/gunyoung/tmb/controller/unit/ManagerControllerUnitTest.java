@@ -22,7 +22,7 @@ import com.gunyoung.tmb.controller.ManagerController;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ManagerControllerUnitTest {
+class ManagerControllerUnitTest {
 	
 	@InjectMocks
 	ManagerController managerController;
@@ -35,12 +35,12 @@ public class ManagerControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView managerView(ModelAndView mav)
+	 * ModelAndView managerView(ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("매니저 메인 화면 반환 -> 정상")
-	public void managerViewTest() {
+	void managerViewTest() {
 		//Given
 		
 		//When

@@ -14,15 +14,15 @@ import com.gunyoung.tmb.testutil.ExercisePostTest;
 * @author kimgun-yeong
 *
 */
-public class ExercisePostUnitTest {
+class ExercisePostUnitTest {
 	
 	/*
-	 *  public String toString()
+	 *  String toString()
 	 */
 	
 	@Test
 	@DisplayName("toString Test -> 정상") 
-	public void toStringTest() {
+	void toStringTest() {
 		//Given
 		Long exercisePostId = Long.valueOf(85);
 		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
@@ -40,12 +40,12 @@ public class ExercisePostUnitTest {
 	}
 	
 	/*
-	 * public void increaseViewNum()
+	 * void increaseViewNum()
 	 */
 	
 	@Test
 	@DisplayName("조회수 증가 -> 정상")
-	public void increaseViewNumTest() {
+	void increaseViewNumTest() {
 		//Given
 		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		int beforeViewNum = exercisePost.getViewNum();

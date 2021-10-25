@@ -63,4 +63,15 @@ public class CommentLike extends Like{
 	public String toString() {
 		return "[ id = " + id + " ]";
 	}
+	
+	/**
+	 * User와 Comment로 CommentLike 생성 후 반환하는 정적 팩토리 메서드
+	 * @author kimgun-yeong
+	 */
+	public static CommentLike of(User user, Comment comment) {
+		return builder()
+				.user(user)
+				.comment(comment)
+				.build();
+	}
 }

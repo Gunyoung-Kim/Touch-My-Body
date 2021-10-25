@@ -28,7 +28,7 @@ import com.gunyoung.tmb.security.AuthorityServiceImpl;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class AuthorityServiceUnitTest {
+class AuthorityServiceUnitTest {
 	
 	@Mock
 	RoleHierarchy roleHierarchy;
@@ -37,12 +37,12 @@ public class AuthorityServiceUnitTest {
 	AuthorityServiceImpl authorityService;
 	
 	/*
-	 * public List<String> getAuthorityStringsExceptROLE(Collection<? extends GrantedAuthority> authorities)
+	 * List<String> getAuthorityStringsExceptROLE(Collection<? extends GrantedAuthority> authorities)
 	 */
 	
 	@Test
 	@DisplayName("Authority들을 ROLE_ 제외한 toString들 반환 -> 정상")
-	public void getAuthorityStringsExceptROLETest() {
+	void getAuthorityStringsExceptROLETest() {
 		//Given
 		Collection<? extends GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_MANAGER", "ROLE_USER");
 		
@@ -63,12 +63,12 @@ public class AuthorityServiceUnitTest {
 	}
 	
 	/*
-	 * public Collection<? extends GrantedAuthority> getAuthoritiesByUserRoleType(RoleType roleType)
+	 * Collection<? extends GrantedAuthority> getAuthoritiesByUserRoleType(RoleType roleType)
 	 */
 	
 	@Test
 	@DisplayName("유저의 RoleType을 통해 Authority 반환하는 메소드 -> 정상, MANAGER")
-	public void getAuthoritiesByUserRoleTypeTestManager() {
+	void getAuthoritiesByUserRoleTypeTestManager() {
 		//Given
 		RoleType role = RoleType.MANAGER;
 		

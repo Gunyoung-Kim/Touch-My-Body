@@ -14,14 +14,14 @@ import com.gunyoung.tmb.testutil.MuscleTest;
 * @author kimgun-yeong
 *
 */
-public class MuscleUnitTest {
+class MuscleUnitTest {
 	/*
-	 *  public String toString()
+	 *  String toString()
 	 */
 	
 	@Test
 	@DisplayName("toString Test -> 정상") 
-	public void toStringTest() {
+	void toStringTest() {
 		//Given
 		Long muscleId = Long.valueOf(778);
 		Muscle muscle = MuscleTest.getMuscleInstance();

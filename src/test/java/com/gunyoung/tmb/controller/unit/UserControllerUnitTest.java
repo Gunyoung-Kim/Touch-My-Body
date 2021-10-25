@@ -51,7 +51,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class UserControllerUnitTest {
+class UserControllerUnitTest {
 	
 	@Mock
 	UserService userService;
@@ -83,12 +83,12 @@ public class UserControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView index(ModelAndView mav)
+	 * ModelAndView index(ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("메인 화면을 반환 -> 정상, ModelAndView check")
-	public void indexTestCheckMav() {
+	void indexTestCheckMav() {
 		//Given
 		
 		//When
@@ -99,12 +99,12 @@ public class UserControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView loginView(HttpServletRequest request,ModelAndView mav)
+	 * ModelAndView loginView(HttpServletRequest request,ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("로그인 화면을 반환 -> 로그인 후 리다일렉트 주소 Referer에 있지만 /login임")
-	public void loginViewTestRefererisLogin() {
+	void loginViewTestRefererisLogin() {
 		//Given
 		HttpServletRequest request = stubbingRequestGetReferer("/login");			
 		
@@ -117,7 +117,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("로그인 화면을 반환 -> 로그인 후 리다일렉트 주소 Referer에 없어")
-	public void loginViewTestRefererNull() {
+	void loginViewTestRefererNull() {
 		//Given
 		HttpServletRequest request = stubbingRequestGetReferer(null);
 		
@@ -130,7 +130,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("로그인 화면을 반환 -> 로그인 후 리다일렉트 주소 Referer에 있고 /login 아니야")
-	public void loginViewTestRefererNotLogin() {
+	void loginViewTestRefererNotLogin() {
 		//Given
 		String redirectedUrl = "/redir";
 		HttpServletRequest request = stubbingRequestGetReferer(redirectedUrl);
@@ -149,12 +149,12 @@ public class UserControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView joinView(@ModelAttribute("formModel")UserJoinDTO formModel,ModelAndView mav)
+	 * ModelAndView joinView(@ModelAttribute("formModel")UserJoinDTO formModel,ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("회원가입 화면을 반환 -> 정상, ModelAndView check")
-	public void joinViewTestCheckMav() {
+	void joinViewTestCheckMav() {
 		//Given
 		UserJoinDTO userJoinDTO = UserJoinDTO.builder().build();
 		
@@ -166,12 +166,12 @@ public class UserControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView join(@ModelAttribute("formModel")UserJoinDTO formModel)
+	 * ModelAndView join(@ModelAttribute("formModel")UserJoinDTO formModel)
 	 */
 	
 	@Test
 	@DisplayName("회원가입을 처리 -> 입력된 email이 이미 존재한다면")
-	public void joinTestEmailDuplicated() {
+	void joinTestEmailDuplicated() {
 		//Given
 		String existEmail = "exist@test.com";
 		UserJoinDTO userJoinDTO = UserTest.getUserJoinDTOInstance(existEmail, "nickName");
@@ -186,7 +186,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("회원가입을 처리 -> 입력된 nickName이 이미 존재한다면")
-	public void joinTestNickNameDuplicated() {
+	void joinTestNickNameDuplicated() {
 		//Given
 		String newEmail = "test@test.com";
 		String existNickName = "exist";
@@ -203,7 +203,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("회원가입을 처리 -> 정상, 비밀번호 암호화 check")
-	public void joinViewTestCheckPasswordEncode() {
+	void joinViewTestCheckPasswordEncode() {
 		//Given
 		UserJoinDTO userJoinDTO = stubbingUserServiceForSuccessCaseInJoinTest();
 		
@@ -219,7 +219,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("회원가입을 처리 -> 정상, userService save check")
-	public void joinTestCheckUserServiceSave() {
+	void joinTestCheckUserServiceSave() {
 		//Given
 		UserJoinDTO userJoinDTO = stubbingUserServiceForSuccessCaseInJoinTest();
 		
@@ -232,7 +232,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("회원가입을 처리 -> 정상, redirectedUrl check")
-	public void joinTestCheckRedirectedURL() {
+	void joinTestCheckRedirectedURL() {
 		//Given
 		UserJoinDTO userJoinDTO = stubbingUserServiceForSuccessCaseInJoinTest();
 				
@@ -254,12 +254,12 @@ public class UserControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView profileView(ModelAndView mav)
+	 * ModelAndView profileView(ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("접속자의 개인정보 화면 반환 -> 세션에 저장된 Id에 해당하는 User 없으면")
-	public void profileViewUserNonExist() {
+	void profileViewUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(76);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
@@ -273,7 +273,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("접속자의 개인정보 화면 반환 -> 정상, ModelAndView check")
-	public void profileViewTestCheckMav() {
+	void profileViewTestCheckMav() {
 		//Given
 		Long loginIdInSession = Long.valueOf(33);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -288,13 +288,13 @@ public class UserControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView myCommentsView(ModelAndPageView mav,@RequestParam(value="page", required=false,defaultValue="1") Integer page
+	 * ModelAndView myCommentsView(ModelAndPageView mav,@RequestParam(value="page", required=false,defaultValue="1") Integer page
 	 *		,@RequestParam(value="order", defaultValue="desc") String order)
 	 */
 	
 	@Test
 	@DisplayName("접속자의 본인이 작성한 댓글 목록 화면 반환 -> 세션에 저장된 Id에 해당하는 User 없으면")
-	public void myCommentsViewTestUserNonExist() {
+	void myCommentsViewTestUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(76);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
@@ -308,7 +308,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("접속자의 본인이 작성한 댓글 목록 화면 반환 -> 검색 정렬 조건이 적절치 못하다면")
-	public void myCommentsViewTestInValidSort() {
+	void myCommentsViewTestInValidSort() {
 		//Given
 		Long loginIdInSession = Long.valueOf(33);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -325,7 +325,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("접속자의 본인이 작성한 댓글 목록 화면 반환 -> 정상, 오름차순(asc), commentService check")
-	public void myCommentsViewTestASCCheckCommentService() {
+	void myCommentsViewTestASCCheckCommentService() {
 		//Given
 		Long loginIdInSession = Long.valueOf(33);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -346,7 +346,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("접속자의 본인이 작성한 댓글 목록 화면 반환 -> 정상, 내림차순(desc), commentService check")
-	public void myCommentsViewTestDescCheckCommentService() {
+	void myCommentsViewTestDescCheckCommentService() {
 		//Given
 		Long loginIdInSession = Long.valueOf(33);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -367,7 +367,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("접속자의 본인이 작성한 댓글 목록 화면 반환 -> 정상, 내림차순(desc), ModelAndView check")
-	public void myCommentsViewTestDescCheckMav() {
+	void myCommentsViewTestDescCheckMav() {
 		//Given
 		Long loginIdInSession = Long.valueOf(33);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -391,13 +391,13 @@ public class UserControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView myPostsView(ModelAndPageView mav,@RequestParam(value="page", required=false,defaultValue="1") Integer page
+	 * ModelAndView myPostsView(ModelAndPageView mav,@RequestParam(value="page", required=false,defaultValue="1") Integer page
 	 *		,@RequestParam(value="order", defaultValue="desc") String order)
 	 */
 	
 	@Test
 	@DisplayName("접속자의 본인이 작성한 게시글 목록 화면 반환 -> 세션에 저장된 Id에 해당하는 User 없으면")
-	public void myPostsViewTestUserNonExist() {
+	void myPostsViewTestUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(76);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
@@ -411,7 +411,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("접속자의 본인이 작성한 게시글 목록 화면 반환 -> 검색 정렬 조건이 적절치 못하다면")
-	public void myPostsViewTestInValidSort() {
+	void myPostsViewTestInValidSort() {
 		//Given
 		Long loginIdInSession = Long.valueOf(33);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -428,7 +428,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("접속자의 본인이 작성한 게시글 목록 화면 반환 -> 정상, 오름차순(asc), exercisePostService check")
-	public void myPostsViewTestASCCheckPostService() {
+	void myPostsViewTestASCCheckPostService() {
 		//Given
 		Long loginIdInSession = Long.valueOf(33);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -449,7 +449,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("접속자의 본인이 작성한 게시글 목록 화면 반환 -> 정상, 내림차순(desc), exercisePostService check")
-	public void myPostsViewTestDescCheckPostService() {
+	void myPostsViewTestDescCheckPostService() {
 		//Given
 		Long loginIdInSession = Long.valueOf(33);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -470,7 +470,7 @@ public class UserControllerUnitTest {
 	
 	@Test
 	@DisplayName("접속자의 본인이 작성한 게시글 목록 화면 반환 -> 정상, 내림차순(desc), ModelAndView check")
-	public void myPostsViewTestDescCheckMav() {
+	void myPostsViewTestDescCheckMav() {
 		//Given
 		Long loginIdInSession = Long.valueOf(33);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);

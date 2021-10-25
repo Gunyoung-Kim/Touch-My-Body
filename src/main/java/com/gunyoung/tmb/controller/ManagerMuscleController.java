@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -43,7 +43,7 @@ public class ManagerMuscleController {
 	 * @param keyword Muscle Name 검색 키워드 
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/muscle", method = RequestMethod.GET)
+	@GetMapping(value="/manager/muscle")
 	public ModelAndView muscleViewForManager(@RequestParam(value="page", required=false, defaultValue="1") int page, @RequestParam(value="keyword", required=false) String keyword,
 			ModelAndPageView mav) {
 		Page<Muscle> pageResult = getPageResultForMuscleViewForManager(keyword, page);
@@ -77,7 +77,7 @@ public class ManagerMuscleController {
 	 * 근육 추가 화면 반환하는 메소드 
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/muscle/add", method= RequestMethod.GET)
+	@GetMapping(value="/manager/muscle/add")
 	public ModelAndView addMuscleView(ModelAndView mav) {
 		List<String> koreanNamesForAllTargetType = TargetType.getKoreanNamesForAllTargetType();
 		
@@ -95,18 +95,13 @@ public class ManagerMuscleController {
 	 * @throws TargetTypeNotFoundedException 추가하려는 Muscle의 category와 일치하는 TargetType 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/muscle/add", method=RequestMethod.POST)
+	@PostMapping(value="/manager/muscle/add")
 	public ModelAndView addMuscle(@ModelAttribute SaveMuscleDTO dto) {
 		if(muscleService.existsByName(dto.getName())) {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		
-		Muscle newMuscle;
-		try {
-			newMuscle = dto.createMuscle();
-		} catch(TargetTypeNotFoundedException ttfe) {
-			throw ttfe;
-		}
+		Muscle newMuscle = dto.createMuscle();
 		muscleService.save(newMuscle);
 		
 		return new ModelAndView("redirect:/manager/muscle");
@@ -118,7 +113,7 @@ public class ManagerMuscleController {
 	 * @throws MuscleNotFoundedException 해당 Id의 Muscle 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.GET)
+	@GetMapping(value="/manager/muscle/modify/{muscleId}")
 	public ModelAndView modifyMuscleView(@PathVariable("muscleId") Long muscleId, ModelAndView mav) {
 		Muscle muscle = muscleService.findById(muscleId);
 		if(muscle == null) {

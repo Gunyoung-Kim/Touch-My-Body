@@ -35,7 +35,7 @@ import com.gunyoung.tmb.testutil.ExerciseTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ExerciseControllerUnitTest {
+class ExerciseControllerUnitTest {
 	
 	@Mock
 	ExerciseService exerciseService;
@@ -55,13 +55,13 @@ public class ExerciseControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView exerciseInfoMainView(@RequestParam(value="page", required=false, defaultValue="1") Integer page, @RequestParam(value="keyword", required=false) String keyword
+	 * ModelAndView exerciseInfoMainView(@RequestParam(value="page", required=false, defaultValue="1") Integer page, @RequestParam(value="keyword", required=false) String keyword
 	 *		, ModelAndPageView mav)
 	 */
 	
 	@Test
 	@DisplayName("운동들 리스트 보여주는 화면 반환 -> 정상, 키워드 없음")
-	public void exerciseInfoMainViewTestNoKeyword() {
+	void exerciseInfoMainViewTestNoKeyword() {
 		//Given
 		stubbingExerciseServiceFindAllInPageWithEmptyPage();
 		given(exerciseService.countAll()).willReturn(Long.valueOf(0));
@@ -76,7 +76,7 @@ public class ExerciseControllerUnitTest {
 	
 	@Test
 	@DisplayName("운동들 리스트 보여주는 화면 반환 -> 정상, 키워드 있음")
-	public void exerciseInfoMainViewWithkeyword() {
+	void exerciseInfoMainViewWithkeyword() {
 		//Given
 		String keyword = "keyword";
 		stubbingExerciseServiceFindAllWithNameKeywordInPageWithEmptyPage(keyword);
@@ -92,7 +92,7 @@ public class ExerciseControllerUnitTest {
 	
 	@Test
 	@DisplayName("운동들 리스트 보여주는 화면 반환 -> 정상, ModelAndPageView check")
-	public void exerciseInfoMainViewTestCheckMapv() {
+	void exerciseInfoMainViewTestCheckMapv() {
 		//Given
 		String keyword = "keyword";
 		stubbingExerciseServiceFindAllWithNameKeywordInPageWithEmptyPage(keyword);
@@ -119,12 +119,12 @@ public class ExerciseControllerUnitTest {
 	
 	
 	/*
-	 * public ModelAndView exerciseInfoDetailView(@PathVariable("exercise_id") Long exerciseId, ModelAndView mav)
+	 * ModelAndView exerciseInfoDetailView(@PathVariable("exercise_id") Long exerciseId, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("운동 상세 정보 화면 반환 -> 해당 id 의 Exercise 없으면")
-	public void exerciseInfoDetailViewExerciseNonExist() {
+	void exerciseInfoDetailViewExerciseNonExist() {
 		//Given
 		Long nonExistExerciseId = Long.valueOf(1);
 		given(exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistExerciseId)).willReturn(null);
@@ -137,7 +137,7 @@ public class ExerciseControllerUnitTest {
 	
 	@Test
 	@DisplayName("운동 상세 정보 화면 반환 -> 정상, Check ModelAndView")
-	public void exerciseInfoDetailViewTestCheckModelAndView() {
+	void exerciseInfoDetailViewTestCheckModelAndView() {
 		//Given
 		Long exerciseId = Long.valueOf(1);
 		ExerciseForInfoViewDTO exerciseForInfoViewDTO = ExerciseTest.getExerciseForInfoViewDTOInstance();

@@ -23,19 +23,19 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PrivacyPolicyControllerTest {
+class PrivacyPolicyControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
 	
 	/*
 	 * @RequestMapping(value="/privacypolicy", method = RequestMethod.GET)
-	 * public ModelAndView privacyPolicyLastest(ModelAndView mav)
+	 * ModelAndView privacyPolicyLastest(ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("가장 최근 개인정보 처리방침 화면 반환 -> 정상")
-	public void privacyPolicyLastestViewTest() throws Exception{
+	void privacyPolicyLastestViewTest() throws Exception{
 		//Given
 		int lastestVersion = PrivacyPolicyController.LATEST_POLICY_VERSION;
 		
@@ -48,12 +48,12 @@ public class PrivacyPolicyControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/privacypolicy/{version}", method = RequestMethod.GET)
-	 * public ModelAndView privacyPolicyWithVersion(@PathVariable("version") int version,ModelAndView mav
+	 * ModelAndView privacyPolicyWithVersion(@PathVariable("version") int version,ModelAndView mav
 	 */
 	
 	@Test
 	@DisplayName("특정 버전의 개인정보 처리방침 화면 반환 -> 버전이 최신버전보다 높음")
-	public void privacyPolicyWithVersionOverVersion() throws Exception {
+	void privacyPolicyWithVersionOverVersion() throws Exception {
 		//Given
 		int invalidVersion = PrivacyPolicyController.LATEST_POLICY_VERSION + 10;
 		
@@ -66,7 +66,7 @@ public class PrivacyPolicyControllerTest {
 	
 	@Test
 	@DisplayName("특정 버전의 개인정보 처리방침 화면 반환 -> 버전이 0")
-	public void privacyPolicyWithVersionZeroVersion() throws Exception {
+	void privacyPolicyWithVersionZeroVersion() throws Exception {
 		//Given
 		int invalidVersion = 0;
 		
@@ -79,7 +79,7 @@ public class PrivacyPolicyControllerTest {
 	
 	@Test
 	@DisplayName("특정 버전의 개인정보 처리방침 화면 반환 -> 버전이 음수")
-	public void privacyPolicyWithVersionMinusVersion() throws Exception {
+	void privacyPolicyWithVersionMinusVersion() throws Exception {
 		//Given
 		int invalidVersion = -1;
 		
@@ -92,7 +92,7 @@ public class PrivacyPolicyControllerTest {
 	
 	@Test
 	@DisplayName("특정 버전의 개인정보 처리방침 화면 반환 -> 정상")
-	public void privacyPolicyWithVersionValidVersion() throws Exception {
+	void privacyPolicyWithVersionValidVersion() throws Exception {
 		//Given
 		int version = PrivacyPolicyController.LATEST_POLICY_VERSION;
 		

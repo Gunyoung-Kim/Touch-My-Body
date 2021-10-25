@@ -41,7 +41,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserExerciseControllerTest {
+class UserExerciseControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -70,14 +70,14 @@ public class UserExerciseControllerTest {
 
 	/*
 	 * @RequestMapping(value="/user/exercise/calendar",method = RequestMethod.GET)
-	 * public ModelAndView calendarView(ModelAndView mav)
+	 * ModelAndView calendarView(ModelAndView mav)
 	 */
 	
 	@WithMockUser
 	@Test
 	@Transactional
 	@DisplayName("유저의 운동 기록 캘린더 화면 반환 -> 정상")
-	public void calendarViewTest() throws Exception {
+	void calendarViewTest() throws Exception {
 		//Given
 		
 		//When
@@ -89,14 +89,14 @@ public class UserExerciseControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.GET)
-	 * public ModelAndView addUserExerciseView(ModelAndView mav)
+	 * ModelAndView addUserExerciseView(ModelAndView mav)
 	 */
 	
 	@WithMockUser
 	@Test
 	@Transactional
 	@DisplayName("운동 기록 추가 화면 반환 -> 정상")
-	public void addUserExerciseViewTest() throws Exception {
+	void addUserExerciseViewTest() throws Exception {
 		//Given
 		
 		//When
@@ -109,14 +109,14 @@ public class UserExerciseControllerTest {
 	/*
 	 * @RequestMapping(value="/user/exercise/calendar/addrecord",method = RequestMethod.POST)
 	 * @LoginIdSessionNotNull
-	 * public ModelAndView addUserExercise(@ModelAttribute("formModel") SaveUserExerciseDTO formModel)
+	 * ModelAndView addUserExercise(@ModelAttribute("formModel") SaveUserExerciseDTO formModel)
 	 */
 	
 	@WithMockUser
 	@Test
 	@Transactional
 	@DisplayName("운동 기록 추가 처리 -> 접속된 세션의 Id의 User 없을 때")
-	public void addUserExerciseUserNonExist() throws Exception {
+	void addUserExerciseUserNonExist() throws Exception {
 		//Given
 		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
@@ -138,7 +138,7 @@ public class UserExerciseControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("운동 기록 추가 처리 -> 해당 이름을 만족하는 Exercise 없을 때")
-	public void addUserExerciseNonExist() throws Exception {
+	void addUserExerciseNonExist() throws Exception {
 		//Given
 		MultiValueMap<String, String> paramMap = UserExerciseTest.getSaveUserExerciseDTOMap("nonExistExerciseName");
 		
@@ -155,7 +155,7 @@ public class UserExerciseControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("운동 기록 추가 처리 -> 정상")
-	public void addUserExerciseTest() throws Exception {
+	void addUserExerciseTest() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);

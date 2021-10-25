@@ -39,7 +39,7 @@ import com.gunyoung.tmb.testutil.TargetTypeTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ManagerExerciseRestControllerUnitTest {
+class ManagerExerciseRestControllerUnitTest {
 	
 	@Mock
 	ExerciseService exerciseService;
@@ -51,12 +51,12 @@ public class ManagerExerciseRestControllerUnitTest {
 	ManagerExerciseRestController managerExerciseRestController;
 	
 	/*
-	 * public void addExercise(@ModelAttribute SaveExerciseDTO dto)
+	 * void addExercise(@ModelAttribute SaveExerciseDTO dto)
 	 */
 	
 	@Test
 	@DisplayName("매니저의 Exercise 추가 처리 -> 입력된 이름의 Exercise 이미 존재하면")
-	public void addExerciseNameDuplicated() {
+	void addExerciseNameDuplicated() {
 		//Given
 		String alreadtExistExerciseName = "exist";
 		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance(alreadtExistExerciseName);
@@ -71,7 +71,7 @@ public class ManagerExerciseRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("매니저의 Exercise 추가 처리 -> 정상")
-	public void addExerciseTest() {
+	void addExerciseTest() {
 		//Given
 		String newExerciseName = "newExercise";
 		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance(newExerciseName);
@@ -86,12 +86,12 @@ public class ManagerExerciseRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute SaveExerciseDTO dto)
+	 * void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute SaveExerciseDTO dto)
 	 */
 	
 	@Test
 	@DisplayName("특정 Exercise 정보 수정 처리 -> 해당 Id의 Exercise 없으면")
-	public void modifyExerciseExerciseNonExist() {
+	void modifyExerciseExerciseNonExist() {
 		//Given
 		String changedExerciseName = "changeExercise";
 		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance(changedExerciseName);
@@ -107,7 +107,7 @@ public class ManagerExerciseRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 Exercise 정보 수정 처리 -> 변경된 이름이 다른 Exercise의 이름과 일치하면")
-	public void modifyExerciseNameDuplicated() {
+	void modifyExerciseNameDuplicated() {
 		//Given
 		String changedButDuplicatedExerciseName = "hangedButDuplicated";
 		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance(changedButDuplicatedExerciseName);
@@ -125,7 +125,7 @@ public class ManagerExerciseRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 Exercise 정보 수정 처리 -> 정상, 이름이 변경")
-	public void modifyExerciseNameChangedTest() {
+	void modifyExerciseNameChangedTest() {
 		//Given
 		String changedExerciseName = "changeExercise";
 		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance(changedExerciseName);
@@ -144,7 +144,7 @@ public class ManagerExerciseRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 Exercise 정보 수정 처리 -> 정상, 이름은 변경 안됨")
-	public void modifyExerciseNameNonchangedTest() {
+	void modifyExerciseNameNonchangedTest() {
 		//Given
 		Long exerciseId = Long.valueOf(1);
 		Exercise exercise = mockingExerciseServiceFindWithExerciseMusclesById(exerciseId);
@@ -168,12 +168,12 @@ public class ManagerExerciseRestControllerUnitTest {
 	}
 	
 	/*
-	 * public void deleteExercise(@RequestParam("exerciseId") Long exerciseId)
+	 * void deleteExercise(@RequestParam("exerciseId") Long exerciseId)
 	 */
 	
 	@Test
 	@DisplayName("특정 Exercise 삭제 요청 처리 -> 정상")
-	public void deleteExerciseTest() {
+	void deleteExerciseTest() {
 		//Given
 		Long exerciseId = Long.valueOf(1);
 		
@@ -185,12 +185,12 @@ public class ManagerExerciseRestControllerUnitTest {
 	}
 	
 	/*
-	 * public List<MuscleInfoBySortDTO> getMusclesSortByCategory()
+	 * List<MuscleInfoBySortDTO> getMusclesSortByCategory()
 	 */
 	
 	@Test
 	@DisplayName("클라이언트에게 근육 종류별로 분류해서 전송 -> 정상")
-	public void getMusclesSortByCategoryTest() {
+	void getMusclesSortByCategoryTest() {
 		//Given
 		Map<String ,List<String>> MusclesSortMap = new HashMap<>();
 		

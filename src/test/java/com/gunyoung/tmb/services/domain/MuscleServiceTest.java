@@ -36,7 +36,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
  */
 @Integration
 @SpringBootTest
-public class MuscleServiceTest {
+class MuscleServiceTest {
 	
 	@Autowired
 	ExerciseMuscleRepository exerciseMuscleRepository;
@@ -61,12 +61,12 @@ public class MuscleServiceTest {
 	}
 	
 	/*
-	 *  public Muscle findById(Long id)
+	 *  Muscle findById(Long id)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("id로 Muscle 찾기 -> 해당 id의 muscle 없음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		long nonExistId = MuscleTest.getNonExistMuscleId(muscleRepository);
 		
@@ -80,7 +80,7 @@ public class MuscleServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("id로 Muscle 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long existMuscleId = muscle.getId();
 		
@@ -93,12 +93,12 @@ public class MuscleServiceTest {
 	}
 	
 	/*
-	 *   public Muscle findByName(String name)
+	 *   Muscle findByName(String name)
 	 */
 	
 	@Test
 	@DisplayName("이름으로 Muscle 찾기 -> 해당 이름의 Muscle 없음")
-	public void findByNameNonExist() {
+	void findByNameNonExist() {
 		//Given
 		String nonExistName= "none";
 		
@@ -111,7 +111,7 @@ public class MuscleServiceTest {
 	
 	@Test
 	@DisplayName("이름으로 Muscle 찾기 -> 정상")
-	public void findNyNameTest() {
+	void findNyNameTest() {
 		//Given
 		String existName = muscle.getName();
 		
@@ -123,12 +123,12 @@ public class MuscleServiceTest {
 	}
 	
 	/*
-	 * public Page<Muscle> findAllInPage(Integer pageNumber, int pageSize)
+	 * Page<Muscle> findAllInPage(Integer pageNumber, int pageSize)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("모든 근육 정보들을 페이지 처리해서 가져오기 ->정상")
-	public void findAllInPageTest() {
+	void findAllInPageTest() {
 		//Given
 		int pageSize = PageSize.MUSCLE_FOR_MANAGE_PAGE_SIZE.getSize();
 		
@@ -144,13 +144,13 @@ public class MuscleServiceTest {
 	}
 	
 	/*
-	 * public Page<Muscle> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize)
+	 * Page<Muscle> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("키워드 이름에 포함하는 근육정보들 페이지 처리해서 가져오기 ->정상, 모든 Muscle이 만족하는 키워드")
-	public void findAllWithNameKeywordInPageTestAll() {
+	void findAllWithNameKeywordInPageTestAll() {
 		//Given
 		int pageSize = PageSize.MUSCLE_FOR_MANAGE_PAGE_SIZE.getSize();
 		String keywordForAllMuscle = MuscleTest.getMuscleInstance().getName();
@@ -169,7 +169,7 @@ public class MuscleServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("키워드 이름에 포함하는 근육정보들 페이지 처리해서 가져오기 ->정상, 단 하나의 Muscle이 만족하는 키워드")
-	public void findAllWithNameKeywordInPageTestOnlyOne() {
+	void findAllWithNameKeywordInPageTestOnlyOne() {
 		//Given
 		int pageSize = PageSize.MUSCLE_FOR_MANAGE_PAGE_SIZE.getSize();
 		String keywordForOnlyOne = "I am only one";
@@ -188,7 +188,7 @@ public class MuscleServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("키워드 이름에 포함하는 근육정보들 페이지 처리해서 가져오기 ->정상")
-	public void findAllWithNameKeywordInPageTest() {
+	void findAllWithNameKeywordInPageTest() {
 		//Given
 		int pageSize = PageSize.MUSCLE_FOR_MANAGE_PAGE_SIZE.getSize();
 		String keywordForNothing = "none!!!";
@@ -203,13 +203,13 @@ public class MuscleServiceTest {
 	}
 	
 	/*
-	 *  public Map<String, List<String>> getAllMusclesWithSortingByCategory()
+	 *  Map<String, List<String>> getAllMusclesWithSortingByCategory()
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("카테고리로 분류해서 Muscle들 반환 -> 정상, 단 하나의 Muscle 만 만족하는 TargetType으로 확인")
-	public void getAllMusclesWithSortingByCategoryTest() {
+	void getAllMusclesWithSortingByCategoryTest() {
 		//Given
 		TargetType targetTypeForOnlyOneMuscle = TargetTypeTest.getAnotherTargetType(MuscleTest.getMuscleInstance().getCategory());
 		Muscle onlyOneCategoryMuscle = MuscleTest.getMuscleInstance("onlyOne", targetTypeForOnlyOneMuscle);
@@ -223,13 +223,13 @@ public class MuscleServiceTest {
 	}
 	
 	/*
-	 * public List<Muscle> getMuscleListFromMuscleNameList(Iterable<String> muscleNames) throws MuscleNotFoundedException 
+	 * List<Muscle> getMuscleListFromMuscleNameList(Iterable<String> muscleNames) throws MuscleNotFoundedException 
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("Muscle 이름 리스트로 부터 Muscle 리스트 반환하기 -> 리스트중에 해당 이름의 Muscle 없는 경우가 있는 케이스")
-	public void getMuscleListFromMuscleNameListNonExist() {
+	void getMuscleListFromMuscleNameListNonExist() {
 		//Given
 		String nonExistName = "nonExist";
 		
@@ -253,7 +253,7 @@ public class MuscleServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Muscle 이름 리스트로 부터 Muscle 리스트 반환하기 -> 정상")
-	public void getMuscleListFromMuscleNameListTest() {
+	void getMuscleListFromMuscleNameListTest() {
 		//Given
 		List<String> muscleNameList = new ArrayList<>();
 		
@@ -273,12 +273,12 @@ public class MuscleServiceTest {
 	}
 	
 	/*
-	 *  public Muscle save(Muscle muscle)
+	 *  Muscle save(Muscle muscle)
 	 */
 	
 	@Test
 	@DisplayName("Muscle 수정하기 -> 정상, 변화 확인")
-	public void mergeTestCheckChange() {
+	void mergeTestCheckChange() {
 		//Given
 		String changeName = "Changed Name";
 		Long muscleId = muscle.getId();
@@ -294,7 +294,7 @@ public class MuscleServiceTest {
 	
 	@Test
 	@DisplayName("Muscle 수정하기 -> 정상, 개수 동일 확인")
-	public void mergeTestCheckCount() {
+	void mergeTestCheckCount() {
 		//Given
 		String changeName = "Changed Name";
 		muscle.setName(changeName);
@@ -310,7 +310,7 @@ public class MuscleServiceTest {
 	
 	@Test
 	@DisplayName("Muscle 추가하기 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		Muscle newMuscle = MuscleTest.getMuscleInstance("newMuscle");
 		Long givenMuscleNum = muscleRepository.count();
@@ -323,12 +323,12 @@ public class MuscleServiceTest {
 	}
 	
 	/*
-	 *  public void delete(Muscle muscle)
+	 *  void delete(Muscle muscle)
 	 */
 	
 	@Test
 	@DisplayName("Muscle 삭제하기 -> 정상, Muscle 삭제 확인")
-	public void deleteTestCheckMuscleDelete() {
+	void deleteTestCheckMuscleDelete() {
 		//Given
 		Long givenMuscleNum = muscleRepository.count();
 		
@@ -342,7 +342,7 @@ public class MuscleServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Muscle 삭제하기 -> 정상, 관련 ExerciseMuscle 삭제 확인")
-	public void deleteTestCheckExerciseMusclesDelete() {
+	void deleteTestCheckExerciseMusclesDelete() {
 		//Given
 		Long givenExerciseMuscleNum = Long.valueOf(12);
 		List<ExerciseMuscle> exerciseMuscles = getExerciseMusclesWithMuscle(givenExerciseMuscleNum);
@@ -367,12 +367,12 @@ public class MuscleServiceTest {
 	}
 	
 	/*
-	 *  public long countAllWithNameKeyword(String keyword)
+	 *  long countAllWithNameKeyword(String keyword)
 	 */
 	
 	@Test
 	@DisplayName("키워드를 이름에 포함하는 Muscle 개수 세기 -> 정상, 모든 Muscle 이 만족하는 키워드")
-	public void countAllWithNameKeywordTestAll() {
+	void countAllWithNameKeywordTestAll() {
 		//Given
 		String keywordForAllMuscle = MuscleTest.DEFAULT_NAME;
 		
@@ -389,7 +389,7 @@ public class MuscleServiceTest {
 	
 	@Test
 	@DisplayName("키워드를 이름에 포함하는 Muscle 개수 세기 -> 정상, 단 하나의 Muscle만 만족하는 키워드")
-	public void countAllWithNameKeywordTestOnlyOne() {
+	void countAllWithNameKeywordTestOnlyOne() {
 		//Given
 		String keywordForOnlyOneMuscle = "i am only one";
 		Muscle onlyOneMuscle = MuscleTest.getMuscleInstance(keywordForOnlyOneMuscle);
@@ -406,7 +406,7 @@ public class MuscleServiceTest {
 	
 	@Test
 	@DisplayName("키워드를 이름에 포함하는 Muscle 개수 세기 -> 정상, 어느 Muscle 도 만족하지 않는 키워드")
-	public void countAllWithNameKeywordTestNothing() {
+	void countAllWithNameKeywordTestNothing() {
 		//Given
 		String keywordForNothing = "nothing.!!";
 		

@@ -34,7 +34,7 @@ import com.gunyoung.tmb.testutil.ExerciseTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ManagerExerciseControllerUnitTest {
+class ManagerExerciseControllerUnitTest {
 	
 	@Mock
 	ExerciseService exerciseService;
@@ -54,13 +54,13 @@ public class ManagerExerciseControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView exerciseViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,
+	 * ModelAndView exerciseViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,
 	 *		@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav)
 	 */
 	
 	@Test
 	@DisplayName("Exercise 리스트 화면 반환 -> 정상, 키워드 없음, exerciseService check")
-	public void exerciseViewForManagerTestNoKeywordCheckExerciseService() {
+	void exerciseViewForManagerTestNoKeywordCheckExerciseService() {
 		//Given
 		Page<Exercise> pageResult = new PageImpl<>(new ArrayList<>());
 		given(exerciseService.findAllInPage(defaultPageNum, ManagerExerciseController.EXERCISE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE)).willReturn(pageResult);
@@ -75,7 +75,7 @@ public class ManagerExerciseControllerUnitTest {
 	
 	@Test
 	@DisplayName("Exercise 리스트 화면 반환 -> 정상, 키워드 있음, exerciseService check")
-	public void exerciseViewForManagerTestWithKeywordCheckExerciseService() {
+	void exerciseViewForManagerTestWithKeywordCheckExerciseService() {
 		//Given
 		String keyword = "keyword";
 		Page<Exercise> pageResult = new PageImpl<>(new ArrayList<>());
@@ -91,7 +91,7 @@ public class ManagerExerciseControllerUnitTest {
 	
 	@Test
 	@DisplayName("Exercise 리스트 화면 반환 -> 정상, 키워드 없음, ModelAndPageView check")
-	public void exerciseViewForManagerTestNoKeywordCheckMapv() {
+	void exerciseViewForManagerTestNoKeywordCheckMapv() {
 		//Given
 		Page<Exercise> pageResult = new PageImpl<>(new ArrayList<>());
 		given(exerciseService.findAllInPage(defaultPageNum, ManagerExerciseController.EXERCISE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE)).willReturn(pageResult);
@@ -108,12 +108,12 @@ public class ManagerExerciseControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView addExerciseView(ModelAndView mav)
+	 * ModelAndView addExerciseView(ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("Exercise 추가하는 화면 반환 -> 정상, ModelAndView check")
-	public void addExerciseViewTestCheckMav() {
+	void addExerciseViewTestCheckMav() {
 		//Given
 		
 		//When
@@ -124,12 +124,12 @@ public class ManagerExerciseControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView modifyExerciseView(@PathVariable("exerciseId") Long exerciseId, ModelAndView mav) 
+	 * ModelAndView modifyExerciseView(@PathVariable("exerciseId") Long exerciseId, ModelAndView mav) 
 	 */
 	
 	@Test
 	@DisplayName("Exercise 정보 수정 화면 반환 -> 해당 Id 의 Exercise 없으면")
-	public void modifyExerciseViewExerciseNonExist() {
+	void modifyExerciseViewExerciseNonExist() {
 		//Given
 		Long nonExistExerciseId = Long.valueOf(25);
 		given(exerciseService.findWithExerciseMusclesById(nonExistExerciseId)).willReturn(null);
@@ -142,7 +142,7 @@ public class ManagerExerciseControllerUnitTest {
 	
 	@Test
 	@DisplayName("Exercise 정보 수정 화면 반환 -> 정상, ModelAndView check")
-	public void modifyExerciseViewTestCheckMav() {
+	void modifyExerciseViewTestCheckMav() {
 		//Given
 		Long exerciseId = Long.valueOf(36);
 		Exercise exercise = ExerciseTest.getExerciseInstance();

@@ -2,9 +2,9 @@ package com.gunyoung.tmb.controller.rest;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,7 +61,7 @@ public class ExercisePostRestController {
 	 * @throws LikeAlreadyExistException 해당 ExercisePost에 User의 PostLike가 이미 존재한다면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/community/post/{postId}/addLike", method = RequestMethod.POST)
+	@PostMapping(value = "/community/post/{postId}/addLike")
 	@LoginIdSessionNotNull
 	public void addLikeToExercisePost(@PathVariable("postId") Long postId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
@@ -88,7 +88,7 @@ public class ExercisePostRestController {
 	 * @throws LikeNotFoundedException 세션의 저장된 UserId와 postId를 만족하는 PostLike 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/community/post/{postId}/removelike", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/community/post/{postId}/removelike")
 	@LoginIdSessionNotNull
 	public void removeLikeToExercisePost(@PathVariable("postId") Long postId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
@@ -109,7 +109,7 @@ public class ExercisePostRestController {
 	 * @throws LikeAlreadyExistException 해당 유저가 댓글에 이미 좋아요 추가했으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/community/post/{postId}/comment/addlike", method = RequestMethod.POST)
+	@PostMapping(value = "/community/post/{postId}/comment/addlike")
 	@LoginIdSessionNotNull
 	public void addLikeToComment(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
@@ -137,7 +137,7 @@ public class ExercisePostRestController {
 	 * @throws LikeNotFoundedException 해당 유저가 해당 댓글에 좋아요 추가하지 않았었으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/community/post/{postId}/comment/removelike", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/community/post/{postId}/comment/removelike")
 	@LoginIdSessionNotNull
 	public void removeLikeToComment(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId) { 
 		Long loginUserId = SessionUtil.getLoginUserId(session);	
@@ -155,7 +155,7 @@ public class ExercisePostRestController {
 	 * @param commentId 삭제하려는 대상 Comment의 ID
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/community/post/{postId}/removeComment", method = RequestMethod.DELETE)
+	@DeleteMapping(value = "/community/post/{postId}/removeComment")
 	@LoginIdSessionNotNull
 	public void removeCommentToExercisePost(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);

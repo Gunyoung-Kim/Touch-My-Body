@@ -17,15 +17,15 @@ import com.gunyoung.tmb.testutil.ExerciseTest;
  * @author kimgun-yeong
  *
  */
-public class ExerciseForInfoViewDTOUnitTest {
+class ExerciseForInfoViewDTOUnitTest {
 	
 	/*
-	 * public static ExerciseForInfoViewDTO of(Exercise exercise) 
+	 * static ExerciseForInfoViewDTO of(Exercise exercise) 
 	 */
 	
 	@Test
 	@DisplayName("Exercise를 통해 ExerciseForInfoViewDTO 객체 생성 및 반환 -> 정상, Exercise 필드와 확인")
-	public void ofExerciseTestCheckWithExercise() {
+	void ofExerciseTestCheckWithExercise() {
 		//Given
 		Long exerciseId = Long.valueOf(24);
 		Exercise exercise = ExerciseTest.getExerciseInstance();
@@ -49,7 +49,7 @@ public class ExerciseForInfoViewDTOUnitTest {
 	
 	@Test
 	@DisplayName("Exercise를 통해 ExerciseForInfoViewDTO 객체 생성 및 반환 -> 정상, ExerciseMuscle과 확인")
-	public void ofExerciseTestCheckWithExerciseMuscle() {
+	void ofExerciseTestCheckWithExerciseMuscle() {
 		//Given
 		Long exerciseId = Long.valueOf(24);
 		Exercise exercise = ExerciseTest.getExerciseInstance();

@@ -43,7 +43,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ManagerExerciseRestControllerTest {
+class ManagerExerciseRestControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -58,14 +58,14 @@ public class ManagerExerciseRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/exercise/add" ,method = RequestMethod.POST)
-	 * public void addExercise(@ModelAttribute SaveExerciseDTO dto,ModelAndView mav)
+	 * void addExercise(@ModelAttribute SaveExerciseDTO dto,ModelAndView mav)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Exercise 추가 -> 이름 중복")
-	public void addExerciseDuplicated() throws Exception {
+	void addExerciseDuplicated() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		
@@ -86,7 +86,7 @@ public class ManagerExerciseRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise 추가 -> 정상")
-	public void addExerciseTest() throws Exception {
+	void addExerciseTest() throws Exception {
 		//Given
 		MultiValueMap<String,String> paramMap = ExerciseTest.getSaveExerciseDTOMap("exercise");
 		
@@ -101,14 +101,14 @@ public class ManagerExerciseRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/exercise/modify/{exerciseId}",method=RequestMethod.PUT) 
-	 * public void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute SaveExerciseDTO dto)
+	 * void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute SaveExerciseDTO dto)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Exercise 수정 -> 해당 ID의 Exercise 없을때")
-	public void modifyExerciseNonExist() throws Exception {
+	void modifyExerciseNonExist() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		String existingName = exercise.getName();
@@ -131,7 +131,7 @@ public class ManagerExerciseRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise 수정 -> 변경된 이름의 다른 운동이 존재할때")
-	public void modifyExerciseAlreadyExist() throws Exception {
+	void modifyExerciseAlreadyExist() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		String existingName = exercise.getName();
@@ -160,7 +160,7 @@ public class ManagerExerciseRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise 수정 -> 정상, description(중복되도 되는것)이 바뀔때")
-	public void modifyExerciseDescriptionTest() throws Exception {
+	void modifyExerciseDescriptionTest() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		String changedDescription = "modifiedDescription";
@@ -184,7 +184,7 @@ public class ManagerExerciseRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise 수정 -> 정상, 이름(중복되면 안되는 것)이 바뀔때")
-	public void modifyExerciseNameTest() throws Exception {
+	void modifyExerciseNameTest() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		String changedName = "modifiedName";
@@ -205,14 +205,14 @@ public class ManagerExerciseRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/exercise/remove" ,method = RequestMethod.DELETE) 
-	 * public void deleteExercise(@RequestParam("exerciseId") Long exerciseId)
+	 * void deleteExercise(@RequestParam("exerciseId") Long exerciseId)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Exercise 삭제 -> 정상")
-	public void deleteExerciseTest() throws Exception {
+	void deleteExerciseTest() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
@@ -229,14 +229,14 @@ public class ManagerExerciseRestControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/exercise/getmuscles",method = RequestMethod.GET)
-	 * public List<MuscleInfoBySortDTO> getMusclesSortByCategory()
+	 * List<MuscleInfoBySortDTO> getMusclesSortByCategory()
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Muscle 종류별 분류 정보 요청 -> 정상")
-	public void getMusclesSortByCategoryTest() throws Exception {
+	void getMusclesSortByCategoryTest() throws Exception {
 		//Given
 		List<Muscle> muscleList = new LinkedList<>();
 		TargetType[] targetTypes = TargetType.values();

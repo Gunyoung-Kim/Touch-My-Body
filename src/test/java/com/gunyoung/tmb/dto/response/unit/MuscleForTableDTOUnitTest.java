@@ -18,15 +18,15 @@ import com.gunyoung.tmb.testutil.MuscleTest;
  * @author kimgun-yeong
  *
  */
-public class MuscleForTableDTOUnitTest {
+class MuscleForTableDTOUnitTest {
 	
 	/*
-	 * public static MuscleForTableDTO of(Muscle muscle) 
+	 * static MuscleForTableDTO of(Muscle muscle) 
 	 */
 	
 	@Test
 	@DisplayName("Muscle 객체로 MuscleForTableDTO 객체 생성 및 반환 -> 정상")
-	public void ofTest() {
+	void ofTest() {
 		//Given
 		Long muscleId = Long.valueOf(24);
 		Muscle muscle = MuscleTest.getMuscleInstance();
@@ -46,12 +46,12 @@ public class MuscleForTableDTOUnitTest {
 	}
 	
 	/*
-	 * public static List<MuscleForTableDTO> of(Iterable<Muscle> muscles)
+	 * static List<MuscleForTableDTO> of(Iterable<Muscle> muscles)
 	 */
 	
 	@Test
 	@DisplayName("Muscle 컬렉션을 통해 MuscleForTableDTO 리스트 반환 -> 정상")
-	public void ofListTest() {
+	void ofListTest() {
 		//Given
 		List<Muscle> muscles = new ArrayList<>();
 		int givenMuscleNum = 15;

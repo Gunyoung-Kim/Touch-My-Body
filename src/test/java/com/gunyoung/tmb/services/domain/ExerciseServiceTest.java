@@ -54,7 +54,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
  */
 @Integration
 @SpringBootTest
-public class ExerciseServiceTest {
+class ExerciseServiceTest {
 	
 	@Autowired
 	UserExerciseRepository userExerciseRepository;
@@ -91,11 +91,11 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
-	 *  public Exercise findById(Long id)
+	 *  Exercise findById(Long id)
 	 */
 	@Test
 	@DisplayName("id로 Exercise 찾기 -> 해당 id의 Exercise 없음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		long nonExistExerciseId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
@@ -108,7 +108,7 @@ public class ExerciseServiceTest {
 	
 	@Test
 	@DisplayName("id로 Exercise 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long existExerciseId = exercise.getId();
 		
@@ -120,12 +120,12 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
-	 *  public Exercise findByName(String name)
+	 *  Exercise findByName(String name)
 	 */
 	
 	@Test
 	@DisplayName("name으로 Exercise 찾기 -> 해당 name의 Exercise 없음")
-	public void findByNameNonExist() {
+	void findByNameNonExist() {
 		//Given
 		String nonExistName = "None";
 		
@@ -138,7 +138,7 @@ public class ExerciseServiceTest {
 	
 	@Test
 	@DisplayName("name으로 Exercise 찾기 -> 정상")
-	public void findByNameTest() {
+	void findByNameTest() {
 		//Given
 		String existName = exercise.getName();
 		
@@ -150,13 +150,13 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
-	 *  public Page<Exercise> findAllInPage(Integer pageNumber,int page_size)
+	 *  Page<Exercise> findAllInPage(Integer pageNumber,int page_size)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("모든 운동 페이지로 가져오기 ->정상")
-	public void findAllInPageTest() {
+	void findAllInPageTest() {
 		//Given
 		Integer pageNumber = 1;
 		
@@ -172,13 +172,13 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
-	 *  public Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int page_size)
+	 *  Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int page_size)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName(" 이름에 키워드를 포함하는 모든 운동 페이지로 가져오기 -> 정상, 모든 Exercise 만족 키워드")
-	public void findAllWithNameKeywordInPageAll() {
+	void findAllWithNameKeywordInPageAll() {
 		//Given
 		Integer pageNumber = 1;
 		String keywordForAllExercise = ExerciseTest.getExerciseInstance().getName();
@@ -197,7 +197,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName(" 이름에 키워드를 포함하는 모든 운동 페이지로 가져오기 -> 정상, 오직 하나의 Exercise 만족 키워드")
-	public void findAllWithNameKeywordInPageOnlyOne() {
+	void findAllWithNameKeywordInPageOnlyOne() {
 		//Given
 		Integer pageNumber = 1;
 		String keywordOnlyOneContains = "I am Only one Exercise";
@@ -218,7 +218,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName(" 이름에 키워드를 포함하는 모든 운동 페이지로 가져오기 -> 정상, 키워드 만족하는 Exercise 없음")
-	public void findAllWithNameKeywordInPageNothing() {
+	void findAllWithNameKeywordInPageNothing() {
 		//Given
 		Integer pageNumber = 1;
 		String noContainsKeyword = "none!!!!";
@@ -233,13 +233,13 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
-	 *  public Map<String, List<String>> getAllExercisesNamewithSorting()
+	 *  Map<String, List<String>> getAllExercisesNamewithSorting()
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("모든 운동 이름과 주 타겟으로 분류해서 가져오기 -> 정상, 단 하나의 Exercise만 만족하는 target 확인")
-	public void getAllExercisesNamewithSortingTest() {
+	void getAllExercisesNamewithSortingTest() {
 		//Given
 		TargetType targetTypeForOnlyOne = TargetTypeTest.getAnotherTargetType(exercise.getTarget());
 		Exercise exerciseAnotherTarget = ExerciseTest.getExerciseInstance("only one", targetTypeForOnlyOne);
@@ -255,12 +255,12 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
-	 *  public Exercise save(Exercise Exercise)
+	 *  Exercise save(Exercise Exercise)
 	 */
 	
 	@Test
 	@DisplayName("Exercise 수정하기 -> 정상, 변화 확인")
-	public void mergeTestCheckChange() {
+	void mergeTestCheckChange() {
 		//Given
 		String changeDescription = "Changed Description";
 		Long exerciseId = exercise.getId();
@@ -276,7 +276,7 @@ public class ExerciseServiceTest {
 	
 	@Test
 	@DisplayName("Exercise 수정하기 -> 정상, 개수 변화 없음 확인")
-	public void mergeTestCheckCount() {
+	void mergeTestCheckCount() {
 		//Given
 		String changeDescription = "Changed Description";
 		exercise.setDescription(changeDescription);
@@ -293,7 +293,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise 추가하기 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		Exercise newExercise = ExerciseTest.getExerciseInstance("newExercise", TargetType.ARM);
 		Long givenExerciseNum = exerciseRepository.count();
@@ -306,13 +306,13 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
-	 *  public Exercise saveWithSaveExerciseDTO(SaveExerciseDTO dto)
+	 *  Exercise saveWithSaveExerciseDTO(SaveExerciseDTO dto)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음, 그래도 Exercise 추가 확인")
-	public void saveWithSaveExerciseDTOMuscleNotFoundedCheckMuscleNotFoundedException() {
+	void saveWithSaveExerciseDTOMuscleNotFoundedCheckMuscleNotFoundedException() {
 		//Given
 		String nonExistMuscleName =  "none";
 		
@@ -334,7 +334,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음, 그래도 exercise 추가 확인")
-	public void saveWithSaveExerciseDTOMuscleNotFoundedCheckExerciseNum() {
+	void saveWithSaveExerciseDTOMuscleNotFoundedCheckExerciseNum() {
 		//Given
 		String nonExistMuscleName =  "none";
 		
@@ -356,7 +356,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 Muscle 없음, Exercise 개수 추가 확인")
-	public void saveWithSaveExerciseDTOMuscleNotFoundedCheckExerciseMuscleNum() {
+	void saveWithSaveExerciseDTOMuscleNotFoundedCheckExerciseMuscleNum() {
 		//Given
 		String nonExistMuscleName =  "none";
 		
@@ -377,7 +377,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 TargetType 없음, TargetTypeNotFoundedException throw 확인")
-	public void saveWithSaveExerciseDTOTargetTypeNotFoundedCheckTargetTypeNotFoundedException() {
+	void saveWithSaveExerciseDTOTargetTypeNotFoundedCheckTargetTypeNotFoundedException() {
 		//Given
 		String existMuscleName = "new Muscle";
 		Muscle muscle = MuscleTest.getMuscleInstance(existMuscleName, TargetType.ARM);
@@ -398,7 +398,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 TargetType 없음, Exercise 개수 변화 없음 확인")
-	public void saveWithSaveExerciseDTOTargetTypeNotFoundedCheckExerciseNum() {
+	void saveWithSaveExerciseDTOTargetTypeNotFoundedCheckExerciseNum() {
 		//Given
 		String existMuscleName = "new Muscle";
 		Muscle muscle = MuscleTest.getMuscleInstance(existMuscleName, TargetType.ARM);
@@ -424,7 +424,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 해당 TargetType 없음, ExerciseMuscle 개수 변화 없음 확인")
-	public void saveWithSaveExerciseDTOTargetTypeNotFounded() {
+	void saveWithSaveExerciseDTOTargetTypeNotFounded() {
 		//Given
 		String existMuscleName = "new Muscle";
 		Muscle muscle = MuscleTest.getMuscleInstance(existMuscleName, TargetType.ARM);
@@ -450,7 +450,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 정상, Exercise 개수 추가 확인")
-	public void saveWithSaveExerciseDTOTestCheckExerciseNum() {
+	void saveWithSaveExerciseDTOTestCheckExerciseNum() {
 		//Given
 		String existMuscleName = "new Muscle";
 		Muscle muscle = MuscleTest.getMuscleInstance(existMuscleName, TargetType.ARM);
@@ -472,7 +472,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("SaveExerciseDTO로 Exercise 추가하기 -> 정상, ExerciseMuscle 추가 확인")
-	public void saveWithSaveExerciseDTOTestCheckExerciseMuscleNum() {
+	void saveWithSaveExerciseDTOTestCheckExerciseMuscleNum() {
 		//Given
 		String existMuscleName = "new Muscle";
 		Muscle muscle = MuscleTest.getMuscleInstance(existMuscleName, TargetType.ARM);
@@ -492,12 +492,12 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
-	 *  public void delete(Exercise Exercise)
+	 *  void delete(Exercise Exercise)
 	 */
 	
 	@Test
 	@DisplayName("Exercise 삭제하기 -> 정상, Exercise Delete Check")
-	public void deleteTestCheckExerciseDelete() {
+	void deleteTestCheckExerciseDelete() {
 		//Given
 		Long givenExerciseNum = exerciseRepository.count();
 		
@@ -511,7 +511,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise 삭제하기 -> 정상, 관련 UserExercise Delete check")
-	public void deleteTestCheckUserExerciseDelete() {
+	void deleteTestCheckUserExerciseDelete() {
 		//Given
 		Long givenUserExerciseNum = Long.valueOf(9);
 		saveUserExercisesWithExercise(givenUserExerciseNum, exercise);
@@ -537,7 +537,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise 삭제하기 -> 정상, Check Feedback Delete")
-	public void deleteTestCheckFeedbackDelete() {
+	void deleteTestCheckFeedbackDelete() {
 		//Given
 		Feedback feedback = FeedbackTest.getFeedbackInstance();
 		feedback.setExercise(exercise);
@@ -555,7 +555,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise 삭제하기 -> 정상, Check ExerciseMuscle Delete")
-	public void deleteTestCheckExerciseMuscleDelete() {
+	void deleteTestCheckExerciseMuscleDelete() {
 		//Given
 		ExerciseMuscle exerciseMuscle = ExerciseMuscleTest.getExerciseMuscleInstance();
 		exerciseMuscle.setExercise(exercise);
@@ -573,7 +573,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise 삭제하기 -> 정상, Check ExercisePost Delete")
-	public void deleteTestCheckExercisePostDelete() {
+	void deleteTestCheckExercisePostDelete() {
 		//Given
 		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		exercisePost.setExercise(exercise);
@@ -589,12 +589,12 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
-	 *  public long countAll()
+	 *  long countAll()
 	 */
 	
 	@Test
 	@DisplayName("모든 Exercise 개수 세기 ->정상")
-	public void countAllTest() {
+	void countAllTest() {
 		//Given
 		ExerciseTest.addNewExercisesInDBByNum(10, exerciseRepository);
 		long givenExerciseNum = exerciseRepository.count();
@@ -607,11 +607,11 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
-	 * public long countAllWithNameKeyword(String nameKeyword)
+	 * long countAllWithNameKeyword(String nameKeyword)
 	 */
 	@Test
 	@DisplayName("이름 키워드를 만족하는 Exercise 개수 세기 -> 정상, 모든 Exercise가 만족하는 키워드")
-	public void countAllWithNameKeywordTestAll() {
+	void countAllWithNameKeywordTestAll() {
 		//Given
 		String allContainsKeyword = ExerciseTest.getExerciseInstance().getName();
 		
@@ -628,7 +628,7 @@ public class ExerciseServiceTest {
 	
 	@Test
 	@DisplayName("이름 키워드를 만족하는 Exercise 개수 세기 -> 정상, 오직 하나의 Exercise가 만족하는 키워드")
-	public void countAllWithNameKeywordTestOnlyOne() {
+	void countAllWithNameKeywordTestOnlyOne() {
 		//Given
 		String onlyOneContainsKeyword = "I am only one";
 		Exercise onlyOneExercise = ExerciseTest.getExerciseInstance(onlyOneContainsKeyword, TargetType.ARM);
@@ -645,7 +645,7 @@ public class ExerciseServiceTest {
 	
 	@Test
 	@DisplayName("이름 키워드를 만족하는 Exercise 개수 세기 -> 정상, 모든 Exercise가 만족하지 않는 키워드")
-	public void countAllWithNameKeywordTestNothing() {
+	void countAllWithNameKeywordTestNothing() {
 		//Given
 		String noContainsKeyword = "none!!!!";
 		
@@ -659,12 +659,12 @@ public class ExerciseServiceTest {
 	}
 	
 	/*
-	 *  public ExerciseForInfoViewDTO getExerciseForInfoViewDTOByExerciseId(Long exerciseId)
+	 *  ExerciseForInfoViewDTO getExerciseForInfoViewDTOByExerciseId(Long exerciseId)
 	 */
 	
 	@Test
 	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 해당 exercise 없음")
-	public void getExerciseForInfoViewDTOByExerciseIdNonExist() {
+	void getExerciseForInfoViewDTOByExerciseIdNonExist() {
 		//Given
 		Long nonExistId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
@@ -677,7 +677,7 @@ public class ExerciseServiceTest {
 	
 	@Test
 	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 정상, ExerciseMuscle 미포함")
-	public void getExerciseForInfoViewDTOByExerciseIdTestWithOutExerciseMuscle() {
+	void getExerciseForInfoViewDTOByExerciseIdTestWithOutExerciseMuscle() {
 		//Given
 		Long existId = exercise.getId();
 		
@@ -691,7 +691,7 @@ public class ExerciseServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Exercise Id로 찾은 Exercise로 ExerciseForInfoViewDTO 생성 및 반환 -> 정상, ExerciseMuscle 포함")
-	public void getExerciseForInfoViewDTOByExerciseIdTestWithExerciseMuscle() {
+	void getExerciseForInfoViewDTOByExerciseIdTestWithExerciseMuscle() {
 		//Given
 		Long existId = exercise.getId();
 		

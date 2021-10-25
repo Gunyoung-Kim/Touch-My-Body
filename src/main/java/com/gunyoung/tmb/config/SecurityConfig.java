@@ -105,6 +105,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		return webSecurityExpressionHandler;
 	}
 	
+	@Override
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return new UserDetailsServiceImpl(userService);

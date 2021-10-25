@@ -37,7 +37,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class UserExcerciseRestControllerUnitTest {
+class UserExcerciseRestControllerUnitTest {
 	
 	@Mock
 	HttpSession session;
@@ -49,12 +49,12 @@ public class UserExcerciseRestControllerUnitTest {
 	UserExcerciseRestController userExcerciseRestController;
 	
 	/*
-	 * public List<UserExerciseWithDateDTO> getExerciseRecords(@ModelAttribute DateDTO date) 
+	 * List<UserExerciseWithDateDTO> getExerciseRecords(@ModelAttribute DateDTO date) 
 	 */
 	
 	@Test
 	@DisplayName("접속자의 특정 날짜의 운동 기록들 반환 -> 정상")
-	public void getExerciseRecordsTest() {
+	void getExerciseRecordsTest() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -98,12 +98,12 @@ public class UserExcerciseRestControllerUnitTest {
 	}
 	
 	/*
-	 * public List<UserExerciseIsDoneDTO> getIsDoneList(@RequestParam("year") int year, @RequestParam("month") int month)
+	 * List<UserExerciseIsDoneDTO> getIsDoneList(@RequestParam("year") int year, @RequestParam("month") int month)
 	 */
 	
 	@Test
 	@DisplayName("접속자의 특정 달에 각 일에 운동 했는지 여부 반환 -> 정상")
-	public void getIsDoneListTest() {
+	void getIsDoneListTest() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);

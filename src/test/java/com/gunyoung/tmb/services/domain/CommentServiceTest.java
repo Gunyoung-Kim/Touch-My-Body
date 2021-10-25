@@ -42,7 +42,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
  */
 @Integration
 @SpringBootTest
-public class CommentServiceTest {
+class CommentServiceTest {
 	
 	@Autowired
 	CommentRepository commentRepository;
@@ -73,11 +73,11 @@ public class CommentServiceTest {
 	}
 	
 	/*
-	 *  public Comment findById(Long id)
+	 *  Comment findById(Long id)
 	 */
 	@Test
 	@DisplayName("id로 Comment 찾기 -> 해당 id의 comment 없음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistCommentId = CommentTest.getNonExistCommentId(commentRepository);
 		
@@ -90,7 +90,7 @@ public class CommentServiceTest {
 	
 	@Test
 	@DisplayName("id로 Comment 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long existCommentId = comment.getId();
 		
@@ -102,12 +102,12 @@ public class CommentServiceTest {
 	}
 	
 	/*
-	 *  public List<Comment> findByExercisePostId(Long postId)
+	 *  List<Comment> findByExercisePostId(Long postId)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("ExercisePost id로 Comment들 찾기 ->정상")
-	public void findByExercisePostIdTest() {
+	void findByExercisePostIdTest() {
 		//Given
 		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		exercisePostRepository.save(exercisePost);
@@ -129,12 +129,12 @@ public class CommentServiceTest {
 	}
 	
 	/*
-	 * public List<Comment> findAllByUserIdOrderByCreatedAtASC(Long userId)
+	 * List<Comment> findAllByUserIdOrderByCreatedAtASC(Long userId)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("User ID로 Comment 찾기 오래된순서대로 ->정상, 개수 확인")
-	public void findAllByUserIdOrderByCreatedAtASCTestCheckCount() {
+	void findAllByUserIdOrderByCreatedAtASCTestCheckCount() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -157,7 +157,7 @@ public class CommentServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User ID로 Comment 찾기 오래된순서대로 ->정상, 정렬 순서 확인")
-	public void findAllByUserIdOrderByCreatedAtASCTestCheckSorting() {
+	void findAllByUserIdOrderByCreatedAtASCTestCheckSorting() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -185,12 +185,12 @@ public class CommentServiceTest {
 	}
 	
 	/*
-	 *  public List<Comment> findAllByUserIdOrderByCreatedAtDESC(Long userId)
+	 *  List<Comment> findAllByUserIdOrderByCreatedAtDESC(Long userId)
 	 */
 	@Test
 	@Transactional
 	@DisplayName("User ID로 Comment 찾기 최신순서대로 ->정상 , 개수 확인")
-	public void findAllByUserIdOrderByCreatedAtDESCTestCheckCount() {
+	void findAllByUserIdOrderByCreatedAtDESCTestCheckCount() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -212,7 +212,7 @@ public class CommentServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User ID로 Comment 찾기 최신순서대로 ->정상")
-	public void findAllByUserIdOrderByCreatedAtDESCTest() {
+	void findAllByUserIdOrderByCreatedAtDESCTest() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -240,13 +240,13 @@ public class CommentServiceTest {
 	}
 	
 	/*
-	 *  public Comment save(Comment comment)
+	 *  Comment save(Comment comment)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("Comment 수정하기 -> 정상")
-	public void mergeTest() {
+	void mergeTest() {
 		//Given
 		Long commentId = comment.getId();
 		comment.setContents("changed Contents");
@@ -262,7 +262,7 @@ public class CommentServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Comment 추가하기 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		Comment newComment = CommentTest.getCommentInstance();
 		Long givenCommentNum = commentRepository.count();
@@ -275,13 +275,13 @@ public class CommentServiceTest {
 	}
 	
 	/*
-	 * public Comment saveWithUserAndExercisePost(User user, ExercisePost exercisePost)
+	 * Comment saveWithUserAndExercisePost(User user, ExercisePost exercisePost)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("User, ExercisePost의 Comment 추가 -> 정상")
-	public void saveWithUserAndExercisePostTest() {
+	void saveWithUserAndExercisePostTest() {
 		//Given
 		Comment comment = CommentTest.getCommentInstance();
 		
@@ -301,13 +301,13 @@ public class CommentServiceTest {
 	}
 	
 	/*
-	 *  public void delete(Comment comment)
+	 *  void delete(Comment comment)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("Comment 삭제하기 -> 정상, Check Comment Delete")
-	public void deleteTest() {
+	void deleteTest() {
 		//Given
 		Long givenCommentNum = commentRepository.count();
 		
@@ -321,7 +321,7 @@ public class CommentServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("Comment 삭제하기 -> 정상, Check CommentLike Delete")
-	public void deleteTestCheckCommentLikeDelete() {
+	void deleteTestCheckCommentLikeDelete() {
 		//Given
 		CommentLike commentLike = CommentLikeTest.getCommentLikeInstance();
 		commentLike.setComment(comment);
@@ -337,13 +337,13 @@ public class CommentServiceTest {
 	}
 	
 	/*
-	 * public void checkIsMineAndDelete(Long userId, Long commentId) {
+	 * void checkIsMineAndDelete(Long userId, Long commentId) {
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("User ID, Comment ID로 User의 Comment인지 확인 후 맞다면 삭제 -> User의 Comment 아님")
-	public void checkIsMineAndDeleteNotMine() {
+	void checkIsMineAndDeleteNotMine() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -364,7 +364,7 @@ public class CommentServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User ID, Comment ID로 User의 Comment인지 확인 후 맞다면 삭제 -> 정상")
-	public void checkIsMineAndDeleteTest() {
+	void checkIsMineAndDeleteTest() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -383,13 +383,13 @@ public class CommentServiceTest {
 	}
 	
 	/*
-	 * public void deleteAllByUserId(Long userId)
+	 * void deleteAllByUserId(Long userId)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("User ID로 Comment 일괄 삭제 -> 정상, Check Comments Delete")
-	public void deleteAllByUserIdTestCheckCommentDelete() {
+	void deleteAllByUserIdTestCheckCommentDelete() {
 		//Given
 		int addCommentNum = 7;
 		addComments(addCommentNum);
@@ -418,7 +418,7 @@ public class CommentServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("User ID로 Comment 일괄 삭제 -> 정상, Check CommentLike Delete")
-	public void deleteAllByUserIdTestCheckCommentLikeDelete() {
+	void deleteAllByUserIdTestCheckCommentLikeDelete() {
 		//Given
 		int addCommentNum = 5;
 		addComments(addCommentNum);
@@ -451,13 +451,13 @@ public class CommentServiceTest {
 	}
 	
 	/*
-	 * public void deleteAllByExercisePostId(Long exercisePostId)
+	 * void deleteAllByExercisePostId(Long exercisePostId)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("ExercisePost ID로 Comment 일괄 삭제 -> 정상 , Check Comments Delete")
-	public void deleteAllByExercisePostIdTestCheckCommentsDelete() {
+	void deleteAllByExercisePostIdTestCheckCommentsDelete() {
 		//Given
 		int addCommentNum = 6;
 		addComments(addCommentNum);
@@ -486,7 +486,7 @@ public class CommentServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("ExercisePost ID로 Comment 일괄 삭제 -> 정상 , Check CommentLike Delete")
-	public void deleteAllByExercisePostIdTestCheckCommentLikeDelete() {
+	void deleteAllByExercisePostIdTestCheckCommentLikeDelete() {
 		//Given
 		int addCommentNum = 6;
 		addComments(addCommentNum);
@@ -529,13 +529,13 @@ public class CommentServiceTest {
 	}
 	
 	/*
-	 * public long countByUserId(Long userId)
+	 * long countByUserId(Long userId)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("User ID를 만족하는 Comment 들 개수 가져오기 -> 정상")
-	public void countByUserIdTest() {
+	void countByUserIdTest() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
@@ -559,13 +559,13 @@ public class CommentServiceTest {
 	}
 	
 	/*
-	 *  public List<CommentForPostViewDTO> getCommentForCommentForPostViewDTOsByExercisePostId(Long postId)
+	 *  List<CommentForPostViewDTO> getCommentForCommentForPostViewDTOsByExercisePostId(Long postId)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("해당 exercisePost id 를 만족하는 Comment 객체들을 CommentForPostViewDTO로 변환해서 반환 -> 정상")
-	public void getCommentForCommentForPostViewDTOsByExercisePostIdTest() {
+	void getCommentForCommentForPostViewDTOsByExercisePostIdTest() {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);

@@ -42,7 +42,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ExercisePostRestControllerTest {
+class ExercisePostRestControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -65,7 +65,7 @@ public class ExercisePostRestControllerTest {
 	/*
 	 * @RequestMapping(value="/community/post/{post_id}/addLike",method = RequestMethod.POST)
 	 * @LoginIdSessionNotNull
-	 * public void addLikeToExercisePost(@PathVariable("post_id") Long postId)
+	 * void addLikeToExercisePost(@PathVariable("post_id") Long postId)
 	 */
 	
 	private void checkFailureAddLikeToExercisePost(User user, ExercisePost ep,int postLikeNum) {
@@ -77,7 +77,7 @@ public class ExercisePostRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("좋아요 추가 -> 세션에 저장된 ID로 유저 찾을 수 없음")
-	public void addLikeToExercisePostUserNonExist() throws Exception {
+	void addLikeToExercisePostUserNonExist() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
@@ -100,7 +100,7 @@ public class ExercisePostRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("좋아요 추가 -> 해당 ID의 ExercisePost 없음")
-	public void addLikeToExercisePostEPNonExist() throws Exception {
+	void addLikeToExercisePostEPNonExist() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
@@ -123,7 +123,7 @@ public class ExercisePostRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("좋아요 추가 -> 해당 ExercisePost에 User의 PostLike가 이미 존재")
-	public void addLikeToExercisePostAlredyExist() throws Exception {
+	void addLikeToExercisePostAlredyExist() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
@@ -152,7 +152,7 @@ public class ExercisePostRestControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("좋아요 추가 -> 정상")
-	public void addLikeToExercisePostTest() throws Exception {
+	void addLikeToExercisePostTest() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);
@@ -177,13 +177,13 @@ public class ExercisePostRestControllerTest {
 	/*
 	 *  @RequestMapping(value="/community/post/{post_id}/removeLike",method = RequestMethod.DELETE)
 	 *  @LoginIdSessionNotNull
-	 *  public void removeLikeToExercisePost(@PathVariable("post_id") Long postId)
+	 *  void removeLikeToExercisePost(@PathVariable("post_id") Long postId)
 	 */
 	
 	 @Test
 	 @Transactional
 	 @DisplayName("좋아요 취소 -> 해당 ID의 PostLike 없음")
-	 public void removeLikeToExercisePostNonExist() throws Exception {
+	 void removeLikeToExercisePostNonExist() throws Exception {
 		 //Given
 		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
@@ -204,7 +204,7 @@ public class ExercisePostRestControllerTest {
 	 @Test
 	 @Transactional
 	 @DisplayName("좋아요 취소 -> 정상")
-	 public void removeLikeToExercisePostTest() throws Exception {
+	 void removeLikeToExercisePostTest() throws Exception {
 		 //Given
 		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
@@ -235,7 +235,7 @@ public class ExercisePostRestControllerTest {
 	 /*
 	  * @RequestMapping(value="/community/post/{post_id}/comment/addlike",method = RequestMethod.POST)
 	  * @LoginIdSessionNotNull
-	  * public void addLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId)
+	  * void addLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId)
 	  */
 	 
 	 private void checkFailureAddLikeToComment(User user, Comment comment, int commentLikeNum) {
@@ -247,7 +247,7 @@ public class ExercisePostRestControllerTest {
 	 @Test
 	 @Transactional
 	 @DisplayName("댓글에 좋아요 추가 -> 세션의 저장된 ID의 유저 없음")
-	 public void addLikeToCommentUserNonExist() throws Exception {
+	 void addLikeToCommentUserNonExist() throws Exception {
 		 //Given
 		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
@@ -277,7 +277,7 @@ public class ExercisePostRestControllerTest {
 	 @Test
 	 @Transactional
 	 @DisplayName("댓글에 좋아요 추가 -> 해당 ID의 Comment 없을때")
-	 public void addLikeToCommentNonExist() throws Exception {
+	 void addLikeToCommentNonExist() throws Exception {
 		 //Given
 		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
@@ -307,7 +307,7 @@ public class ExercisePostRestControllerTest {
 	 @Test
 	 @Transactional
 	 @DisplayName("댓글에 좋아요 추가 -> 해당 유저가 이미 댓글에 좋아요 추가했을때")
-	 public void addLikeToCommentAlreadyExist() throws Exception {
+	 void addLikeToCommentAlreadyExist() throws Exception {
 		 //Given
 		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
@@ -342,7 +342,7 @@ public class ExercisePostRestControllerTest {
 	 @Test
 	 @Transactional
 	 @DisplayName("댓글에 좋아요 추가 -> 정상")
-	 public void addLikeToCommentTest() throws Exception {
+	 void addLikeToCommentTest() throws Exception {
 		 //Given
 		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
@@ -374,13 +374,13 @@ public class ExercisePostRestControllerTest {
 	 /*
 	  * @RequestMapping(value="/community/post/{post_id}/comment/removelike",method = RequestMethod.DELETE)
 	  * @LoginIdSessionNotNull
-	  * public void removeLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId)
+	  * void removeLikeToComment(@PathVariable("post_id") Long postId, @RequestParam("commentId") Long commentId)
 	  */
 	 
 	 @Test
 	 @Transactional
 	 @DisplayName("댓글 좋아요 취소 -> 해당 조건 만족하는 commentLike 없을때")
-	 public void removeLikeToCommentNonExist() throws Exception {
+	 void removeLikeToCommentNonExist() throws Exception {
 		 //Given
 		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
@@ -408,7 +408,7 @@ public class ExercisePostRestControllerTest {
 	 @Test
 	 @Transactional
 	 @DisplayName("댓글 좋아요 취소 -> 정상")
-	 public void removeLikeToCommentTest() throws Exception {
+	 void removeLikeToCommentTest() throws Exception {
 		 //Given
 		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
@@ -445,13 +445,13 @@ public class ExercisePostRestControllerTest {
 	 /*
 	  * @RequestMapping(value="/community/post/{post_id}/removeComment",method = RequestMethod.DELETE)
 	  * @LoginIdSessionNotNull
-	  * public void removeCommentToExercisePost(@PathVariable("post_id") Long postId,@RequestParam("commentId") Long commentId)
+	  * void removeCommentToExercisePost(@PathVariable("post_id") Long postId,@RequestParam("commentId") Long commentId)
 	  */
 	 
 	 @Test
 	 @Transactional
 	 @DisplayName("댓글 삭제 -> 해당 ID의 Comment 없을 때")
-	 public void removeCommentToExercisePostNonExist() throws Exception {
+	 void removeCommentToExercisePostNonExist() throws Exception {
 		 //Given
 		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
@@ -481,7 +481,7 @@ public class ExercisePostRestControllerTest {
 	 @Test
 	 @Transactional
 	 @DisplayName("댓글 삭제 -> 세션에 저장된 ID와 댓글 작성자의 ID 일치 하지 않으면")
-	 public void removeCommentToExercisePostNotMatch() throws Exception {
+	 void removeCommentToExercisePostNotMatch() throws Exception {
 		 //Given
 		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);
@@ -511,7 +511,7 @@ public class ExercisePostRestControllerTest {
 	 @Test
 	 @Transactional
 	 @DisplayName("댓글 삭제 -> 정상")
-	 public void removeCommentToExercisePostTest() throws Exception {
+	 void removeCommentToExercisePostTest() throws Exception {
 		 //Given
 		 User user = UserTest.getUserInstance(RoleType.USER);
 		 userRepository.save(user);

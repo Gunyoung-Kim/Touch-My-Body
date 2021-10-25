@@ -29,7 +29,7 @@ import com.gunyoung.tmb.config.RedisSessionConfig;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class RedisSessionConfigUnitTest {
+class RedisSessionConfigUnitTest {
 	
 	private String redisSessionHost = "127.0.0.1";
 	
@@ -42,12 +42,12 @@ public class RedisSessionConfigUnitTest {
 	ObjectMapper objectMapper;
 	
 	/*
-	 * public RedisConnectionFactory redisConnectionFactory()
+	 * RedisConnectionFactory redisConnectionFactory()
 	 */
 	
 	@Test
 	@DisplayName("RedisConnectionFactory 생성 -> LettuceConnectionFactory 생성")
-	public void redisConnectionFactoryTestLettuce() throws NoSuchFieldException, IllegalAccessException {
+	void redisConnectionFactoryTestLettuce() throws NoSuchFieldException, IllegalAccessException {
 		//Given
 		settingRedisSessionConfigField();
 		
@@ -59,12 +59,12 @@ public class RedisSessionConfigUnitTest {
 	}
 	
 	/*
-	 * public RedisTemplate<String, Object> redisTemplate()
+	 * RedisTemplate<String, Object> redisTemplate()
 	 */
 
 	@Test
 	@DisplayName("RedisTemplate 빈 생성 -> KeySerializer 확인")
-	public void redisTemplateTestKeySerializer()  throws NoSuchFieldException, IllegalAccessException{
+	void redisTemplateTestKeySerializer()  throws NoSuchFieldException, IllegalAccessException{
 		//Given
 		settingRedisSessionConfigField();
 		
@@ -77,7 +77,7 @@ public class RedisSessionConfigUnitTest {
 	
 	@Test
 	@DisplayName("RedisTemplate 빈 생성 -> ValueSerializer 확인")
-	public void redisTemplateTestValueSerializer()  throws NoSuchFieldException, IllegalAccessException{
+	void redisTemplateTestValueSerializer()  throws NoSuchFieldException, IllegalAccessException{
 		//Given
 		settingRedisSessionConfigField();
 		
@@ -89,12 +89,12 @@ public class RedisSessionConfigUnitTest {
 	}
 	
 	/*
-	 * public ConfigureRedisAction configureRedisAction()
+	 * ConfigureRedisAction configureRedisAction()
 	 */
 	
 	@Test
 	@DisplayName("ConfigureRedisAction 빈 생성 -> NO_OP 인지 확인")
-	public void configureRedisActionTestNO_OP() {
+	void configureRedisActionTestNO_OP() {
 		//Given
 		
 		//When

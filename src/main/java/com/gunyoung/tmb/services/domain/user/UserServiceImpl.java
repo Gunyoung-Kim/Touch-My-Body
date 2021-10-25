@@ -123,11 +123,11 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void delete(User user) {
 		Long userId = user.getId();
-		deleteAllOneToManyEntityById(userId);
+		deleteAllWeakEntityById(userId);
 		userRepository.deleteByIdInQuery(userId);
 	}
 	
-	private void deleteAllOneToManyEntityById(Long userId) {
+	private void deleteAllWeakEntityById(Long userId) {
 		userExerciseService.deleteAllByUserId(userId);
 		commentLikeService.deleteAllByUserId(userId);
 		commentService.deleteAllByUserId(userId);

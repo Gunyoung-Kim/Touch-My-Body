@@ -37,7 +37,7 @@ import com.gunyoung.tmb.enums.RoleType;
  *
  */
 @ExtendWith(SpringExtension.class)
-public class AuthorityServiceTest {
+class AuthorityServiceTest {
 	
 	@Mock
 	RoleHierarchy roleHierarchy;
@@ -46,13 +46,13 @@ public class AuthorityServiceTest {
 	AuthorityServiceImpl authorityService;
 	
 	/*
-	 * public boolean isSessionUserAuthorityCanAccessToTargetAuthority(User target)
+	 * boolean isSessionUserAuthorityCanAccessToTargetAuthority(User target)
 	 */
 	
 	@WithMockUser(roles = {"MANAGER"})
 	@Test
 	@DisplayName("세션 접속자의 권한으로 인자로 전달된 유저의 권한에 접근 가능한지 여부 반환 -> 서로 동일한 권한일때")
-	public void isSessionUserAuthorityCanAccessToTargetAuthoritySameTest() {
+	void isSessionUserAuthorityCanAccessToTargetAuthoritySameTest() {
 		//Given
 		User targetUser = getUserInstance(RoleType.MANAGER);
 		
@@ -86,7 +86,7 @@ public class AuthorityServiceTest {
 	@WithMockUser(roles = {"MANAGER"})
 	@Test
 	@DisplayName("세션 접속자의 권한으로 인자로 전달된 유저의 권한에 접근 가능한지 여부 반환 -> 세션 접속자가 더 높을 때")
-	public void isSessionUserAuthorityCanAccessToTargetAuthoritySessionUserHigherTest() {
+	void isSessionUserAuthorityCanAccessToTargetAuthoritySessionUserHigherTest() {
 		//Given
 		User targetUser = getUserInstance(RoleType.USER);
 		
@@ -119,7 +119,7 @@ public class AuthorityServiceTest {
 	@WithMockUser(roles = {"MANAGER"})
 	@Test
 	@DisplayName("세션 접속자의 권한으로 인자로 전달된 유저의 권한에 접근 가능한지 여부 반환 -> 인자로 전달된 유저가 더 높을 때")
-	public void isSessionUserAuthorityCanAccessToTargetAuthorityTargetHigherTest() {
+	void isSessionUserAuthorityCanAccessToTargetAuthorityTargetHigherTest() {
 		//Given
 		User targetUser = getUserInstance(RoleType.ADMIN);
 		
@@ -164,12 +164,12 @@ public class AuthorityServiceTest {
 	
 	
 	/*
-	 * public List<String> getAuthorityStringsExceptROLE(Collection<? extends GrantedAuthority> authorities) 
+	 * List<String> getAuthorityStringsExceptROLE(Collection<? extends GrantedAuthority> authorities) 
 	 */
 	
 	@Test
 	@DisplayName("Authority들을 ROLE_ 제외한 toString들 반환 -> 정상")
-	public void getAuthorityStringsExceptROLETest() {
+	void getAuthorityStringsExceptROLETest() {
 		//Given
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		
@@ -188,12 +188,12 @@ public class AuthorityServiceTest {
 	}
 	
 	/*
-	 * public Collection<? extends GrantedAuthority> getAuthoritiesByUserRoleType(RoleType roleType)
+	 * Collection<? extends GrantedAuthority> getAuthoritiesByUserRoleType(RoleType roleType)
 	 */
 	
 	@Test
 	@DisplayName("User의 RoleType을 통해 Authority 반환 -> RoleTyp.USER")
-	public void getAuthoritiesByUserRoleTypeUSERTest() {
+	void getAuthoritiesByUserRoleTypeUSERTest() {
 		//Given
 		RoleType userType = RoleType.USER;
 		
@@ -211,7 +211,7 @@ public class AuthorityServiceTest {
 	
 	@Test
 	@DisplayName("Manager의 RoleType을 통해 Authority 반환 -> RoleTyp.MANAGER")
-	public void getAuthoritiesByUserRoleTypeMANAGERTest() {
+	void getAuthoritiesByUserRoleTypeMANAGERTest() {
 		//Given
 		RoleType userType = RoleType.MANAGER;
 		
@@ -229,7 +229,7 @@ public class AuthorityServiceTest {
 	
 	@Test
 	@DisplayName("Administrator의 RoleType을 통해 Authority 반환 -> RoleTyp.ADMIN")
-	public void getAuthoritiesByUserRoleTypeADMINTest() {
+	void getAuthoritiesByUserRoleTypeADMINTest() {
 		//Given
 		RoleType userType = RoleType.ADMIN;
 		

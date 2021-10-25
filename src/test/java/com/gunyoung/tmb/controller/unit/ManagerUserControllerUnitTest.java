@@ -44,7 +44,7 @@ import com.gunyoung.tmb.testutil.UserTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ManagerUserControllerUnitTest {
+class ManagerUserControllerUnitTest {
 	
 	@Mock
 	UserService userService;
@@ -73,13 +73,13 @@ public class ManagerUserControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView userManageView(@RequestParam(value="page", required=false,defaultValue="1") Integer page,
+	 * ModelAndView userManageView(@RequestParam(value="page", required=false,defaultValue="1") Integer page,
 	 *		@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav)
 	 */
 	
 	@Test
 	@DisplayName("매니저들의 유저 검색 (for managing) 페이지반환 -> 정상, 키워드 없음, totalPageNum check")
-	public void userManageViewNoKeywordCheckTotalPageNum() {
+	void userManageViewNoKeywordCheckTotalPageNum() {
 		//Given
 		
 		//When
@@ -91,7 +91,7 @@ public class ManagerUserControllerUnitTest {
 	
 	@Test
 	@DisplayName("매니저들의 유저 검색 (for managing) 페이지반환 -> 정상, 키워드 있음, userService check")
-	public void userManageViewYesKeywordCheckUserService() {
+	void userManageViewYesKeywordCheckUserService() {
 		//Given
 		String keyword = "keyword";
 		Page<User> pageResult = new PageImpl<>(new ArrayList<>());
@@ -106,7 +106,7 @@ public class ManagerUserControllerUnitTest {
 	
 	@Test
 	@DisplayName("매니저들의 유저 검색 (for managing) 페이지반환 -> 정상, 키워드 없음, ModelAndPageView Check")
-	public void userManageViewNoKeywordCheckMav() {
+	void userManageViewNoKeywordCheckMav() {
 		//Given
 		String keyword = "keyword";
 		Page<User> pageResult = new PageImpl<>(new ArrayList<>());
@@ -124,12 +124,12 @@ public class ManagerUserControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView manageUserProfileView(@PathVariable("user_id") Long userId, ModelAndView mav)
+	 * ModelAndView manageUserProfileView(@PathVariable("user_id") Long userId, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("특정 User 관리 화면 반환 -> 해당 Id의 User 없으면")
-	public void manageUserProfileViewTestUserNonExist() {
+	void manageUserProfileViewTestUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(52);
 		given(userService.findById(nonExistUserId)).willReturn(null);
@@ -142,7 +142,7 @@ public class ManagerUserControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 User 관리 화면 반환 -> 접속자의 권한이 대상 User의 권한보다 낮다면")
-	public void manageUserProfileViewTestAccessDenied() {
+	void manageUserProfileViewTestAccessDenied() {
 		//Given
 		Long userId = Long.valueOf(36);
 		User user = stubbingUserServiceFindById(userId);
@@ -157,7 +157,7 @@ public class ManagerUserControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 User 관리 화면 반환 -> 정상, ModelAndView check")
-	public void manageUserProfileViewTestCheckMav() {
+	void manageUserProfileViewTestCheckMav() {
 		//Given
 		Long userId = Long.valueOf(36);
 		User user = stubbingUserServiceFindById(userId);
@@ -176,13 +176,13 @@ public class ManagerUserControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView manageUserComments(@PathVariable("user_id") Long userId,@RequestParam(value="page", required=false,defaultValue="1") Integer page
+	 * ModelAndView manageUserComments(@PathVariable("user_id") Long userId,@RequestParam(value="page", required=false,defaultValue="1") Integer page
 	 *		,@RequestParam(value="order", defaultValue="desc") String order , ModelAndPageView mav)
 	 */
 	
 	@Test
 	@DisplayName("특정 유저의 댓글 목록 보여주는 화면 반환 -> 해당 Id의 User 없으면")
-	public void manageUserCommentsTestUserNonExist() {
+	void manageUserCommentsTestUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(76);
 		given(userService.findById(nonExistUserId)).willReturn(null);
@@ -195,7 +195,7 @@ public class ManagerUserControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 유저의 댓글 목록 보여주는 화면 반환 -> 검색 결과 정렬 방식이 올바르지 못하다면")
-	public void manageUserCommentsTestInvalidSort() {
+	void manageUserCommentsTestInvalidSort() {
 		//Given
 		Long userId = Long.valueOf(33);
 		stubbingUserServiceFindById(userId);
@@ -210,7 +210,7 @@ public class ManagerUserControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 유저의 댓글 목록 보여주는 화면 반환 -> 정상, 정렬 오름차순(asc), commentService check")
-	public void manageUserCommentsTestASCCheckCommentService() {
+	void manageUserCommentsTestASCCheckCommentService() {
 		//Given
 		Long userId = Long.valueOf(33);
 		stubbingUserServiceFindById(userId);
@@ -229,7 +229,7 @@ public class ManagerUserControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 유저의 댓글 목록 보여주는 화면 반환 -> 정상, 정렬 내림차순(desc), commentService check")
-	public void manageUserCommentsTestDescCheckCommentService() {
+	void manageUserCommentsTestDescCheckCommentService() {
 		//Given
 		Long userId = Long.valueOf(33);
 		stubbingUserServiceFindById(userId);
@@ -248,7 +248,7 @@ public class ManagerUserControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 유저의 댓글 목록 보여주는 화면 반환 -> 정상, 정렬 내림차순(desc), ModelAndView check")
-	public void manageUserCommentsDescCheckMav() {
+	void manageUserCommentsDescCheckMav() {
 		//Given
 		Long userId = Long.valueOf(33);
 		User user = stubbingUserServiceFindById(userId);
@@ -276,13 +276,13 @@ public class ManagerUserControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView manageUserPosts(@PathVariable("user_id") Long userId,@RequestParam(value="page", required=false,defaultValue="1") Integer page
+	 * ModelAndView manageUserPosts(@PathVariable("user_id") Long userId,@RequestParam(value="page", required=false,defaultValue="1") Integer page
 	 *		,@RequestParam(value="order", defaultValue="desc") String order , ModelAndPageView mav)
 	 */
 	
 	@Test
 	@DisplayName("특정 유저의 게시글 목록 보여주는 화면 반환 -> 해당 Id의 User 없으면")
-	public void manageUserPostsTestUserNonExist() {
+	void manageUserPostsTestUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(76);
 		given(userService.findById(nonExistUserId)).willReturn(null);
@@ -295,7 +295,7 @@ public class ManagerUserControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 유저의 게시글 목록 보여주는 화면 반환 -> 검색 결과 정렬 방식이 올바르지 못하다면")
-	public void manageUserPostsTestInvalidSort() {
+	void manageUserPostsTestInvalidSort() {
 		//Given
 		Long userId = Long.valueOf(33);
 		stubbingUserServiceFindById(userId);
@@ -310,7 +310,7 @@ public class ManagerUserControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 유저의 게시글 목록 보여주는 화면 반환 -> 정상, 정렬 오름차순(asc), exercisePostService check")
-	public void manageUserPostsTestASCCheckPostService() {
+	void manageUserPostsTestASCCheckPostService() {
 		//Given
 		Long userId = Long.valueOf(33);
 		stubbingUserServiceFindById(userId);
@@ -329,7 +329,7 @@ public class ManagerUserControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 유저의 게시글 목록 보여주는 화면 반환 -> 정상, 정렬 내림차순(desc), exercisePostService check")
-	public void manageUserPostsTestDescCheckPostService() {
+	void manageUserPostsTestDescCheckPostService() {
 		//Given
 		Long userId = Long.valueOf(33);
 		stubbingUserServiceFindById(userId);
@@ -348,7 +348,7 @@ public class ManagerUserControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 유저의 게시글 목록 보여주는 화면 반환 -> 정상, 정렬 내림차순(desc), ModelAndView check")
-	public void manageUserPostsDescCheckMav() {
+	void manageUserPostsDescCheckMav() {
 		//Given
 		Long userId = Long.valueOf(33);
 		User user = stubbingUserServiceFindById(userId);

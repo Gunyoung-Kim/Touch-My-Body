@@ -37,7 +37,7 @@ import com.gunyoung.tmb.security.UserAuthenticationProvider;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class UserAuthenticationProviderUnitTest {
+class UserAuthenticationProviderUnitTest {
 	
 	@InjectMocks
 	UserAuthenticationProvider userAuthenticationProvider;
@@ -49,12 +49,12 @@ public class UserAuthenticationProviderUnitTest {
     PasswordEncoder passwordEncoder;
 	
 	/*
-	 * public Authentication authenticate(Authentication authentication) throws AuthenticationException 
+	 * Authentication authenticate(Authentication authentication) throws AuthenticationException 
 	 */
 	
 	@Test
 	@DisplayName("DB 정보를 통해 생성한 UserDetails와 입력된 Authentication을 비교하여 유효성을 검증하고 검증 성공 시 새로운 Authentication 반환 -> 비밀 번호 불일치")
-	public void authenticateTestPasswordNotMatch() throws AuthenticationException {
+	void authenticateTestPasswordNotMatch() throws AuthenticationException {
 		//Given
 		String inputUserName = "test@test.com";
 		String inputPassword = "abcd1234!";
@@ -79,7 +79,7 @@ public class UserAuthenticationProviderUnitTest {
 	
 	@Test
 	@DisplayName("DB 정보를 통해 생성한 UserDetails와 입력된 Authentication을 비교하여 유효성을 검증하고 검증 성공 시 새로운 Authentication 반환 -> 정상, Principal 확인")
-	public void authenticateTestPassworMatchCheckPrincipal() throws AuthenticationException {
+	void authenticateTestPassworMatchCheckPrincipal() throws AuthenticationException {
 		//Given
 		String inputUserName = "test@test.com";
 		String inputPassword = "abcd1234!";
@@ -106,7 +106,7 @@ public class UserAuthenticationProviderUnitTest {
 	
 	@Test
 	@DisplayName("DB 정보를 통해 생성한 UserDetails와 입력된 Authentication을 비교하여 유효성을 검증하고 검증 성공 시 새로운 Authentication 반환 -> 정상, Credential 확인")
-	public void authenticateTestPassworMatchCheckCredential() throws AuthenticationException {
+	void authenticateTestPassworMatchCheckCredential() throws AuthenticationException {
 		//Given
 		String inputUserName = "test@test.com";
 		String inputPassword = "abcd1234!";
@@ -131,12 +131,12 @@ public class UserAuthenticationProviderUnitTest {
 	}
 	
 	/*
-	 * public boolean supports(Class<?> authentication)
+	 * boolean supports(Class<?> authentication)
 	 */
 	
 	@Test
 	@DisplayName("AuthenticationProvider 가 주어진 Authentication을 처리할 수 있는지 여부 -> AbstractAuthenticationToken")
-	public void supportsTestAbstractAuthenticationToken() {
+	void supportsTestAbstractAuthenticationToken() {
 		//Given
 		Class<?> authentication = AbstractAuthenticationToken.class;
 		
@@ -149,7 +149,7 @@ public class UserAuthenticationProviderUnitTest {
 	
 	@Test
 	@DisplayName("AuthenticationProvider 가 주어진 Authentication을 처리할 수 있는지 여부 -> AnonymousAuthenticationToken")
-	public void supportsTestAnonymousAuthenticationToken() {
+	void supportsTestAnonymousAuthenticationToken() {
 		//Given
 		Class<?> authentication = AnonymousAuthenticationToken.class;
 		
@@ -162,7 +162,7 @@ public class UserAuthenticationProviderUnitTest {
 	
 	@Test
 	@DisplayName("AuthenticationProvider 가 주어진 Authentication을 처리할 수 있는지 여부 -> CasAssertionAuthenticationToken")
-	public void supportsTestCasAssertionAuthenticationToken() {
+	void supportsTestCasAssertionAuthenticationToken() {
 		//Given
 		Class<?> authentication = AbstractAuthenticationToken.class;
 		
@@ -175,7 +175,7 @@ public class UserAuthenticationProviderUnitTest {
 	
 	@Test
 	@DisplayName("AuthenticationProvider 가 주어진 Authentication을 처리할 수 있는지 여부 -> PreAuthenticatedAuthenticationToken")
-	public void supportsTestPreAuthenticatedAuthenticationTokenn() {
+	void supportsTestPreAuthenticatedAuthenticationTokenn() {
 		//Given
 		Class<?> authentication = PreAuthenticatedAuthenticationToken.class;
 		
@@ -188,7 +188,7 @@ public class UserAuthenticationProviderUnitTest {
 	
 	@Test
 	@DisplayName("AuthenticationProvider 가 주어진 Authentication을 처리할 수 있는지 여부 -> RememberMeAuthenticationToken")
-	public void supportsTestRememberMeAuthenticationToken() {
+	void supportsTestRememberMeAuthenticationToken() {
 		//Given
 		Class<?> authentication = RememberMeAuthenticationToken.class;
 		
@@ -201,7 +201,7 @@ public class UserAuthenticationProviderUnitTest {
 	
 	@Test
 	@DisplayName("AuthenticationProvider 가 주어진 Authentication을 처리할 수 있는지 여부 -> RunAsUserToken")
-	public void supportsTestRunAsUserToken() {
+	void supportsTestRunAsUserToken() {
 		//Given
 		Class<?> authentication = RunAsUserToken.class;
 		
@@ -214,7 +214,7 @@ public class UserAuthenticationProviderUnitTest {
 	
 	@Test
 	@DisplayName("AuthenticationProvider 가 주어진 Authentication을 처리할 수 있는지 여부 -> TestingAuthenticationToken")
-	public void supportsTestTestingAuthenticationToken() {
+	void supportsTestTestingAuthenticationToken() {
 		//Given
 		Class<?> authentication = TestingAuthenticationToken.class;
 		
@@ -227,7 +227,7 @@ public class UserAuthenticationProviderUnitTest {
 	
 	@Test
 	@DisplayName("AuthenticationProvider 가 주어진 Authentication을 처리할 수 있는지 여부 -> UsernamePasswordAuthenticationToken")
-	public void supportsTestUsernamePasswordAuthenticationToken() {
+	void supportsTestUsernamePasswordAuthenticationToken() {
 		//Given
 		Class<?> authentication = UsernamePasswordAuthenticationToken.class;
 		

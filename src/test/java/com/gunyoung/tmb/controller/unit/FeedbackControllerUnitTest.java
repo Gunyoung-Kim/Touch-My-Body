@@ -42,7 +42,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class FeedbackControllerUnitTest {
+class FeedbackControllerUnitTest {
 	
 	@Mock
 	FeedbackService feedbackService;
@@ -68,12 +68,12 @@ public class FeedbackControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView addFeedbackView(@PathVariable("exercise_id") Long exerciseId,ModelAndView mav)
+	 * ModelAndView addFeedbackView(@PathVariable("exercise_id") Long exerciseId,ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("Feedback 추가 화면 반환 -> 해당 ID의 Exercise 없으면")
-	public void addFeedbackViewExerciseNonExist() {
+	void addFeedbackViewExerciseNonExist() {
 		//Given
 		Long nonExistExerciseId = Long.valueOf(66);
 		given(exerciseService.findById(nonExistExerciseId)).willReturn(null);
@@ -86,7 +86,7 @@ public class FeedbackControllerUnitTest {
 	
 	@Test
 	@DisplayName("Feedback 추가 화면 반환 -> 정상, ModelAndView Check")
-	public void addFeedbackViewTestCheckMav() {
+	void addFeedbackViewTestCheckMav() {
 		//Given
 		Long exerciseId = Long.valueOf(36);
 		Exercise exercise = ExerciseTest.getExerciseInstance();
@@ -105,14 +105,14 @@ public class FeedbackControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId, @ModelAttribute SaveFeedbackDTO dto)
+	 * ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId, @ModelAttribute SaveFeedbackDTO dto)
 	 */
 	
 	private SaveFeedbackDTO saveFeedbackDTO;
 	
 	@Test
 	@DisplayName("Feedback 추가 처리 -> 세션에 저장된 ID에 해당하는 User 없으면")
-	public void addFeedbackTestUserNonExist() {
+	void addFeedbackTestUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(73);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
@@ -127,7 +127,7 @@ public class FeedbackControllerUnitTest {
 	
 	@Test
 	@DisplayName("Feedback 추가 처리 -> 해당 ID에 해당하는 Exercise 없으면")
-	public void addFeedbackExerciseNonExist() {
+	void addFeedbackExerciseNonExist() {
 		//Given
 		Long loginIdInSession = Long.valueOf(92);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -144,7 +144,7 @@ public class FeedbackControllerUnitTest {
 	
 	@Test
 	@DisplayName("Feedback 추가 처리 -> 정상, feedbackService check")
-	public void addFeedbackTestCheckFeedbackService() {
+	void addFeedbackTestCheckFeedbackService() {
 		//Given
 		Long loginIdInSession = Long.valueOf(92);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);
@@ -162,7 +162,7 @@ public class FeedbackControllerUnitTest {
 	
 	@Test
 	@DisplayName("Feedback 추가 처리 -> 정상, 리다이렉트 URL 체크")
-	public void addFeedbackTestCheckRedirectedURL() {
+	void addFeedbackTestCheckRedirectedURL() {
 		//Given
 		Long loginIdInSession = Long.valueOf(92);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(loginIdInSession);

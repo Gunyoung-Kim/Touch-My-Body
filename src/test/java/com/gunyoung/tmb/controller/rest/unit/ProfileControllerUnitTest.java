@@ -21,7 +21,7 @@ import com.gunyoung.tmb.controller.rest.ProfileController;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ProfileControllerUnitTest {
+class ProfileControllerUnitTest {
 	
 	@Mock 
 	Environment env;
@@ -30,12 +30,12 @@ public class ProfileControllerUnitTest {
 	ProfileController profileController;
 	
 	/*
-	 *  public String getProfile()
+	 *  String getProfile()
 	 */
 	
 	@Test
 	@DisplayName("프로그램 프로필에서 server를 prefix로 같는 프로필 반환 -> 프로필에 server1 포함")
-	public void getProfileTest1() {
+	void getProfileTest1() {
 		//Given
 		String server1Profile = "server1";
 		String anotherProfile = "another";
@@ -51,7 +51,7 @@ public class ProfileControllerUnitTest {
 	
 	@Test
 	@DisplayName("프로그램 프로필에서 server를 prefix로 같는 프로필 반환 -> 그런 프로필 없습니다. 다른 프로필만 있음")
-	public void getProfileAnother() {
+	void getProfileAnother() {
 		//Given
 		String anotherProfile = "another";
 		String[] profiles = { anotherProfile };
@@ -66,7 +66,7 @@ public class ProfileControllerUnitTest {
 	
 	@Test
 	@DisplayName("프로그램 프로필에서 server를 prefix로 같는 프로필 반환 -> 어떠한 프로필도 없음")
-	public void getProfileDefault() {
+	void getProfileDefault() {
 		//Given
 		String[] profiles = {};
 		given(env.getActiveProfiles()).willReturn(profiles);

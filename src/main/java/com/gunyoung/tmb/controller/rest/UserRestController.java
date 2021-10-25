@@ -2,8 +2,8 @@ package com.gunyoung.tmb.controller.rest;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +38,7 @@ public class UserRestController {
 	 * @return 중복여부
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="join/emailverification",method=RequestMethod.GET)
+	@GetMapping(value="join/emailverification")
 	public boolean emailVerification(@RequestParam("email") String email) {
 		return userService.existsByEmail(email);
 	}
@@ -49,7 +49,7 @@ public class UserRestController {
 	 * @return 중복여부
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="join/nickNameverification",method=RequestMethod.GET)
+	@GetMapping(value="join/nickNameverification")
 	public boolean nickNameVerification(@RequestParam("nickName")String nickName) {
 		return userService.existsByNickName(nickName);
 	}
@@ -59,7 +59,7 @@ public class UserRestController {
 	 * @param commentId 삭제하려는 대상 Comment의 Id
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/user/profile/mycomments/remove", method=RequestMethod.DELETE)
+	@DeleteMapping(value="/user/profile/mycomments/remove")
 	@LoginIdSessionNotNull
 	public void removeMyComments(@RequestParam("commentId") Long commentId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
@@ -72,7 +72,7 @@ public class UserRestController {
 	 * @param postId 삭제하려는 대상 exercisePost의 Id
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/user/profile/myposts/remove",method=RequestMethod.DELETE)
+	@DeleteMapping(value="/user/profile/myposts/remove")
 	@LoginIdSessionNotNull
 	public void removeMyPosts(@RequestParam("postId") Long postId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);

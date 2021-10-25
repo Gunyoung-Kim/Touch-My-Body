@@ -34,7 +34,7 @@ import com.gunyoung.tmb.aop.log.LogAspect;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class LogAspectUnitTest {
+class LogAspectUnitTest {
 	
 	@Mock
 	Logger logger;
@@ -43,12 +43,12 @@ public class LogAspectUnitTest {
 	LogAspect logAspect;
 	
 	/*
-	 * public Object loggingAroundController(ProceedingJoinPoint pjp) throws Throwable 
+	 * Object loggingAroundController(ProceedingJoinPoint pjp) throws Throwable 
 	 */
 	
 	@Test
 	@DisplayName("컨트롤러에 Request 가 들어오면 Request 메소드,uri, parameters, remote address, 처리 시간 들을 로깅 -> 정상, Parameter not empty")
-	public void loggingAroundControllerTestParamNotEmpty() throws Throwable{
+	void loggingAroundControllerTestParamNotEmpty() throws Throwable{
 		//Given
 		Map<String, String[]> paramMap = getParameterMap();
 		mockingRequestContextHolderCurrentRequestAttributes(paramMap);
@@ -70,7 +70,7 @@ public class LogAspectUnitTest {
 	
 	@Test
 	@DisplayName("컨트롤러에 Request 가 들어오면 Request 메소드,uri, parameters, remote address, 처리 시간 들을 로깅 -> 정상, Parameter empty")
-	public void loggingAroundControllerTestParamEmpty() throws Throwable{
+	void loggingAroundControllerTestParamEmpty() throws Throwable{
 		//Given
 		Map<String, String[]> paramMap = getEmptyParameterMap();
 		mockingRequestContextHolderCurrentRequestAttributes(paramMap);

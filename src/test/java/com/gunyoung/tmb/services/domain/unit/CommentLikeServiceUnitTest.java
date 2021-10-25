@@ -33,7 +33,7 @@ import com.gunyoung.tmb.testutil.UserTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class CommentLikeServiceUnitTest {
+class CommentLikeServiceUnitTest {
 	
 	@Mock
 	CommentLikeRepository commentLikeRepository;
@@ -49,11 +49,11 @@ public class CommentLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public CommentLike findById(Long id)
+	 * CommentLike findById(Long id)
 	 */
 	@Test
 	@DisplayName("ID로 CommentLike찾기 -> 존재하지 않음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		given(commentLikeRepository.findById(nonExistId)).willReturn(Optional.empty());
@@ -67,7 +67,7 @@ public class CommentLikeServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 CommentLike 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long existId = Long.valueOf(1);
 		given(commentLikeRepository.findById(existId)).willReturn(Optional.of(commentLike));
@@ -80,12 +80,12 @@ public class CommentLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public CommentLike findByUserIdAndCommentId(Long userId, Long commentId)
+	 * CommentLike findByUserIdAndCommentId(Long userId, Long commentId)
 	 */
 	
 	@Test
 	@DisplayName("User Id, Comment Id 로 CommentLike 찾기 -> 존재하지 않음")
-	public void findByUserIdAndCommentIdNonExist() {
+	void findByUserIdAndCommentIdNonExist() {
 		//Given
 		Long userId = Long.valueOf(1);
 		Long commentId = Long.valueOf(1);
@@ -100,7 +100,7 @@ public class CommentLikeServiceUnitTest {
 	
 	@Test
 	@DisplayName("User Id, Comment Id 로 CommentLike 찾기 -> 정상")
-	public void findByUserIdAndCommentIdTest() {
+	void findByUserIdAndCommentIdTest() {
 		//Given
 		Long userId = Long.valueOf(1);
 		Long commentId = Long.valueOf(1);
@@ -114,12 +114,12 @@ public class CommentLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public CommentLike save(CommentLike commentLike) 
+	 * CommentLike save(CommentLike commentLike) 
 	 */
 	
 	@Test
 	@DisplayName("Comment 저장 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		given(commentLikeRepository.save(commentLike)).willReturn(commentLike);
 		
@@ -131,12 +131,12 @@ public class CommentLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public CommentLike createAndSaveWithUserAndComment(User user, Comment comment) 
+	 * CommentLike createAndSaveWithUserAndComment(User user, Comment comment) 
 	 */
 	
 	@Test
 	@DisplayName("CommentLike 생성 및 User, Comment 와 연관 관계 추가 후 저장 -> 정상, 저장 확인")
-	public void createAndSaveWithUserAndCommentTestCheckSave() {
+	void createAndSaveWithUserAndCommentTestCheckSave() {
 		//Given
 		User user = UserTest.getUserInstance();
 		Comment comment = CommentTest.getCommentInstance();
@@ -149,12 +149,12 @@ public class CommentLikeServiceUnitTest {
 	}
 
 	/*
-	 * public void delete(CommentLike commentLike)
+	 * void delete(CommentLike commentLike)
 	 */
 	
 	@Test
 	@DisplayName("CommentLike 삭제 -> 정상")
-	public void deleteTest() {
+	void deleteTest() {
 		
 		//When
 		commentLikeService.delete(commentLike);
@@ -164,12 +164,12 @@ public class CommentLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteAllByUserId(Long userId)
+	 * void deleteAllByUserId(Long userId)
 	 */
 	
 	@Test
 	@DisplayName("User ID로 만족하는 CommentLike들 일괄 삭제 -> 정상, check repo")
-	public void deleteAllByUserIdTestCheckRepo() {
+	void deleteAllByUserIdTestCheckRepo() {
 		//Given
 		Long userId = Long.valueOf(66);
 		
@@ -181,12 +181,12 @@ public class CommentLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteAllByCommentId(Long commentId)
+	 * void deleteAllByCommentId(Long commentId)
 	 */
 	
 	@Test
 	@DisplayName("Comment ID로 만족하는 CommentLike들 일괄 삭제 -> 정상, check repo")
-	public void deleteAllByCommentIdTestCheckRepo() {
+	void deleteAllByCommentIdTestCheckRepo() {
 		//Given
 		Long commentId = Long.valueOf(66);
 		
@@ -198,12 +198,12 @@ public class CommentLikeServiceUnitTest {
 	}
 	
 	/*
-	 * public boolean existsByUserIdAndCommentId(Long userId, Long commentId)
+	 * boolean existsByUserIdAndCommentId(Long userId, Long commentId)
 	 */
 	
 	@Test
 	@DisplayName("User Id, Comment Id로 CommentLike 존재하는 여부 반환 -> true")
-	public void existsByUserIdAndCommentIdTrue() {
+	void existsByUserIdAndCommentIdTrue() {
 		//Given
 		Long userId = Long.valueOf(1);
 		Long commentId = Long.valueOf(1);
@@ -219,7 +219,7 @@ public class CommentLikeServiceUnitTest {
 	
 	@Test
 	@DisplayName("User Id, Comment Id로 CommentLike 존재하는 여부 반환 -> false")
-	public void existsByUserIdAndCommentIdFalse() {
+	void existsByUserIdAndCommentIdFalse() {
 		Long userId = Long.valueOf(1);
 		Long commentId = Long.valueOf(1);
 		given(commentLikeRepository.existsByUserIdAndCommentId(userId, commentId)).willReturn(false);

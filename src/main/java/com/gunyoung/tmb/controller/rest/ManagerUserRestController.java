@@ -1,9 +1,9 @@
 package com.gunyoung.tmb.controller.rest;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,22 +45,16 @@ public class ManagerUserRestController {
 	 * @throws BusinessException dto를 통해 유저 정보 처리하는 과정에서 발생하는 예외
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/usermanage/{userId}", method = RequestMethod.PUT)
+	@PutMapping(value="/manager/usermanage/{userId}")
 	public void manageUserProfile(@PathVariable("userId") Long userId, @ModelAttribute UserProfileForManagerDTO dto) {
 		User user = userService.findById(userId);
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
-		
 		if(!authorityService.isSessionUserAuthorityCanAccessToTargetAuthority(user)) {
 			throw new AccessDeniedException(UserErrorCode.ACESS_DENIED_ERROR.getDescription());
 		}
-		
-		try {
-			UserProfileForManagerDTO.mergeUserWithUserProfileForManagerDTO(user, dto);
-		} catch(BusinessException be) {
-			throw be;
-		}
+		UserProfileForManagerDTO.mergeUserWithUserProfileForManagerDTO(user, dto);
 		
 		userService.save(user);
 	}
@@ -71,7 +65,7 @@ public class ManagerUserRestController {
 	 * @param commentId 삭제하려는 대상 Comment의 Id
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/usermanage/{user_id}/comments/remove", method = RequestMethod.DELETE)
+	@DeleteMapping(value="/manager/usermanage/{user_id}/comments/remove")
 	public void removeCommentByManager(@PathVariable("user_id") Long userId,@RequestParam("comment_id") Long commentId) {
 		commentService.deleteById(commentId);
 	}
@@ -82,7 +76,7 @@ public class ManagerUserRestController {
 	 * @param postId 삭제하려는 대상 ExercisePost의 Id
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/usermanage/{user_id}/posts/remove",method = RequestMethod.DELETE) 
+	@DeleteMapping(value="/manager/usermanage/{user_id}/posts/remove") 
 	public void removePostByManager(@PathVariable("user_id") Long userId,@RequestParam("post_id") Long postId) {
 		exercisePostService.deleteById(postId);
 	}

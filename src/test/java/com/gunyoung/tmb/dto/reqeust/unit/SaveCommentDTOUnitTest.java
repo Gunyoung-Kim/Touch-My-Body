@@ -14,15 +14,15 @@ import com.gunyoung.tmb.dto.reqeust.SaveCommentDTO;
  * @author kimgun-yeong
  *
  */
-public class SaveCommentDTOUnitTest {
+class SaveCommentDTOUnitTest {
 	
 	/*
-	 * public static Comment toComment(SaveCommentDTO dto,String writerIp) 
+	 * static Comment toComment(SaveCommentDTO dto,String writerIp) 
 	 */
 	
 	@Test
 	@DisplayName("SaveCommentDTO 필드 값과 writerIp를 통해 Comment 생성 후 반환 -> 정상, WriterIp 확인")
-	public void toCommentTestCheckWriterIp() {
+	void toCommentTestCheckWriterIp() {
 		//Given
 		SaveCommentDTO saveCommentDTO = SaveCommentDTO.builder()
 				.contents("contents")
@@ -40,7 +40,7 @@ public class SaveCommentDTOUnitTest {
 	
 	@Test
 	@DisplayName("SaveCommentDTO 필드 값과 writerIp를 통해 Comment 생성 후 반환 -> 정상, Contents 확인")
-	public void toCommentTestCheckContents() {
+	void toCommentTestCheckContents() {
 		//Given
 		String contents = "contents!!";
 		SaveCommentDTO saveCommentDTO = SaveCommentDTO.builder()
@@ -59,7 +59,7 @@ public class SaveCommentDTOUnitTest {
 	
 	@Test
 	@DisplayName("SaveCommentDTO 필드 값과 writerIp를 통해 Comment 생성 후 반환 -> 정상, IsAnonymous 확인")
-	public void toCommentTestCheckIsAnonymous() {
+	void toCommentTestCheckIsAnonymous() {
 		//Given
 		boolean isAnonymous = true;
 		SaveCommentDTO saveCommentDTO = SaveCommentDTO.builder()

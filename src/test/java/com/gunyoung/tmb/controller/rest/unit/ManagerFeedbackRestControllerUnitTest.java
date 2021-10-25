@@ -27,7 +27,7 @@ import com.gunyoung.tmb.testutil.FeedbackTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ManagerFeedbackRestControllerUnitTest {
+class ManagerFeedbackRestControllerUnitTest {
 	
 	@Mock
 	FeedbackService feedbackService;
@@ -36,12 +36,12 @@ public class ManagerFeedbackRestControllerUnitTest {
 	ManagerFeedbackRestController managerFeedbackRestController;
 	
 	/*
-	 * public void reflectFeedback(@PathVariable("feedbackId") Long feedbackId)
+	 * void reflectFeedback(@PathVariable("feedbackId") Long feedbackId)
 	 */
 	
 	@Test
 	@DisplayName("매니저의 특정 Feedback 반영 요청 처리 -> 해당 Id의 Feedback 없으면")
-	public void reflectFeedbackFeedbackNonExist() {
+	void reflectFeedbackFeedbackNonExist() {
 		//Given
 		Long nonExistFeedbackId = Long.valueOf(1);
 		given(feedbackService.findById(nonExistFeedbackId)).willReturn(null);
@@ -54,7 +54,7 @@ public class ManagerFeedbackRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("매니저의 특정 Feedback 반영 요청 처리 -> 정상, 반영 확인")
-	public void reflectFeedbackTestCheckReflected() {
+	void reflectFeedbackTestCheckReflected() {
 		//Given
 		Long feedbackId = Long.valueOf(1);
 		Feedback feedback = stubbingFeedbackServiceFindById(feedbackId);
@@ -68,7 +68,7 @@ public class ManagerFeedbackRestControllerUnitTest {
 	
 	@Test
 	@DisplayName("매니저의 특정 Feedback 반영 요청 처리 -> 정상, 저장 확인")
-	public void reflectFeedbackTestCheckSave() {
+	void reflectFeedbackTestCheckSave() {
 		//Given
 		Long feedbackId = Long.valueOf(1);
 		Feedback feedback = stubbingFeedbackServiceFindById(feedbackId);

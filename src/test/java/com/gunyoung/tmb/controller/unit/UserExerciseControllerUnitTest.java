@@ -41,7 +41,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class UserExerciseControllerUnitTest {
+class UserExerciseControllerUnitTest {
 	
 	@Mock
 	HttpSession session;
@@ -63,12 +63,12 @@ public class UserExerciseControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView calendarView(ModelAndView mav)
+	 * ModelAndView calendarView(ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("User의 그간의 운동 기록을 보여주는 캘린더 화면 반환 -> 정상, View name check")
-	public void calendarViewTestCheckViewName() {
+	void calendarViewTestCheckViewName() {
 		//Given
 		
 		//When
@@ -79,12 +79,12 @@ public class UserExerciseControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView addUserExerciseView(ModelAndView mav)
+	 * ModelAndView addUserExerciseView(ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("User의 오늘의 운동 기록을 추가하는 화면 반환 -> 정상, View Name check")
-	public void addUserExerciseViewTestCheckViewName() {
+	void addUserExerciseViewTestCheckViewName() {
 		//Given
 		
 		//When
@@ -96,12 +96,12 @@ public class UserExerciseControllerUnitTest {
 	
 	
 	/*
-	 * public ModelAndView addUserExercise(@ModelAttribute("formModel") SaveUserExerciseDTO formModel)
+	 * ModelAndView addUserExercise(@ModelAttribute("formModel") SaveUserExerciseDTO formModel)
 	 */
 	
 	@Test
 	@DisplayName("User의 오늘의 운동 기록 추가 처리 -> 접속된 세션의 id의 user 가 없을 때 ")
-	public void addUserExerciseUserNonExist() {
+	void addUserExerciseUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(1);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
@@ -118,7 +118,7 @@ public class UserExerciseControllerUnitTest {
 	
 	@Test
 	@DisplayName("User의 오늘의 운동 기록 추가 처리 -> 해당 이름을 만족하는 Exercise 가 없을 때")
-	public void addUserExerciseExerciseNonExist() {
+	void addUserExerciseExerciseNonExist() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionAndUserServiceFindWithUserExerciseById(loginIdInSession);
@@ -136,7 +136,7 @@ public class UserExerciseControllerUnitTest {
 	
 	@Test
 	@DisplayName("User의 오늘의 운동 기록 추가 처리 -> Check UserService")
-	public void addUserExerciseTestCheckUserService() {
+	void addUserExerciseTestCheckUserService() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionAndUserServiceFindWithUserExerciseById(loginIdInSession);
@@ -155,7 +155,7 @@ public class UserExerciseControllerUnitTest {
 	
 	@Test
 	@DisplayName("User의 오늘의 운동 기록 추가 처리 -> Check ModelAndView")
-	public void addUserExerciseTestCheckModelAndView() {
+	void addUserExerciseTestCheckModelAndView() {
 		//Given
 		Long loginIdInSession = Long.valueOf(1);
 		stubbingSessionAndUserServiceFindWithUserExerciseById(loginIdInSession);

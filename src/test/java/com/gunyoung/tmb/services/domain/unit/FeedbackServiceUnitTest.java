@@ -34,7 +34,7 @@ import com.gunyoung.tmb.services.domain.exercise.FeedbackServiceImpl;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class FeedbackServiceUnitTest {
+class FeedbackServiceUnitTest {
 	@Mock
 	FeedbackRepository feedbackRepository;
 	
@@ -49,12 +49,12 @@ public class FeedbackServiceUnitTest {
 	}
 	
 	/*
-	 * public Feedback findById(Long id)
+	 * Feedback findById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Feedback 찾기 -> 존재하지 않음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		given(feedbackRepository.findById(nonExistId)).willReturn(Optional.empty());
@@ -68,7 +68,7 @@ public class FeedbackServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Feedback 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long feedbackId = Long.valueOf(1);
 		given(feedbackRepository.findById(feedbackId)).willReturn(Optional.of(feedback));
@@ -81,12 +81,12 @@ public class FeedbackServiceUnitTest {
 	}
 	
 	/*
-	 * public FeedbackViewDTO findForFeedbackViewDTOById(Long id)
+	 * FeedbackViewDTO findForFeedbackViewDTOById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Feedback 찾고 FeedbackViewDTO 생성 후 반환 -> 해당 ID의 Feedback 없을때")
-	public void findForFeedbackViewDTOByIdNonExist() {
+	void findForFeedbackViewDTOByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		given(feedbackRepository.findForFeedbackViewDTOById(nonExistId)).willReturn(Optional.empty());
@@ -100,7 +100,7 @@ public class FeedbackServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Feedback 찾고 FeedbackViewDTO 생성 후 반환 -> 정상")
-	public void findForFeedbackViewDTOByIdTest() {
+	void findForFeedbackViewDTOByIdTest() {
 		//Given
 		FeedbackViewDTO feedbackViewDTO = FeedbackViewDTO.builder().build();
 		Long feedbackId = Long.valueOf(1);
@@ -114,12 +114,12 @@ public class FeedbackServiceUnitTest {
 	}
 	
 	/*
-	 * public Page<Feedback> findAllByExerciseIdByPage(Long exerciseId, Integer pageNum, int pageSize)
+	 * Page<Feedback> findAllByExerciseIdByPage(Long exerciseId, Integer pageNum, int pageSize)
 	 */
 	
 	@Test
 	@DisplayName("Exercise ID를 만족하는 Feedback들 페이지 반환 -> 정상")
-	public void findAllByExerciseIdByPageTest() {
+	void findAllByExerciseIdByPageTest() {
 		//Given
 		Long exerciseId = Long.valueOf(1);
 		int pageNum = 1;
@@ -133,13 +133,13 @@ public class FeedbackServiceUnitTest {
 	}
 	
 	/*
-	 * public Page<FeedbackManageListDTO> findAllForFeedbackManageListDTOByExerciseIdByPage(Long exerciseId,
+	 * Page<FeedbackManageListDTO> findAllForFeedbackManageListDTOByExerciseIdByPage(Long exerciseId,
 	 *		Integer pageNum, int pageSize)
 	 */
 	
 	@Test
 	@DisplayName("Exercise ID를 만족하는 Feedback 찾고 FeedbackManageListDTO들 생성해서 페이지 반환")
-	public void findAllForFeedbackManageListDTOByExerciseIdByPageTest() {
+	void findAllForFeedbackManageListDTOByExerciseIdByPageTest() {
 		//Given
 		Long exerciseId = Long.valueOf(1);
 		int pageNum = 1;
@@ -153,12 +153,12 @@ public class FeedbackServiceUnitTest {
 	}
 	
 	/*
-	 * public Feedback save(Feedback feedback)
+	 * Feedback save(Feedback feedback)
 	 */
 	
 	@Test
 	@DisplayName("Feedback 생성 및 수정 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		given(feedbackRepository.save(feedback)).willReturn(feedback);
 		
@@ -170,12 +170,12 @@ public class FeedbackServiceUnitTest {
 	}
 	
 	/*
-	 * public Feedback saveWithUserAndExercise(Feedback feedback,User user, Exercise exercise)
+	 * Feedback saveWithUserAndExercise(Feedback feedback,User user, Exercise exercise)
 	 */
 	
 	@Test
 	@DisplayName("User와 Exercise객체를 인자로 받아 Feedback 객체 생성 및 연관 관계 설정 후 저장 -> 정상")
-	public void saveWithUserAndExerciseTest() {
+	void saveWithUserAndExerciseTest() {
 		//Given
 		User user = User.builder().build();
 		Exercise exercise = Exercise.builder().build();
@@ -191,12 +191,12 @@ public class FeedbackServiceUnitTest {
 	}
 	
 	/*
-	 * public void delete(Feedback feedback)
+	 * void delete(Feedback feedback)
 	 */
 	
 	@Test
 	@DisplayName("Feedback 삭제 -> 정상")
-	public void deleteTest() {
+	void deleteTest() {
 		//Given
 		
 		//When
@@ -207,12 +207,12 @@ public class FeedbackServiceUnitTest {
 	}
 	
 	/*
-	 *  public void deleteAllByUserId(Long userId)
+	 *  void deleteAllByUserId(Long userId)
 	 */
 	
 	@Test
 	@DisplayName("User ID로 Feedback 일괄 삭제 -> 정상, check Repo") 
-	public void deleteAllByUserIdTestCheckRepo() {
+	void deleteAllByUserIdTestCheckRepo() {
 		//Given
 		Long userId = Long.valueOf(53);
 		
@@ -224,12 +224,12 @@ public class FeedbackServiceUnitTest {
 	}
 	
 	/*
-	 *  public void deleteAllByExerciseId(Long exerciseId)
+	 *  void deleteAllByExerciseId(Long exerciseId)
 	 */
 	
 	@Test
 	@DisplayName("Exercise ID로 Feedback 일괄 삭제 -> 정상, check Repo") 
-	public void deleteAllByExerciseIdTestCheckRepo() {
+	void deleteAllByExerciseIdTestCheckRepo() {
 		//Given
 		Long exerciseId = Long.valueOf(53);
 		
@@ -241,12 +241,12 @@ public class FeedbackServiceUnitTest {
 	}
 	
 	/*
-	 * public long countByExerciseId(Long exerciseId)
+	 * long countByExerciseId(Long exerciseId)
 	 */
 	
 	@Test
 	@DisplayName("Exercise ID를 만족하는 Feedback들 개수 반환 -> 정상")
-	public void countByExerciseIdTest() {
+	void countByExerciseIdTest() {
 		//Given
 		long num = 1;
 		Long exerciseId = Long.valueOf(1);

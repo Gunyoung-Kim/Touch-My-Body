@@ -32,7 +32,6 @@ public class UserAuthenticationProvider implements AuthenticationProvider{
 		if(!passwordEncoder.matches(inputPassword, userDetailsByDB.getPassword())) {
 			throw new BadCredentialsException(inputUsername);
 		}
-		
 		return new UsernamePasswordAuthenticationToken(userDetailsByDB.getUsername(), null, userDetailsByDB.getAuthorities());
 	}
 

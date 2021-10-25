@@ -44,7 +44,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ManagerUserControllerTest {
+class ManagerUserControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -73,14 +73,14 @@ public class ManagerUserControllerTest {
 
 	/*
 	 * @RequestMapping(value="/manager/usermanage",method= RequestMethod.GET)
-	 * public ModelAndView userManageView(@RequestParam(value="page", required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav)
+	 * ModelAndView userManageView(@RequestParam(value="page", required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("매니저의 유저 검색 페이지 반환 -> 정상, 키워드 존재")
-	public void userManageViewTest() throws Exception {
+	void userManageViewTest() throws Exception {
 		//Given
 		String nameKeyword = "first";
 		
@@ -104,7 +104,7 @@ public class ManagerUserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("매니저의 유저 검색 페이지 반환 -> 정상, 키워드 없음")
-	public void userManageViewTestNoKeyword() throws Exception {
+	void userManageViewTestNoKeyword() throws Exception {
 		//Given
 		
 		//When
@@ -124,14 +124,14 @@ public class ManagerUserControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/usermanage/{user_id}" , method = RequestMethod.GET)
-	 * public ModelAndView manageUserProfileView(@PathVariable("user_id") Long userId, ModelAndView mav)
+	 * ModelAndView manageUserProfileView(@PathVariable("user_id") Long userId, ModelAndView mav)
 	 */
 	
 	@WithMockUser(roles= {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("특정 User 관리 화면 반환 -> 해당 ID의 User 없을 때")
-	public void manageUserProfileViewNonExist() throws Exception {
+	void manageUserProfileViewNonExist() throws Exception {
 		//Given
 		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
@@ -146,7 +146,7 @@ public class ManagerUserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 User 관리 화면 반환 -> 접속자의 권한이 대상 User의 권한보다 낮을 때")
-	public void manageUserProfileViewAccessDenied() throws Exception {
+	void manageUserProfileViewAccessDenied() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.ADMIN);
 		user.setEmail("second@test.com");
@@ -163,7 +163,7 @@ public class ManagerUserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 User 관리 화면 반환 -> 정상")
-	public void manageUserProfileViewTest() throws Exception {
+	void manageUserProfileViewTest() throws Exception {
 		//Given
 		Long userId = user.getId();
 		
@@ -177,7 +177,7 @@ public class ManagerUserControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/usermanage/{user_id}/comments", method = RequestMethod.GET) 
-	 * public ModelAndView manageUserComments(@PathVariable("user_id") Long userId,@RequestParam(value="page", required=false,defaultValue="1") Integer page
+	 * ModelAndView manageUserComments(@PathVariable("user_id") Long userId,@RequestParam(value="page", required=false,defaultValue="1") Integer page
 	 *		,@RequestParam(value="order", defaultValue="desc") String order ,ModelAndView mav)
 	 */
 	
@@ -185,7 +185,7 @@ public class ManagerUserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 유저의 작성 댓글 화면 -> 해당 Id의 유저 없을 때")
-	public void manageUserCommentsUserNonExist() throws Exception {
+	void manageUserCommentsUserNonExist() throws Exception {
 		//Given
 		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
@@ -200,7 +200,7 @@ public class ManagerUserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 유저의 작성 댓글 화면 -> 잘못된 검색 결과 정렬 방식")
-	public void manageUserCommentsBadRequest() throws Exception {
+	void manageUserCommentsBadRequest() throws Exception {
 		//Given
 		String badOrder = "badbad";
 		
@@ -215,7 +215,7 @@ public class ManagerUserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 유저의 작성 댓글 화면 -> 정상, 최신순으로 정렬")
-	public void manageUserCommentsTestSortingDESC() throws Exception {
+	void manageUserCommentsTestSortingDESC() throws Exception {
 		//Given
 		int givenCommentNum = 10;
 		CommentTest.addCommentsInDBWithSettingUser(givenCommentNum,user,commentRepository);
@@ -238,7 +238,7 @@ public class ManagerUserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 유저의 작성 댓글 화면 -> 정상, 오래된순으로 정렬")
-	public void manageUserCommentsTestSortingASC() throws Exception {
+	void manageUserCommentsTestSortingASC() throws Exception {
 		//Given
 		int givenCommentNum = 10;
 		CommentTest.addCommentsInDBWithSettingUser(givenCommentNum,user,commentRepository);
@@ -260,7 +260,7 @@ public class ManagerUserControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/usermanage/{user_id}/posts",method=RequestMethod.GET)
-	 * public ModelAndView managerUserPosts(@PathVariable("user_id") Long userId, @RequestParam(value="page", required=false,defaultValue="1") Integer page
+	 * ModelAndView managerUserPosts(@PathVariable("user_id") Long userId, @RequestParam(value="page", required=false,defaultValue="1") Integer page
 	 *		,@RequestParam(value="order", defaultValue="desc") String order ,ModelAndView mav)
 	 */
 	
@@ -268,7 +268,7 @@ public class ManagerUserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 유저의 작성 게시글 화면 -> 해당 ID의 User 없을 때")
-	public void managerUserPostsUserNonExist() throws Exception {
+	void managerUserPostsUserNonExist() throws Exception {
 		//Given
 		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
@@ -283,7 +283,7 @@ public class ManagerUserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 유저의 작성 게시글 화면 -> 검색 결과 정렬 방식이 올바르지 못할 떄")
-	public void managerUserPostsAccessDenied() throws Exception {
+	void managerUserPostsAccessDenied() throws Exception {
 		//Given
 		String badOrder = "badbad";
 		
@@ -298,7 +298,7 @@ public class ManagerUserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 유저의 작성 게시글 화면 -> 정상, 정렬 최신순으로")
-	public void managerUserPostsTestSortDesc() throws Exception {
+	void managerUserPostsTestSortDesc() throws Exception {
 		//Given
 		int exercisePostNum = 10;
 		ExercisePostTest.addNewExercisePostsInDBWithSettingUser(exercisePostNum, user, exercisePostRepository);
@@ -322,7 +322,7 @@ public class ManagerUserControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 유저의 작성 게시글 화면 -> 정상, 정렬 오래된순으로")
-	public void managerUserPostsTestSortAsc() throws Exception {
+	void managerUserPostsTestSortAsc() throws Exception {
 		//Given
 		int exercisePostNum = 10;
 		ExercisePostTest.addNewExercisePostsInDBWithSettingUser(exercisePostNum, user, exercisePostRepository);

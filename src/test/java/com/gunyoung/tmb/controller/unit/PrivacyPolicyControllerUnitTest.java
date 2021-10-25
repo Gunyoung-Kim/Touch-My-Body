@@ -24,7 +24,7 @@ import com.gunyoung.tmb.error.exceptions.nonexist.PrivacyPolicyNotFoundedExcepti
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class PrivacyPolicyControllerUnitTest {
+class PrivacyPolicyControllerUnitTest {
 	
 	@InjectMocks
 	PrivacyPolicyController privacyPolicyController;
@@ -37,12 +37,12 @@ public class PrivacyPolicyControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView privacyPolicyLastest(ModelAndView mav)
+	 * ModelAndView privacyPolicyLastest(ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("가장 최근에 적용된 개인정보 처리방침 문서 화면 반환 -> 정상, View name 확인")
-	public void privacyPolicyLastestTest() {
+	void privacyPolicyLastestTest() {
 		//Given
 		
 		//When
@@ -53,12 +53,12 @@ public class PrivacyPolicyControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView privacyPolicyWithVersion(@PathVariable("version") int version,ModelAndView mav)
+	 * ModelAndView privacyPolicyWithVersion(@PathVariable("version") int version,ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("특정 버전의 개인정보 처리방침 화면 반환 -> 버전이 0보다 작거나 같음")
-	public void privacyPolicyWithVersionMinusVersion() {
+	void privacyPolicyWithVersionMinusVersion() {
 		//Given
 		int givenVersion = -1;
 		
@@ -70,7 +70,7 @@ public class PrivacyPolicyControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 버전의 개인정보 처리방침 화면 반환 -> 버전이 최신 버전보다 높음")
-	public void privacyPolicyWithVersionOverVersion() {
+	void privacyPolicyWithVersionOverVersion() {
 		//Given
 		int givenVersion = PrivacyPolicyController.LATEST_POLICY_VERSION + 2;
 		
@@ -82,7 +82,7 @@ public class PrivacyPolicyControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 버전의 개인정보 처리방침 화면 반환 -> 정상")
-	public void privacyPolicyWithVersionTest() {
+	void privacyPolicyWithVersionTest() {
 		//Given
 		int givenVersion = PrivacyPolicyController.LATEST_POLICY_VERSION;
 		

@@ -8,9 +8,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -65,7 +65,7 @@ public class UserController {
 	 * 메인 화면을 반환하는 메소드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@GetMapping(value = "/")
 	public ModelAndView index(ModelAndView mav) {
 		mav.setViewName("index");
 		
@@ -77,7 +77,7 @@ public class UserController {
 	 * 로그인 화면으로 들어오기전 위치 로그인 성공 후 리다이렉트 위해 세션에 저장
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	@GetMapping(value = "/login")
 	public ModelAndView loginView(HttpServletRequest request, ModelAndView mav) {
 		String referer = request.getHeader("Referer");
 		if(isRefererNeedToBeRegisteredForSession(referer)) {
@@ -97,7 +97,7 @@ public class UserController {
 	 * 회원가입 화면을 반환하는 메소드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/join", method = RequestMethod.GET)
+	@GetMapping(value = "/join")
 	public ModelAndView joinView(@ModelAttribute("formModel")UserJoinDTO formModel,ModelAndView mav) {
 		mav.setViewName("join");
 		
@@ -112,7 +112,7 @@ public class UserController {
 	 * @throws NickNameDuplicationFoundedException 입력된 nickName이 이미 존재한다면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/join", method = RequestMethod.POST)
+	@PostMapping(value = "/join")
 	public ModelAndView join(@ModelAttribute("formModel") UserJoinDTO formModel) {
 		String email = formModel.getEmail();
 		if(userService.existsByEmail(email)) {
@@ -143,7 +143,7 @@ public class UserController {
 	 * @throws UserNotFoundedException 세션에 저장된 Id에 해당하는 User 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
+	@GetMapping(value = "/user/profile")
 	@LoginIdSessionNotNull
 	public ModelAndView profileView(ModelAndView mav) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
@@ -151,7 +151,6 @@ public class UserController {
 		if(user == null) {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
-		
 		UserProfileDTO userProfileDTO = UserProfileDTO.of(user);
 		
 		mav.addObject("profile", userProfileDTO);
@@ -168,7 +167,7 @@ public class UserController {
 	 * @throws SearchCriteriaInvalidException 검색 정렬 조건이 적절치 못하다면 
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/user/profile/mycomments", method = RequestMethod.GET)
+	@GetMapping(value = "/user/profile/mycomments")
 	@LoginIdSessionNotNull
 	public ModelAndView myCommentsView(ModelAndPageView mav, @RequestParam(value = "page", required = false, defaultValue= "1") int page
 			, @RequestParam(value = "order", defaultValue = "desc") String order) {
@@ -178,14 +177,8 @@ public class UserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Page<Comment> pageResult;
-		try {
-			pageResult = getPageResultForMyCommentListView(order, loginUserId, page);
-		} catch(SearchCriteriaInvalidException scie) {
-			throw scie;
-		}
+		Page<Comment> pageResult = getPageResultForMyCommentListView(order, loginUserId, page);
 		long totalPageNum = getTotalPageNumForMyCommentListView(loginUserId);
-		
 		List<CommentForManageViewDTO> commentListForView = CommentForManageViewDTO.of(pageResult, user);
 
 		mav.setPageNumbers(page, totalPageNum);
@@ -216,7 +209,7 @@ public class UserController {
 	 * @throws SearchCriteriaInvalidException 검색 정렬 조건이 적절치 못하다면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value = "/user/profile/myposts", method = RequestMethod.GET)
+	@GetMapping(value = "/user/profile/myposts")
 	@LoginIdSessionNotNull
 	public ModelAndView myPostsView(ModelAndPageView mav, @RequestParam(value = "page", required = false, defaultValue = "1") int page
 			, @RequestParam(value = "order", defaultValue = "desc") String order) {
@@ -226,14 +219,8 @@ public class UserController {
 			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
 		}
 		
-		Page<ExercisePost> pageResult; 
-		try {
-			pageResult = getPageResultForMyPostListView(order, loginUserId, page);
-		} catch(SearchCriteriaInvalidException scie) {
-			throw scie;
-		}
+		Page<ExercisePost> pageResult = getPageResultForMyPostListView(order, loginUserId, page);
 		long totalPageNum = getTotalPageNumForMyPostListView(loginUserId);
-		
 		List<ExercisePostForManageViewDTO> postListForView = ExercisePostForManageViewDTO.of(pageResult, user);
 		
 		mav.setPageNumbers(page, totalPageNum);

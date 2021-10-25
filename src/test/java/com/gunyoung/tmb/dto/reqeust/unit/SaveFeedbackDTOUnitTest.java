@@ -14,15 +14,15 @@ import com.gunyoung.tmb.dto.reqeust.SaveFeedbackDTO;
  * @author kimgun-yeong
  *
  */
-public class SaveFeedbackDTOUnitTest {
+class SaveFeedbackDTOUnitTest {
 	
 	/*
-	 * public Feedback createFeedback()
+	 * Feedback createFeedback()
 	 */
 	
 	@Test
 	@DisplayName("이 객체를 통해 Feedback 생성 후 반환 -> 정상, Feedback field check")
-	public void createFeedbackTestCheckField() {
+	void createFeedbackTestCheckField() {
 		//Given
 		SaveFeedbackDTO saveFeedbackDTO = SaveFeedbackDTO.builder()
 				.title("title")

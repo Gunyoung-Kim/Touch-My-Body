@@ -45,7 +45,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserExerciseRestControllerTest {
+class UserExerciseRestControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -64,14 +64,14 @@ public class UserExerciseRestControllerTest {
 	/*
 	 * @RequestMapping(value="/user/exercise/calendar/records",method=RequestMethod.GET)
 	 * @LoginIdSessionNotNull
-	 * public List<UserExerciseWithDateDTO> getExerciseRecords(@ModelAttribute DateDTO date)
+	 * List<UserExerciseWithDateDTO> getExerciseRecords(@ModelAttribute DateDTO date)
 	 */
 	
 	@WithMockUser(roles= {"USER"})
 	@Test
 	@Transactional
 	@DisplayName("접속자의 특정 날짜 운동 기록 반환 -> 정상")
-	public void getExerciseRecordsTest() throws Exception {
+	void getExerciseRecordsTest() throws Exception {
 		//Given
 		int year = 1999;
 		int month = Calendar.JANUARY;
@@ -107,13 +107,13 @@ public class UserExerciseRestControllerTest {
 	/*
 	 * @RequestMapping(value="/user/exercise/calendar/isdone",method=RequestMethod.GET)
 	 * @LoginIdSessionNotNull
-	 * public List<UserExerciseIsDoneDTO> getIsDoneList(@RequestParam("year") int year, @RequestParam("month") int month)
+	 * List<UserExerciseIsDoneDTO> getIsDoneList(@RequestParam("year") int year, @RequestParam("month") int month)
 	 */
 	@WithMockUser(roles= {"USER"})
 	@Test
 	@Transactional
 	@DisplayName("접속자의 특정 년월 운동 여부 반환 -> 정상")
-	public void getIsDoneListTest() throws Exception {
+	void getIsDoneListTest() throws Exception {
 		//Given
 		User user = UserTest.getUserInstance(RoleType.USER);
 		userRepository.save(user);

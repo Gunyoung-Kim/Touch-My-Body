@@ -14,15 +14,15 @@ import com.gunyoung.tmb.testutil.ExerciseTest;
 * @author kimgun-yeong
 *
 */
-public class ExerciseUnitTest {
+class ExerciseUnitTest {
 	
 	/*
-	 *  public String toString()
+	 *  String toString()
 	 */
 	
 	@Test
 	@DisplayName("toString Test -> 정상") 
-	public void toStringTest() {
+	void toStringTest() {
 		//Given
 		Long exerciseId = Long.valueOf(35);
 		Exercise exercise = ExerciseTest.getExerciseInstance();

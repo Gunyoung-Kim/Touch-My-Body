@@ -16,7 +16,7 @@ import com.gunyoung.tmb.utils.CacheConstants;
 * @author kimgun-yeong
 *
 */
-public class CacheConstantsUnitTest {
+class CacheConstantsUnitTest {
 	
 	/*
 	 * constructor
@@ -24,7 +24,7 @@ public class CacheConstantsUnitTest {
 	
 	@Test
 	@DisplayName("생성자 호출시 예외 발생 확인")
-	public void constructorTestThrowsAssertionError() throws NoSuchMethodException {
+	void constructorTestThrowsAssertionError() throws NoSuchMethodException {
 		//Given
 		Constructor<CacheConstants> constructor = CacheConstants.class.getDeclaredConstructor();
 		constructor.setAccessible(true);

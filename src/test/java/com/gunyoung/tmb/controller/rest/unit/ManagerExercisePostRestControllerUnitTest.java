@@ -21,7 +21,7 @@ import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ManagerExercisePostRestControllerUnitTest {
+class ManagerExercisePostRestControllerUnitTest {
 	
 	@Mock
 	ExercisePostService exercisePostService;
@@ -30,12 +30,12 @@ public class ManagerExercisePostRestControllerUnitTest {
 	ManagerExercisePostRestController managerExercisePostRestController;
 	
 	/*
-	 * public void removeExercisePostByManager(@RequestParam("postId") Long postId)
+	 * void removeExercisePostByManager(@RequestParam("postId") Long postId)
 	 */
 	
 	@Test
 	@DisplayName("매니저가 특정 게시글을 삭제하려는 요청 처리 -> 정상")
-	public void removeExercisePostByManagerTest() {
+	void removeExercisePostByManagerTest() {
 		//Given
 		Long exercisePostId = Long.valueOf(1);
 		

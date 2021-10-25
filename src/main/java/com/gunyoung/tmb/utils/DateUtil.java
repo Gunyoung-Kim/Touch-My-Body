@@ -26,13 +26,10 @@ public class DateUtil {
 	 * @author kimgun-yeong
 	 */
 	public static Calendar[] calendarForStartAndEndOfYearAndMonth(int year, int month) {
-		int startDate=1;
-		int endDate=0;
-		
-		// calculating last date of month
+		int startDate = 1;
+		int endDate = 0;
 		Calendar start = new GregorianCalendar(year,month,startDate);
 		endDate = start.getActualMaximum(Calendar.DAY_OF_MONTH);
-		
 		Calendar end = new GregorianCalendar(year,month,endDate);
 		
 		return new Calendar[] {start,end};

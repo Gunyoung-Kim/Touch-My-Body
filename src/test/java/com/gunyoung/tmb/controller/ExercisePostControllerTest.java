@@ -51,7 +51,7 @@ import com.gunyoung.tmb.utils.SessionUtil;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ExercisePostControllerTest {
+class ExercisePostControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -83,14 +83,14 @@ public class ExercisePostControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/community",method=RequestMethod.GET)
-	 * public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") int page,
+	 * ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") int page,
 	 *		@RequestParam(value="keyword",required=false)String keyword,ModelAndView mav)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("커뮤니티 메인 화면 반환 -> 정상, 모든 ExercisePost 만족하는 키워드 포함")
-	public void exercisePostViewTesKeywordForAllExercisePost() throws Exception {
+	void exercisePostViewTesKeywordForAllExercisePost() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
@@ -119,7 +119,7 @@ public class ExercisePostControllerTest {
 		Map<String, Object> resultMap = ControllerTest.getResponseModel(result);
 		
 		@SuppressWarnings("unchecked")
-		Page<PostForCommunityViewDTO> listObject = (Page<PostForCommunityViewDTO> )resultMap.get("listObject");
+		Page<PostForCommunityViewDTO> listObject = (Page<PostForCommunityViewDTO>) resultMap.get("listObject");
 		
 		assertEquals(Math.min(givenExercisePostNum, PageSize.COMMUNITY_PAGE_SIZE.getSize()), listObject.getNumberOfElements());
 	}
@@ -127,7 +127,7 @@ public class ExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("커뮤니티 메인 화면 반환 -> 정상, 키워드 없음")
-	public void exercisePostViewTestKeywordNull() throws Exception {
+	void exercisePostViewTestKeywordNull() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
@@ -161,14 +161,14 @@ public class ExercisePostControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/community/{target}",method = RequestMethod.GET)
-	 * public ModelAndView exercisePostViewWithTarget(@RequestParam(value="page", required = false,defaultValue="1") int page
+	 * ModelAndView exercisePostViewWithTarget(@RequestParam(value="page", required = false,defaultValue="1") int page
 	 *		,@RequestParam(value="keyword",required=false)String keyword,ModelAndView mav,@PathVariable("target") String targetName)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("특정 카테고리 게시글만 반환 -> 요청 카테고리 존재하지 않을때")
-	public void exercisePostViewWithTargetNonExist() throws Exception {
+	void exercisePostViewWithTargetNonExist() throws Exception {
 		//Given
 		String nonExistTargetName ="nonExist";
 		
@@ -182,7 +182,7 @@ public class ExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 카테고리 게시글만 반환 -> 정상, 키워드는 없음, 모든 ExercisePost가 만족하는 TargetType")
-	public void exercisePostViewWithTargetTestNoKeywordTargetTypeForAll() throws Exception {
+	void exercisePostViewWithTargetTestNoKeywordTargetTypeForAll() throws Exception {
 		//Given
 		TargetType forAllTarget = TargetType.ARM;
 		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",forAllTarget);
@@ -208,7 +208,7 @@ public class ExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 카테고리 게시글만 반환 -> 정상, 키워드는 없음, 어떤 ExercisePost도 만족하지 않는 TargetType") 
-	public void exercisePostViewWithTargetTestNoKeywordTargetTypeForNothing() throws Exception {
+	void exercisePostViewWithTargetTestNoKeywordTargetTypeForNothing() throws Exception {
 		//Given
 		TargetType forNoneTarget = TargetType.BACK;
 		
@@ -236,7 +236,7 @@ public class ExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 카테고리 게시글만 반환 -> 정상, 모든 ExercisePost가 만족하는 키워드, 모든 ExercisePost가 만족하는 TargetType")
-	public void exercisePostViewWithTargetTestKeywordForAllTargetTypeForAll() throws Exception {
+	void exercisePostViewWithTargetTestKeywordForAllTargetTypeForAll() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
@@ -263,7 +263,7 @@ public class ExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 카테고리 게시글만 반환 -> 정상, 모든 ExercisePost가 만족하는 키워드, 모든 ExercisePost가 만족하는 TargetType")
-	public void exercisePostViewWithTargetTestKeywordForNothingTargetTypeForAll() throws Exception {
+	void exercisePostViewWithTargetTestKeywordForNothingTargetTypeForAll() throws Exception {
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		exerciseRepository.save(exercise);
 		
@@ -299,13 +299,13 @@ public class ExercisePostControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/community/post/{post_id}" ,method = RequestMethod.GET)
-	 * public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId,ModelAndView mav)
+	 * ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId,ModelAndView mav)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("특정 게시글 화면 -> 해당 ID의 게시글 없을 때")
-	public void exercisePostDetailViewNonExist() throws Exception {
+	void exercisePostDetailViewNonExist() throws Exception {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
@@ -326,7 +326,7 @@ public class ExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("특정 게시글 화면 -> 정상")
-	public void exercisePostDetailViewTest() throws Exception {
+	void exercisePostDetailViewTest() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		
@@ -347,13 +347,13 @@ public class ExercisePostControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/community/post/addpost", method = RequestMethod.GET)
-	 * public ModelAndView addExercisePostView(ModelAndView mav)
+	 * ModelAndView addExercisePostView(ModelAndView mav)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("게시글 작성 화면 반환 -> 정상")
-	public void addExercisePostViewTest() throws Exception {
+	void addExercisePostViewTest() throws Exception {
 		//Given
 		
 		//When
@@ -367,13 +367,13 @@ public class ExercisePostControllerTest {
 	/*
 	 * @RequestMapping(value="/community/post/addpost", method = RequestMethod.POST)
 	 * @LoginIdSessionNotNull
-	 * public ModelAndView addExercisePost(@ModelAttribute SaveExercisePostDTO dto, ModelAndView mav)
+	 * ModelAndView addExercisePost(@ModelAttribute SaveExercisePostDTO dto, ModelAndView mav)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("게시글 추가 처리 -> 세션에 저장된ID에 해당하는 User 없을 때")
-	public void addExercisePostUserNonExist() throws Exception {
+	void addExercisePostUserNonExist() throws Exception {
 		//Given
 		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
@@ -395,7 +395,7 @@ public class ExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("게시글 추가 처리 -> param의 exerciseName에 해당하는 Exercise 없을 때")
-	public void addExercisePostNonExist() throws Exception {
+	void addExercisePostNonExist() throws Exception {
 		//Given
 		String exerciseName = "exercise";
 		Exercise exercise = ExerciseTest.getExerciseInstance(exerciseName,TargetType.ARM);
@@ -417,7 +417,7 @@ public class ExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("게시글 추가 처리 -> 정상")
-	public void addExercisePostTest() throws Exception {
+	void addExercisePostTest() throws Exception {
 		//Given
 		String exerciseName = "exercise";
 		Exercise exercise = ExerciseTest.getExerciseInstance(exerciseName,TargetType.ARM);
@@ -437,14 +437,14 @@ public class ExercisePostControllerTest {
 	/*
 	 * @RequestMapping(value="/community/post/{post_id}/addComment",method = RequestMethod.POST)
 	 * @LoginIdSessionNotNull
-	 * public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute SaveCommentDTO dto,
+	 * ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId,@ModelAttribute SaveCommentDTO dto,
 	 *		@RequestParam("isAnonymous") boolean isAnonymous,HttpServletRequest request)
 	 */
 	
 	@Test
 	@Transactional
 	@DisplayName("게시글에 댓글 추가 처리 -> 세션에 저장된 ID의 유저 없을 때")
-	public void addCommentToExercisePostuserNonExist() throws Exception {
+	void addCommentToExercisePostuserNonExist() throws Exception {
 		//Given
 		Long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
@@ -471,7 +471,7 @@ public class ExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("게시글에 댓글 추가 처리 -> 해당 ID의 ExercisePost 없을때")
-	public void addCommentToExercisePostNonExist() throws Exception {
+	void addCommentToExercisePostNonExist() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);
@@ -497,7 +497,7 @@ public class ExercisePostControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("게시글에 댓글 추가 처리 -> 정상")
-	public void addCommentToExercisePostTest() throws Exception {
+	void addCommentToExercisePostTest() throws Exception {
 		//Given
 		Exercise exercise = ExerciseTest.getExerciseInstance("exercise",TargetType.ARM);
 		exerciseRepository.save(exercise);

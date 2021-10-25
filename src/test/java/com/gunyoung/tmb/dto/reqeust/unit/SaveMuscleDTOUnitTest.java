@@ -19,15 +19,15 @@ import com.gunyoung.tmb.testutil.TargetTypeTest;
  * @author kimgun-yeong
  *
  */
-public class SaveMuscleDTOUnitTest {
+class SaveMuscleDTOUnitTest {
 	
 	/*
-	 * public static SaveMuscleDTO of(Muscle muscle) 
+	 * static SaveMuscleDTO of(Muscle muscle) 
 	 */
 	
 	@Test
 	@DisplayName("Muscle 인스턴스 정보를 통해 SaveMuscleDTO 생성-> 정상, MuscleName 체크")
-	public void ofTestCheckName() {
+	void ofTestCheckName() {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		String muscleName = muscle.getName();
@@ -41,7 +41,7 @@ public class SaveMuscleDTOUnitTest {
 	
 	@Test
 	@DisplayName("Muscle 인스턴스 정보를 통해 SaveMuscleDTO 생성-> 정상, Category 체크")
-	public void ofTestCheckCategory() {
+	void ofTestCheckCategory() {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		TargetType category = muscle.getCategory();
@@ -54,12 +54,12 @@ public class SaveMuscleDTOUnitTest {
 	}
 	
 	/*
-	 * public static Muscle updateMuscleBySaveMuscleDTO(Muscle muscle, SaveMuscleDTO dto) throws TargetTypeNotFoundedException
+	 * static Muscle updateMuscleBySaveMuscleDTO(Muscle muscle, SaveMuscleDTO dto) throws TargetTypeNotFoundedException
 	 */
 	
 	@Test
 	@DisplayName("SaveMuscleDTO를 통해 Muscle 업데이트 후 반환 -> dto category에 해당하는 TargetType KoreanName 없을 때")
-	public void updateMuscleBySaveMuscleDTOInValidCategory() {
+	void updateMuscleBySaveMuscleDTOInValidCategory() {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		
@@ -77,7 +77,7 @@ public class SaveMuscleDTOUnitTest {
 	
 	@Test
 	@DisplayName("SaveMuscleDTO를 통해 Muscle 업데이트 후 반환 -> 정상, name 확인")
-	public void updateMuscleBySaveMuscleDTOTestCheckName() {
+	void updateMuscleBySaveMuscleDTOTestCheckName() {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		
@@ -96,7 +96,7 @@ public class SaveMuscleDTOUnitTest {
 	
 	@Test
 	@DisplayName("SaveMuscleDTO를 통해 Muscle 업데이트 후 반환 -> 정상, category 확인")
-	public void updateMuscleBySaveMuscleDTOTestCheckCategory() {
+	void updateMuscleBySaveMuscleDTOTestCheckCategory() {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		

@@ -39,7 +39,7 @@ import com.gunyoung.tmb.testutil.tag.Integration;
 @Integration
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ManagerMuscleControllerTest {
+class ManagerMuscleControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -49,14 +49,14 @@ public class ManagerMuscleControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/muscle",method = RequestMethod.GET)
-	 * public ModelAndView muscleViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav) 
+	 * ModelAndView muscleViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,@RequestParam(value="keyword",required=false) String keyword,ModelAndView mav) 
 	 */
 	
 	@WithMockUser(roles = {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Muscle 리스트 화면 반환 -> 정상, 키워드 없음")
-	public void muscleViewForManagerTestNoKeyword() throws Exception {
+	void muscleViewForManagerTestNoKeyword() throws Exception {
 		//Given
 		int givenMuscleNum = 10;
 		MuscleTest.addNewMusclesInDBByNum(givenMuscleNum, muscleRepository);
@@ -80,7 +80,7 @@ public class ManagerMuscleControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Muscle 리스트 화면 반환 -> 정상, 모든 Muscle이 만족하지 않는 키워드")
-	public void muscleViewForManagerTestKeywordForNothing() throws Exception {
+	void muscleViewForManagerTestKeywordForNothing() throws Exception {
 		//Given
 		String keywordForNothing = "noting!!";
 		int givenMuscleNum = 10;
@@ -106,7 +106,7 @@ public class ManagerMuscleControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Muscle 리스트 화면 반환 -> 정상, 모든 Muscle이 만족하는 키워드")
-	public void muscleViewForManagerTestKeywordForAll() throws Exception {
+	void muscleViewForManagerTestKeywordForAll() throws Exception {
 		//Given
 		String keywordForAllMuscle = MuscleTest.DEFAULT_NAME;
 		int givenMuscleNum = 10;
@@ -130,14 +130,14 @@ public class ManagerMuscleControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/muscle/add" , method= RequestMethod.GET)
-	 * public ModelAndView addMuscleView(ModelAndView mav)
+	 * ModelAndView addMuscleView(ModelAndView mav)
 	 */
 	
 	@WithMockUser(roles = {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Muscle 추가 화면 반환 -> 정상")
-	public void addMuscleViewTest() throws Exception {
+	void addMuscleViewTest() throws Exception {
 		//Given
 		
 		//When
@@ -149,14 +149,14 @@ public class ManagerMuscleControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/muscle/add" ,method=RequestMethod.POST)
-	 * public ModelAndView addMuscle(@ModelAttribute SaveMuscleDTO dto)
+	 * ModelAndView addMuscle(@ModelAttribute SaveMuscleDTO dto)
 	 */
 	
 	@WithMockUser(roles = {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Muscle 추가 처리 -> 이름 중복")
-	public void addMuscleDuplicated() throws Exception {
+	void addMuscleDuplicated() throws Exception {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		muscleRepository.save(muscle);
@@ -177,7 +177,7 @@ public class ManagerMuscleControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Muscle 추가 처리 -> TargetType 오류")
-	public void addMuscleTargetTypeNonExist() throws Exception {
+	void addMuscleTargetTypeNonExist() throws Exception {
 		//Given
 		String nonExistTargetTypeName = "nonExist";
 		MultiValueMap<String, String> paramMap =  MuscleTest.getSaveMuscleDTOMap("muscle",nonExistTargetTypeName);
@@ -196,7 +196,7 @@ public class ManagerMuscleControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Muscle 추가 처리 -> 정상")
-	public void addMuscleTest() throws Exception {
+	void addMuscleTest() throws Exception {
 		//Given
 		MultiValueMap<String, String> paramMap =  MuscleTest.getSaveMuscleDTOMap("muscle",TargetType.BACK.getKoreanName());
 		
@@ -212,14 +212,14 @@ public class ManagerMuscleControllerTest {
 	
 	/*
 	 * @RequestMapping(value="/manager/muscle/modify/{muscleId}", method = RequestMethod.GET)
-	 * public ModelAndView modifyMuscleView(@PathVariable("muscleId") Long muscleId, ModelAndView mav)
+	 * ModelAndView modifyMuscleView(@PathVariable("muscleId") Long muscleId, ModelAndView mav)
 	 */
 	
 	@WithMockUser(roles = {"MANAGER"})
 	@Test
 	@Transactional
 	@DisplayName("Muscle 수정 화면 반환 -> 해당 ID의 Muscle 없을 때")
-	public void modifyMuscleViewNonExist() throws Exception {
+	void modifyMuscleViewNonExist() throws Exception {
 		//Given
 		Long nonExistMuscleId = MuscleTest.getNonExistMuscleId(muscleRepository);
 		
@@ -234,7 +234,7 @@ public class ManagerMuscleControllerTest {
 	@Test
 	@Transactional
 	@DisplayName("Muscle 수정 화면 반환 -> 정상")
-	public void modifyMuscleViewTest() throws Exception {
+	void modifyMuscleViewTest() throws Exception {
 		//Given
 		Muscle muscle = MuscleTest.getMuscleInstance();
 		muscleRepository.save(muscle);

@@ -46,8 +46,7 @@ public class RedisSessionConfig {
 	 */
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
-		LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisSessionHost,redisSessionPort);
-		return lettuceConnectionFactory;
+		return new LettuceConnectionFactory(redisSessionHost, redisSessionPort);
 	}
 	
 	/**
@@ -67,7 +66,7 @@ public class RedisSessionConfig {
 	
 	/**
 	 * AWS ElastiCache 같은 secured redis 환경에서 <br>
-	 * {@link org.springframework.session.data.redis.config.ConfigureNotifyKeyspaceEventsAction} 가 Redis config 명령어 수행하지 않게 설
+	 * {@link org.springframework.session.data.redis.config.ConfigureNotifyKeyspaceEventsAction} 가 Redis config 명령어 수행하지 않게 설정
 	 * @author kimgun-yeong
 	 */
 	@Bean

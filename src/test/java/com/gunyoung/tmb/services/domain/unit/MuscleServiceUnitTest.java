@@ -39,7 +39,7 @@ import com.gunyoung.tmb.services.domain.exercise.MuscleServiceImpl;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class MuscleServiceUnitTest {
+class MuscleServiceUnitTest {
 	
 	@Mock
 	MuscleRepository muscleRepository;
@@ -61,12 +61,12 @@ public class MuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public Muscle findById(Long id)
+	 * Muscle findById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID로 Muscle 찾기 -> 존재하지 않음")
-	public void findByIdNonExist() {
+	void findByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		given(muscleRepository.findById(nonExistId)).willReturn(Optional.empty());
@@ -80,7 +80,7 @@ public class MuscleServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID로 Muscle 찾기 -> 정상")
-	public void findByIdTest() {
+	void findByIdTest() {
 		//Given
 		Long muscleId = Long.valueOf(1);
 		given(muscleRepository.findById(muscleId)).willReturn(Optional.of(muscle));
@@ -93,12 +93,12 @@ public class MuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public Muscle findByName(String name)
+	 * Muscle findByName(String name)
 	 */
 	
 	@Test
 	@DisplayName("Name으로 Muscle 찾기 -> 존재하지 않음")
-	public void findByNameNonExist() {
+	void findByNameNonExist() {
 		//Given
 		String nonExistName = "nonExist";
 		given(muscleRepository.findByName(nonExistName)).willReturn(Optional.empty());
@@ -112,7 +112,7 @@ public class MuscleServiceUnitTest {
 	
 	@Test
 	@DisplayName("Name으로 Muscle 찾기 -> 정상")
-	public void findByNameTest() {
+	void findByNameTest() {
 		//Given
 		String muscleName = "muscle";
 		given(muscleRepository.findByName(muscleName)).willReturn(Optional.of(muscle));
@@ -125,12 +125,12 @@ public class MuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public Page<Muscle> findAllInPage(Integer pageNumber, int pageSize)
+	 * Page<Muscle> findAllInPage(Integer pageNumber, int pageSize)
 	 */
 	
 	@Test
 	@DisplayName("모든 Muscle들 페이지 반환 -> 정상")
-	public void findAllInPageTest() {
+	void findAllInPageTest() {
 		//Given
 		int pageNum = 1;
 		int pageSize = 1;
@@ -143,12 +143,12 @@ public class MuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public Page<Muscle> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize) 
+	 * Page<Muscle> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize) 
 	 */
 	
 	@Test
 	@DisplayName("키워드 name에 포함하는 Muscle 페이지 반환 -> 정상")
-	public void findAllWithNameKeywordInPageTest() {
+	void findAllWithNameKeywordInPageTest() {
 		//Given
 		String keyword = "keyword";
 		int pageNum = 1;
@@ -162,12 +162,12 @@ public class MuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public Map<String, List<String>> getAllMusclesWithSortingByCategory()
+	 * Map<String, List<String>> getAllMusclesWithSortingByCategory()
 	 */
 	
 	@Test
 	@DisplayName("모든 Muscle들 category로 분류해서 반환 -> 정상")
-	public void getAllMusclesWithSortingByCategoryTest() {
+	void getAllMusclesWithSortingByCategoryTest() {
 		//Given
 		TargetType[] targetTypes = TargetType.values();
 		List<MuscleNameAndCategoryDTO> muscleNameAndCategoryDTOList = new ArrayList<>();
@@ -199,12 +199,12 @@ public class MuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public List<Muscle> getMuscleListFromMuscleNameList(Iterable<String> muscleNames) throws MuscleNotFoundedException 
+	 * List<Muscle> getMuscleListFromMuscleNameList(Iterable<String> muscleNames) throws MuscleNotFoundedException 
 	 */
 	
 	@Test
 	@DisplayName("Muscle name List 이용하여 Muscle List 반환 -> 정상")
-	public void getMuscleListFromMuscleNameListTest() {
+	void getMuscleListFromMuscleNameListTest() {
 		//Given
 		String muscleName = "muscle";
 		List<String> muscleNames = new ArrayList<>();
@@ -222,12 +222,12 @@ public class MuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public Muscle save(Muscle muscle)
+	 * Muscle save(Muscle muscle)
 	 */
 	
 	@Test
 	@DisplayName("Muscle 저장 -> 정상")
-	public void saveTest() {
+	void saveTest() {
 		//Given
 		given(muscleRepository.save(muscle)).willReturn(muscle);
 		
@@ -239,12 +239,12 @@ public class MuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public void delete(Muscle muscle)
+	 * void delete(Muscle muscle)
 	 */
 	
 	@Test
 	@DisplayName("Muscle 삭제 -> 실패, Muscle null")
-	public void deleteTestMuscleNull() {
+	void deleteTestMuscleNull() {
 		//Given
 		
 		//When, Then
@@ -255,7 +255,7 @@ public class MuscleServiceUnitTest {
 	
 	@Test
 	@DisplayName("Muscle 삭제 -> 정상, check muscleRepository")
-	public void deleteTestCheckMuscleRepository() {
+	void deleteTestCheckMuscleRepository() {
 		//Given
 		
 		//When
@@ -267,7 +267,7 @@ public class MuscleServiceUnitTest {
 	
 	@Test
 	@DisplayName("Muscle 삭제 -> 정상 , exerciseMuscleService check")
-	public void deleteTestCheckExerciseMuscleService() {
+	void deleteTestCheckExerciseMuscleService() {
 		//Given
 		Long muscleId = muscle.getId();
 		
@@ -279,12 +279,12 @@ public class MuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public void deleteById(Long id)
+	 * void deleteById(Long id)
 	 */
 	
 	@Test
 	@DisplayName("ID를 만족하는 Muscle 삭제 -> ID를 만족하는 Muscle 없음")
-	public void deleteByIdNonExist() {
+	void deleteByIdNonExist() {
 		//Given
 		Long nonExistId = Long.valueOf(1);
 		
@@ -299,7 +299,7 @@ public class MuscleServiceUnitTest {
 	
 	@Test
 	@DisplayName("ID를 만족하는 Muscle 삭제 -> 정상")
-	public void deleteByIdTest() {
+	void deleteByIdTest() {
 		//Given
 		Long muscleId = Long.valueOf(1);
 		
@@ -313,12 +313,12 @@ public class MuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public long countAll()
+	 * long countAll()
 	 */
 	
 	@Test
 	@DisplayName("모든 Muscle의 개수 반환 -> 정상")
-	public void countAllTest() {
+	void countAllTest() {
 		//Given
 		long num = 1;
 		given(muscleRepository.count()).willReturn(num);
@@ -331,12 +331,12 @@ public class MuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public long countAllWithNameKeyword(String keyword)
+	 * long countAllWithNameKeyword(String keyword)
 	 */
 	
 	@Test
 	@DisplayName("name 키워드 만족하는 모든 Muscle 개수 반환 -> 정상")
-	public void countAllWithNameKeyword() {
+	void countAllWithNameKeyword() {
 		long num = 1;
 		String keyword = "keyword";
 		given(muscleRepository.countAllWithNamekeyword(keyword)).willReturn(num);
@@ -349,12 +349,12 @@ public class MuscleServiceUnitTest {
 	}
 	
 	/*
-	 * public boolean existsByName(String name)
+	 * boolean existsByName(String name)
 	 */
 	
 	@Test
 	@DisplayName("name을 만족하느 Muscle 존재 여부 반환 -> 정상")
-	public void existsByNameTest() {
+	void existsByNameTest() {
 		//Given
 		String name = "muscle";
 		boolean isExist = true;

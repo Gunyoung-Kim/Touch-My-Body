@@ -14,15 +14,15 @@ import com.gunyoung.tmb.testutil.UserTest;
 * @author kimgun-yeong
 *
 */
-public class UserUnitTest {
+class UserUnitTest {
 	
 	/*
-	 *  public String toString()
+	 *  String toString()
 	 */
 	
 	@Test
 	@DisplayName("toString test -> 정상")
-	public void toStringTest() {
+	void toStringTest() {
 		//Given
 		Long userId = Long.valueOf(35);
 		User user = UserTest.getUserInstance();

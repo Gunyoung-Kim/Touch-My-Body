@@ -40,7 +40,7 @@ import com.gunyoung.tmb.testutil.FeedbackTest;
  *
  */
 @ExtendWith(MockitoExtension.class)
-public class ManagerFeedbackControllerUnitTest {
+class ManagerFeedbackControllerUnitTest {
 	
 	@Mock
 	FeedbackService feedbackService;
@@ -63,13 +63,13 @@ public class ManagerFeedbackControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId,@RequestParam(value="page", defaultValue="1") int page
+	 * ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId,@RequestParam(value="page", defaultValue="1") int page
 	 *		,ModelAndPageView mav)
 	 */
 	
 	@Test
 	@DisplayName("특정 Exercise 정보에 대해 작성된 Feedback 리스트 화면 반환 -> 해당 Id의 Exercise 없으면")
-	public void feedbackListViewTestExerciseNonExist() {
+	void feedbackListViewTestExerciseNonExist() {
 		//Given
 		Long nonExistExerciseId = Long.valueOf(1);
 		given(exerciseService.findById(nonExistExerciseId)).willReturn(null);
@@ -82,7 +82,7 @@ public class ManagerFeedbackControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 Exercise 정보에 대해 작성된 Feedback 리스트 화면 반환 -> FeedbackService 체크")
-	public void feedbackListViewTestCheckFeedbackService() {
+	void feedbackListViewTestCheckFeedbackService() {
 		//Given
 		Long exerciseId = Long.valueOf(1);
 		stubbingExerciseServiceFindById(exerciseId);
@@ -97,7 +97,7 @@ public class ManagerFeedbackControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 Exercise 정보에 대해 작성된 Feedback 리스트 화면 반환 -> ModelAndPageView 체크")
-	public void feedbackListViewTestCheckViewName() {
+	void feedbackListViewTestCheckViewName() {
 		//Given
 		Long exerciseId = Long.valueOf(1);
 		Exercise exercise = stubbingExerciseServiceFindById(exerciseId);
@@ -129,12 +129,12 @@ public class ManagerFeedbackControllerUnitTest {
 	}
 	
 	/*
-	 * public ModelAndView feedbackView(@PathVariable("feedbackId") Long feedbackId, ModelAndView mav)
+	 * ModelAndView feedbackView(@PathVariable("feedbackId") Long feedbackId, ModelAndView mav)
 	 */
 	
 	@Test
 	@DisplayName("특정 Feedback의 상세정보 화면 반환 -> 해당 Id의 Feedback 없으면")
-	public void feedbackViewFeedbackNonExist() {
+	void feedbackViewFeedbackNonExist() {
 		//Given
 		Long nonExistFeedbackId = Long.valueOf(1);
 		given(feedbackService.findForFeedbackViewDTOById(nonExistFeedbackId)).willReturn(null);
@@ -147,7 +147,7 @@ public class ManagerFeedbackControllerUnitTest {
 	
 	@Test
 	@DisplayName("특정 Feedback의 상세정보 화면 반환 -> 정상, ModelAndView 체크")
-	public void feedbackViewTestModelAndView() {
+	void feedbackViewTestModelAndView() {
 		//Given
 		Long feedbackId = Long.valueOf(1);
 		FeedbackViewDTO feedbackViewDTO = FeedbackTest.getFeedbackViewDTOInstance();

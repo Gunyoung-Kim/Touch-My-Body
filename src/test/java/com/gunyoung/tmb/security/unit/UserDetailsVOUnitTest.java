@@ -23,15 +23,15 @@ import com.gunyoung.tmb.testutil.UserTest;
  * @author kimgun-yeong
  *
  */
-public class UserDetailsVOUnitTest {
+class UserDetailsVOUnitTest {
 	
 	/*
-	 * public of(User user)
+	 * of(User user)
 	 */
 	
 	@Test
 	@DisplayName("User 객체를 통한 생성자 -> 정상, Authority확인")
-	public void ofTest() {
+	void ofTest() {
 		//Given
 		RoleType userRole = RoleType.MANAGER;
 		User user = UserTest.getUserInstance(userRole);
@@ -46,11 +46,11 @@ public class UserDetailsVOUnitTest {
 	}
 	
 	/*
-	 * public Collection<? extends GrantedAuthority> getAuthorities()
+	 * Collection<? extends GrantedAuthority> getAuthorities()
 	 */
 	@Test
 	@DisplayName("UserDetails에서 Authorities 반환 -> 정상")
-	public void getAuthoritiesTest() throws NoSuchFieldException, IllegalAccessException {
+	void getAuthoritiesTest() throws NoSuchFieldException, IllegalAccessException {
 		//Given
 		UserDetailsVO userDetails = new UserDetailsVO();
 		Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + RoleType.USER.toString()));
@@ -66,11 +66,11 @@ public class UserDetailsVOUnitTest {
 	}
 	
 	/*
-	 * public String getPassword() 
+	 * String getPassword() 
 	 */
 	@Test
 	@DisplayName("UserDetails에서 Password 반환 -> 정상")
-	public void getPasswordTest() throws NoSuchFieldException, IllegalAccessException {
+	void getPasswordTest() throws NoSuchFieldException, IllegalAccessException {
 		//Given
 		UserDetailsVO userDetails = new UserDetailsVO();
 		String password = "abcd1234!";
@@ -86,11 +86,11 @@ public class UserDetailsVOUnitTest {
 	}
 	
 	/*
-	 * public String getUsername() 
+	 * String getUsername() 
 	 */
 	@Test
 	@DisplayName("UserDetails에서 username 반환 -> 정상")
-	public void getUsernameTest() throws NoSuchFieldException, IllegalAccessException {
+	void getUsernameTest() throws NoSuchFieldException, IllegalAccessException {
 		//Given
 		UserDetailsVO userDetails = new UserDetailsVO();
 		String email = "test@test.com";
@@ -107,11 +107,11 @@ public class UserDetailsVOUnitTest {
 	
 	
 	/*
-	 * public boolean isAccountNonExpired() 
+	 * boolean isAccountNonExpired() 
 	 */
 	@Test
 	@DisplayName("계정 만료 확인 -> 만료되지 않음")
-	public void isAccountNonExpiredTrue() {
+	void isAccountNonExpiredTrue() {
 		//Given
 		UserDetailsVO userDetails = new UserDetailsVO();
 		
@@ -123,12 +123,12 @@ public class UserDetailsVOUnitTest {
 	}
 	
 	/*
-	 * public boolean isAccountNonLocked() 
+	 * boolean isAccountNonLocked() 
 	 */
 	
 	@Test
 	@DisplayName("계정 만료 확인 -> 만료되지 않음")
-	public void isAccountNonLockedTrue() {
+	void isAccountNonLockedTrue() {
 		//Given
 		UserDetailsVO userDetails = new UserDetailsVO();
 		
@@ -140,12 +140,12 @@ public class UserDetailsVOUnitTest {
 	}
 	
 	/*
-	 * public boolean isCredentialsNonExpired() 
+	 * boolean isCredentialsNonExpired() 
 	 */
 	
 	@Test
 	@DisplayName("계정 만료 확인 -> 만료되지 않음")
-	public void isCredentialsNonExpiredTrue() {
+	void isCredentialsNonExpiredTrue() {
 		//Given
 		UserDetailsVO userDetails = new UserDetailsVO();
 		
@@ -157,12 +157,12 @@ public class UserDetailsVOUnitTest {
 	}
 	
 	/*
-	 * public boolean isEnabled() 
+	 * boolean isEnabled() 
 	 */
 	
 	@Test
 	@DisplayName("계정 만료 확인 -> 만료되지 않음")
-	public void isEnabledTrue() {
+	void isEnabledTrue() {
 		//Given
 		UserDetailsVO userDetails = new UserDetailsVO();
 		
