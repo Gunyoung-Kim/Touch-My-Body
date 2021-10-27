@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -13,6 +12,7 @@ import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
+import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.services.domain.like.CommentLikeService;
 
@@ -80,6 +80,10 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	public Comment saveWithUserAndExercisePost(Comment comment, User user, ExercisePost exercisePost) {
+		Preconditions.notNull(comment, "Given comment must not be null!");
+		Preconditions.notNull(user, "Given user must not be null!");
+		Preconditions.notNull(exercisePost, "Given exercisePost must not be null!");
+		
 		setRelationBetweenCommentAndUser(comment, user);
 		setRelationBetweenCommentAndPost(comment, exercisePost);
 		
@@ -112,7 +116,7 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	public void delete(Comment comment) {
-		Objects.requireNonNull(comment, "Given comment must not be null!");
+		Preconditions.notNull(comment, "Given comment must not be null!");
 		deleteAllWeakEntityForComment(comment);
 		commentRepository.deleteByIdInQuery(comment.getId());
 	}

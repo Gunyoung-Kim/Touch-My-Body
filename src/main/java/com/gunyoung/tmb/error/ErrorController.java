@@ -17,6 +17,7 @@ import com.gunyoung.tmb.error.codes.JoinErrorCode;
 import com.gunyoung.tmb.error.codes.LikeErrorCode;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.codes.PrivacyPolicyErrorCode;
+import com.gunyoung.tmb.error.codes.ProgramErrorCode;
 import com.gunyoung.tmb.error.codes.SearchCriteriaErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
@@ -38,6 +39,7 @@ import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.request.AccessDeniedException;
 import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 
 /**
  * 컨트롤러에서 Exeption 발생했을때 이를 처리하는 컨트롤러
@@ -174,5 +176,15 @@ public class ErrorController {
 	@ExceptionHandler(SessionAttributesNotFoundedException.class)
 	public void sessionAttributesNotFounded(SessionAttributesNotFoundedException e, HttpServletResponse response) throws IOException {
 		response.sendRedirect("/login");
+	}
+	
+	/*
+	 * --------------------- INTERNAL_SERVER_ERROR ------------------------------------------------
+	 */
+	
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(PreconditionViolationException.class) 
+	public ErrorMsg preconditionViolation(PreconditionViolationException e) {
+		return new ErrorMsg(ProgramErrorCode.PRECONDITION_VIOLATION_ERROR.getCode(), e.getMessage());
 	}
 }

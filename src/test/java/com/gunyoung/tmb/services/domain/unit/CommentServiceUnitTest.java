@@ -27,10 +27,13 @@ import org.springframework.data.domain.PageRequest;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentServiceImpl;
 import com.gunyoung.tmb.services.domain.like.CommentLikeService;
 import com.gunyoung.tmb.testutil.CommentTest;
+import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link CommentServiceImpl} 에 대한 테스트 클래스 <br>
@@ -244,11 +247,48 @@ class CommentServiceUnitTest {
 	 */
 	
 	@Test
+	@DisplayName("User, ExercisePost 와 연관관계 생성 후 저장 -> 입력 comment null")
+	void saveWithUserAndExercisePostTestNullComment() {
+		//Given
+		User user = UserTest.getUserInstance();
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		
+		//When, Then 
+		assertThrows(PreconditionViolationException.class, () -> {
+			commentService.saveWithUserAndExercisePost(null, user, exercisePost);
+		});
+	}
+	
+	@Test
+	@DisplayName("User, ExercisePost 와 연관관계 생성 후 저장 -> 입력 user null")
+	void saveWithUserAndExercisePostTestNullUser() {
+		//Given
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
+		
+		//When, Then 
+		assertThrows(PreconditionViolationException.class, () -> {
+			commentService.saveWithUserAndExercisePost(comment, null, exercisePost);
+		});
+	}
+	
+	@Test
+	@DisplayName("User, ExercisePost 와 연관관계 생성 후 저장 -> 입력 exercisePost null")
+	void saveWithUserAndExercisePostTestNullExercisePost() {
+		//Given
+		User user = UserTest.getUserInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			commentService.saveWithUserAndExercisePost(comment, user, null);
+		});
+	}
+	
+	@Test
 	@DisplayName("User, ExercisePost 와 연관관계 생성 후 저장 -> 연관 관계 확인")
 	void saveWithUserAndExercisePostTest() {
 		//Given
-		User user = new User();
-		ExercisePost exercisePost = new ExercisePost();
+		User user = UserTest.getUserInstance();
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 		
 		//When
 		commentService.saveWithUserAndExercisePost(comment, user, exercisePost);
@@ -262,8 +302,8 @@ class CommentServiceUnitTest {
 	@DisplayName("User, ExercisePost 와 연관관계 생성 후 저장 -> 저장 확인")
 	void saveWithUserAndExercisePostSaveTest() {
 		//Given
-		User user = new User();
-		ExercisePost exercisePost = new ExercisePost();
+		User user = UserTest.getUserInstance();
+		ExercisePost exercisePost = ExercisePostTest.getExercisePostInstance();
 				
 		//When
 		commentService.saveWithUserAndExercisePost(comment, user, exercisePost);
@@ -283,7 +323,7 @@ class CommentServiceUnitTest {
 		//Given
 		
 		//When, Then
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(PreconditionViolationException.class, () -> {
 			commentService.delete(null);
 		});
 	}
