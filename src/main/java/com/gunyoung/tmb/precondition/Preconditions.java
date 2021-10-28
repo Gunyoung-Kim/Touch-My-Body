@@ -28,7 +28,7 @@ public final class Preconditions {
 	}
 	
 	/**
-	 * object가 another보다 큰지 확인, 크다의 기준은 Comparable.compareTo 의 값이 양수 또는 0인 경우(논리적으로 크기가 같은 경우) <br>
+	 * object가 another 이상인지 확인, 크다의 기준은 Comparable.compareTo 의 값이 양수 또는 0인 경우(논리적으로 크기가 같은 경우) <br>
 	 * 그렇지 않은 경우 {@link PreconditionViolationException} 발생
 	 * @param <T> Comparable<T>를 구현한 클래스여야 한다. 내부적으로 Comparable.compareTo 를 호출하기 때문
 	 * @param object another보다 크거나 같은지 확인하려는 객체
@@ -38,13 +38,13 @@ public final class Preconditions {
 	 * @return object
 	 * @author kimgun-yeong
 	 */
-	public static <T extends Comparable<T>> T greaterThan(T object, T another, String message) {
+	public static <T extends Comparable<T>> T notLessThan(T object, T another, String message) {
 		condition(object.compareTo(another) >= 0, message);
 		return object;
 	}
 	
 	/**
-	 * object가 another보다 작은지 확인, 작다의 기준은 Comparable.compareTo 의 값이 음수 또는 0인 경우(논리적으로 크기가 같은 경우) <br>
+	 * object가 another 이하인지 확인, 작다의 기준은 Comparable.compareTo 의 값이 음수 또는 0인 경우(논리적으로 크기가 같은 경우) <br>
 	 * 그렇지 않은 경우 {@link PreconditionViolationException} 발생
 	 * @param <T> Comparable<T>를 구현한 클래스여야 한다. 내부적으로 Comparable.compareTo 를 호출하기 때문
 	 * @param object another보다 작거나 같은지 확인하려는 객체
@@ -54,7 +54,7 @@ public final class Preconditions {
 	 * @return object
 	 * @author kimgun-yeong
 	 */
-	public static <T extends Comparable<T>> T lessThan(T object, T another, String message) {
+	public static <T extends Comparable<T>> T notMoreThan(T object, T another, String message) {
 		condition(object.compareTo(another) <= 0, message);
 		return object;
 	}

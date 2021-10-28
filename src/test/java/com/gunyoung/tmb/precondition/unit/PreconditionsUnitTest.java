@@ -62,12 +62,12 @@ class PreconditionsUnitTest {
 	}
 	
 	/*
-	 * public static <T extends Comparable<T>> T greaterThan(T object, T another, String message)
+	 * public static <T extends Comparable<T>> T notLessThan(T object, T another, String message)
 	 */
 	
 	@Test
-	@DisplayName("object가 another보다 큰지 확인 -> 크지 않음")
-	void greaterThanTestNotGreater() {
+	@DisplayName("object가 another 이상인지 확인 -> 크지 않음")
+	void notLessThanTestNotGreater() {
 		//Given
 		Integer object = Integer.valueOf(24);
 		Integer another = Integer.valueOf(100);
@@ -75,32 +75,32 @@ class PreconditionsUnitTest {
 		
 		//When, Then
 		assertThrows(PreconditionViolationException.class, () -> {
-			Preconditions.greaterThan(object, another, messageForException);
+			Preconditions.notLessThan(object, another, messageForException);
 		});
 	}
 	
 	@Test
-	@DisplayName("object가 another보다 큰지 확인 -> 큼")
-	void greaterThanTestGreater() {
+	@DisplayName("object가 another 이상인지 확인 -> 큼")
+	void notLessThanTestGreater() {
 		//Given
 		Integer object = Integer.valueOf(82);
 		Integer another = Integer.valueOf(18);
 		String messageForException = "object is not greater than antoher";
 		
 		//When
-		Integer result = Preconditions.greaterThan(object, another, messageForException);
+		Integer result = Preconditions.notLessThan(object, another, messageForException);
 		
 		//Then
 		assertEquals(object, result);
 	}
 	
 	/*
-	 * public static <T extends Comparable<T>> T lessThan(T object, T another, String message)
+	 * public static <T extends Comparable<T>> T notMoreThan(T object, T another, String message)
 	 */
 	
 	@Test
 	@DisplayName("object가 another보다 작은지 확인 -> 작지 않음")
-	void lessThanTestNotLess() {
+	void notMoreThanTestNotLess() {
 		//Given
 		Integer object = Integer.valueOf(72);
 		Integer another = Integer.valueOf(66);
@@ -108,20 +108,20 @@ class PreconditionsUnitTest {
 		
 		//When, Then 
 		assertThrows(PreconditionViolationException.class, () -> {
-			Preconditions.lessThan(object, another, messageForException);
+			Preconditions.notMoreThan(object, another, messageForException);
 		});
 	}
 	
 	@Test
 	@DisplayName("object가 another보다 작은지 확인 -> 작음")
-	void lessThanTestLess() {
+	void notMoreThanTestLess() {
 		//Given
 		Integer object = Integer.valueOf(10);
 		Integer another = Integer.valueOf(30);
 		String messageForException = "object is not less than antoher";
 		
 		//When
-		Integer result = Preconditions.lessThan(object, another, messageForException);
+		Integer result = Preconditions.notMoreThan(object, another, messageForException);
 		
 		//Then
 		assertEquals(object, result);

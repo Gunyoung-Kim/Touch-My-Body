@@ -109,8 +109,8 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	}
 	
 	private void checkParameterForPageRequest(Integer pageNumber, int pageSize) {
-		Preconditions.greaterThan(pageNumber, 1, "pageNumber should be equal or greater than 1");
-		Preconditions.greaterThan(pageSize, 1, "pageSize should be equal or greater than 1");
+		Preconditions.notLessThan(pageNumber, 1, "pageNumber should be equal or greater than 1");
+		Preconditions.notLessThan(pageSize, 1, "pageSize should be equal or greater than 1");
 	}
 
 	@Override
