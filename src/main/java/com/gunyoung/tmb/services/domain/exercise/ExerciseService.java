@@ -57,6 +57,7 @@ public interface ExerciseService {
 	
 	/**
 	 * 모든 Exercise 페이지로 가져오기 
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<Exercise> findAllInPage(Integer pageNumber, int pageSize);
@@ -64,6 +65,7 @@ public interface ExerciseService {
 	/**
 	 * name에 키워드를 포함하는 모든 Exercise 페이지로 가져오는 메소드
 	 * @param keyword name 검색 키워드 
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize);
@@ -88,7 +90,7 @@ public interface ExerciseService {
 	 * {@link SaveExerciseDTO} 에 담긴 정보로 Exercise save <br>
 	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제
 	 * @param dto 클라이언트로부터 받은 Exercise save하기 위한 {@link SaveExerciseDTO} 객체
-	 * @throws NullPointerException exercise == null || dto == null
+	 * @throws PreconditionViolationException exercise == null || dto == null
 	 * @throws TargetTypeNotFoundedException dto 객체에 담긴 target이 아무런 TargetType의 이름이 아닐때 
 	 * @author kimgun-yeong
 	 */
@@ -99,7 +101,7 @@ public interface ExerciseService {
 	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제 <br>
 	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param exercise 삭제하려는 Exercise
-	 * @throws NullPointerException exercise == null
+	 * @throws PreconditionViolationException exercise == null
 	 * @author kimgun-yeong
 	 */
 	public void delete(Exercise exercise);

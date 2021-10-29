@@ -30,6 +30,7 @@ import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
@@ -154,6 +155,32 @@ class ExerciseServiceTest {
 	 */
 	
 	@Test
+	@DisplayName("모든 운동 페이지로 가져오기 -> pageNumber < 1")
+	void findAllInPageNegativePageNumber() {
+		//Given
+		Integer pageNumber = -1;
+		int pageSize = PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.findAllInPage(pageNumber, pageSize);
+		});
+	}
+	
+	@Test
+	@DisplayName("모든 운동 페이지로 가져오기 -> pageSize < 1")
+	void findAllInPageNegativePageSize() {
+		//Given
+		Integer pageNumber = 1;
+		int pageSize = -1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.findAllInPage(pageNumber, pageSize);
+		});
+	}
+	
+	@Test
 	@Transactional
 	@DisplayName("모든 운동 페이지로 가져오기 ->정상")
 	void findAllInPageTest() {
@@ -165,7 +192,7 @@ class ExerciseServiceTest {
 		long givenExerciseNum = exerciseRepository.count();
 		
 		//When
-		Page<Exercise> result =exerciseService.findAllInPage(pageNumber, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize());
+		Page<Exercise> result = exerciseService.findAllInPage(pageNumber, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize());
 		
 		//Then
 		assertEquals(Math.min(givenExerciseNum, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize()), result.getContent().size());
@@ -174,6 +201,35 @@ class ExerciseServiceTest {
 	/*
 	 *  Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int page_size)
 	 */
+	
+	@Test
+	@DisplayName("이름에 키워드를 포함하는 모든 운동 페이지로 가져오기 -> pageNumber < 1")
+	void findAllWithNameKeywordInPageNegativePageNumber() {
+		//Given
+		Integer pageNumber = -1;
+		int pageSize = PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize();
+		String keyword = "keyword";
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.findAllWithNameKeywordInPage(keyword, pageNumber, pageSize);
+		});
+	}
+	
+	@Test
+	@DisplayName("이름에 키워드를 포함하는 모든 운동 페이지로 가져오기-> pageSize < 1")
+	void findAllWithNameKeywordInPageNegativePageSize() {
+		//Given
+		Integer pageNumber = 1;
+		int pageSize = -1;
+		String keyword = "keyword";
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.findAllWithNameKeywordInPage(keyword, pageNumber, pageSize);
+		});
+	}
+	
 	
 	@Test
 	@Transactional
