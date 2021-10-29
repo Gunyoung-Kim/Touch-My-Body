@@ -12,6 +12,7 @@ import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
 import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
+import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	@Transactional(readOnly=true)
 	public Page<Feedback> findAllByExerciseIdByPage(Long exerciseId, Integer pageNum, int pageSize) {
+		checkParameterForPageRequest(pageNum, pageSize);
 		PageRequest pageRequest = PageRequest.of(pageNum-1, pageSize);
 		return feedbackRepository.findAllByExerciseIdByPage(exerciseId, pageRequest);
 	}
@@ -53,8 +55,14 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Transactional(readOnly=true)
 	public Page<FeedbackManageListDTO> findAllForFeedbackManageListDTOByExerciseIdByPage(Long exerciseId,
 			Integer pageNum, int pageSize) {
+		checkParameterForPageRequest(pageNum, pageSize);
 		PageRequest pageRequest = PageRequest.of(pageNum-1, pageSize);
 		return feedbackRepository.findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, pageRequest);
+	}
+	
+	private void checkParameterForPageRequest(Integer pageNumber, int pageSize) {
+		Preconditions.notLessThan(pageNumber, 1, "pageNumber should be equal or greater than 1");
+		Preconditions.notLessThan(pageSize, 1, "pageSize should be equal or greater than 1");
 	}
 
 	@Override
@@ -64,6 +72,10 @@ public class FeedbackServiceImpl implements FeedbackService {
 	
 	@Override
 	public Feedback saveWithUserAndExercise(Feedback feedback, User user, Exercise exercise) {
+		Preconditions.notNull(feedback, "Given feedback must be not null");
+		Preconditions.notNull(user, "Given user must be not null");
+		Preconditions.notNull(exercise, "Given exercise must be not null");
+		
 		addRelationBetweenFeedbackAndUser(feedback, user);
 		addRelationBetweenFeedbackAndExercise(feedback, exercise);
 

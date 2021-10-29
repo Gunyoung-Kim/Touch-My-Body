@@ -2,6 +2,7 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -23,8 +24,11 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackServiceImpl;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link FeedbackServiceImpl} 에 대한 테스트 클래스 <br>
@@ -45,7 +49,8 @@ class FeedbackServiceUnitTest {
 	
 	@BeforeEach
 	void setup() {
-		feedback = Feedback.builder().build();
+		feedback = Feedback.builder()
+				.build();
 	}
 	
 	/*
@@ -118,6 +123,34 @@ class FeedbackServiceUnitTest {
 	 */
 	
 	@Test
+	@DisplayName("Exercise ID를 만족하는 Feedback들 페이지 반환 -> pageNumber < 1")
+	void findAllByExerciseIdByPageTestPageNumLessThanOne() {
+		//Given
+		Long exerciseId = Long.valueOf(1);
+		Integer pageNum = -1;
+		int pageSize = 1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			feedbackService.findAllByExerciseIdByPage(exerciseId, pageNum, pageSize);
+		});
+	}
+	
+	@Test
+	@DisplayName("Exercise ID를 만족하는 Feedback들 페이지 반환 -> pageSize < 1")
+	void findAllByExerciseIdByPageTestPageSizeLessThanOne() {
+		//Given
+		Long exerciseId = Long.valueOf(1);
+		Integer pageNum = 1;
+		int pageSize = -1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			feedbackService.findAllByExerciseIdByPage(exerciseId, pageNum, pageSize);
+		});
+	}
+	
+	@Test
 	@DisplayName("Exercise ID를 만족하는 Feedback들 페이지 반환 -> 정상")
 	void findAllByExerciseIdByPageTest() {
 		//Given
@@ -136,6 +169,34 @@ class FeedbackServiceUnitTest {
 	 * Page<FeedbackManageListDTO> findAllForFeedbackManageListDTOByExerciseIdByPage(Long exerciseId,
 	 *		Integer pageNum, int pageSize)
 	 */
+	
+	@Test
+	@DisplayName("Exercise ID를 만족하는 Feedback들 페이지 반환 -> pageNumber < 1")
+	void findAllForFeedbackManageListDTOByExerciseIdByPageTestPageNumLessThanOne() {
+		//Given
+		Long exerciseId = Long.valueOf(1);
+		Integer pageNum = -1;
+		int pageSize = 1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			feedbackService.findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, pageNum, pageSize);
+		});
+	}
+	
+	@Test
+	@DisplayName("Exercise ID를 만족하는 Feedback들 페이지 반환 -> pageSize < 1")
+	void findAllForFeedbackManageListDTOByExerciseIdByPageTestPageSizeLessThanOne() {
+		//Given
+		Long exerciseId = Long.valueOf(1);
+		Integer pageNum = 1;
+		int pageSize = -1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			feedbackService.findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, pageNum, pageSize);
+		});
+	}
 	
 	@Test
 	@DisplayName("Exercise ID를 만족하는 Feedback 찾고 FeedbackManageListDTO들 생성해서 페이지 반환")
@@ -174,11 +235,48 @@ class FeedbackServiceUnitTest {
 	 */
 	
 	@Test
+	@DisplayName("User와 Exercise객체를 인자로 받아 Feedback 객체 생성 및 연관 관계 설정 후 저장 -> given feedback == null")
+	void saveWithUserAndExerciseTestNullFeedback() {
+		//Given
+		User user = UserTest.getUserInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			feedbackService.saveWithUserAndExercise(null, user, exercise);
+		});
+	}
+	
+	@Test
+	@DisplayName("User와 Exercise객체를 인자로 받아 Feedback 객체 생성 및 연관 관계 설정 후 저장 -> given user == null")
+	void saveWithUserAndExerciseTestNullUser() {
+		//Given
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			feedbackService.saveWithUserAndExercise(feedback, null, exercise);
+		});
+	}
+	
+	@Test
+	@DisplayName("User와 Exercise객체를 인자로 받아 Feedback 객체 생성 및 연관 관계 설정 후 저장 -> given exercise == null")
+	void saveWithUserAndExerciseTestNullExercise() {
+		//Given
+		User user = UserTest.getUserInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			feedbackService.saveWithUserAndExercise(feedback, user, null);
+		});
+	}
+	
+	@Test
 	@DisplayName("User와 Exercise객체를 인자로 받아 Feedback 객체 생성 및 연관 관계 설정 후 저장 -> 정상")
 	void saveWithUserAndExerciseTest() {
 		//Given
-		User user = User.builder().build();
-		Exercise exercise = Exercise.builder().build();
+		User user = UserTest.getUserInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		
 		given(feedbackRepository.save(feedback)).willReturn(feedback);
 		

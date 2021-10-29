@@ -31,6 +31,7 @@ public interface FeedbackService {
 	/**
 	 * Exercise ID를 만족하는 Feedback들 페이지 반환
 	 * @param exerciseId 찾으려는 Feedback들의 Exercise ID
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<Feedback> findAllByExerciseIdByPage(Long exerciseId, Integer pageNum, int pageSize);
@@ -38,6 +39,7 @@ public interface FeedbackService {
 	/**
 	 * Exercise ID를 만족하는 Feedback 찾고 {@link FeedbackManageListDTO}들 생성해서 페이지 반환
 	 * @param exerciseId 찾으려는 Feedback들의 Exercise ID
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<FeedbackManageListDTO> findAllForFeedbackManageListDTOByExerciseIdByPage(Long exerciseId, Integer pageNum, int pageSize);
@@ -52,6 +54,7 @@ public interface FeedbackService {
 	
 	/**
 	 * User와 Exercise객체를 인자로 받아 Feedback 객체 생성 및 연관 관계 설정 후 저장
+	 * @throws PreconditionViolationException 인자로 전달된 객체 중 하나라도 null인 경우
 	 * @author kimgun-yeong
 	 */
 	public Feedback saveWithUserAndExercise(Feedback feedback, User user, Exercise exercise);
