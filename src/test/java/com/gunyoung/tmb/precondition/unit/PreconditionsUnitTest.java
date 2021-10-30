@@ -62,6 +62,72 @@ class PreconditionsUnitTest {
 	}
 	
 	/*
+	 * public static int notLessThanInt(int object, int another, String message)
+	 */
+	
+	@Test
+	@DisplayName("int object가 another 이상인지 확인 -> 이상 아님")
+	void notLessThanIntTestNotLessThan() {
+		//Given
+		int object = 36;
+		int another = 88;
+		String messageForException = "object is not greater than antoher";
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			Preconditions.notLessThanInt(object, another, messageForException);
+		});
+	}
+	
+	@Test
+	@DisplayName("int object가 another 이상인지 확인 -> 이상임")
+	void notLessThanIntTest() {
+		//Given
+		int object = 92;
+		int another = 24;
+		String messageForException = "object is not greater than antoher";
+		
+		//When
+		int result = Preconditions.notLessThanInt(object, another, messageForException);
+		
+		//Then
+		assertEquals(object, result);
+	}
+	
+	/*
+	 * public static int notMoreThanInt(int object, int another, String message)
+	 */
+	
+	@Test
+	@DisplayName("int object가 another 이하인지 확인 -> 이하 아님")
+	void notMoreThanIntTestNotLessThan() {
+		//Given
+		int object = 225;
+		int another = 28;
+		String messageForException = "object is not less than antoher";
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			Preconditions.notMoreThanInt(object, another, messageForException);
+		});
+	}
+	
+	@Test
+	@DisplayName("int object가 another 이하인지 확인 -> 이하임")
+	void notMoreThanIntTest() {
+		//Given
+		int object = 22;
+		int another = 29;
+		String messageForException = "object is not less than antoher";
+		
+		//When
+		int result = Preconditions.notMoreThanInt(object, another, messageForException);
+		
+		//Then
+		assertEquals(object, result);
+	}
+	
+	/*
 	 * public static <T extends Comparable<T>> T notLessThan(T object, T another, String message)
 	 */
 	

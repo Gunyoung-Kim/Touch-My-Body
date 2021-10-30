@@ -28,12 +28,40 @@ public final class Preconditions {
 	}
 	
 	/**
+	 * object가 another 이상인지 확인, notLessThan에서의 오토 박싱에 의한 성능 감소를 고려하여 추가한 메소드
+	 * @param object another보다 크거나 같은지 확인하려는 int 
+	 * @param another object와의 비교를 위한 int
+	 * @param message object가 another보다 작은 경우 예외에 담길 메시지
+	 * @throws PreconditionViolationException if object is less than anohter
+	 * @return object
+	 * @author kimgun-yeong
+	 */
+	public static int notLessThanInt(int object, int another, String message) {
+		condition(Integer.compare(object, another) >= 0, message);
+		return object;
+	}
+	
+	/**
+	 * object가 another 이하인지 확인, notMoreThan에서의 오토 박싱에 의한 성능 감소를 고려하여 추가한 메소드
+	 * @param object another보다 작거나 같은지 확인하려는 int 
+	 * @param another object와의 비교를 위한 int
+	 * @param message object가 another보다 큰 경우 예외에 담길 메시지
+	 * @throws PreconditionViolationException if object is more than anohter
+	 * @return object
+	 * @author kimgun-yeong
+	 */
+	public static int notMoreThanInt(int object, int another, String message) {
+		condition(Integer.compare(object, another) <= 0, message);
+		return object;
+	}
+	
+	/**
 	 * object가 another 이상인지 확인, 크다의 기준은 Comparable.compareTo 의 값이 양수 또는 0인 경우(논리적으로 크기가 같은 경우) <br>
 	 * 그렇지 않은 경우 {@link PreconditionViolationException} 발생
 	 * @param <T> {@code Comparable<T>}를 구현한 클래스여야 한다. 내부적으로 Comparable.compareTo 를 호출하기 때문
 	 * @param object another보다 크거나 같은지 확인하려는 객체
 	 * @param another object와의 비교를 위한 객체
-	 * @param message object가 object보다 작은 경우 예외에 담길 메시지 
+	 * @param message object가 another보다 작은 경우 예외에 담길 메시지 
 	 * @throws PreconditionViolationException if object is less than anohter by Comparable.compareTo
 	 * @return object
 	 * @author kimgun-yeong
@@ -49,7 +77,7 @@ public final class Preconditions {
 	 * @param <T> {@code Comparable<T>}를 구현한 클래스여야 한다. 내부적으로 Comparable.compareTo 를 호출하기 때문
 	 * @param object another보다 작거나 같은지 확인하려는 객체
 	 * @param another object와의 비교를 위한 객체
-	 * @param message object가 object보다 큰 경우 예외에 담길 메시지 
+	 * @param message object가 another보다 큰 경우 예외에 담길 메시지 
 	 * @throws PreconditionViolationException if object is more than anohter by Comparable.compareTo
 	 * @return object
 	 * @author kimgun-yeong
