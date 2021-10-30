@@ -63,7 +63,7 @@ public class MuscleServiceImpl implements MuscleService {
 	
 	private void checkParameterForPageRequest(Integer pageNumber, int pageSize) {
 		Preconditions.notLessThan(pageNumber, 1, "pageNumber should be equal or greater than 1");
-		Preconditions.notLessThan(pageSize, 1, "pageSize should be equal or greater than 1");
+		Preconditions.notLessThanInt(pageSize, 1, "pageSize should be equal or greater than 1");
 	}
 	
 	@Override

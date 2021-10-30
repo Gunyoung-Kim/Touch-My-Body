@@ -62,6 +62,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	@Transactional(readOnly= true)
 	public Page<Comment> findAllByUserIdOrderByCreatedAtAsc(Long userId, Integer pageNum, int pageSize) {
+		checkParameterForPageRequest(pageNum, pageSize);
 		PageRequest pageRequest = PageRequest.of(pageNum-1, pageSize);
 		return commentRepository.findAllByUserIdOrderByCreatedAtAscInPage(userId,pageRequest);
 	}
@@ -69,8 +70,14 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	@Transactional(readOnly=true)
 	public Page<Comment> findAllByUserIdOrderByCreatedAtDesc(Long userId, Integer pageNum, int pageSize) {
+		checkParameterForPageRequest(pageNum, pageSize);
 		PageRequest pageRequest = PageRequest.of(pageNum-1, pageSize);
 		return commentRepository.findAllByUserIdOrderByCreatedAtDescInPage(userId,pageRequest);
+	}
+	
+	private void checkParameterForPageRequest(Integer pageNumber, int pageSize) {
+		Preconditions.notLessThan(pageNumber, 1, "pageNumber should be equal or greater than 1");
+		Preconditions.notLessThanInt(pageSize, 1, "pageSize should be equal or greater than 1");
 	}
 
 	@Override
@@ -116,7 +123,8 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	public void delete(Comment comment) {
-		Preconditions.notNull(comment, "Given comment must not be null!");
+		Preconditions.notNull(comment, "Given comment must be not null");
+		
 		deleteAllWeakEntityForComment(comment);
 		commentRepository.deleteByIdInQuery(comment.getId());
 	}

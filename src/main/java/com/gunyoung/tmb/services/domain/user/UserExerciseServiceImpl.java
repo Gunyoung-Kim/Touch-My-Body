@@ -44,9 +44,9 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 	@Override
 	@Transactional(readOnly=true)
 	public List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year, int month) {
-		Preconditions.notLessThan(year, 0, "Given year should be not less than zero");
-		Preconditions.notLessThan(month, Calendar.JANUARY, "Given month should be not less than Calendar.JANUARY");
-		Preconditions.notMoreThan(month, Calendar.DECEMBER, "Given month should be not less than Calendar.DECEMBER");
+		Preconditions.notLessThanInt(year, 0, "Given year should be not less than zero");
+		Preconditions.notLessThanInt(month, Calendar.JANUARY, "Given month should be not less than Calendar.JANUARY");
+		Preconditions.notMoreThanInt(month, Calendar.DECEMBER, "Given month should be not less than Calendar.DECEMBER");
 		
 		Calendar[] firstAndLastDay = DateUtil.calendarForStartAndEndOfYearAndMonth(year, month);
 		boolean[] isDoneArr = getIsDoneArrayFromRepository(userId, firstAndLastDay);
