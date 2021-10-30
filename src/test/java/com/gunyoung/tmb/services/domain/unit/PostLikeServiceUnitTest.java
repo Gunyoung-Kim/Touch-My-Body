@@ -2,6 +2,7 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.PostLikeRepository;
 import com.gunyoung.tmb.services.domain.like.PostLikeServiceImpl;
 import com.gunyoung.tmb.testutil.ExercisePostTest;
@@ -139,6 +141,30 @@ class PostLikeServiceUnitTest {
 	/*
 	 * PostLike createAndSaveWithUserAndPost(User user, Post post) 
 	 */
+	
+	@Test
+	@DisplayName("PostLike 생성 및 User, Post 와 연관 관계 추가 후 저장 -> Given user == null")
+	void createAndSaveWithUserAndPostTestNullUser() {
+		//Given
+		ExercisePost exercisepost = ExercisePostTest.getExercisePostInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			postLikeService.createAndSaveWithUserAndExercisePost(null, exercisepost);
+		});
+	}
+	
+	@Test
+	@DisplayName("PostLike 생성 및 User, Post 와 연관 관계 추가 후 저장 -> Given exercisePost == null")
+	void createAndSaveWithUserAndPostTestNullExercisePost() {
+		//Given
+		User user = UserTest.getUserInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			postLikeService.createAndSaveWithUserAndExercisePost(user, null);
+		});
+	}
 	
 	@Test
 	@DisplayName("PostLike 생성 및 User, Post 와 연관 관계 추가 후 저장 -> 정상, 저장 확인")

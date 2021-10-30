@@ -2,6 +2,7 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -22,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.response.UserExerciseIsDoneDTO;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.services.domain.user.UserExerciseServiceImpl;
 
@@ -92,7 +94,7 @@ class UserExerciseServiceUnitTest {
 	void findByUserIdAndDateTest() {
 		//Given
 		Long userId = Long.valueOf(1);
-		Calendar date = new GregorianCalendar(1999,Calendar.JANUARY,16);
+		Calendar date = new GregorianCalendar(1999, Calendar.JANUARY, 16);
 		
 		//When
 		userExerciseService.findByUserIdAndDate(userId, date);
@@ -104,6 +106,48 @@ class UserExerciseServiceUnitTest {
 	/*
 	 * List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year,int month)
 	 */
+	
+	@Test
+	@DisplayName("특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환 -> given year is negative")
+	void findIsDoneDTOByUserIdAndYearAndMonthTestNegativeYear() {
+		//Given
+		Long userId = Long.valueOf(1);
+		int year = -1;
+		int month = Calendar.DECEMBER;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId, year, month);
+		});
+	}
+	
+	@Test
+	@DisplayName("특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환 -> given month is negative")
+	void findIsDoneDTOByUserIdAndYearAndMonthTestNegativeMonth() {
+		//Given
+		Long userId = Long.valueOf(1);
+		int year = 1999;
+		int month = -1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId, year, month);
+		});
+	}
+	
+	@Test
+	@DisplayName("특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환 -> given month is over december")
+	void findIsDoneDTOByUserIdAndYearAndMonthTestMonthOverDecember() {
+		//Given
+		Long userId = Long.valueOf(1);
+		int year = 1999;
+		int month = Calendar.DECEMBER + 1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId, year, month);
+		});
+	}
 	
 	@Test
 	@DisplayName("특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환하는 메소드 -> 정상")

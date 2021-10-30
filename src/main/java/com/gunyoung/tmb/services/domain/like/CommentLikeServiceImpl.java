@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -53,6 +54,9 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	@CacheEvict(cacheNames=COMMENT_LIKE_NAME, 
 	key="#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#user.id).concat(':').concat(#comment.id)")
 	public CommentLike createAndSaveWithUserAndComment(User user, Comment comment) {
+		Preconditions.notNull(user, "Given user must be not null");
+		Preconditions.notNull(comment, "Given comment must be not null");
+		
 		CommentLike newCommentLike = CommentLike.of(user, comment);
 		user.getCommentLikes().add(newCommentLike);
 		comment.getCommentLikes().add(newCommentLike);

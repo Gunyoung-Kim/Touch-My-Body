@@ -12,7 +12,7 @@ public final class Preconditions {
 	private Preconditions() {
 		throw new AssertionError();
 	}
-	
+
 	/**
 	 * object가 null 값이 아닌지 확인, null인 경우에는 {@link PreconditionViolationException} 발생
 	 * @param <T> any class

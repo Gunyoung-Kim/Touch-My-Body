@@ -40,6 +40,7 @@ public interface CommentLikeService {
 	 * @param user CommentLike 추가하려는 User
 	 * @param comment CommentLike가 추가되는 Comment
 	 * @return 새로 저장된 CommentLike
+	 * @throws PreconditionViolationException user == null || comment == null
 	 * @author kimgun-yeong
 	 */
 	public CommentLike createAndSaveWithUserAndComment(User user, Comment comment);

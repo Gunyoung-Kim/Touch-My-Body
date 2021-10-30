@@ -2,6 +2,7 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
 import com.gunyoung.tmb.services.domain.like.CommentLikeServiceImpl;
 import com.gunyoung.tmb.testutil.CommentTest;
@@ -133,6 +135,30 @@ class CommentLikeServiceUnitTest {
 	/*
 	 * CommentLike createAndSaveWithUserAndComment(User user, Comment comment) 
 	 */
+	
+	@Test
+	@DisplayName("CommentLike 생성 및 User, Comment 와 연관 관계 추가 후 저장 -> Given user == null")
+	void createAndSaveWithUserAndCommentTestNullUser() {
+		//Given
+		Comment comment = CommentTest.getCommentInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			commentLikeService.createAndSaveWithUserAndComment(null, comment);
+		});
+	}
+	
+	@Test
+	@DisplayName("CommentLike 생성 및 User, Comment 와 연관 관계 추가 후 저장 -> Given comment == null")
+	void createAndSaveWithUserAndCommentTestNullComment() {
+		//Given
+		User user = UserTest.getUserInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			commentLikeService.createAndSaveWithUserAndComment(user, null);
+		});
+	}
 	
 	@Test
 	@DisplayName("CommentLike 생성 및 User, Comment 와 연관 관계 추가 후 저장 -> 정상, 저장 확인")
