@@ -1,4 +1,4 @@
-package com.gunyoung.tmb.controller.rest.unit;
+package com.gunyoung.tmb.controller.unit;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;

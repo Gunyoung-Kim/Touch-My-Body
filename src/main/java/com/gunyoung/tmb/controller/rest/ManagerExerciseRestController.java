@@ -63,13 +63,9 @@ public class ManagerExerciseRestController {
 	@PutMapping(value = "/manager/exercise/modify/{exerciseId}")
 	public void modifyExercise(@PathVariable("exerciseId") Long exerciseId, @ModelAttribute SaveExerciseDTO dto) {
 		Exercise exercise = exerciseService.findWithExerciseMusclesById(exerciseId);
-		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
-		}
 		if(isNameChangedAndDuplicatedWithNamesOfOtherThings(exercise, dto)) {
 			throw new ExerciseNameDuplicationFoundedException(ExerciseErrorCode.EXERCISE_NAME_DUPLICATION_ERROR.getDescription());
 		}
-		
 		exerciseService.saveWithSaveExerciseDTO(exercise, dto);
 	}
 	
@@ -95,7 +91,6 @@ public class ManagerExerciseRestController {
 	@GetMapping(value = "/manager/exercise/getmuscles")
 	public List<MuscleInfoBySortDTO> getMusclesSortByCategory() {
 		Map<String, List<String>> classificationOfMuscleNamesByCategory = muscleService.getAllMusclesWithSortingByCategory();
-		
 		return getListOfMuscleInfoBySortDTOByMapOfMuscleNames(classificationOfMuscleNamesByCategory);
 	}
 	
