@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -27,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.jpa.MuscleNameAndCategoryDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
@@ -72,11 +72,10 @@ class MuscleServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(muscleRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		Muscle result = muscleService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(MuscleNotFoundedException.class, () -> {
+			muscleService.findById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -105,10 +104,9 @@ class MuscleServiceUnitTest {
 		given(muscleRepository.findByName(nonExistName)).willReturn(Optional.empty());
 		
 		//When
-		Muscle result = muscleService.findByName(nonExistName);
-		
-		//Then
-		assertNull(result);
+		assertThrows(MuscleNotFoundedException.class, () -> {
+			muscleService.findByName(nonExistName);
+		});
 	}
 	
 	@Test

@@ -14,7 +14,8 @@ public interface MuscleService {
 	/**
 	 * ID로 Muscle 찾기
 	 * @param id 찾으려는 Muscle의 id
-	 * @return Muscle, Null (해당 id의 Muscle이 없을때)
+	 * @return Muscle
+	 * @throws MuscleNotFoundedException 해당 id의 Muscle이 없을때
 	 * @author kimgun-yeong
 	 */
 	public Muscle findById(Long id);
@@ -22,7 +23,8 @@ public interface MuscleService {
 	/**
 	 * name으로 Muscle 찾기
 	 * @param name 찾으려는 Muscle 이름
-	 * @return Muscle, Null (해당 이름의 Muscle이 없을때)
+	 * @return Muscle
+	 * @throws MuscleNotFoundedException 해당 name의 Muscle이 없을때
 	 * @author kimgun-yeong
 	 */
 	public Muscle findByName(String name);

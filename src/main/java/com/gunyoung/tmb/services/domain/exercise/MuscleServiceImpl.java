@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.jpa.MuscleNameAndCategoryDTO;
+import com.gunyoung.tmb.error.codes.MuscleErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.MuscleRepository;
 
@@ -35,14 +37,14 @@ public class MuscleServiceImpl implements MuscleService {
 	@Transactional(readOnly = true)
 	public Muscle findById(Long id) {
 		Optional<Muscle> result = muscleRepository.findById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
 	public Muscle findByName(String name) {
 		Optional<Muscle> result = muscleRepository.findByName(name);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
@@ -106,9 +108,8 @@ public class MuscleServiceImpl implements MuscleService {
 	@Override
 	@CacheEvict(cacheNames = {MUSCLE_SORT_NAME}, key = "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void deleteById(Long id) {
-		Muscle muscle = findById(id);
-		if(muscle != null)
-			delete(muscle);
+		Optional<Muscle> muscle = muscleRepository.findById(id);
+		muscle.ifPresent(this::delete);
 	}
 
 	@Override
