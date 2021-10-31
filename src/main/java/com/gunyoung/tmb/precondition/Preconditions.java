@@ -22,7 +22,7 @@ public final class Preconditions {
 	 * @return object
 	 * @author kimgun-yeong
 	 */
-	public static <T> T notNull(T object, String message) {
+	public static <T> T notNull(T object, String message) throws PreconditionViolationException {
 		condition(object != null, message);
 		return object;
 	}
@@ -36,7 +36,7 @@ public final class Preconditions {
 	 * @return object
 	 * @author kimgun-yeong
 	 */
-	public static int notLessThanInt(int object, int another, String message) {
+	public static int notLessThanInt(int object, int another, String message) throws PreconditionViolationException {
 		condition(Integer.compare(object, another) >= 0, message);
 		return object;
 	}
@@ -50,7 +50,7 @@ public final class Preconditions {
 	 * @return object
 	 * @author kimgun-yeong
 	 */
-	public static int notMoreThanInt(int object, int another, String message) {
+	public static int notMoreThanInt(int object, int another, String message) throws PreconditionViolationException {
 		condition(Integer.compare(object, another) <= 0, message);
 		return object;
 	}
@@ -66,7 +66,7 @@ public final class Preconditions {
 	 * @return object
 	 * @author kimgun-yeong
 	 */
-	public static <T extends Comparable<T>> T notLessThan(T object, T another, String message) {
+	public static <T extends Comparable<T>> T notLessThan(T object, T another, String message) throws PreconditionViolationException {
 		condition(object.compareTo(another) >= 0, message);
 		return object;
 	}
@@ -82,7 +82,7 @@ public final class Preconditions {
 	 * @return object
 	 * @author kimgun-yeong
 	 */
-	public static <T extends Comparable<T>> T notMoreThan(T object, T another, String message) {
+	public static <T extends Comparable<T>> T notMoreThan(T object, T another, String message) throws PreconditionViolationException {
 		condition(object.compareTo(another) <= 0, message);
 		return object;
 	}
