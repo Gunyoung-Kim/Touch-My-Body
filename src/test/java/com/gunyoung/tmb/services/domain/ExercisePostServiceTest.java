@@ -3,7 +3,7 @@ package com.gunyoung.tmb.services.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
@@ -92,11 +93,10 @@ class ExercisePostServiceTest {
 		//Given
 		long nonExistExercisePostId = ExercisePostTest.getNonExistExercisePostId(exercisePostRepository);
 		
-		//When
-		ExercisePost result = exercisePostService.findById(nonExistExercisePostId+ 1000);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.findById(nonExistExercisePostId+ 1000);
+		});
 	}
 	
 	@Test
@@ -1036,10 +1036,9 @@ class ExercisePostServiceTest {
 		Long nonExistId = ExercisePostTest.getNonExistExercisePostId(exercisePostRepository);
 		
 		//When
-		ExercisePostViewDTO result = exercisePostService.getExercisePostViewDTOWithExercisePostId(nonExistId);
-		
-		//Then
-		assertNull(result);
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.getExercisePostViewDTOWithExercisePostId(nonExistId);
+		});
 	}
 	
 	@Test

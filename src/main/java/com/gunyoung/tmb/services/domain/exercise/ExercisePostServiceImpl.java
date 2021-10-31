@@ -14,6 +14,8 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.services.domain.like.PostLikeService;
@@ -40,21 +42,21 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public ExercisePost findById(Long id) {
 		Optional<ExercisePost> result = exercisePostRepository.findById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public ExercisePost findWithPostLikesById(Long id) {
 		Optional<ExercisePost> result = exercisePostRepository.findWithPostLikesById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public ExercisePost findWithCommentsById(Long id) {
 		Optional<ExercisePost> result = exercisePostRepository.findWithCommentsById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
@@ -142,9 +144,8 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	
 	@Override
 	public void deleteById(Long id) {
-		ExercisePost exercisePost = findById(id);
-		if(exercisePost != null)
-			delete(exercisePost);
+		Optional<ExercisePost> targetExercisePost = exercisePostRepository.findById(id);
+		targetExercisePost.ifPresent(this::delete);
 	}
 	
 	@Override
@@ -219,15 +220,12 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id) {
 		Optional<ExercisePostViewDTO> result = exercisePostRepository.findForExercisePostViewDTOById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription()));
 	}
 
 	@Override
 	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(Long id) {
 		ExercisePost exercisePost = findById(id);
-		if(exercisePost == null)
-			return null;
-		
 		exercisePost.increaseViewNum();
 		save(exercisePost);
 		

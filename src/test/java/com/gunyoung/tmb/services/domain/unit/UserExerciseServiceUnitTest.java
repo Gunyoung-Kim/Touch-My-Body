@@ -125,7 +125,7 @@ class UserExerciseServiceUnitTest {
 	@DisplayName("특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환 -> given month is negative")
 	void findIsDoneDTOByUserIdAndYearAndMonthTestNegativeMonth() {
 		//Given
-		Long userId = Long.valueOf(1);
+		Long userId = Long.valueOf(1); 
 		int year = 1999;
 		int month = -1;
 		

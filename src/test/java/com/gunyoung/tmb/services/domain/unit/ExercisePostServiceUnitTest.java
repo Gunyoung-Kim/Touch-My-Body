@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -29,6 +28,7 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
@@ -81,10 +81,9 @@ class ExercisePostServiceUnitTest {
 		given(exercisePostRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
 		//When
-		ExercisePost result = exercisePostService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.findById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -112,11 +111,10 @@ class ExercisePostServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(exercisePostRepository.findWithPostLikesById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		ExercisePost result = exercisePostService.findWithPostLikesById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.findWithPostLikesById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -144,11 +142,10 @@ class ExercisePostServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(exercisePostRepository.findWithCommentsById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		ExercisePost result = exercisePostService.findWithCommentsById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.findWithCommentsById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -717,11 +714,10 @@ class ExercisePostServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(exercisePostRepository.findForExercisePostViewDTOById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		ExercisePostViewDTO result = exercisePostService.getExercisePostViewDTOWithExercisePostId(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.getExercisePostViewDTOWithExercisePostId(nonExistId);
+		});
 	}
 	
 	@Test
@@ -750,11 +746,10 @@ class ExercisePostServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(exercisePostRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		ExercisePostViewDTO result = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(nonExistId);
+		});
 	}
 	
 	@Test
@@ -765,7 +760,9 @@ class ExercisePostServiceUnitTest {
 		given(exercisePostRepository.findById(nonExistId)).willReturn(Optional.empty());
 				
 		//When
-		exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(nonExistId);
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(nonExistId);
+		});
 		
 		//Then
 		then(exercisePostRepository).should(never()).save(any(ExercisePost.class));
@@ -780,6 +777,9 @@ class ExercisePostServiceUnitTest {
 		
 		Long exercisePostId = Long.valueOf(1);
 		given(exercisePostRepository.findById(exercisePostId)).willReturn(Optional.of(exercisePost));
+		
+		ExercisePostViewDTO dto = ExercisePostTest.getExercisePostViewDTOInstance();
+		given(exercisePostRepository.findForExercisePostViewDTOById(exercisePostId)).willReturn(Optional.of(dto));
 		
 		//When
 		exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(exercisePostId);

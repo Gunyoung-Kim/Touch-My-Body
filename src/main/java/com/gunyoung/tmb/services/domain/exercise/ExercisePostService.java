@@ -8,13 +8,15 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 
 public interface ExercisePostService {
 	
 	/**
 	 * ID로 ExercisePost 찾기
 	 * @param id 찾으려는 ExerciePost id 값
-	 * @return ExercisePost, NUll(해당 id의 ExercisePost가 없을때)
+	 * @return ExercisePost
+	 * @ 해당 id의 ExercisePost가 없을때 
 	 * @author kimgun-yeong
 	 */
 	public ExercisePost findById(Long id);
@@ -22,7 +24,8 @@ public interface ExercisePostService {
 	/**
 	 * ID로 PostLikes 페치조인 후 ExercisePost 반환
 	 * @param id 찾으려는 ExerciePost id 값
-	 * @return ExercisePost, NUll(해당 id의 ExercisePost가 없을때)
+	 * @return ExercisePost
+	 * @ 해당 id의 ExercisePost가 없을때
 	 * @author kimgun-yeong
 	 */
 	public ExercisePost findWithPostLikesById(Long id);
@@ -30,7 +33,8 @@ public interface ExercisePostService {
 	/**
 	 * ID로 Comments 페치 조인후 ExercisePost 반환
 	 * @param id 찾으려는 ExerciePost id 값
-	 * @return ExercisePost, NUll(해당 id의 ExercisePost가 없을때)
+	 * @return ExercisePost
+	 * @ 해당 id의 ExercisePost가 없을때
 	 * @author kimgun-yeong
 	 */
 	public ExercisePost findWithCommentsById(Long id);
@@ -173,8 +177,8 @@ public interface ExercisePostService {
 	/**
 	 * ExercisePost id로 ExercisePost 가져와서 이를 통해 {@link ExercisePostViewDTO} 생성 및 반환
 	 * @param id ExercisePost ID
-	 * @return ExercisePostViewDTO, null(해당 id의 ExercisePost 없을때)
-	 * @since 11
+	 * @return ExercisePostViewDTO
+	 * @ 해당 id의 ExercisePost가 없을때
 	 * @author kimgun-yeong
 	 */
 	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id);
@@ -183,7 +187,8 @@ public interface ExercisePostService {
 	 * ExercisePost id로 ExercisePost 가져와서 이를 통해 {@link ExercisePostViewDTO} 생성 및 반환 <br>
 	 * ExercisePost viewNum(조회수) 증가
 	 * @param id ExercisePost ID
-	 * @return ExercisePostViewDTO, null(해당 id의 ExercisePost 없을때)
+	 * @return ExercisePostViewDTO
+	 * @ 해당 id의 ExercisePost가 없을때
 	 * @author kimgun-yeong
 	 */
 	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(Long id);

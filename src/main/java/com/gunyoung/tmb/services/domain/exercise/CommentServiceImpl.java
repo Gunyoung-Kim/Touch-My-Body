@@ -117,10 +117,8 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	public void deleteById(Long id) {
-		Comment comment = findById(id);
-		if(comment == null) 
-			return;
-		delete(comment);
+		Optional<Comment> targetComment = commentRepository.findById(id);
+		targetComment.ifPresent(this::delete);
 	}
 	
 	@Override

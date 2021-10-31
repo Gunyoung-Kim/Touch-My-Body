@@ -20,7 +20,7 @@ public interface CommentService {
 	 * @throws CommentNotFoundedException 해당 id의 Comment가 없을때 
 	 * @author kimgun-yeong
 	 */
-	public Comment findById(Long id) throws CommentNotFoundedException;
+	public Comment findById(Long id);
 	
 	/**
 	 * ID로 User와 ExercisePost 페치조인 후 Comment 반환
@@ -29,7 +29,7 @@ public interface CommentService {
 	 * @throws CommentNotFoundedException 해당 id의 Comment가 없을때 
 	 * @author kimgun-yeong
 	 */
-	public Comment findWithUserAndExercisePostById(Long id) throws CommentNotFoundedException;
+	public Comment findWithUserAndExercisePostById(Long id);
 	
 	/**
 	 * ID로 CommentLikes 페치조인 후 Comment 반환
@@ -38,7 +38,7 @@ public interface CommentService {
 	 * @throws CommentNotFoundedException 해당 id의 Comment가 없을때 
 	 * @author kimgun-yeong
 	 */
-	public Comment findWithCommentLikesById(Long id) throws CommentNotFoundedException;
+	public Comment findWithCommentLikesById(Long id);
 	
 	/**
 	 * ExercisePost ID를 만족하는 Comment들 반환

@@ -363,9 +363,7 @@ class CommentServiceUnitTest {
 		given(commentRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
 		//When
-		assertThrows(CommentNotFoundedException.class, () -> {
-			commentService.deleteById(nonExistId);
-		});
+		commentService.deleteById(nonExistId);
 		
 		//Then
 		then(commentRepository).should(never()).delete(comment);
