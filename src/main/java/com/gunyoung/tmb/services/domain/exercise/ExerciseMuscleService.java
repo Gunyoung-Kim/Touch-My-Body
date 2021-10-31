@@ -7,14 +7,6 @@ import com.gunyoung.tmb.domain.exercise.ExerciseMuscle;
 public interface ExerciseMuscleService {
 	
 	/**
-	 * ID로 ExerciseMuscle 찾기
-	 * @param id 찾으려는 ExerciseMuscle의 id
-	 * @return ExerciseMuscle, Null(해당 id의 ExerciseMuscle없을때)
-	 * @author kimgun-yeong
-	 */
-	public ExerciseMuscle findById(Long id);
-	
-	/**
 	 * ExerciseMuscle 생성 및 수정
 	 * @param exerciseMuscle 저장하려는 exerciseMuscle
 	 * @return 저장된 ExerciseMuscle

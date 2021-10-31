@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +21,6 @@ import lombok.RequiredArgsConstructor;
 public class ExerciseMuscleServiceImpl implements ExerciseMuscleService {
 	
 	private final ExerciseMuscleRepository exerciseMuscleRepository;
-
-	@Override
-	@Transactional(readOnly=true)
-	public ExerciseMuscle findById(Long id) {
-		Optional<ExerciseMuscle> result = exerciseMuscleRepository.findById(id);
-		return result.orElse(null);
-	}
 
 	@Override
 	public ExerciseMuscle save(ExerciseMuscle exerciseMuscle) {

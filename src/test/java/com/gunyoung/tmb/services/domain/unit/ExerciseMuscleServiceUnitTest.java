@@ -1,14 +1,12 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,38 +41,6 @@ class ExerciseMuscleServiceUnitTest {
 	@BeforeEach
 	void setup() {
 		exerciseMuscle = new ExerciseMuscle();
-	}
-	
-	/*
-	 * ExerciseMuscle findById(Long id)
-	 */
-	
-	@Test
-	@DisplayName("ID로 ExerciseMuscle 찾기 -> 존재하지 않음")
-	void findByIdNonExist() {
-		//Given
-		Long nonExistExerciseMuscleId = Long.valueOf(1);
-		given(exerciseMuscleRepository.findById(nonExistExerciseMuscleId)).willReturn(Optional.empty());
-		
-		//When
-		ExerciseMuscle result = exerciseMuscleService.findById(nonExistExerciseMuscleId);
-		
-		//Then
-		assertNull(result);
-	}
-	
-	@Test
-	@DisplayName("ID로 ExerciseMuscle 찾기 -> 정상")
-	void findByIdTest() {
-		//Given
-		Long exerciseMuscleId = Long.valueOf(1);
-		given(exerciseMuscleRepository.findById(exerciseMuscleId)).willReturn(Optional.of(exerciseMuscle));
-		
-		//When
-		ExerciseMuscle result = exerciseMuscleService.findById(exerciseMuscleId);
-		
-		//Then
-		assertEquals(exerciseMuscle, result);
 	}
 	
 	/*
