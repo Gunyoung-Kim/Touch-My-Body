@@ -1,6 +1,6 @@
 package com.gunyoung.tmb.services.domain.like;
 
-import static com.gunyoung.tmb.utils.CacheConstants.*;
+import static com.gunyoung.tmb.utils.CacheConstants.COMMENT_LIKE_NAME;
 
 import java.util.Optional;
 
@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.error.codes.LikeErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
 
@@ -31,16 +33,9 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	
 	@Override
 	@Transactional(readOnly=true)
-	public CommentLike findById(Long id) {
-		Optional<CommentLike> result = commentLikeRepository.findById(id);
-		return result.orElse(null);
-	}
-	
-	@Override
-	@Transactional(readOnly=true)
 	public CommentLike findByUserIdAndCommentId(Long userId, Long commentId) {
 		Optional<CommentLike> result = commentLikeRepository.findByUserIdAndCommentId(userId, commentId);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new LikeNotFoundedException(LikeErrorCode.LIKE_NOT_FOUNDED_ERROR.getDescription()));
 	}
 
 	@Override
@@ -60,7 +55,6 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 		CommentLike newCommentLike = CommentLike.of(user, comment);
 		user.getCommentLikes().add(newCommentLike);
 		comment.getCommentLikes().add(newCommentLike);
-		
 		return save(newCommentLike);		
 	}
 	

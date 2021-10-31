@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -21,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.PostLikeRepository;
 import com.gunyoung.tmb.services.domain.like.PostLikeServiceImpl;
@@ -52,40 +52,6 @@ class PostLikeServiceUnitTest {
 	}
 	
 	/*
-	 * PostLike findById(Long id)
-	 */
-	
-	@Test
-	@DisplayName("ID로 PostLike 찾기 -> 존재하지 않음")
-	void findByIdNonExist() {
-		//Given
-		Long nonExistId = Long.valueOf(1);
-		
-		given(postLikeRepository.findById(nonExistId)).willReturn(Optional.empty());
-		
-		//When
-		PostLike result = postLikeService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
-	}
-	
-	@Test
-	@DisplayName("ID로 PostLike 찾기 -> 정상")
-	void findByIdTest() {
-		//Given
-		Long postLikeId = Long.valueOf(1);
-		
-		given(postLikeRepository.findById(postLikeId)).willReturn(Optional.of(postLike));
-		
-		//When
-		PostLike result = postLikeService.findById(postLikeId);
-				
-		//Then
-		assertEquals(postLike, result);
-	}
-	
-	/*
 	 * PostLike findByUserIdAndExercisePostId(Long userId, Long exercisePostId)
 	 */
 	
@@ -96,13 +62,12 @@ class PostLikeServiceUnitTest {
 		Long userId = Long.valueOf(1);
 		Long exercisePostId = Long.valueOf(1);
 		
-		given(postLikeRepository.findByUserIdAndExercisePostId(userId,exercisePostId)).willReturn(Optional.empty());
+		given(postLikeRepository.findByUserIdAndExercisePostId(userId, exercisePostId)).willReturn(Optional.empty());
 		
-		//When
-		PostLike result = postLikeService.findByUserIdAndExercisePostId(userId,exercisePostId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(LikeNotFoundedException.class, () -> {
+			postLikeService.findByUserIdAndExercisePostId(userId, exercisePostId);
+		});
 	}
 	
 	@Test
@@ -112,10 +77,10 @@ class PostLikeServiceUnitTest {
 		Long userId = Long.valueOf(1);
 		Long exercisePostId = Long.valueOf(1);
 		
-		given(postLikeRepository.findByUserIdAndExercisePostId(userId,exercisePostId)).willReturn(Optional.of(postLike));
+		given(postLikeRepository.findByUserIdAndExercisePostId(userId, exercisePostId)).willReturn(Optional.of(postLike));
 		
 		//When
-		PostLike result = postLikeService.findByUserIdAndExercisePostId(userId,exercisePostId);
+		PostLike result = postLikeService.findByUserIdAndExercisePostId(userId, exercisePostId);
 				
 		//Then
 		assertEquals(postLike, result);

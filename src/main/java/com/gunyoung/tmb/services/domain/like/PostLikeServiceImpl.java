@@ -1,6 +1,6 @@
 package com.gunyoung.tmb.services.domain.like;
 
-import static com.gunyoung.tmb.utils.CacheConstants.*;
+import static com.gunyoung.tmb.utils.CacheConstants.POST_LIKE_NAME;
 
 import java.util.Optional;
 
@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.error.codes.LikeErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.PostLikeRepository;
 
@@ -30,17 +32,10 @@ public class PostLikeServiceImpl implements PostLikeService {
 	private final PostLikeRepository postLikeRepository;
 
 	@Override
-	@Transactional(readOnly=true)
-	public PostLike findById(Long id) {
-		Optional<PostLike> result = postLikeRepository.findById(id);
-		return result.orElse(null);
-	}
-	
-	@Override
 	@Transactional(readOnly = true)
 	public PostLike findByUserIdAndExercisePostId(Long userId, Long exercisePostId) {
 		Optional<PostLike> result = postLikeRepository.findByUserIdAndExercisePostId(userId, exercisePostId);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new LikeNotFoundedException(LikeErrorCode.LIKE_NOT_FOUNDED_ERROR.getDescription()));
 	}
 
 	@Override
@@ -60,7 +55,6 @@ public class PostLikeServiceImpl implements PostLikeService {
 		PostLike newPostLike = PostLike.of(user, exercisePost);
 		user.getPostLikes().add(newPostLike);
 		exercisePost.getPostLikes().add(newPostLike);
-		
 		return save(newPostLike);
 	}
 

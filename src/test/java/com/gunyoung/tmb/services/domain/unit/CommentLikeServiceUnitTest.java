@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -21,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
 import com.gunyoung.tmb.services.domain.like.CommentLikeServiceImpl;
@@ -51,37 +51,6 @@ class CommentLikeServiceUnitTest {
 	}
 	
 	/*
-	 * CommentLike findById(Long id)
-	 */
-	@Test
-	@DisplayName("ID로 CommentLike찾기 -> 존재하지 않음")
-	void findByIdNonExist() {
-		//Given
-		Long nonExistId = Long.valueOf(1);
-		given(commentLikeRepository.findById(nonExistId)).willReturn(Optional.empty());
-		
-		//When
-		CommentLike result = commentLikeService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
-	}
-	
-	@Test
-	@DisplayName("ID로 CommentLike 찾기 -> 정상")
-	void findByIdTest() {
-		//Given
-		Long existId = Long.valueOf(1);
-		given(commentLikeRepository.findById(existId)).willReturn(Optional.of(commentLike));
-		
-		//When
-		CommentLike result = commentLikeService.findById(existId);
-		
-		//Then
-		assertEquals(commentLike, result);
-	}
-	
-	/*
 	 * CommentLike findByUserIdAndCommentId(Long userId, Long commentId)
 	 */
 	
@@ -93,11 +62,10 @@ class CommentLikeServiceUnitTest {
 		Long commentId = Long.valueOf(1);
 		given(commentLikeRepository.findByUserIdAndCommentId(userId, commentId)).willReturn(Optional.empty());
 		
-		//When
-		CommentLike result = commentLikeService.findByUserIdAndCommentId(userId, commentId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(LikeNotFoundedException.class, () -> {
+			commentLikeService.findByUserIdAndCommentId(userId, commentId);
+		});
 	}
 	
 	@Test

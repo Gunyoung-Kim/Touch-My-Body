@@ -3,7 +3,7 @@ package com.gunyoung.tmb.services.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.UserRepository;
@@ -50,7 +51,6 @@ class CommentLikeServiceTest {
 	
 	private CommentLike commentLike;
 	
-	
 	@BeforeEach
 	void setup() {
 		commentLike = CommentLikeTest.getCommentLikeInstance();
@@ -63,38 +63,6 @@ class CommentLikeServiceTest {
 	}
 	
 	/*
-	 *   Comment findById(Long id)
-	 */
-	
-	@Test
-	@Transactional
-	@DisplayName("id로 commentLike 찾기 -> 해당 id의 commentLike 없음")
-	void findByIdNonExist() {
-		//Given
-		Long nonExistCommentLikeId = CommentLikeTest.getNonExistCommentLikeId(commentLikeRepository);
-		
-		//When
-		CommentLike result = commentLikeService.findById(nonExistCommentLikeId);
-		
-		//Then
-		assertNull(result);
-	}
-	
-	@Test
-	@Transactional
-	@DisplayName("id로 commentLike 찾기 -> 정상")
-	void findByIdTest() {
-		//Given
-		Long existCommentLikeId = commentLike.getId();
-		
-		//When
-		CommentLike result = commentLikeService.findById(existCommentLikeId);
-		
-		//Then
-		assertNotNull(result);
-	}
-	
-	/*
 	 *  CommentLike findByUserIdAndCommentId(Long userId, Long commentId)
 	 */
 	@Test
@@ -104,15 +72,16 @@ class CommentLikeServiceTest {
 		//Given
 		User user = UserTest.getUserInstance();
 		userRepository.save(user);
+		Long userId = user.getId();
 		
 		Comment comment = CommentTest.getCommentInstance();
 		commentRepository.save(comment);
+		Long commentId = comment.getId();
 		
-		//When
-		CommentLike result = commentLikeService.findByUserIdAndCommentId(user.getId(), comment.getId());
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(LikeNotFoundedException.class, () -> {
+			commentLikeService.findByUserIdAndCommentId(userId, commentId);
+		});
 	}
 	
 	@Test
@@ -150,7 +119,7 @@ class CommentLikeServiceTest {
 	@Test
 	@Transactional
 	@DisplayName("commentLike 수정하기 -> 정상")
-	void mergerTest() {
+	void mergeTest() {
 		//Given
 		
 		//When
