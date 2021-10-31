@@ -2,7 +2,6 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -25,6 +24,7 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
+import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
@@ -92,11 +92,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -126,11 +125,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findByEmail(nonExistEmail)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findByEmail(nonExistEmail);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findByEmail(nonExistEmail);
+		});
 	}
 	
 	@Test
@@ -160,11 +158,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findWithUserExercisesById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findWithUserExerciseById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findWithUserExerciseById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -194,11 +191,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findWithFeedbacksById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findWithFeedbacksById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findWithFeedbacksById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -228,11 +224,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findWithPostLikesById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findWithPostLikesById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findWithPostLikesById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -262,11 +257,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findWithCommentLikesById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findWithCommentLikesById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findWithCommentLikesById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -297,10 +291,9 @@ class UserServiceUnitTest {
 		given(userRepository.findWithExercisePostsById(nonExistId)).willReturn(Optional.empty());
 		
 		//When
-		User result = userService.findWithExercisePostsById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findWithExercisePostsById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -330,11 +323,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findWithCommentsById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findWithCommentsById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findWithCommentsById(nonExistId);
+		});
 	}
 	
 	@Test

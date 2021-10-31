@@ -12,6 +12,8 @@ import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
+import com.gunyoung.tmb.error.codes.UserErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
@@ -50,56 +52,56 @@ public class UserServiceImpl implements UserService{
 	@Transactional(readOnly=true)
 	public User findById(Long id) {
 		Optional<User> result = userRepository.findById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public User findByEmail(String email) {
 		Optional<User> result = userRepository.findByEmail(email);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithUserExerciseById(Long id) {
 		Optional<User> result = userRepository.findWithUserExercisesById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithFeedbacksById(Long id) {
 		Optional<User> result = userRepository.findWithFeedbacksById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithPostLikesById(Long id) {
 		Optional<User> result = userRepository.findWithPostLikesById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithCommentLikesById(Long id) {
 		Optional<User> result = userRepository.findWithCommentLikesById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithExercisePostsById(Long id) {
 		Optional<User> result = userRepository.findWithExercisePostsById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithCommentsById(Long id) {
 		Optional<User> result = userRepository.findWithCommentsById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override

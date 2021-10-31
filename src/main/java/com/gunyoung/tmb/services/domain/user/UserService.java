@@ -18,7 +18,8 @@ public interface UserService {
 	/**
 	 * ID로 User 찾기
 	 * @param id 찾으려는 유저의 id
-	 * @return User, null(해당 id의 유저가 존재하지 않을때)
+	 * @return User
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findById(Long id);
@@ -26,7 +27,8 @@ public interface UserService {
 	/**
 	 * email로 User 찾기
 	 * @param email 찾으려는 유저의 email
-	 * @return User, null(해당 email의 유저가 존재하지 않을때)
+	 * @return User
+	 * @throws UserNotFoundedException 해당 email의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findByEmail(String email);
@@ -34,6 +36,7 @@ public interface UserService {
 	/**
 	 * UserExercises 페치 조인해서 가져오는 메소드 
 	 * @param id User의 ID
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findWithUserExerciseById(Long id);
@@ -41,6 +44,7 @@ public interface UserService {
 	/**
 	 * Feedbacks 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findWithFeedbacksById(Long id);
@@ -48,6 +52,7 @@ public interface UserService {
 	/**
 	 * PostLikes 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findWithPostLikesById(Long id);
@@ -55,6 +60,7 @@ public interface UserService {
 	/**
 	 * CommentLikes 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findWithCommentLikesById(Long id);
@@ -62,6 +68,7 @@ public interface UserService {
 	/**
 	 * ExercisePosts 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findWithExercisePostsById(Long id);
@@ -69,6 +76,7 @@ public interface UserService {
 	/**
 	 * Comments 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findWithCommentsById(Long id);

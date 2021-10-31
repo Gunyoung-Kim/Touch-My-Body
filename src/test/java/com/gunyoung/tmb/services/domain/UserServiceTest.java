@@ -3,7 +3,7 @@ package com.gunyoung.tmb.services.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.persistence.EntityManager;
@@ -26,6 +26,7 @@ import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
+import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
@@ -103,11 +104,10 @@ class UserServiceTest {
 		//Given
 		long nonExistUserId = UserTest.getNonExistUserId(userRepository);
 		
-		//When
-		User result = userService.findById(nonExistUserId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findById(nonExistUserId);
+		});
 	}
 	
 	@Test
@@ -133,11 +133,10 @@ class UserServiceTest {
 		//Given
 		String nonExistEmail = "nonexist@test.com";
 		
-		//When
-		User result = userService.findByEmail(nonExistEmail);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findByEmail(nonExistEmail);
+		});
 	}
 	
 	@Test
