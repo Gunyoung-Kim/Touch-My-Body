@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,40 +47,6 @@ class UserExerciseServiceUnitTest {
 	void setup() {
 		userExercise = UserExercise.builder()
 				.build();
-	}
-	
-	/*
-	 * UserExercise findById(Long id)
-	 */
-	
-	@Test
-	@DisplayName("ID로 UserExercise 찾기 -> 존재하지 않음")
-	void findByIdNonExist() {
-		//Given
-		Long nonExistId = Long.valueOf(1);
-		
-		given(userExerciseRepository.findById(nonExistId)).willReturn(Optional.empty());
-		
-		//When
-		UserExercise result = userExerciseService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
-	}
-	
-	@Test
-	@DisplayName("ID로 UserExercise 찾기 -> 정상")
-	void findByIdTest() {
-		//Given
-		Long userExerciseId = Long.valueOf(1);
-		
-		given(userExerciseRepository.findById(userExerciseId)).willReturn(Optional.of(userExercise));
-		
-		//When
-		UserExercise result = userExerciseService.findById(userExerciseId);
-		
-		//Then
-		assertEquals(userExercise, result);
 	}
 	
 	/*

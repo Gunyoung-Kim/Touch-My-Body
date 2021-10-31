@@ -3,7 +3,6 @@ package com.gunyoung.tmb.services.domain.user;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,13 +26,6 @@ import lombok.RequiredArgsConstructor;
 public class UserExerciseServiceImpl implements UserExerciseService {
 
 	private final UserExerciseRepository userExerciseRepository;
-	
-	@Override
-	@Transactional(readOnly=true)
-	public UserExercise findById(Long id) {
-		Optional<UserExercise> result = userExerciseRepository.findById(id);
-		return result.orElse(null);
-	}
 	
 	@Override
 	@Transactional(readOnly=true)

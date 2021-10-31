@@ -9,15 +9,6 @@ import com.gunyoung.tmb.dto.response.UserExerciseIsDoneDTO;
 public interface UserExerciseService {
 	
 	/**
-	 * ID로 UserExercise 찾기
-	 * @param id 찾으려는 UserExercise의 id값
-	 * @return UserExercise, null(해당 id의 UserExercise 없을때)
-	 * @since 11
-	 * @author kimgun-yeong
-	 */
-	public UserExercise findById(Long id);
-	
-	/**
 	 * User Id, UserExercise date 로 UserExercise들 찾기
 	 * @param userId 운동기록의 주인 Id
 	 * @param date 찾으려는 날짜
