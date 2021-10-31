@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -27,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentServiceImpl;
@@ -73,11 +73,10 @@ class CommentServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(commentRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		Comment result = commentService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(CommentNotFoundedException.class, () -> {
+			commentService.findById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -105,11 +104,10 @@ class CommentServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(commentRepository.findWithUserAndExercisePostById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		Comment result = commentService.findWithUserAndExercisePostById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(CommentNotFoundedException.class, () -> {
+			commentService.findWithUserAndExercisePostById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -137,11 +135,10 @@ class CommentServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(commentRepository.findWithCommentLikesById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		Comment result = commentService.findWithCommentLikesById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(CommentNotFoundedException.class, () -> {
+			commentService.findWithCommentLikesById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -366,7 +363,9 @@ class CommentServiceUnitTest {
 		given(commentRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
 		//When
-		commentService.deleteById(nonExistId);
+		assertThrows(CommentNotFoundedException.class, () -> {
+			commentService.deleteById(nonExistId);
+		});
 		
 		//Then
 		then(commentRepository).should(never()).delete(comment);

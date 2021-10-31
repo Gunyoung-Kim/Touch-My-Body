@@ -8,32 +8,37 @@ import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
+import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 
 public interface CommentService {
 	
 	/**
 	 * ID로 Comment 찾기
 	 * @param id 찾으려는 Comment의 id
-	 * @return Comment, Null(해당 id의 Comment가 없을때)
+	 * @return Comment
+	 * @throws CommentNotFoundedException 해당 id의 Comment가 없을때 
 	 * @author kimgun-yeong
 	 */
-	public Comment findById(Long id);
+	public Comment findById(Long id) throws CommentNotFoundedException;
 	
 	/**
 	 * ID로 User와 ExercisePost 페치조인 후 Comment 반환
 	 * @param id 찾으려는 Comment의 id
-	 * @return Comment, Null(해당 id의 Comment가 없을때)
+	 * @return Comment
+	 * @throws CommentNotFoundedException 해당 id의 Comment가 없을때 
 	 * @author kimgun-yeong
 	 */
-	public Comment findWithUserAndExercisePostById(Long id);
+	public Comment findWithUserAndExercisePostById(Long id) throws CommentNotFoundedException;
 	
 	/**
 	 * ID로 CommentLikes 페치조인 후 Comment 반환
 	 * @param id 찾으려는 Comment의 id
-	 * @return Comment, Null(해당 id의 Comment가 없을때)
+	 * @return Comment
+	 * @throws CommentNotFoundedException 해당 id의 Comment가 없을때 
 	 * @author kimgun-yeong
 	 */
-	public Comment findWithCommentLikesById(Long id);
+	public Comment findWithCommentLikesById(Long id) throws CommentNotFoundedException;
 	
 	/**
 	 * ExercisePost ID를 만족하는 Comment들 반환

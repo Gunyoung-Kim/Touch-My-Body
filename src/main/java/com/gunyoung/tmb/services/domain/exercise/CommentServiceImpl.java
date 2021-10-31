@@ -12,6 +12,8 @@ import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
+import com.gunyoung.tmb.error.codes.CommentErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.services.domain.like.CommentLikeService;
@@ -36,21 +38,21 @@ public class CommentServiceImpl implements CommentService {
 	@Transactional(readOnly=true)
 	public Comment findById(Long id) {
 		Optional<Comment> result = commentRepository.findById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new CommentNotFoundedException(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Comment findWithUserAndExercisePostById(Long id) {
 		Optional<Comment> result = commentRepository.findWithUserAndExercisePostById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new CommentNotFoundedException(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Comment findWithCommentLikesById(Long id) {
 		Optional<Comment> result = commentRepository.findWithCommentLikesById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new CommentNotFoundedException(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
