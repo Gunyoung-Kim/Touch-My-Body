@@ -17,7 +17,8 @@ public interface ExerciseService {
 	/**
 	 * ID로 Exercise 찾기
 	 * @param id 찾으려는 Exercise의 id
-	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
+	 * @return Exercise
+	 * @throws ExerciseNotFoundedException 해당 id의 Exercise가 없을때 
 	 * @author kimgun-yeong
 	 */
 	public Exercise findById(Long id);
@@ -25,7 +26,8 @@ public interface ExerciseService {
 	/**
 	 * name으로 Exercise 찾기
 	 * @param name 찾으려는 Exercise의 이름
-	 * @return Exercise, Null(해당 name의 Exercise가 없을때)
+	 * @return Exercise
+	 * @throws ExerciseNotFoundedException 해당 name의 Exercise가 없을때
 	 * @author kimgun-yeong
 	 */
 	public Exercise findByName(String name);
@@ -33,7 +35,8 @@ public interface ExerciseService {
 	/**
 	 * ID 로 Feedbacks 페치 조인 후 반환 
 	 * @param id 찾으려는 Exercise의 id
-	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
+	 * @return Exercise
+	 * @throws ExerciseNotFoundedException 해당 id의 Exercise가 없을때
 	 * @author kimgun-yeong
 	 */
 	public Exercise findWithFeedbacksById(Long id);
@@ -41,7 +44,8 @@ public interface ExerciseService {
 	/**
 	 * ID로 ExercisePosts 페치 조인 후 반환
 	 * @param id 찾으려는 Exercise의 id
-	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
+	 * @return Exercise
+	 * @throws ExerciseNotFoundedException 해당 name의 Exercise가 없을때
 	 * @author kimgun-yeong
 	 */
 	public Exercise findWithExercisePostsByName(String name);
@@ -49,8 +53,8 @@ public interface ExerciseService {
 	/**
 	 * ID로 ExerciseMuscles 페치 조인 후 반환
 	 * @param id 찾으려는 Exercise의 id
-	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
- 
+	 * @return Exercise
+	 * @throws ExerciseNotFoundedException 해당 id의 Exercise가 없을때
 	 * @author kimgun-yeong
 	 */
 	public Exercise findWithExerciseMusclesById(Long id);
@@ -130,7 +134,8 @@ public interface ExerciseService {
 	/**
 	 * Exercise Id로 찾은 Exercise로 {@link ExerciseForInfoViewDTO} 생성 및 반환 
 	 * @param exerciseId 찾으려는 Exercise의 ID
-	 * @return {@link ExerciseForInfoViewDTO}, null(해당 id의 Exercise 없을때)
+	 * @return {@link ExerciseForInfoViewDTO}
+	 * @throws ExerciseNotFoundedException 해당 id의 Exercise가 없을때
 	 * @author kimgun-yeong
 	 */
 	public ExerciseForInfoViewDTO getExerciseForInfoViewDTOByExerciseId(Long exerciseId);

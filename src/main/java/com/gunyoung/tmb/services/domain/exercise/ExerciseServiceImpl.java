@@ -22,7 +22,9 @@ import com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO;
 import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.ExerciseRepository;
@@ -57,35 +59,35 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Transactional(readOnly=true)
 	public Exercise findById(Long id) {
 		Optional<Exercise> result = exerciseRepository.findById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findByName(String name) {
 		Optional<Exercise> result = exerciseRepository.findByName(name);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findWithFeedbacksById(Long id) {
 		Optional<Exercise> result = exerciseRepository.findWithFeedbacksById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findWithExercisePostsByName(String name) {
 		Optional<Exercise> result = exerciseRepository.findWithExercisePostsByName(name);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findWithExerciseMusclesById(Long id) {
 		Optional<Exercise> result = exerciseRepository.findWithExerciseMusclesById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
@@ -183,9 +185,8 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Override
 	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void deleteById(Long id) {
-		Exercise exercise = findById(id);
-		if(exercise != null)
-			delete(exercise);
+		Optional<Exercise> exercise = exerciseRepository.findById(id);
+		exercise.ifPresent(this::delete);
 	}
 
 	@Override
@@ -221,8 +222,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Transactional(readOnly=true)
 	public ExerciseForInfoViewDTO getExerciseForInfoViewDTOByExerciseId(Long exerciseId) {
 		Exercise exercise = findWithExerciseMusclesById(exerciseId);
-		if(exercise == null)
-			return null;
 		return ExerciseForInfoViewDTO.of(exercise);
 	}
 

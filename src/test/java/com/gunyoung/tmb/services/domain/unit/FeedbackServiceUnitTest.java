@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -24,6 +23,7 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
+import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackServiceImpl;
@@ -64,11 +64,10 @@ class FeedbackServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(feedbackRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		Feedback result = feedbackService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(FeedbackNotFoundedException.class, () -> {
+			feedbackService.findById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -96,11 +95,10 @@ class FeedbackServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(feedbackRepository.findForFeedbackViewDTOById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		FeedbackViewDTO result = feedbackService.findForFeedbackViewDTOById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(FeedbackNotFoundedException.class, () -> {
+			feedbackService.findForFeedbackViewDTOById(nonExistId);
+		});
 	}
 	
 	@Test

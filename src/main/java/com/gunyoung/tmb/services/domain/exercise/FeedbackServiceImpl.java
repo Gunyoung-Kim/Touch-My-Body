@@ -12,6 +12,8 @@ import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
 import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
+import com.gunyoung.tmb.error.codes.FeedbackErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 
@@ -33,14 +35,14 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Transactional(readOnly=true)
 	public Feedback findById(Long id) {
 		Optional<Feedback> result = feedbackRepository.findById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new FeedbackNotFoundedException(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public FeedbackViewDTO findForFeedbackViewDTOById(Long id) {
 		Optional<FeedbackViewDTO> result = feedbackRepository.findForFeedbackViewDTOById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new FeedbackNotFoundedException(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
@@ -78,7 +80,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 		
 		addRelationBetweenFeedbackAndUser(feedback, user);
 		addRelationBetweenFeedbackAndExercise(feedback, exercise);
-
 		return save(feedback);
 	}
 	

@@ -2,7 +2,6 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -34,6 +33,7 @@ import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
@@ -101,11 +101,10 @@ class ExerciseServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(exerciseRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		Exercise result = exerciseService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -132,11 +131,10 @@ class ExerciseServiceUnitTest {
 		String nonExistName = "nonExist";
 		given(exerciseRepository.findByName(nonExistName)).willReturn(Optional.empty());
 		
-		//When
-		Exercise result = exerciseService.findByName(nonExistName);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findByName(nonExistName);
+		});
 	}
 	
 	@Test
@@ -163,11 +161,10 @@ class ExerciseServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(exerciseRepository.findWithFeedbacksById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		Exercise result = exerciseService.findWithFeedbacksById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findWithFeedbacksById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -194,11 +191,10 @@ class ExerciseServiceUnitTest {
 		String nonExistName = "nonExist";
 		given(exerciseRepository.findWithExercisePostsByName(nonExistName)).willReturn(Optional.empty());
 		
-		//When
-		Exercise result = exerciseService.findWithExercisePostsByName(nonExistName);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findWithExercisePostsByName(nonExistName);
+		});
 	}
 	
 	@Test
@@ -226,10 +222,9 @@ class ExerciseServiceUnitTest {
 		given(exerciseRepository.findWithExerciseMusclesById(nonExistId)).willReturn(Optional.empty());
 		
 		//When
-		Exercise result = exerciseService.findWithExerciseMusclesById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findWithExerciseMusclesById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -646,10 +641,9 @@ class ExerciseServiceUnitTest {
 		given(exerciseRepository.findWithExerciseMusclesById(nonExistId)).willReturn(Optional.empty());
 		
 		//When
-		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistId);
-		
-		//Then
-		assertNull(result);
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistId);
+		});
 	}
 	
 	@Test

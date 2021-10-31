@@ -13,8 +13,8 @@ public interface FeedbackService {
 	/**
 	 * ID로 Feedback 찾기
 	 * @param id 찾으려는 Feedback 의 id
-	 * @return Feedback, Null(해당 id의 Feedback이 없으면)
-	 * @since 11
+	 * @return Feedback
+	 * @throws FeedbackNotFoundedException 해당 id의 Feedback이 없으면 
 	 * @author kimgun-yeong
 	 */
 	public Feedback findById(Long id);
@@ -22,8 +22,8 @@ public interface FeedbackService {
 	/**
 	 * ID로 Feedback 찾고 {@link FeedbackViewDTO} 생성 후 반환
 	 * @param id 찾으려는 Feedback 의 id
-	 * @return {@link FeedbackViewDTO}, null (해당 ID의 Feedback 없을때)
-	 * @since 11
+	 * @return {@link FeedbackViewDTO}
+	 * @throws FeedbackNotFoundedException 해당 id의 Feedback이 없으면
 	 * @author kimgun-yeong
 	 */
 	public FeedbackViewDTO findForFeedbackViewDTOById(Long id);

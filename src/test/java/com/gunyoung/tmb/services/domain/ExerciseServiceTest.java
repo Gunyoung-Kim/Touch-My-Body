@@ -3,7 +3,6 @@ package com.gunyoung.tmb.services.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
@@ -100,11 +100,10 @@ class ExerciseServiceTest {
 		//Given
 		long nonExistExerciseId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
-		//When
-		Exercise result = exerciseService.findById(nonExistExerciseId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findById(nonExistExerciseId);
+		});
 	}
 	
 	@Test
@@ -130,11 +129,10 @@ class ExerciseServiceTest {
 		//Given
 		String nonExistName = "None";
 		
-		//When
-		Exercise result = exerciseService.findByName(nonExistName);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findByName(nonExistName);
+		});
 	}
 	
 	@Test
@@ -724,11 +722,10 @@ class ExerciseServiceTest {
 		//Given
 		Long nonExistId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
-		//When
-		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistId);
+		});
 	}
 	
 	@Test
