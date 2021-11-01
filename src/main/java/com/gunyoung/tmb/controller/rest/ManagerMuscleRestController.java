@@ -39,15 +39,15 @@ public class ManagerMuscleRestController {
 	@PutMapping(value="/manager/muscle/modify/{muscleId}")
 	public void modifyMuscle(@PathVariable("muscleId") Long muscleId, @ModelAttribute SaveMuscleDTO dto) {
 		Muscle muscle = muscleService.findById(muscleId);
-		if(muscle == null) {
-			throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
-		}
-		if(!muscle.getName().equals(dto.getName()) && muscleService.existsByName(dto.getName())) {
+		if(isMuscleNameChangedToAlreadyExistName(muscle, dto)) {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
 		}
 		muscle = SaveMuscleDTO.updateMuscleBySaveMuscleDTO(muscle, dto);
-		
 		muscleService.save(muscle);
+	}
+	
+	private boolean isMuscleNameChangedToAlreadyExistName(Muscle muscle, SaveMuscleDTO dto) {
+		return !muscle.getName().equals(dto.getName()) && muscleService.existsByName(dto.getName());
 	}
 	
 	

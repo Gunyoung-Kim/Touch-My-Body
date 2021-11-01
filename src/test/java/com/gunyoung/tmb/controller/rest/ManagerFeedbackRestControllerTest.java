@@ -1,6 +1,7 @@
 package com.gunyoung.tmb.controller.rest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,7 +58,7 @@ class ManagerFeedbackRestControllerTest {
 		//Then
 				.andExpect(status().isNoContent());
 		
-		assertEquals(false,feedbackRepository.findById(feedback.getId()).get().isReflected());
+		assertFalse(feedbackRepository.findById(feedback.getId()).get().isReflected());
 	}
 	
 	@WithMockUser(roles= {"MANAGER"})

@@ -43,9 +43,7 @@ public class UserExcerciseRestController {
 	@LoginIdSessionNotNull
 	public List<UserExerciseWithDateDTO> getExerciseRecords(@ModelAttribute DateDTO date) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
-		
 		Calendar paramDate = new GregorianCalendar(date.getYear(),date.getMonth(),date.getDate());
-		
 		List<UserExercise> userExerciseList = userExerciseService.findByUserIdAndDate(loginUserId, paramDate);
 		
 		return UserExerciseWithDateDTO.of(userExerciseList);

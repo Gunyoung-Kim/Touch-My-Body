@@ -48,14 +48,10 @@ public class ManagerUserRestController {
 	@PutMapping(value="/manager/usermanage/{userId}")
 	public void manageUserProfile(@PathVariable("userId") Long userId, @ModelAttribute UserProfileForManagerDTO dto) {
 		User user = userService.findById(userId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
 		if(!authorityService.isSessionUserAuthorityCanAccessToTargetAuthority(user)) {
 			throw new AccessDeniedException(UserErrorCode.ACESS_DENIED_ERROR.getDescription());
 		}
 		UserProfileForManagerDTO.mergeUserWithUserProfileForManagerDTO(user, dto);
-		
 		userService.save(user);
 	}
 	

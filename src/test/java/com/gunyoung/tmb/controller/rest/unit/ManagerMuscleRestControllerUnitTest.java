@@ -17,6 +17,7 @@ import com.gunyoung.tmb.controller.rest.ManagerMuscleRestController;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.reqeust.SaveMuscleDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.MuscleNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
@@ -49,7 +50,7 @@ class ManagerMuscleRestControllerUnitTest {
 	void modifyMuscleMuscleNonExist() {
 		//Given
 		Long nonExistMuscleId = Long.valueOf(1);
-		given(muscleService.findById(nonExistMuscleId)).willReturn(null);
+		given(muscleService.findById(nonExistMuscleId)).willThrow(new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription()));
 		
 		SaveMuscleDTO saveMuscleDTO = MuscleTest.getSaveMuscleDTOInstance("changedMuscle", TargetType.ARM.getKoreanName());
 		
