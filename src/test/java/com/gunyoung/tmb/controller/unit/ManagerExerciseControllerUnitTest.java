@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.gunyoung.tmb.controller.ManagerExerciseController;
 import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Exercise;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.testutil.ExerciseTest;
@@ -131,8 +132,8 @@ class ManagerExerciseControllerUnitTest {
 	@DisplayName("Exercise 정보 수정 화면 반환 -> 해당 Id 의 Exercise 없으면")
 	void modifyExerciseViewExerciseNonExist() {
 		//Given
-		Long nonExistExerciseId = Long.valueOf(25);
-		given(exerciseService.findWithExerciseMusclesById(nonExistExerciseId)).willReturn(null);
+		Long nonExistExerciseId = Long.valueOf(24);
+		given(exerciseService.findWithExerciseMusclesById(nonExistExerciseId)).willThrow(new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(ExerciseNotFoundedException.class , () -> {

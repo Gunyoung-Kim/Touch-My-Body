@@ -24,6 +24,8 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.reqeust.SaveFeedbackDTO;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
+import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
@@ -76,7 +78,7 @@ class FeedbackControllerUnitTest {
 	void addFeedbackViewExerciseNonExist() {
 		//Given
 		Long nonExistExerciseId = Long.valueOf(66);
-		given(exerciseService.findById(nonExistExerciseId)).willReturn(null);
+		given(exerciseService.findById(nonExistExerciseId)).willThrow(new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(ExerciseNotFoundedException.class, () -> {
@@ -116,7 +118,7 @@ class FeedbackControllerUnitTest {
 		//Given
 		Long nonExistUserId = Long.valueOf(73);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
-		given(userService.findWithFeedbacksById(nonExistUserId)).willReturn(null);
+		given(userService.findWithFeedbacksById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 		
 		Long exerciseId = Long.valueOf(34);
 		//When, Then
@@ -134,7 +136,7 @@ class FeedbackControllerUnitTest {
 		stubbingUserServiceFindWithFeedbacksById(loginIdInSession);
 		
 		Long nonExistExerciseId = Long.valueOf(152);
-		given(exerciseService.findWithFeedbacksById(nonExistExerciseId)).willReturn(null);
+		given(exerciseService.findWithFeedbacksById(nonExistExerciseId)).willThrow(new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(ExerciseNotFoundedException.class, () -> {

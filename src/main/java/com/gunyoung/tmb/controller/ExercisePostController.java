@@ -27,10 +27,7 @@ import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
-import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
-import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
-import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
@@ -110,8 +107,8 @@ public class ExercisePostController {
 	 * @author kimgun-yeong
 	 */
 	@GetMapping(value="/community/{target}")
-	public ModelAndView exercisePostViewWithTarget(@RequestParam(value="page", required = false,defaultValue="1") Integer page
-			, @RequestParam(value="keyword",required=false)String keyword, ModelAndPageView mav, @PathVariable("target") String targetName) {
+	public ModelAndView exercisePostViewWithTarget(@RequestParam(value = "page", required = false,defaultValue = "1") Integer page
+			, @RequestParam(value = "keyword",required = false)String keyword, ModelAndPageView mav, @PathVariable("target") String targetName) {
 		TargetType type;
 		try {
 			type = TargetType.valueOf(targetName);
@@ -157,10 +154,6 @@ public class ExercisePostController {
 	@GetMapping(value="/community/post/{post_id}")
 	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId, ModelAndView mav) {
 		ExercisePostViewDTO postViewDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(postId);
-		if(postViewDTO == null) {
-			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		List<CommentForPostViewDTO> commentsInPost = commentService.getCommentForPostViewDTOsByExercisePostId(postId);
 		
 		mav.addObject("exercisePost",postViewDTO);
@@ -194,15 +187,7 @@ public class ExercisePostController {
 	public ModelAndView addExercisePost(@ModelAttribute SaveExercisePostDTO dto, ModelAndView mav) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findWithExercisePostsById(loginUserId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		Exercise exercise = exerciseService.findWithExercisePostsByName(dto.getExerciseName());
-		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		ExercisePost exercisePost = dto.createExercisePost();
 		
 		exercisePostService.saveWithUserAndExercise(exercisePost, user, exercise);
@@ -224,15 +209,8 @@ public class ExercisePostController {
 			@RequestParam("isAnonymous") boolean isAnonymous, HttpServletRequest request) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findWithCommentsById(loginUserId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		ExercisePost exercisePost = exercisePostService.findWithCommentsById(postId);
-		if(exercisePost == null) {
-			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
-		}
-		 
+ 
 		String writerIp = HttpRequestUtil.getRemoteHost(request);
 		Comment newComment = SaveCommentDTO.toComment(dto, writerIp);
 		newComment.setAnonymous(isAnonymous);

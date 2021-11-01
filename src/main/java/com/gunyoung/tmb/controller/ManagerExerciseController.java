@@ -4,9 +4,8 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,7 +15,6 @@ import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForTableDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
-import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 
@@ -41,7 +39,7 @@ public class ManagerExerciseController {
 	 * @param keyword Exercise Name 검색 키워드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/exercise",method= RequestMethod.GET)
+	@GetMapping(value="/manager/exercise")
 	public ModelAndView exerciseViewForManager(@RequestParam(value="page" , required=false,defaultValue="1") Integer page,
 			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
 		Page<Exercise> pageResult = getPageResultForExerciseListViewForManager(keyword, page);
@@ -66,16 +64,16 @@ public class ManagerExerciseController {
 	
 	private long getTotalPageNumForExerciseListViewForManager(String keyword) {
 		if(keyword == null) {
-			return exerciseService.countAll()/EXERCISE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE +1;
+			return exerciseService.countAll()/EXERCISE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE + 1;
 		}
-		return exerciseService.countAllWithNameKeyword(keyword)/EXERCISE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE +1;
+		return exerciseService.countAllWithNameKeyword(keyword)/EXERCISE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE + 1;
 	}
 	
 	/**
 	 * Exercise 추가하는 화면 반환하는 메소드
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/exercise/add",method = RequestMethod.GET)
+	@GetMapping(value="/manager/exercise/add")
 	public ModelAndView addExerciseView(ModelAndView mav) {
 		List<String> koreanNamesForAllTargetType = TargetType.getKoreanNamesForAllTargetType();
 		
@@ -92,13 +90,9 @@ public class ManagerExerciseController {
 	 * @throws ExerciseNotFoundedException 해당 Id 의 Exercise 없으면
 	 * @author kimgun-yeong
 	 */
-	@RequestMapping(value="/manager/exercise/modify/{exerciseId}", method = RequestMethod.GET) 
+	@GetMapping(value="/manager/exercise/modify/{exerciseId}") 
 	public ModelAndView modifyExerciseView(@PathVariable("exerciseId") Long exerciseId, ModelAndView mav)  {
 		Exercise exercise = exerciseService.findWithExerciseMusclesById(exerciseId);
-		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		SaveExerciseDTO addExerciseDTO = SaveExerciseDTO.of(exercise); 
 
 		List<String> koreanNamesForAllTargetType = TargetType.getKoreanNamesForAllTargetType();
