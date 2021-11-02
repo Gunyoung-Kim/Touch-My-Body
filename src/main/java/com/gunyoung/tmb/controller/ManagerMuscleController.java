@@ -43,8 +43,8 @@ public class ManagerMuscleController {
 	 * @param keyword Muscle Name 검색 키워드 
 	 * @author kimgun-yeong
 	 */
-	@GetMapping(value="/manager/muscle")
-	public ModelAndView muscleViewForManager(@RequestParam(value="page", required=false, defaultValue="1") int page, @RequestParam(value="keyword", required=false) String keyword,
+	@GetMapping(value = "/manager/muscle")
+	public ModelAndView muscleViewForManager(@RequestParam(value = "page", required = false, defaultValue = "1") int page, @RequestParam(value = "keyword", required = false) String keyword,
 			ModelAndPageView mav) {
 		Page<Muscle> pageResult = getPageResultForMuscleViewForManager(keyword, page);
 		long totalPageNum = getTotalPageNumForMuscleViewForManager(keyword);
@@ -77,7 +77,7 @@ public class ManagerMuscleController {
 	 * 근육 추가 화면 반환하는 메소드 
 	 * @author kimgun-yeong
 	 */
-	@GetMapping(value="/manager/muscle/add")
+	@GetMapping(value = "/manager/muscle/add")
 	public ModelAndView addMuscleView(ModelAndView mav) {
 		List<String> koreanNamesForAllTargetType = TargetType.getKoreanNamesForAllTargetType();
 		
@@ -95,7 +95,7 @@ public class ManagerMuscleController {
 	 * @throws TargetTypeNotFoundedException 추가하려는 Muscle의 category와 일치하는 TargetType 없으면
 	 * @author kimgun-yeong
 	 */
-	@PostMapping(value="/manager/muscle/add")
+	@PostMapping(value = "/manager/muscle/add")
 	public ModelAndView addMuscle(@ModelAttribute SaveMuscleDTO dto) {
 		if(muscleService.existsByName(dto.getName())) {
 			throw new MuscleNameDuplicationFoundedException(MuscleErrorCode.MUSCLE_NAME_DUPLICATION_FOUNDED_ERROR.getDescription());
@@ -113,7 +113,7 @@ public class ManagerMuscleController {
 	 * @throws MuscleNotFoundedException 해당 Id의 Muscle 없으면
 	 * @author kimgun-yeong
 	 */
-	@GetMapping(value="/manager/muscle/modify/{muscleId}")
+	@GetMapping(value = "/manager/muscle/modify/{muscleId}")
 	public ModelAndView modifyMuscleView(@PathVariable("muscleId") Long muscleId, ModelAndView mav) {
 		Muscle muscle = muscleService.findById(muscleId);
 		SaveMuscleDTO saveMuscleDTO = SaveMuscleDTO.of(muscle);
