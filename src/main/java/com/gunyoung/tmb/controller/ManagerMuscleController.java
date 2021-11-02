@@ -68,9 +68,9 @@ public class ManagerMuscleController {
 	
 	private long getTotalPageNumForMuscleViewForManager(String keyword) {
 		if(keyword == null) {
-			return muscleService.countAll() / MUSCLE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE +1;
+			return muscleService.countAll()/MUSCLE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE + 1;
 		}
-		return muscleService.countAllWithNameKeyword(keyword) / MUSCLE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE +1;
+		return muscleService.countAllWithNameKeyword(keyword)/MUSCLE_LIST_VIEW_FOR_MANAGE_PAGE_SIZE + 1;
 	}
 	
 	/**
@@ -116,17 +116,13 @@ public class ManagerMuscleController {
 	@GetMapping(value="/manager/muscle/modify/{muscleId}")
 	public ModelAndView modifyMuscleView(@PathVariable("muscleId") Long muscleId, ModelAndView mav) {
 		Muscle muscle = muscleService.findById(muscleId);
-		if(muscle == null) {
-			throw new MuscleNotFoundedException(MuscleErrorCode.MUSCLE_NOT_FOUNDED_ERROR.getDescription());
-		}
+		SaveMuscleDTO saveMuscleDTO = SaveMuscleDTO.of(muscle);
 		
 		List<String> koreanNamesForAllTargetType = TargetType.getKoreanNamesForAllTargetType();
 		
-		SaveMuscleDTO saveMuscleDTO = SaveMuscleDTO.of(muscle);
-		
 		mav.addObject("muscleId", muscleId);
-		mav.addObject("targetTypes", koreanNamesForAllTargetType);
 		mav.addObject("muscleInfo", saveMuscleDTO);
+		mav.addObject("targetTypes", koreanNamesForAllTargetType);
 		
 		mav.setViewName("modifyMuscle");
 		

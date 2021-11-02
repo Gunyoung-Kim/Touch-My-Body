@@ -33,6 +33,7 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
+import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.EmailDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.duplication.NickNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
@@ -263,7 +264,7 @@ class UserControllerUnitTest {
 		//Given
 		Long nonExistUserId = Long.valueOf(76);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
-		given(userService.findById(nonExistUserId)).willReturn(null);
+		given(userService.findById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(UserNotFoundedException.class, () -> {
@@ -298,7 +299,7 @@ class UserControllerUnitTest {
 		//Given
 		Long nonExistUserId = Long.valueOf(76);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
-		given(userService.findById(nonExistUserId)).willReturn(null);
+		given(userService.findById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(UserNotFoundedException.class, () -> {
@@ -401,11 +402,13 @@ class UserControllerUnitTest {
 		//Given
 		Long nonExistUserId = Long.valueOf(76);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
-		given(userService.findById(nonExistUserId)).willReturn(null);
+		given(userService.findById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
+		
+		String order = "asc";
 		
 		//When, Then
 		assertThrows(UserNotFoundedException.class, () -> {
-			userController.myPostsView(mapv, defaultPageNum, null);
+			userController.myPostsView(mapv, defaultPageNum, order);
 		});
 	}
 	

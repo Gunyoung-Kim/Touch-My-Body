@@ -27,7 +27,6 @@ import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
 import com.gunyoung.tmb.error.codes.JoinErrorCode;
 import com.gunyoung.tmb.error.codes.SearchCriteriaErrorCode;
-import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.EmailDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.duplication.NickNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
@@ -148,9 +147,6 @@ public class UserController {
 	public ModelAndView profileView(ModelAndView mav) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findById(loginUserId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
 		UserProfileDTO userProfileDTO = UserProfileDTO.of(user);
 		
 		mav.addObject("profile", userProfileDTO);
@@ -173,12 +169,10 @@ public class UserController {
 			, @RequestParam(value = "order", defaultValue = "desc") String order) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findById(loginUserId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
 		
 		Page<Comment> pageResult = getPageResultForMyCommentListView(order, loginUserId, page);
 		long totalPageNum = getTotalPageNumForMyCommentListView(loginUserId);
+		
 		List<CommentForManageViewDTO> commentListForView = CommentForManageViewDTO.of(pageResult, user);
 
 		mav.setPageNumbers(page, totalPageNum);
@@ -215,12 +209,10 @@ public class UserController {
 			, @RequestParam(value = "order", defaultValue = "desc") String order) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findById(loginUserId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
 		
 		Page<ExercisePost> pageResult = getPageResultForMyPostListView(order, loginUserId, page);
 		long totalPageNum = getTotalPageNumForMyPostListView(loginUserId);
+		
 		List<ExercisePostForManageViewDTO> postListForView = ExercisePostForManageViewDTO.of(pageResult, user);
 		
 		mav.setPageNumbers(page, totalPageNum);
@@ -241,6 +233,6 @@ public class UserController {
 	}
 	
 	private long getTotalPageNumForMyPostListView(Long loginUserId) {
-		return exercisePostService.countWithUserId(loginUserId)/MY_POST_LIST_VIEW_PAGE_SIZE+1;
+		return exercisePostService.countWithUserId(loginUserId)/MY_POST_LIST_VIEW_PAGE_SIZE + 1;
 	}
 }
