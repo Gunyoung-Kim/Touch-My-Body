@@ -143,7 +143,7 @@ class ExercisePostControllerUnitTest {
 	
 	private void verifyModelAndPageViewInExercisePostViewTestCheckMapv(Page<PostForCommunityViewDTO> pageResult, Long givenExercisPostNum ) {
 		then(mapv).should(times(1)).addObject("listObject", pageResult);
-		then(mapv).should(times(1)).setPageNumbers(defaultPageNum, givenExercisPostNum/ ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE + 1);
+		then(mapv).should(times(1)).setPageNumbers(defaultPageNum, givenExercisPostNum/ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE + 1);
 		then(mapv).should(times(1)).addObject("category", "전체");
 		then(mapv).should(times(1)).setViewName("community");
 	}
