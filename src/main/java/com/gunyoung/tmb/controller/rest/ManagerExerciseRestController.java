@@ -99,10 +99,7 @@ public class ManagerExerciseRestController {
 		for(Entry<String, List<String>> entry: classificationOfMuscleNamesByCategory.entrySet()) {
 			String category = entry.getKey();
 			List<String> listOfMuscleName = entry.getValue();
-			MuscleInfoBySortDTO dto = MuscleInfoBySortDTO.builder()
-					.target(category)
-					.muscleNames(listOfMuscleName)
-					.build();
+			MuscleInfoBySortDTO dto = MuscleInfoBySortDTO.of(category, listOfMuscleName);
 			result.add(dto);
 		}
 		return result;

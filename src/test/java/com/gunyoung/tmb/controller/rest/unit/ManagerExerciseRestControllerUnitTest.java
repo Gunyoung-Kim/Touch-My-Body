@@ -212,9 +212,9 @@ class ManagerExerciseRestControllerUnitTest {
 	
 	private void assertMuscleInfoBySortDTOList(List<MuscleInfoBySortDTO> result) {
 		for(MuscleInfoBySortDTO dto: result) {
-			String target = dto.getTarget();
+			String category = dto.getCategory();
 			for(String exerciseName :dto.getMuscleNames()) {
-				assertEquals(exerciseName, TargetType.valueOf(target).getKoreanName());
+				assertEquals(exerciseName, TargetType.valueOf(category).getKoreanName());
 			}
 		}
 	}
