@@ -1,6 +1,6 @@
 # Touch-My-Body [![Build Status](https://app.travis-ci.com/Gunyoung-Kim/Touch-My-Body.svg?branch=master)](https://app.travis-ci.com/Gunyoung-Kim/Touch-My-Body)
 
-최신 버전 : ver 0.0.13
+최신 버전 : ver 0.0.14
 
 ## 프로젝트 주 기능
 
@@ -97,13 +97,13 @@
 ```bash
 
 # 통합 테스트 + 단위 테스트 -> instructions: 100%, branches: 100%
-$ ./mvnw clean package
+$ ./mvnw clean test
 
 # 단위 테스트 -> instructions: 100%, branches: 100%
-$ ./mvnw clean package -DexcludedGruops=integration
+$ ./mvnw clean test -DexcludedGruops=integration
 ```
 
-<img width="661" alt="tmb_0_0_11_tc" src="https://user-images.githubusercontent.com/60494603/133609641-8208b686-84a2-43f2-94ce-cf6c6a267388.png">
+<img width="653" alt="스크린샷 2021-11-04 오후 5 03 28" src="https://user-images.githubusercontent.com/60494603/140278335-6dd6889c-4cde-45b2-813d-df11cb262324.png">
 
 ---
 
