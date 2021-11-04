@@ -9,18 +9,11 @@ public interface CommentLikeService {
 	public static final String EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY = "exsitByUserIdAndCommentId";
 	
 	/**
-	 * ID로 CommentLike 찾기
-	 * @param id 찾으려는 commentLike의 id
-	 * @return CommentLike, Null(해당 id의 commentLike 없을때)
-	 * @author kimgun-yeong
-	 */
-	public CommentLike findById(Long id);
-	
-	/**
 	 * User Id, Comment Id 로 CommentLike 찾기
 	 * @param userId 찾으려는 CommenLike의 User ID
 	 * @param commentId 찾으려는 CommentLike의 Comment ID
-	 * @return CommentLike, Null (해당 조건을 만족하는 CommentLike 없을때)
+	 * @return CommentLike
+	 * @throws LikeNotFoundedException 해당 조건을 만족하는 CommentLike 없을때 
 	 * @author kimgun-yeong
 	 */
 	public CommentLike findByUserIdAndCommentId(Long userId, Long commentId);
@@ -40,6 +33,7 @@ public interface CommentLikeService {
 	 * @param user CommentLike 추가하려는 User
 	 * @param comment CommentLike가 추가되는 Comment
 	 * @return 새로 저장된 CommentLike
+	 * @throws PreconditionViolationException user == null || comment == null
 	 * @author kimgun-yeong
 	 */
 	public CommentLike createAndSaveWithUserAndComment(User user, Comment comment);

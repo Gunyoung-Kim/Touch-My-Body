@@ -1,7 +1,7 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.response.UserExerciseIsDoneDTO;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.services.domain.user.UserExerciseServiceImpl;
 
@@ -50,40 +50,6 @@ class UserExerciseServiceUnitTest {
 	}
 	
 	/*
-	 * UserExercise findById(Long id)
-	 */
-	
-	@Test
-	@DisplayName("ID로 UserExercise 찾기 -> 존재하지 않음")
-	void findByIdNonExist() {
-		//Given
-		Long nonExistId = Long.valueOf(1);
-		
-		given(userExerciseRepository.findById(nonExistId)).willReturn(Optional.empty());
-		
-		//When
-		UserExercise result = userExerciseService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
-	}
-	
-	@Test
-	@DisplayName("ID로 UserExercise 찾기 -> 정상")
-	void findByIdTest() {
-		//Given
-		Long userExerciseId = Long.valueOf(1);
-		
-		given(userExerciseRepository.findById(userExerciseId)).willReturn(Optional.of(userExercise));
-		
-		//When
-		UserExercise result = userExerciseService.findById(userExerciseId);
-		
-		//Then
-		assertEquals(userExercise, result);
-	}
-	
-	/*
 	 * List<UserExercise> findByUserIdAndDate(Long userId, Calendar date)
 	 */
 	
@@ -92,7 +58,7 @@ class UserExerciseServiceUnitTest {
 	void findByUserIdAndDateTest() {
 		//Given
 		Long userId = Long.valueOf(1);
-		Calendar date = new GregorianCalendar(1999,Calendar.JANUARY,16);
+		Calendar date = new GregorianCalendar(1999, Calendar.JANUARY, 16);
 		
 		//When
 		userExerciseService.findByUserIdAndDate(userId, date);
@@ -104,6 +70,48 @@ class UserExerciseServiceUnitTest {
 	/*
 	 * List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year,int month)
 	 */
+	
+	@Test
+	@DisplayName("특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환 -> given year is negative")
+	void findIsDoneDTOByUserIdAndYearAndMonthTestNegativeYear() {
+		//Given
+		Long userId = Long.valueOf(1);
+		int year = -1;
+		int month = Calendar.DECEMBER;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId, year, month);
+		});
+	}
+	
+	@Test
+	@DisplayName("특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환 -> given month is negative")
+	void findIsDoneDTOByUserIdAndYearAndMonthTestNegativeMonth() {
+		//Given
+		Long userId = Long.valueOf(1); 
+		int year = 1999;
+		int month = -1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId, year, month);
+		});
+	}
+	
+	@Test
+	@DisplayName("특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환 -> given month is over december")
+	void findIsDoneDTOByUserIdAndYearAndMonthTestMonthOverDecember() {
+		//Given
+		Long userId = Long.valueOf(1);
+		int year = 1999;
+		int month = Calendar.DECEMBER + 1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			userExerciseService.findIsDoneDTOByUserIdAndYearAndMonth(userId, year, month);
+		});
+	}
 	
 	@Test
 	@DisplayName("특정 유저의 특정 년,월에 각 일마다 운동했는지 여부 반환하는 메소드 -> 정상")

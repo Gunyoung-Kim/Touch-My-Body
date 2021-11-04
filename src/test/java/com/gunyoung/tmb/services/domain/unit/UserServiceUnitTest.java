@@ -2,7 +2,7 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -24,6 +24,8 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
+import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
@@ -90,11 +92,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -124,11 +125,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findByEmail(nonExistEmail)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findByEmail(nonExistEmail);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findByEmail(nonExistEmail);
+		});
 	}
 	
 	@Test
@@ -158,11 +158,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findWithUserExercisesById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findWithUserExerciseById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findWithUserExerciseById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -192,11 +191,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findWithFeedbacksById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findWithFeedbacksById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findWithFeedbacksById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -226,11 +224,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findWithPostLikesById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findWithPostLikesById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findWithPostLikesById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -260,11 +257,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findWithCommentLikesById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findWithCommentLikesById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findWithCommentLikesById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -295,10 +291,9 @@ class UserServiceUnitTest {
 		given(userRepository.findWithExercisePostsById(nonExistId)).willReturn(Optional.empty());
 		
 		//When
-		User result = userService.findWithExercisePostsById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findWithExercisePostsById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -328,11 +323,10 @@ class UserServiceUnitTest {
 		
 		given(userRepository.findWithCommentsById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		User result = userService.findWithCommentsById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(UserNotFoundedException.class, () -> {
+			userService.findWithCommentsById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -355,11 +349,24 @@ class UserServiceUnitTest {
 	 */
 	
 	@Test
+	@DisplayName("User name, nickName 검색 키워드에 해당하는 User들 페이지 반환 -> given pageNumber < 1")
+	void findAllByNickNameOrNameInPageTestPageNumberLessThanOne() {
+		//Given
+		String keyword = "keyword";
+		Integer pageNum = -1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			userService.findAllByNickNameOrNameInPage(keyword, pageNum);
+		});
+	}
+	
+	@Test
 	@DisplayName("User name, nickName 검색 키워드에 해당하는 User들 페이지 반환 -> 정상")
 	void findAllByNickNameOrNameTest() {
 		//Given
 		String keyword = "keyword";
-		int pageNum = 1;
+		Integer pageNum = 1;
 		
 		//When
 		userService.findAllByNickNameOrNameInPage(keyword, pageNum);
@@ -390,7 +397,19 @@ class UserServiceUnitTest {
 	 */
 	
 	@Test
-	@DisplayName(" UserJoinDTO 객체에 담긴 정보를 이용하여 User 객체 생성 후 저장 -> 정상, userRepository 확인")
+	@DisplayName("UserJoinDTO 객체에 담긴 정보를 이용하여 User 객체 생성 후 저장 -> given dto == null")
+	void saveByJoinDTOAndRoleTypeTestNullDTO() {
+		//Given
+		RoleType role = RoleType.USER;
+		
+		//When, Then 
+		assertThrows(PreconditionViolationException.class, () -> {
+			userService.saveByJoinDTOAndRoleType(null, role);
+		});
+	}
+	
+	@Test
+	@DisplayName("UserJoinDTO 객체에 담긴 정보를 이용하여 User 객체 생성 후 저장 -> 정상, userRepository 확인")
 	void saveByJoinDTOAndRoleTypeTestCheckRepository() {
 		//Given
 		String email = "test@test.com";
@@ -528,10 +547,33 @@ class UserServiceUnitTest {
 	 */
 	
 	@Test
+	@DisplayName("User 객체에 UserExercise 객체 추가하는 메소드 -> given user == null")
+	void addUserExerciseTestNullUser() {
+		//Given
+		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			userService.addUserExercise(null, userExercise);
+		});
+	}
+	
+	@Test
+	@DisplayName("User 객체에 UserExercise 객체 추가하는 메소드 -> given userExercise == null")
+	void addUserExerciseTestNullUserExercise() {
+		//Given
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			userService.addUserExercise(user, null);
+		});
+	}
+	
+	@Test
 	@DisplayName("User 객체에 UserExercise 객체 추가하는 메소드 -> 정상")
 	void addUserExerciseTest() {
 		//Given
-		UserExercise userExercise = UserExercise.builder().build();
+		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
 		
 		//When
 		userService.addUserExercise(user, userExercise);
@@ -547,6 +589,29 @@ class UserServiceUnitTest {
 	/*
 	 * void deleteUserExercise(User user, UserExercise userExercise)
 	 */
+	
+	@Test
+	@DisplayName("User 객체에서 UserExercise 삭제 -> given user == null")
+	void deleteUserExerciseTestNullUser() {
+		//Given
+		UserExercise userExercise = UserExerciseTest.getUserExerciseInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			userService.deleteUserExercise(null, userExercise);
+		});
+	}
+	
+	@Test
+	@DisplayName("User 객체에서 UserExercise 삭제 -> given userExercise == null")
+	void deleteUserExerciseTestNullUserExercise() {
+		//Given
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			userService.deleteUserExercise(user, null);
+		});
+	}
 	
 	@Test
 	@DisplayName("User 객체에서 UserExercise 삭제 -> 정상, User의 UserExercise 아님")

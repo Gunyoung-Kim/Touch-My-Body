@@ -24,6 +24,7 @@ import com.gunyoung.tmb.error.codes.JoinErrorCode;
 import com.gunyoung.tmb.error.codes.LikeErrorCode;
 import com.gunyoung.tmb.error.codes.MuscleErrorCode;
 import com.gunyoung.tmb.error.codes.PrivacyPolicyErrorCode;
+import com.gunyoung.tmb.error.codes.ProgramErrorCode;
 import com.gunyoung.tmb.error.codes.SearchCriteriaErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
 import com.gunyoung.tmb.error.codes.UserErrorCode;
@@ -45,6 +46,7 @@ import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.request.AccessDeniedException;
 import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 
 /**
  * {@link ErrorController} 에 대한 테스트 클래스 <br>
@@ -381,5 +383,23 @@ class ErrorControllerUnitTest {
 		
 		//Then
 		then(response).should(times(1)).sendRedirect("/login");
+	}
+	
+	/*
+	 * public ErrorMsg preconditionViolation(PreconditionViolationException e)
+	 */
+	
+	@Test
+	void preconditionViolationTest() {
+		//Given
+		String errorMsg = "precondition violation";
+		PreconditionViolationException exception = new PreconditionViolationException(errorMsg);
+		
+		//When
+		ErrorMsg result = errorController.preconditionViolation(exception);
+		
+		//Then
+		assertEquals(ProgramErrorCode.PRECONDITION_VIOLATION_ERROR.getCode(), result.getErrorCode());
+		assertEquals(errorMsg, result.getDescription());
 	}
 }

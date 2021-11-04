@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -27,6 +26,8 @@ import org.springframework.data.domain.PageRequest;
 import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.jpa.MuscleNameAndCategoryDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.exceptions.nonexist.MuscleNotFoundedException;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.MuscleRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
 import com.gunyoung.tmb.services.domain.exercise.MuscleServiceImpl;
@@ -71,11 +72,10 @@ class MuscleServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(muscleRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		Muscle result = muscleService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(MuscleNotFoundedException.class, () -> {
+			muscleService.findById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -104,10 +104,9 @@ class MuscleServiceUnitTest {
 		given(muscleRepository.findByName(nonExistName)).willReturn(Optional.empty());
 		
 		//When
-		Muscle result = muscleService.findByName(nonExistName);
-		
-		//Then
-		assertNull(result);
+		assertThrows(MuscleNotFoundedException.class, () -> {
+			muscleService.findByName(nonExistName);
+		});
 	}
 	
 	@Test
@@ -129,6 +128,32 @@ class MuscleServiceUnitTest {
 	 */
 	
 	@Test
+	@DisplayName("모든 Muscle들 페이지 반환 -> pageNumber < 1")
+	void findAllInPageTestPageNumberLessThanOne() {
+		//Given
+		Integer pageNumber = -1;
+		int pageSize = 1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			muscleService.findAllInPage(pageNumber, pageSize);
+		});
+	}
+	
+	@Test
+	@DisplayName("모든 Muscle들 페이지 반환 -> pageSize < 1")
+	void findAllInPageTestPageSizeLessThanOne() {
+		//Given
+		Integer pageNumber = 1;
+		int pageSize = -1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			muscleService.findAllInPage(pageNumber, pageSize);
+		});
+	}
+	
+	@Test
 	@DisplayName("모든 Muscle들 페이지 반환 -> 정상")
 	void findAllInPageTest() {
 		//Given
@@ -145,6 +170,34 @@ class MuscleServiceUnitTest {
 	/*
 	 * Page<Muscle> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize) 
 	 */
+	
+	@Test
+	@DisplayName("키워드 name에 포함하는 Muscle 페이지 반환 -> pageNumber < 1")
+	void findAllWithNameKeywordInPageTestPageNumberLessThanOne() {
+		//Given
+		String keyword = "keyword";
+		Integer pageNumber = -1;
+		int pageSize = 1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			muscleService.findAllWithNameKeywordInPage(keyword, pageNumber, pageSize);
+		});
+	}
+	
+	@Test
+	@DisplayName("키워드 name에 포함하는 Muscle 페이지 반환-> pageSize < 1")
+	void findAllWithNameKeywordInPageTestPageSizeLessThanOne() {
+		//Given
+		String keyword = "keyword";
+		Integer pageNumber = 1;
+		int pageSize = -1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			muscleService.findAllWithNameKeywordInPage(keyword, pageNumber, pageSize);
+		});
+	}
 	
 	@Test
 	@DisplayName("키워드 name에 포함하는 Muscle 페이지 반환 -> 정상")
@@ -248,7 +301,7 @@ class MuscleServiceUnitTest {
 		//Given
 		
 		//When, Then
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(PreconditionViolationException.class, () -> {
 			muscleService.delete(null);
 		});
 	}

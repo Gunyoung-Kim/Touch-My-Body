@@ -6,6 +6,7 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.RoleType;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 
 /**
  * User 도메인 관련 처리 서비스
@@ -17,7 +18,8 @@ public interface UserService {
 	/**
 	 * ID로 User 찾기
 	 * @param id 찾으려는 유저의 id
-	 * @return User, null(해당 id의 유저가 존재하지 않을때)
+	 * @return User
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findById(Long id);
@@ -25,7 +27,8 @@ public interface UserService {
 	/**
 	 * email로 User 찾기
 	 * @param email 찾으려는 유저의 email
-	 * @return User, null(해당 email의 유저가 존재하지 않을때)
+	 * @return User
+	 * @throws UserNotFoundedException 해당 email의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findByEmail(String email);
@@ -33,6 +36,7 @@ public interface UserService {
 	/**
 	 * UserExercises 페치 조인해서 가져오는 메소드 
 	 * @param id User의 ID
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findWithUserExerciseById(Long id);
@@ -40,6 +44,7 @@ public interface UserService {
 	/**
 	 * Feedbacks 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findWithFeedbacksById(Long id);
@@ -47,6 +52,7 @@ public interface UserService {
 	/**
 	 * PostLikes 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findWithPostLikesById(Long id);
@@ -54,6 +60,7 @@ public interface UserService {
 	/**
 	 * CommentLikes 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findWithCommentLikesById(Long id);
@@ -61,6 +68,7 @@ public interface UserService {
 	/**
 	 * ExercisePosts 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findWithExercisePostsById(Long id);
@@ -68,13 +76,15 @@ public interface UserService {
 	/**
 	 * Comments 페치 조인해서 가져오는 메소드
 	 * @param id User의 ID
+	 * @throws UserNotFoundedException 해당 id의 유저가 존재하지 않을때
 	 * @author kimgun-yeong
 	 */
 	public User findWithCommentsById(Long id);
 	
 	/**
 	 * User name, nickName 검색 키워드에 해당하는 User들 페이지 반환 
-	 * @param keyword User name, nickName 검색 키워드 	
+	 * @param keyword User name, nickName 검색 키워드
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우 	
 	 * @author kimgun-yeong
 	 */
 	public Page<User> findAllByNickNameOrNameInPage(String keyword, Integer pageNumber);
@@ -92,6 +102,7 @@ public interface UserService {
 	 * @param dto 저장할 User 객체 정보가 담긴 dto 객체
 	 * @param role 저장할 User의 role
 	 * @return 저장된 객체
+	 * @throws PreconditionViolationException 인자로 입력된 dto가 null일때
 	 * @author kimgun-yeong
 	 */
 	public User saveByJoinDTOAndRoleType(UserJoinDTO dto, RoleType role);
@@ -139,6 +150,7 @@ public interface UserService {
 	 * User 객체에 UserExercise 객체 추가하는 메소드
 	 * @param user UserExercise를 추가하려는 User
 	 * @param userExercise 추가하려는 UserExercise
+	 * @throws PreconditionViolationException given user == null || userExercise == null
 	 * @author kimgun-yeong
 	 */
 	public User addUserExercise(User user, UserExercise userExercise);
@@ -147,6 +159,7 @@ public interface UserService {
 	 * User 객체에서 UserExercise 삭제하는 메소드
 	 * @param user UserExercise를 삭제하려는 User
 	 * @param userExercise 삭제하려는 userExercise
+	 * @throws PreconditionViolationException given user == null || userExercise == null
 	 * @author kimgun-yeong
 	 */
 	public void deleteUserExercise(User user, UserExercise userExercise);

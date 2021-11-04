@@ -1,8 +1,6 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -67,35 +65,6 @@ class UserExerciseServiceTest {
 	@AfterEach
 	void tearDown() {
 		userExerciseRepository.deleteAll();
-	}
-	
-	/*
-	 *   UserExerciseService findById(Long id)
-	 */
-	@Test
-	@DisplayName("Id로 해당 UserExercise 찾기 -> 해당 Id 존재하지 않음")
-	void findByIdNonExist() {
-		//Given
-		long nonExistId = UserExerciseTest.getNonExistUserExerciseId(userExerciseRepository);
-		
-		//When
-		UserExercise result = userExerciseService.findById(nonExistId+100);
-		
-		//Then
-		assertNull(result);
-	}
-	
-	@Test
-	@DisplayName("Id로 해당 UserExercise 찾기 ->  정상")
-	void findByIdTest() {
-		//Given
-		 Long existId = userExercise.getId();
-		
-		//When
-		 UserExercise result = userExerciseService.findById(existId);
-		 
-		//Then
-		 assertNotNull(result);
 	}
 	
 	/*

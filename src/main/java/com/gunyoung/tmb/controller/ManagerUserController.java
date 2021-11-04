@@ -63,7 +63,7 @@ public class ManagerUserController {
 	 * @author kimgun-yeong
 	 */
 	@GetMapping(value = "/manager/usermanage")
-	public ModelAndView userManageView(@RequestParam(value="page", required = false, defaultValue = "1") int page,
+	public ModelAndView userManageView(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			@RequestParam(value = "keyword", required = false) String keyword, ModelAndPageView mav) {
 		Page<User> pageResult = getPageResultForUserManageView(keyword, page);
 		long totalPageNum = getTotalPageNumForUserManageView(keyword);
@@ -102,10 +102,6 @@ public class ManagerUserController {
 	@GetMapping(value = "/manager/usermanage/{user_id}")
 	public ModelAndView manageUserProfileView(@PathVariable("user_id") Long userId, ModelAndView mav) {
 		User targetUser = userService.findById(userId);
-		if(targetUser == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		if(!authorityService.isSessionUserAuthorityCanAccessToTargetAuthority(targetUser)) {
 			throw new AccessDeniedException(UserErrorCode.ACESS_DENIED_ERROR.getDescription());
 		}
@@ -134,9 +130,6 @@ public class ManagerUserController {
 	public ModelAndView manageUserComments(@PathVariable("user_id") Long userId, @RequestParam(value = "page", required = false, defaultValue = "1") int page
 			, @RequestParam(value = "order", defaultValue = "desc") String order, ModelAndPageView mav) {
 		User user = userService.findById(userId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
 		
 		Page<Comment> pageResult = getPageResultForUserCommentListViewForManage(order, userId, page);
 		long totalPageNum = getTotalPageNumForUserCommentListViewForManage(userId);
@@ -178,9 +171,6 @@ public class ManagerUserController {
 	public ModelAndView managerUserPosts(@PathVariable("userId") Long userId, @RequestParam(value = "page", required = false, defaultValue = "1") int page
 			, @RequestParam(value = "order", defaultValue = "desc") String order, ModelAndPageView mav) {
 		User user = userService.findById(userId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
 		
 		Page<ExercisePost> pageResult = getPageResultForUserPostListViewForManage(order, userId, page);
 		long totalPageNum = getTotalPageNumForUserPostListViewForManage(userId);

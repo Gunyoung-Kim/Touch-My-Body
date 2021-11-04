@@ -3,7 +3,7 @@ package com.gunyoung.tmb.services.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 import com.gunyoung.tmb.enums.PageSize;
+import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
 import com.gunyoung.tmb.repos.CommentRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
@@ -81,11 +82,10 @@ class CommentServiceTest {
 		//Given
 		Long nonExistCommentId = CommentTest.getNonExistCommentId(commentRepository);
 		
-		//When
-		Comment result = commentService.findById(nonExistCommentId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(CommentNotFoundedException.class, () -> {
+			commentService.findById(nonExistCommentId);
+		});
 	}
 	
 	@Test
@@ -256,7 +256,7 @@ class CommentServiceTest {
 		
 		//Then
 		Comment result = commentRepository.findById(commentId).get();
-		assertEquals(result.getContents(),"changed Contents");
+		assertEquals("changed Contents", result.getContents());
 	}
 	
 	@Test
@@ -271,7 +271,7 @@ class CommentServiceTest {
 		commentService.save(newComment);
 		
 		//Then
-		assertEquals(givenCommentNum+1, commentRepository.count());
+		assertEquals(givenCommentNum + 1, commentRepository.count());
 	}
 	
 	/*

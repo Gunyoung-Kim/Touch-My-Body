@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -29,11 +28,15 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostServiceImpl;
 import com.gunyoung.tmb.services.domain.like.PostLikeService;
 import com.gunyoung.tmb.testutil.ExercisePostTest;
+import com.gunyoung.tmb.testutil.ExerciseTest;
+import com.gunyoung.tmb.testutil.UserTest;
 
 /**
  * {@link ExercisePostServiceImpl} 에 대한 테스트 클래스 <br>
@@ -78,10 +81,9 @@ class ExercisePostServiceUnitTest {
 		given(exercisePostRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
 		//When
-		ExercisePost result = exercisePostService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.findById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -109,11 +111,10 @@ class ExercisePostServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(exercisePostRepository.findWithPostLikesById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		ExercisePost result = exercisePostService.findWithPostLikesById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.findWithPostLikesById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -141,11 +142,10 @@ class ExercisePostServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(exercisePostRepository.findWithCommentsById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		ExercisePost result = exercisePostService.findWithCommentsById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.findWithCommentsById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -167,6 +167,20 @@ class ExercisePostServiceUnitTest {
 	 */
 	
 	@Test
+	@DisplayName("UserID 를 만족하는 ExercisePost들 생성 오래된순으로 페이지 반환 -> pageNumber이 1보다 작음")
+	void findAllByUserIdOrderByCreatedAtAscTestPageNumberIsLessThanOne() {
+		//Given
+		Long userId = Long.valueOf(1);
+		int pageNum = 0;
+		int pageSize = 1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exercisePostService.findAllByUserIdOrderByCreatedAtAsc(userId, pageNum, pageSize);
+		});
+	}
+	
+	@Test
 	@DisplayName("UserID 를 만족하는 ExercisePost들 생성 오래된순으로 페이지 반환 -> 정상")
 	void findAllByUserIdOrderByCreatedAtAscTest() {
 		//Given
@@ -186,6 +200,20 @@ class ExercisePostServiceUnitTest {
 	 */
 	
 	@Test
+	@DisplayName("UserID 를 만족하는 ExercisePost들 생성 최신순으로 페이지 반환 -> pageNumber이 1보다 작음")
+	void findAllByUserIdOrderByCreatedAtDescTestPageNumberIsLessThanOne() {
+		//Given
+		Long userId = Long.valueOf(1);
+		int pageNum = 0;
+		int pageSize = 1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exercisePostService.findAllByUserIdOrderByCreatedAtDesc(userId, pageNum, pageSize);
+		});
+	}
+	
+	@Test
 	@DisplayName("UserID 를 만족하는 ExercisePost들 생성 최신순으로 페이지 반환 -> 정상")
 	void findAllByUserIdOrderByCreatedAtDescTest() {
 		//Given
@@ -203,6 +231,19 @@ class ExercisePostServiceUnitTest {
 	/*
 	 * Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOByPage(Integer pageNumber,int pageSize) 
 	 */
+	
+	@Test
+	@DisplayName("모든 ExercisePost로 PostForCommunityViewDTO 생성 후 페이지 반환 -> pageSize가 0보다 작음")
+	void findAllForPostForCommunityViewDTOByPageTestPageSizeIsLessThanZero() {
+		//Given
+		int pageNum = 2;
+		int pageSize = 0;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exercisePostService.findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(pageNum, pageSize);
+		});
+	}
 	
 	@Test
 	@DisplayName("모든 ExercisePost로 PostForCommunityViewDTO 생성 후 페이지 반환 -> 정상")
@@ -298,11 +339,48 @@ class ExercisePostServiceUnitTest {
 	 */
 	
 	@Test
+	@DisplayName("User, Exercise와 연관 관계 추가 후 ExercisePost 저장 -> 입력 exercisePost == null")
+	void saveWithUserAndExerciseTestNullExercisePost() {
+		//Given
+		User user = UserTest.getUserInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exercisePostService.saveWithUserAndExercise(null, user, exercise);
+		});
+	}
+	
+	@Test
+	@DisplayName("User, Exercise와 연관 관계 추가 후 ExercisePost 저장 -> 입력 user == null")
+	void saveWithUserAndExerciseTestNullUser() {
+		//Given
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exercisePostService.saveWithUserAndExercise(exercisePost, null, exercise);
+		});
+	}
+	
+	@Test
+	@DisplayName("User, Exercise와 연관 관계 추가 후 ExercisePost 저장 -> 입력 exercise == null")
+	void saveWithUserAndExerciseTestNullExercise() {
+		//Given
+		User user = UserTest.getUserInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exercisePostService.saveWithUserAndExercise(exercisePost, user, null);
+		});
+	}
+	
+	@Test
 	@DisplayName("User, Exercise와 연관 관계 추가 후 ExercisePost 저장 -> 저장")
 	void saveWithUserAndExerciseTest() {
 		//Given
-		User user = new User();
-		Exercise exercise = new Exercise();
+		User user = UserTest.getUserInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
 		
 		given(exercisePostRepository.save(exercisePost)).willReturn(exercisePost);
 		
@@ -324,7 +402,7 @@ class ExercisePostServiceUnitTest {
 		//Given
 		
 		//When, Then
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(PreconditionViolationException.class, () -> {
 			exercisePostService.delete(null);
 		});
 	}
@@ -636,11 +714,10 @@ class ExercisePostServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(exercisePostRepository.findForExercisePostViewDTOById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		ExercisePostViewDTO result = exercisePostService.getExercisePostViewDTOWithExercisePostId(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.getExercisePostViewDTOWithExercisePostId(nonExistId);
+		});
 	}
 	
 	@Test
@@ -669,11 +746,10 @@ class ExercisePostServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(exercisePostRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		ExercisePostViewDTO result = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(nonExistId);
+		});
 	}
 	
 	@Test
@@ -684,7 +760,9 @@ class ExercisePostServiceUnitTest {
 		given(exercisePostRepository.findById(nonExistId)).willReturn(Optional.empty());
 				
 		//When
-		exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(nonExistId);
+		assertThrows(ExercisePostNotFoundedException.class, () -> {
+			exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(nonExistId);
+		});
 		
 		//Then
 		then(exercisePostRepository).should(never()).save(any(ExercisePost.class));
@@ -699,6 +777,9 @@ class ExercisePostServiceUnitTest {
 		
 		Long exercisePostId = Long.valueOf(1);
 		given(exercisePostRepository.findById(exercisePostId)).willReturn(Optional.of(exercisePost));
+		
+		ExercisePostViewDTO dto = ExercisePostTest.getExercisePostViewDTOInstance();
+		given(exercisePostRepository.findForExercisePostViewDTOById(exercisePostId)).willReturn(Optional.of(dto));
 		
 		//When
 		exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(exercisePostId);

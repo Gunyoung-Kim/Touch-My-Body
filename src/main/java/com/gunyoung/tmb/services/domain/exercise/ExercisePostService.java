@@ -8,13 +8,15 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 
 public interface ExercisePostService {
 	
 	/**
 	 * ID로 ExercisePost 찾기
 	 * @param id 찾으려는 ExerciePost id 값
-	 * @return ExercisePost, NUll(해당 id의 ExercisePost가 없을때)
+	 * @return ExercisePost
+	 * @ 해당 id의 ExercisePost가 없을때 
 	 * @author kimgun-yeong
 	 */
 	public ExercisePost findById(Long id);
@@ -22,7 +24,8 @@ public interface ExercisePostService {
 	/**
 	 * ID로 PostLikes 페치조인 후 ExercisePost 반환
 	 * @param id 찾으려는 ExerciePost id 값
-	 * @return ExercisePost, NUll(해당 id의 ExercisePost가 없을때)
+	 * @return ExercisePost
+	 * @ 해당 id의 ExercisePost가 없을때
 	 * @author kimgun-yeong
 	 */
 	public ExercisePost findWithPostLikesById(Long id);
@@ -30,7 +33,8 @@ public interface ExercisePostService {
 	/**
 	 * ID로 Comments 페치 조인후 ExercisePost 반환
 	 * @param id 찾으려는 ExerciePost id 값
-	 * @return ExercisePost, NUll(해당 id의 ExercisePost가 없을때)
+	 * @return ExercisePost
+	 * @ 해당 id의 ExercisePost가 없을때
 	 * @author kimgun-yeong
 	 */
 	public ExercisePost findWithCommentsById(Long id);
@@ -38,6 +42,7 @@ public interface ExercisePostService {
 	/**
 	 * UserID 를 만족하는 ExercisePost들 생성 오래된순으로 페이지 반환
 	 * @param userId ExercisePost들의 작성자 ID 
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtAsc(Long userId, Integer pageNumber, int pageSize);
@@ -45,12 +50,14 @@ public interface ExercisePostService {
 	/**
 	 * UserID 를 만족하는 ExercisePost들 생성 최신순으로 페이지 반환
 	 * @param userId ExercisePost들의 작성자 ID 
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtDesc(Long userId, Integer pageNumber, int pageSize);
 	
 	/**
 	 * 모든 ExercisePost로 {@link PostForCommunityViewDTO} 생성 후 페이지 반환
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(Integer pageNumber, int pageSize);
@@ -58,6 +65,7 @@ public interface ExercisePostService {
 	/**
 	 * 키워드를 만족하는 ExercisePost들로 {@link PostForCommunityViewDTO} 생성 후 페이지 반환
 	 * @param keyword ExercisePost의 title, contents 검색 키워드
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithKeywordByPage(String keyword, Integer pageNumber, int pageSize);
@@ -65,6 +73,7 @@ public interface ExercisePostService {
 	/**
 	 * target 을 만족하는 ExercisePost들로 {@link PostForCommunityViewDTO} 생성 후 페이지 반환
 	 * @param target ExercisePost들의 target
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetByPage(TargetType target, Integer pageNumber, int pageSize);
@@ -73,6 +82,7 @@ public interface ExercisePostService {
 	 * target,키워드를 만족하는 ExercisePost들로 {@link PostForCommunityViewDTO} 생성 후 페이지 반환
 	 * @param target ExercisePost들의 target
 	 * @param keyword ExercisePost의 title, contents 검색 키워드
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType target, String keyword, Integer pageNumber, int pageSize);
@@ -87,6 +97,7 @@ public interface ExercisePostService {
 	
 	/**
 	 * User, Exercise와 연관 관계 추가 후 ExercisePost 저장
+	 * @throws PreconditionViolationException 전달된 인자중 하나라도 null인 경우
 	 * @author kimgun-yeong
 	 */
 	public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exercise);
@@ -94,7 +105,7 @@ public interface ExercisePostService {
 	/**
 	 * ExercisePost 삭제 
 	 * @param exercisePost 삭제하려는 ExercisePost
-	 * @throws NullPointerException exercisePost == null
+	 * @throws PreconditionViolationException exercisePost == null
 	 * @author kimgun-yeong
 	 */
 	public void delete(ExercisePost exercisePost);
@@ -166,8 +177,8 @@ public interface ExercisePostService {
 	/**
 	 * ExercisePost id로 ExercisePost 가져와서 이를 통해 {@link ExercisePostViewDTO} 생성 및 반환
 	 * @param id ExercisePost ID
-	 * @return ExercisePostViewDTO, null(해당 id의 ExercisePost 없을때)
-	 * @since 11
+	 * @return ExercisePostViewDTO
+	 * @ 해당 id의 ExercisePost가 없을때
 	 * @author kimgun-yeong
 	 */
 	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id);
@@ -176,7 +187,8 @@ public interface ExercisePostService {
 	 * ExercisePost id로 ExercisePost 가져와서 이를 통해 {@link ExercisePostViewDTO} 생성 및 반환 <br>
 	 * ExercisePost viewNum(조회수) 증가
 	 * @param id ExercisePost ID
-	 * @return ExercisePostViewDTO, null(해당 id의 ExercisePost 없을때)
+	 * @return ExercisePostViewDTO
+	 * @ 해당 id의 ExercisePost가 없을때
 	 * @author kimgun-yeong
 	 */
 	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(Long id);

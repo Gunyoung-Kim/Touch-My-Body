@@ -25,6 +25,8 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
 import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
 import com.gunyoung.tmb.enums.PageSize;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
+import com.gunyoung.tmb.error.codes.FeedbackErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
@@ -72,7 +74,7 @@ class ManagerFeedbackControllerUnitTest {
 	void feedbackListViewTestExerciseNonExist() {
 		//Given
 		Long nonExistExerciseId = Long.valueOf(1);
-		given(exerciseService.findById(nonExistExerciseId)).willReturn(null);
+		given(exerciseService.findById(nonExistExerciseId)).willThrow(new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(ExerciseNotFoundedException.class, () -> {
@@ -137,7 +139,7 @@ class ManagerFeedbackControllerUnitTest {
 	void feedbackViewFeedbackNonExist() {
 		//Given
 		Long nonExistFeedbackId = Long.valueOf(1);
-		given(feedbackService.findForFeedbackViewDTOById(nonExistFeedbackId)).willReturn(null);
+		given(feedbackService.findForFeedbackViewDTOById(nonExistFeedbackId)).willThrow(new FeedbackNotFoundedException(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(FeedbackNotFoundedException.class, () -> {

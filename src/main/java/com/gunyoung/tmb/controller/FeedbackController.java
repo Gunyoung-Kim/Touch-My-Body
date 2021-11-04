@@ -14,8 +14,6 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.reqeust.SaveFeedbackDTO;
-import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
-import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
@@ -51,9 +49,6 @@ public class FeedbackController {
 	@GetMapping(value="/exercise/about/{exercise_id}/addfeedback")
 	public ModelAndView addFeedbackView(@PathVariable("exercise_id") Long exerciseId, ModelAndView mav) {
 		Exercise exercise = exerciseService.findById(exerciseId);
-		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
-		}
 		
 		mav.addObject("exerciseName", exercise.getName());
 		
@@ -75,15 +70,7 @@ public class FeedbackController {
 	public ModelAndView addFeedback(@PathVariable("exercise_id") Long exerciseId, @ModelAttribute SaveFeedbackDTO dto) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findWithFeedbacksById(loginUserId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		Exercise exercise = exerciseService.findWithFeedbacksById(exerciseId);
-		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		Feedback feedback = dto.createFeedback();
 		
 		feedbackService.saveWithUserAndExercise(feedback, user, exercise);

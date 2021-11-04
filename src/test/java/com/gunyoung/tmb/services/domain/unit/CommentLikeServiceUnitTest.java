@@ -1,7 +1,7 @@
 package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -20,6 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.CommentLikeRepository;
 import com.gunyoung.tmb.services.domain.like.CommentLikeServiceImpl;
 import com.gunyoung.tmb.testutil.CommentTest;
@@ -49,37 +51,6 @@ class CommentLikeServiceUnitTest {
 	}
 	
 	/*
-	 * CommentLike findById(Long id)
-	 */
-	@Test
-	@DisplayName("ID로 CommentLike찾기 -> 존재하지 않음")
-	void findByIdNonExist() {
-		//Given
-		Long nonExistId = Long.valueOf(1);
-		given(commentLikeRepository.findById(nonExistId)).willReturn(Optional.empty());
-		
-		//When
-		CommentLike result = commentLikeService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
-	}
-	
-	@Test
-	@DisplayName("ID로 CommentLike 찾기 -> 정상")
-	void findByIdTest() {
-		//Given
-		Long existId = Long.valueOf(1);
-		given(commentLikeRepository.findById(existId)).willReturn(Optional.of(commentLike));
-		
-		//When
-		CommentLike result = commentLikeService.findById(existId);
-		
-		//Then
-		assertEquals(commentLike, result);
-	}
-	
-	/*
 	 * CommentLike findByUserIdAndCommentId(Long userId, Long commentId)
 	 */
 	
@@ -91,11 +62,10 @@ class CommentLikeServiceUnitTest {
 		Long commentId = Long.valueOf(1);
 		given(commentLikeRepository.findByUserIdAndCommentId(userId, commentId)).willReturn(Optional.empty());
 		
-		//When
-		CommentLike result = commentLikeService.findByUserIdAndCommentId(userId, commentId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(LikeNotFoundedException.class, () -> {
+			commentLikeService.findByUserIdAndCommentId(userId, commentId);
+		});
 	}
 	
 	@Test
@@ -133,6 +103,30 @@ class CommentLikeServiceUnitTest {
 	/*
 	 * CommentLike createAndSaveWithUserAndComment(User user, Comment comment) 
 	 */
+	
+	@Test
+	@DisplayName("CommentLike 생성 및 User, Comment 와 연관 관계 추가 후 저장 -> Given user == null")
+	void createAndSaveWithUserAndCommentTestNullUser() {
+		//Given
+		Comment comment = CommentTest.getCommentInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			commentLikeService.createAndSaveWithUserAndComment(null, comment);
+		});
+	}
+	
+	@Test
+	@DisplayName("CommentLike 생성 및 User, Comment 와 연관 관계 추가 후 저장 -> Given comment == null")
+	void createAndSaveWithUserAndCommentTestNullComment() {
+		//Given
+		User user = UserTest.getUserInstance();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			commentLikeService.createAndSaveWithUserAndComment(user, null);
+		});
+	}
 	
 	@Test
 	@DisplayName("CommentLike 생성 및 User, Comment 와 연관 관계 추가 후 저장 -> 정상, 저장 확인")

@@ -17,7 +17,8 @@ public interface ExerciseService {
 	/**
 	 * ID로 Exercise 찾기
 	 * @param id 찾으려는 Exercise의 id
-	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
+	 * @return Exercise
+	 * @throws ExerciseNotFoundedException 해당 id의 Exercise가 없을때 
 	 * @author kimgun-yeong
 	 */
 	public Exercise findById(Long id);
@@ -25,7 +26,8 @@ public interface ExerciseService {
 	/**
 	 * name으로 Exercise 찾기
 	 * @param name 찾으려는 Exercise의 이름
-	 * @return Exercise, Null(해당 name의 Exercise가 없을때)
+	 * @return Exercise
+	 * @throws ExerciseNotFoundedException 해당 name의 Exercise가 없을때
 	 * @author kimgun-yeong
 	 */
 	public Exercise findByName(String name);
@@ -33,7 +35,8 @@ public interface ExerciseService {
 	/**
 	 * ID 로 Feedbacks 페치 조인 후 반환 
 	 * @param id 찾으려는 Exercise의 id
-	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
+	 * @return Exercise
+	 * @throws ExerciseNotFoundedException 해당 id의 Exercise가 없을때
 	 * @author kimgun-yeong
 	 */
 	public Exercise findWithFeedbacksById(Long id);
@@ -41,7 +44,8 @@ public interface ExerciseService {
 	/**
 	 * ID로 ExercisePosts 페치 조인 후 반환
 	 * @param id 찾으려는 Exercise의 id
-	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
+	 * @return Exercise
+	 * @throws ExerciseNotFoundedException 해당 name의 Exercise가 없을때
 	 * @author kimgun-yeong
 	 */
 	public Exercise findWithExercisePostsByName(String name);
@@ -49,14 +53,15 @@ public interface ExerciseService {
 	/**
 	 * ID로 ExerciseMuscles 페치 조인 후 반환
 	 * @param id 찾으려는 Exercise의 id
-	 * @return Exercise, Null(해당 id의 Exercise가 없을때)
- 
+	 * @return Exercise
+	 * @throws ExerciseNotFoundedException 해당 id의 Exercise가 없을때
 	 * @author kimgun-yeong
 	 */
 	public Exercise findWithExerciseMusclesById(Long id);
 	
 	/**
 	 * 모든 Exercise 페이지로 가져오기 
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<Exercise> findAllInPage(Integer pageNumber, int pageSize);
@@ -64,6 +69,7 @@ public interface ExerciseService {
 	/**
 	 * name에 키워드를 포함하는 모든 Exercise 페이지로 가져오는 메소드
 	 * @param keyword name 검색 키워드 
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize);
@@ -88,7 +94,7 @@ public interface ExerciseService {
 	 * {@link SaveExerciseDTO} 에 담긴 정보로 Exercise save <br>
 	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제
 	 * @param dto 클라이언트로부터 받은 Exercise save하기 위한 {@link SaveExerciseDTO} 객체
-	 * @throws NullPointerException exercise == null || dto == null
+	 * @throws PreconditionViolationException exercise == null || dto == null
 	 * @throws TargetTypeNotFoundedException dto 객체에 담긴 target이 아무런 TargetType의 이름이 아닐때 
 	 * @author kimgun-yeong
 	 */
@@ -99,7 +105,7 @@ public interface ExerciseService {
 	 * {@code CacheUtil.EXERCISE_SORT_NAME} 관련 캐시 삭제 <br>
 	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param exercise 삭제하려는 Exercise
-	 * @throws NullPointerException exercise == null
+	 * @throws PreconditionViolationException exercise == null
 	 * @author kimgun-yeong
 	 */
 	public void delete(Exercise exercise);
@@ -128,7 +134,8 @@ public interface ExerciseService {
 	/**
 	 * Exercise Id로 찾은 Exercise로 {@link ExerciseForInfoViewDTO} 생성 및 반환 
 	 * @param exerciseId 찾으려는 Exercise의 ID
-	 * @return {@link ExerciseForInfoViewDTO}, null(해당 id의 Exercise 없을때)
+	 * @return {@link ExerciseForInfoViewDTO}
+	 * @throws ExerciseNotFoundedException 해당 id의 Exercise가 없을때
 	 * @author kimgun-yeong
 	 */
 	public ExerciseForInfoViewDTO getExerciseForInfoViewDTOByExerciseId(Long exerciseId);

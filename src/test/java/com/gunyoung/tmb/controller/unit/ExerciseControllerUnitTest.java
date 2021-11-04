@@ -23,6 +23,7 @@ import com.gunyoung.tmb.controller.ExerciseController;
 import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 import com.gunyoung.tmb.testutil.ExerciseTest;
@@ -127,7 +128,7 @@ class ExerciseControllerUnitTest {
 	void exerciseInfoDetailViewExerciseNonExist() {
 		//Given
 		Long nonExistExerciseId = Long.valueOf(1);
-		given(exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistExerciseId)).willReturn(null);
+		given(exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistExerciseId)).willThrow(new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(ExerciseNotFoundedException.class, () -> {

@@ -36,6 +36,9 @@ import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
+import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
+import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
@@ -140,7 +143,7 @@ class ExercisePostControllerUnitTest {
 	
 	private void verifyModelAndPageViewInExercisePostViewTestCheckMapv(Page<PostForCommunityViewDTO> pageResult, Long givenExercisPostNum ) {
 		then(mapv).should(times(1)).addObject("listObject", pageResult);
-		then(mapv).should(times(1)).setPageNumbers(defaultPageNum, givenExercisPostNum/ ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE + 1);
+		then(mapv).should(times(1)).setPageNumbers(defaultPageNum, givenExercisPostNum/ExercisePostController.COMMUNITY_VIEW_PAGE_SIZE + 1);
 		then(mapv).should(times(1)).addObject("category", "전체");
 		then(mapv).should(times(1)).setViewName("community");
 	}
@@ -230,6 +233,7 @@ class ExercisePostControllerUnitTest {
 	void exercisePostDetailViewExercisePostNonExist() {
 		//Given
 		Long nonExistExercisePostId = Long.valueOf(24);
+		given(exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(nonExistExercisePostId)).willThrow(new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When,Then
 		assertThrows(ExercisePostNotFoundedException.class, () -> {
@@ -306,7 +310,7 @@ class ExercisePostControllerUnitTest {
 		//Given
 		Long nonExistUserId = Long.valueOf(95);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
-		given(userService.findWithExercisePostsById(nonExistUserId)).willReturn(null);
+		given(userService.findWithExercisePostsById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 		
 		String exerciseName = "exercise";
 		SaveExercisePostDTO saveExercisePostDTO = ExercisePostTest.getSaveExercisePostDTOInstance(exerciseName);
@@ -328,7 +332,7 @@ class ExercisePostControllerUnitTest {
 		
 		String nonExistExerciseName = "nonexist";
 		SaveExercisePostDTO saveExercisePostDTO = ExercisePostTest.getSaveExercisePostDTOInstance(nonExistExerciseName);
-		given(exerciseService.findWithExercisePostsByName(nonExistExerciseName)).willReturn(null);
+		given(exerciseService.findWithExercisePostsByName(nonExistExerciseName)).willThrow(new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(ExerciseNotFoundedException.class, () -> {
@@ -375,7 +379,7 @@ class ExercisePostControllerUnitTest {
 		//Given
 		Long nonExistUserId = Long.valueOf(95);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
-		given(userService.findWithCommentsById(nonExistUserId)).willReturn(null);
+		given(userService.findWithCommentsById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 		
 		Long exercisePostId = Long.valueOf(1);
 		HttpServletRequest request = mock(HttpServletRequest.class);
@@ -395,7 +399,7 @@ class ExercisePostControllerUnitTest {
 		stubbingUserServiceFindWithCommentsById(loginIdInSession);
 		
 		Long nonExistExercisePostId = Long.valueOf(96);
-		given(exercisePostService.findWithCommentsById(nonExistExercisePostId)).willReturn(null);
+		given(exercisePostService.findWithCommentsById(nonExistExercisePostId)).willThrow(new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription()));
 		
 		HttpServletRequest request = mock(HttpServletRequest.class);
 		

@@ -24,6 +24,8 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.SaveUserExerciseDTO;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
+import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
@@ -105,7 +107,7 @@ class UserExerciseControllerUnitTest {
 		//Given
 		Long nonExistUserId = Long.valueOf(1);
 		given(session.getAttribute(SessionUtil.LOGIN_USER_ID)).willReturn(nonExistUserId);
-		given(userService.findWithUserExerciseById(nonExistUserId)).willReturn(null);
+		given(userService.findWithUserExerciseById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 		
 		Exercise exercise = ExerciseTest.getExerciseInstance();
 		SaveUserExerciseDTO saveUserExerciseDTO = UserExerciseTest.getSaveUserExerciseDTOInstance(exercise.getName()); 
@@ -126,7 +128,7 @@ class UserExerciseControllerUnitTest {
 		String nonExistExerciseName = "nonExist";
 		SaveUserExerciseDTO saveUserExerciseDTO = UserExerciseTest.getSaveUserExerciseDTOInstance(nonExistExerciseName);
 		
-		given(exerciseService.findByName(nonExistExerciseName)).willReturn(null);
+		given(exerciseService.findByName(nonExistExerciseName)).willThrow(new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(ExerciseNotFoundedException.class, () -> {

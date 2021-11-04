@@ -17,6 +17,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class MuscleInfoBySortDTO {
-	private String target;
+	private String category;
 	private List<String> muscleNames;
+	
+	/**
+	 * category, muscleNames를 통해 MusclInfoBySortDTO 생성 후 반환
+	 * @param category koreanName of TargetType
+	 * @param listOfMuscleNames Muscle name 필드 리스트
+	 * @return MuscleInfoBySortDTO
+	 * @author kimgun-yeong
+	 */
+	public static MuscleInfoBySortDTO of(String category, List<String> listOfMuscleNames) {
+		return MuscleInfoBySortDTO.builder()
+				.category(category)
+				.muscleNames(listOfMuscleNames)
+				.build();
+	}
 }

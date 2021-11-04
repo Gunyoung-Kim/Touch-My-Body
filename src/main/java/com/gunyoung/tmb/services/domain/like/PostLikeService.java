@@ -9,19 +9,10 @@ public interface PostLikeService {
 	public static final String EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY = "exsitByUserIdAndExercisePostId";
 	
 	/**
-	 * ID로 PostLike 찾기
-	 * @param id 찾으려는 PostLike의 id
-	 * @return PostLike, Null( 해당 id의 PostLike 없으면)
-	 * @since 11
-	 * @author kimgun-yeong
-	 */
-	public PostLike findById(Long id);
-	
-	/**
 	 * User Id, ExercisePost Id 로 PostLike 찾기
 	 * @param userId 찾으려는 PostLike를 추가한 User Id
 	 * @param exercisePostId 찾으려는 PostLike의 대상 게시물 Id
-	 * @since 11
+	 * @throws LikeNotFoundedException 해당 조건을 만족하는 PostLike 없을 때
 	 * @author kimgun-yeong
 	 */
 	public PostLike findByUserIdAndExercisePostId(Long userId, Long exercisePostId);

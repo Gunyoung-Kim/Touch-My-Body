@@ -18,7 +18,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long>{
 	/**
 	 * ID를 만족하는 Feedback 필드 Select 후 {@link FeedbackViewDTO} 매핑하는 쿼리 
 	 * @param id 찾으려는 Feedback의 ID
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@Query("SELECT new com.gunyoung.tmb.dto.response.FeedbackViewDTO (f.id, f.title, f.contents, u.nickName, e.name, f.createdAt) FROM Feedback f "
@@ -32,8 +31,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long>{
 	 * Feedback 생성 오래된 순으로 정렬 <br>
 	 * 페이징 처리 
 	 * @param exerciseId 찾으려는 Feedback의 Exercise ID
-	 * @param pageable
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@Query("SELECT f FROM Feedback f "
@@ -48,8 +45,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long>{
 	 * Feedback 생성 오래된 순으로 정렬 <br>
 	 * 페이징 처리
 	 * @param exericseId 찾으려는 Feedback의 Exercise ID
-	 * @param pageable
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@Query("SELECT new com.gunyoung.tmb.dto.response.FeedbackManageListDTO (f.id, f.title, u.nickName, e.name, f.createdAt) FROM Feedback f "
@@ -63,7 +58,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback,Long>{
 	/**
 	 * Exercise ID를 만족하는 모든 Feedback 개수 찾기 
 	 * @param exerciseId 찾으려는 Feedback의 Exercise ID
-	 * @return
 	 * @author kimgun-yeong
 	 */
 	@Query("SELECT COUNT(f) FROM Feedback f "

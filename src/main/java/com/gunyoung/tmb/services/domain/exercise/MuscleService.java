@@ -14,7 +14,8 @@ public interface MuscleService {
 	/**
 	 * ID로 Muscle 찾기
 	 * @param id 찾으려는 Muscle의 id
-	 * @return Muscle, Null (해당 id의 Muscle이 없을때)
+	 * @return Muscle
+	 * @throws MuscleNotFoundedException 해당 id의 Muscle이 없을때
 	 * @author kimgun-yeong
 	 */
 	public Muscle findById(Long id);
@@ -22,13 +23,15 @@ public interface MuscleService {
 	/**
 	 * name으로 Muscle 찾기
 	 * @param name 찾으려는 Muscle 이름
-	 * @return Muscle, Null (해당 이름의 Muscle이 없을때)
+	 * @return Muscle
+	 * @throws MuscleNotFoundedException 해당 name의 Muscle이 없을때
 	 * @author kimgun-yeong
 	 */
 	public Muscle findByName(String name);
 	
 	/**
 	 * 모든 Muscle들 페이지 반환
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<Muscle> findAllInPage(Integer pageNumber, int pageSize);
@@ -36,6 +39,7 @@ public interface MuscleService {
 	/**
 	 * 키워드 name에 포함하는 Muscle 페이지 반환
 	 * @param keyword Muscle name 검색 키워드 
+	 * @throws PreconditionViolationException pageNumber 이 1보다 작거나 pageSize가 1보다 작을 경우
 	 * @author kimgun-yeong
 	 */
 	public Page<Muscle> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize);
@@ -68,7 +72,7 @@ public interface MuscleService {
 	 * Muscle 삭제 <br>
 	 * {@code CacheUtil.MUSCLE_SORT_NAME} 관련 Cache 삭제
 	 * @param muscle 삭제하려는 muscle
-	 * @throws NullPointerException muscle == null
+	 * @throws PreconditionViolationException muscle == null
 	 * @author kimgun-yeong
 	 */
 	public void delete(Muscle muscle);

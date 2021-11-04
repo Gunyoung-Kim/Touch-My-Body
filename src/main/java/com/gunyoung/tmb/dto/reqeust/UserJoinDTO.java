@@ -44,13 +44,12 @@ public class UserJoinDTO {
 	 * @author kimgun-yeong
 	 */
 	public User createUserInstance() {
-		User user = User.builder()
+		return User.builder()
 				.email(this.email)
 				.password(this.password)
 				.firstName(this.firstName)
 				.lastName(this.lastName)
 				.nickName(this.nickName)
 				.build();
-		return user;
 	}
 }

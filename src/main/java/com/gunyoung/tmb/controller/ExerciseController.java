@@ -14,7 +14,6 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForTableDTO;
 import com.gunyoung.tmb.enums.PageSize;
-import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
 
@@ -77,9 +76,6 @@ public class ExerciseController {
 	@GetMapping(value="/exercise/about/{exercise_id}")
 	public ModelAndView exerciseInfoDetailView(@PathVariable("exercise_id") Long exerciseId, ModelAndView mav) {
 		ExerciseForInfoViewDTO exerciseforInfoViewDTO = exerciseService.getExerciseForInfoViewDTOByExerciseId(exerciseId);
-		if(exerciseforInfoViewDTO == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
-		}
 		
 		mav.addObject("exerciseInfo", exerciseforInfoViewDTO);
 		mav.setViewName("exerciseInfo");

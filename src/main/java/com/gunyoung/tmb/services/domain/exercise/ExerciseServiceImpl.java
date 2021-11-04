@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.cache.annotation.CacheEvict;
@@ -23,8 +22,11 @@ import com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO;
 import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
+import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.services.domain.user.UserExerciseService;
 
@@ -57,40 +59,41 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Transactional(readOnly=true)
 	public Exercise findById(Long id) {
 		Optional<Exercise> result = exerciseRepository.findById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findByName(String name) {
 		Optional<Exercise> result = exerciseRepository.findByName(name);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findWithFeedbacksById(Long id) {
 		Optional<Exercise> result = exerciseRepository.findWithFeedbacksById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findWithExercisePostsByName(String name) {
 		Optional<Exercise> result = exerciseRepository.findWithExercisePostsByName(name);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Exercise findWithExerciseMusclesById(Long id) {
 		Optional<Exercise> result = exerciseRepository.findWithExerciseMusclesById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Page<Exercise> findAllInPage(Integer pageNumber, int pageSize) {
+		checkParameterForPageRequest(pageNumber, pageSize);
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exerciseRepository.findAll(pageRequest);
 	}
@@ -98,8 +101,14 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Override
 	@Transactional(readOnly=true)
 	public Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize) {
+		checkParameterForPageRequest(pageNumber, pageSize);
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exerciseRepository.findAllWithNameKeyword(keyword, pageRequest);
+	}
+	
+	private void checkParameterForPageRequest(Integer pageNumber, int pageSize) {
+		Preconditions.notLessThan(pageNumber, 1, "pageNumber should be equal or greater than 1");
+		Preconditions.notLessThanInt(pageSize, 1, "pageSize should be equal or greater than 1");
 	}
 	
 	@Override
@@ -127,8 +136,8 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Override
 	@CacheEvict(cacheNames = EXERCISE_SORT_NAME, key = "#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public Exercise saveWithSaveExerciseDTO(Exercise exercise, SaveExerciseDTO dto) {
-		Objects.requireNonNull(exercise, "Given exercise must not be null!");
-		Objects.requireNonNull(dto, "Given saveExerciseDTO must not be null");
+		Preconditions.notNull(exercise, "Given exercise must not be null!");
+		Preconditions.notNull(dto, "Given saveExerciseDTO must not be null");
 		
 		exercise.setName(dto.getName());
 		exercise.setDescription(dto.getDescription());
@@ -176,15 +185,15 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Override
 	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void deleteById(Long id) {
-		Exercise exercise = findById(id);
-		if(exercise != null)
-			delete(exercise);
+		Optional<Exercise> exercise = exerciseRepository.findById(id);
+		exercise.ifPresent(this::delete);
 	}
 
 	@Override
 	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
 	public void delete(Exercise exercise) {
-		Objects.requireNonNull(exercise);
+		Preconditions.notNull(exercise, "Given exercise must be not null");
+		
 		deleteAllWeakEntityForExercise(exercise);
 		exerciseRepository.deleteByIdInQuery(exercise.getId());
 	}
@@ -213,8 +222,6 @@ public class ExerciseServiceImpl implements ExerciseService {
 	@Transactional(readOnly=true)
 	public ExerciseForInfoViewDTO getExerciseForInfoViewDTOByExerciseId(Long exerciseId) {
 		Exercise exercise = findWithExerciseMusclesById(exerciseId);
-		if(exercise == null)
-			return null;
 		return ExerciseForInfoViewDTO.of(exercise);
 	}
 

@@ -8,13 +8,16 @@ import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.CommentForPostViewDTO;
+import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 
 public interface CommentService {
 	
 	/**
 	 * ID로 Comment 찾기
 	 * @param id 찾으려는 Comment의 id
-	 * @return Comment, Null(해당 id의 Comment가 없을때)
+	 * @return Comment
+	 * @throws CommentNotFoundedException 해당 id의 Comment가 없을때 
 	 * @author kimgun-yeong
 	 */
 	public Comment findById(Long id);
@@ -22,7 +25,8 @@ public interface CommentService {
 	/**
 	 * ID로 User와 ExercisePost 페치조인 후 Comment 반환
 	 * @param id 찾으려는 Comment의 id
-	 * @return Comment, Null(해당 id의 Comment가 없을때)
+	 * @return Comment
+	 * @throws CommentNotFoundedException 해당 id의 Comment가 없을때 
 	 * @author kimgun-yeong
 	 */
 	public Comment findWithUserAndExercisePostById(Long id);
@@ -30,7 +34,8 @@ public interface CommentService {
 	/**
 	 * ID로 CommentLikes 페치조인 후 Comment 반환
 	 * @param id 찾으려는 Comment의 id
-	 * @return Comment, Null(해당 id의 Comment가 없을때)
+	 * @return Comment
+	 * @throws CommentNotFoundedException 해당 id의 Comment가 없을때 
 	 * @author kimgun-yeong
 	 */
 	public Comment findWithCommentLikesById(Long id);
@@ -66,8 +71,10 @@ public interface CommentService {
 	
 	/**
 	 * User, ExercisePost 와 연관관계 생성 후 저장 
+	 * @param comment 저장할 댓글
 	 * @param user 댓글을 추가한 User
 	 * @param exercisePost 댓글이 추가된 ExercisePost
+	 * @throws PreconditionViolationException 인자로 전달된 객체들 중 하나라도 null인 경우
 	 * @author kimgun-yeong
 	 */
 	public Comment saveWithUserAndExercisePost(Comment comment, User user, ExercisePost exercisePost);
@@ -76,7 +83,7 @@ public interface CommentService {
 	 * Comment 삭제 <br>
 	 * OneToMany 연관 엔티티도 모두 삭제
 	 * @param comment 삭제하려는 Comment
-	 * @throws NullPointerException comment == null
+	 * @throws PreconditionViolationException comment == null
 	 * @author kimgun-yeong
 	 */
 	public void delete(Comment comment);

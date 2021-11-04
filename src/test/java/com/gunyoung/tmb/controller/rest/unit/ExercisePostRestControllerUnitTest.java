@@ -20,6 +20,10 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.error.codes.CommentErrorCode;
+import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
+import com.gunyoung.tmb.error.codes.LikeErrorCode;
+import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.LikeAlreadyExistException;
 import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
@@ -79,7 +83,7 @@ class ExercisePostRestControllerUnitTest {
 		Long nonExistUserId = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(nonExistUserId);
 		
-		given(userService.findWithPostLikesById(nonExistUserId)).willReturn(null);
+		given(userService.findWithPostLikesById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 		
 		Long exercisePostId = Long.valueOf(1);
 		
@@ -98,7 +102,7 @@ class ExercisePostRestControllerUnitTest {
 		stubbingUserServiceFindWithPostLikesById(loginIdInSession);
 		
 		Long nonExistExercisePostId = Long.valueOf(1);
-		given(exercisePostService.findWithPostLikesById(nonExistExercisePostId)).willReturn(null);
+		given(exercisePostService.findWithPostLikesById(nonExistExercisePostId)).willThrow(new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(ExercisePostNotFoundedException.class, () -> {
@@ -169,7 +173,7 @@ class ExercisePostRestControllerUnitTest {
 		stubbingSessionByLoginIdInSession(loginIdInSession);
 		
 		Long exercisePostId = Long.valueOf(1);
-		given(postLikeService.findByUserIdAndExercisePostId(loginIdInSession, exercisePostId)).willReturn(null);
+		given(postLikeService.findByUserIdAndExercisePostId(loginIdInSession, exercisePostId)).willThrow(new LikeNotFoundedException(LikeErrorCode.LIKE_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When,Then
 		assertThrows(LikeNotFoundedException.class, () -> {
@@ -206,7 +210,7 @@ class ExercisePostRestControllerUnitTest {
 		Long nonExistUserId = Long.valueOf(1);
 		stubbingSessionByLoginIdInSession(nonExistUserId);
 		
-		given(userService.findWithCommentLikesById(nonExistUserId)).willReturn(null);
+		given(userService.findWithCommentLikesById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 		
 		Long exercisePostId = Long.valueOf(1);
 		
@@ -225,7 +229,7 @@ class ExercisePostRestControllerUnitTest {
 		stubbingUserServiceFindWithCommentLikesById(loginIdInSession);
 		
 		Long nonExistCommentId = Long.valueOf(1);
-		given(commentService.findWithCommentLikesById(nonExistCommentId)).willReturn(null);
+		given(commentService.findWithCommentLikesById(nonExistCommentId)).willThrow(new CommentNotFoundedException(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getDescription()));
 		
 		Long exercisePostId = Long.valueOf(1);
 		//When, Then
@@ -298,7 +302,7 @@ class ExercisePostRestControllerUnitTest {
 		stubbingSessionByLoginIdInSession(loginIdInSession);
 		
 		Long commentId = Long.valueOf(1);
-		given(commentLikeService.findByUserIdAndCommentId(loginIdInSession, commentId)).willReturn(null);
+		given(commentLikeService.findByUserIdAndCommentId(loginIdInSession, commentId)).willThrow(new LikeNotFoundedException(LikeErrorCode.LIKE_NOT_FOUNDED_ERROR.getDescription()));
 		
 		Long exercisePostId = Long.valueOf(1);
 		//When, Then

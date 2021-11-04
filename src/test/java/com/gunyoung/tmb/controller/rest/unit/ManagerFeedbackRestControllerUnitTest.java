@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.gunyoung.tmb.controller.rest.ManagerFeedbackRestController;
 import com.gunyoung.tmb.domain.exercise.Feedback;
+import com.gunyoung.tmb.error.codes.FeedbackErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
 import com.gunyoung.tmb.testutil.FeedbackTest;
@@ -44,7 +45,7 @@ class ManagerFeedbackRestControllerUnitTest {
 	void reflectFeedbackFeedbackNonExist() {
 		//Given
 		Long nonExistFeedbackId = Long.valueOf(1);
-		given(feedbackService.findById(nonExistFeedbackId)).willReturn(null);
+		given(feedbackService.findById(nonExistFeedbackId)).willThrow(new FeedbackNotFoundedException(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(FeedbackNotFoundedException.class, () -> {

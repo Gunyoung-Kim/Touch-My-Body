@@ -1,8 +1,6 @@
 package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,38 +52,6 @@ class ExerciseMuscleServiceTest {
 	@AfterEach
 	void tearDown() {
 		exerciseMuscleRepository.deleteAll();
-	}
-	
-	/*
-	 *  ExerciseMuscle findById(Long id)
-	 */
-	@Test
-	@Transactional
-	@DisplayName("id로 ExerciseMuscle 찾기 -> 해당 id의 exerciseMuscle 없음")
-	void findByIdNonExist() {
-		//Given
-		long nonExistExerciseMuscleId = ExerciseMuscleTest.getNonExistExerciseMuscleId(exerciseMuscleRepository);
-		
-		//When
-		ExerciseMuscle result = exerciseMuscleService.findById(nonExistExerciseMuscleId);
-		
-		//Then
-		assertNull(result);
-	}
-	
-	@Test
-	@Transactional
-	@DisplayName("id로 ExerciseMuscle 찾기 -> 정상")
-	void findByIdTest() {
-		//Given
-		Long exerciseMuscleId = exerciseMuscle.getId();
-		
-		//When
-		ExerciseMuscle result = exerciseMuscleService.findById(exerciseMuscleId);
-		
-		//Then
-		assertNotNull(result);
-		
 	}
 	
 	/*

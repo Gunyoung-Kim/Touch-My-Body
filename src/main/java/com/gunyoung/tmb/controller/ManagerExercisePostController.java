@@ -35,15 +35,15 @@ public class ManagerExercisePostController {
 	 * @param keyword title,contents 검색 키워드
 	 * @author kimgun-yeong
 	 */
-	@GetMapping(value="/manager/community")
-	public ModelAndView manageCommunityView(@RequestParam(value="page", defaultValue="1") int page,
-			@RequestParam(value ="keyword", required=false) String keyword, ModelAndPageView mav) {
+	@GetMapping(value = "/manager/community")
+	public ModelAndView manageCommunityView(@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "keyword", required = false) String keyword, ModelAndPageView mav) {
 		Page<PostForCommunityViewDTO> pageResult = new PageImpl<>(new ArrayList<>());
 		long totalPageNum = 1;
 		
 		if(keyword != null) {
 			pageResult = exercisePostService.findAllForPostForCommunityViewDTOWithKeywordByPage(keyword, page, POST_FOR_MANAGE_PAGE_SIZE);
-			totalPageNum = exercisePostService.countWithTitleAndContentsKeyword(keyword)/POST_FOR_MANAGE_PAGE_SIZE +1;
+			totalPageNum = exercisePostService.countWithTitleAndContentsKeyword(keyword)/POST_FOR_MANAGE_PAGE_SIZE + 1;
 		}
 		
 		mav.addObject("listObject", pageResult);

@@ -27,6 +27,7 @@ import com.gunyoung.tmb.controller.util.ModelAndPageView;
 import com.gunyoung.tmb.domain.exercise.Comment;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.request.AccessDeniedException;
 import com.gunyoung.tmb.error.exceptions.request.SearchCriteriaInvalidException;
@@ -132,7 +133,7 @@ class ManagerUserControllerUnitTest {
 	void manageUserProfileViewTestUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(52);
-		given(userService.findById(nonExistUserId)).willReturn(null);
+		given(userService.findById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(UserNotFoundedException.class, () -> {
@@ -185,7 +186,7 @@ class ManagerUserControllerUnitTest {
 	void manageUserCommentsTestUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(76);
-		given(userService.findById(nonExistUserId)).willReturn(null);
+		given(userService.findById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(UserNotFoundedException.class, () -> {
@@ -285,7 +286,7 @@ class ManagerUserControllerUnitTest {
 	void manageUserPostsTestUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(76);
-		given(userService.findById(nonExistUserId)).willReturn(null);
+		given(userService.findById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(UserNotFoundedException.class, () -> {

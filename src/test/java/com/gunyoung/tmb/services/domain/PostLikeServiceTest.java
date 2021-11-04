@@ -3,7 +3,7 @@ package com.gunyoung.tmb.services.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.error.exceptions.nonexist.LikeNotFoundedException;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.PostLikeRepository;
 import com.gunyoung.tmb.repos.UserRepository;
@@ -59,35 +60,6 @@ class PostLikeServiceTest {
 	@AfterEach
 	void tearDown() {
 		postLikeRepository.deleteAll();
-	}
-	
-	/*
-	 *  PostLike findById(Long id)
-	 */
-	@Test
-	@DisplayName("id로 PostLike 찾기 -> 해당 id의 PostLike없음")
-	void findByIdNonExist() {
-		//Given
-		long nonExistId = PostLikeTest.getNonExistPostLikeId(postLikeRepository);
-		
-		//When
-		PostLike result = postLikeService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
-	}
-	
-	@Test
-	@DisplayName("id로 PostLike 찾기 -> 정상")
-	void findByIdTest() {
-		//Given
-		Long existId = postLike.getId();
-		
-		//When
-		PostLike result = postLikeService.findById(existId);
-		
-		//Then
-		assertNotNull(result);
 	}
 	
 	/*
@@ -219,12 +191,10 @@ class PostLikeServiceTest {
 		exercisePostRepository.save(exercisePost);
 		Long exercisePostId = exercisePost.getId();
 		
-		//when
-		PostLike result = postLikeService.findByUserIdAndExercisePostId(userId, exercisePostId);
-		
-		//Then
-		assertNull(result);
-		
+		//When, Then
+		assertThrows(LikeNotFoundedException.class, () -> {
+			postLikeService.findByUserIdAndExercisePostId(userId, exercisePostId);
+		});
 	}
 	
 	@Test

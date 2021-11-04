@@ -2,7 +2,6 @@ package com.gunyoung.tmb.services.domain.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -32,8 +31,11 @@ import com.gunyoung.tmb.domain.exercise.Muscle;
 import com.gunyoung.tmb.dto.jpa.ExerciseNameAndTargetDTO;
 import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
+import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseMuscleService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
@@ -99,11 +101,10 @@ class ExerciseServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(exerciseRepository.findById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		Exercise result = exerciseService.findById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -130,11 +131,10 @@ class ExerciseServiceUnitTest {
 		String nonExistName = "nonExist";
 		given(exerciseRepository.findByName(nonExistName)).willReturn(Optional.empty());
 		
-		//When
-		Exercise result = exerciseService.findByName(nonExistName);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findByName(nonExistName);
+		});
 	}
 	
 	@Test
@@ -161,11 +161,10 @@ class ExerciseServiceUnitTest {
 		Long nonExistId = Long.valueOf(1);
 		given(exerciseRepository.findWithFeedbacksById(nonExistId)).willReturn(Optional.empty());
 		
-		//When
-		Exercise result = exerciseService.findWithFeedbacksById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findWithFeedbacksById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -192,11 +191,10 @@ class ExerciseServiceUnitTest {
 		String nonExistName = "nonExist";
 		given(exerciseRepository.findWithExercisePostsByName(nonExistName)).willReturn(Optional.empty());
 		
-		//When
-		Exercise result = exerciseService.findWithExercisePostsByName(nonExistName);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findWithExercisePostsByName(nonExistName);
+		});
 	}
 	
 	@Test
@@ -224,10 +222,9 @@ class ExerciseServiceUnitTest {
 		given(exerciseRepository.findWithExerciseMusclesById(nonExistId)).willReturn(Optional.empty());
 		
 		//When
-		Exercise result = exerciseService.findWithExerciseMusclesById(nonExistId);
-		
-		//Then
-		assertNull(result);
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findWithExerciseMusclesById(nonExistId);
+		});
 	}
 	
 	@Test
@@ -249,6 +246,32 @@ class ExerciseServiceUnitTest {
 	 */
 	
 	@Test
+	@DisplayName("모든 운동 페이지로 가져오기 -> pageNumber < 1")
+	void findAllInPageNegativePageNumber() {
+		//Given
+		Integer pageNumber = -1;
+		int pageSize = PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.findAllInPage(pageNumber, pageSize);
+		});
+	}
+	
+	@Test
+	@DisplayName("모든 운동 페이지로 가져오기 -> pageSize < 1")
+	void findAllInPageNegativePageSize() {
+		//Given
+		Integer pageNumber = 1;
+		int pageSize = -1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.findAllInPage(pageNumber, pageSize);
+		});
+	}
+	
+	@Test
 	@DisplayName("모든 Exercise 페이지로 가져오기 -> 정상")
 	void findAllInPageTest() {
 		//Given
@@ -265,6 +288,36 @@ class ExerciseServiceUnitTest {
 	/*
 	 * Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int page_size)
 	 */
+	
+	@Test
+	@DisplayName("이름에 키워드를 포함하는 모든 운동 페이지로 가져오기 -> pageNumber < 1")
+	void findAllWithNameKeywordInPageNegativePageNumber() {
+		//Given
+		Integer pageNumber = -1;
+		int pageSize = PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize();
+		String keyword = "keyword";
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.findAllWithNameKeywordInPage(keyword, pageNumber, pageSize);
+		});
+	}
+	
+	@Test
+	@DisplayName("이름에 키워드를 포함하는 모든 운동 페이지로 가져오기-> pageSize < 1")
+	void findAllWithNameKeywordInPageNegativePageSize() {
+		//Given
+		Integer pageNumber = 1;
+		int pageSize = -1;
+		String keyword = "keyword";
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.findAllWithNameKeywordInPage(keyword, pageNumber, pageSize);
+		});
+	}
+	
+	
 	@Test
 	@DisplayName("name에 키워드를 포함하는 모든 Exercise 페이지로 가져오는 메소드 -> 정상")
 	void findAllWithNameKeywordInPageTest() {
@@ -365,6 +418,30 @@ class ExerciseServiceUnitTest {
 	}
 	
 	@Test
+	@DisplayName("SaveExerciseDTO 에 담긴 정보로 Exercise save -> 인자 exercise == null")
+	void saveWithSaveExerciseDTOTestNullExercise() {
+		//Given
+		String targetTypeKoreanName = TargetType.ARM.getKoreanName();
+		SaveExerciseDTO saveExerciseDTO = getSaveExerciseDTOInstance(targetTypeKoreanName);
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.saveWithSaveExerciseDTO(null, saveExerciseDTO);
+		});
+	}
+	
+	@Test
+	@DisplayName("SaveExerciseDTO 에 담긴 정보로 Exercise save -> 인자 dto == null")
+	void saveWithSaveExerciseDTOTestNullDTO() {
+		//Given
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.saveWithSaveExerciseDTO(exercise, null);
+		});
+	}
+	
+	@Test
 	@DisplayName("SaveExerciseDTO 에 담긴 정보로 Exercise save ->dto 객체에 담긴 TargetType 이름에 해당하는 TargetType 없음")
 	void saveWithSaveExerciseDTOTargetTypeNonExist() {
 		//Given
@@ -411,7 +488,7 @@ class ExerciseServiceUnitTest {
 		//Given
 		
 		//When, Then
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(PreconditionViolationException.class, () -> {
 			exerciseService.delete(null);
 		});
 	}
@@ -564,10 +641,9 @@ class ExerciseServiceUnitTest {
 		given(exerciseRepository.findWithExerciseMusclesById(nonExistId)).willReturn(Optional.empty());
 		
 		//When
-		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistId);
-		
-		//Then
-		assertNull(result);
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistId);
+		});
 	}
 	
 	@Test

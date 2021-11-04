@@ -3,7 +3,6 @@ package com.gunyoung.tmb.services.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -29,7 +28,9 @@ import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.ExerciseForInfoViewDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
+import com.gunyoung.tmb.precondition.PreconditionViolationException;
 import com.gunyoung.tmb.repos.ExerciseMuscleRepository;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.repos.ExerciseRepository;
@@ -99,11 +100,10 @@ class ExerciseServiceTest {
 		//Given
 		long nonExistExerciseId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
-		//When
-		Exercise result = exerciseService.findById(nonExistExerciseId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findById(nonExistExerciseId);
+		});
 	}
 	
 	@Test
@@ -129,11 +129,10 @@ class ExerciseServiceTest {
 		//Given
 		String nonExistName = "None";
 		
-		//When
-		Exercise result = exerciseService.findByName(nonExistName);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.findByName(nonExistName);
+		});
 	}
 	
 	@Test
@@ -154,6 +153,32 @@ class ExerciseServiceTest {
 	 */
 	
 	@Test
+	@DisplayName("모든 운동 페이지로 가져오기 -> pageNumber < 1")
+	void findAllInPageNegativePageNumber() {
+		//Given
+		Integer pageNumber = -1;
+		int pageSize = PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize();
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.findAllInPage(pageNumber, pageSize);
+		});
+	}
+	
+	@Test
+	@DisplayName("모든 운동 페이지로 가져오기 -> pageSize < 1")
+	void findAllInPageNegativePageSize() {
+		//Given
+		Integer pageNumber = 1;
+		int pageSize = -1;
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.findAllInPage(pageNumber, pageSize);
+		});
+	}
+	
+	@Test
 	@Transactional
 	@DisplayName("모든 운동 페이지로 가져오기 ->정상")
 	void findAllInPageTest() {
@@ -165,7 +190,7 @@ class ExerciseServiceTest {
 		long givenExerciseNum = exerciseRepository.count();
 		
 		//When
-		Page<Exercise> result =exerciseService.findAllInPage(pageNumber, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize());
+		Page<Exercise> result = exerciseService.findAllInPage(pageNumber, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize());
 		
 		//Then
 		assertEquals(Math.min(givenExerciseNum, PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize()), result.getContent().size());
@@ -174,6 +199,35 @@ class ExerciseServiceTest {
 	/*
 	 *  Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int page_size)
 	 */
+	
+	@Test
+	@DisplayName("이름에 키워드를 포함하는 모든 운동 페이지로 가져오기 -> pageNumber < 1")
+	void findAllWithNameKeywordInPageNegativePageNumber() {
+		//Given
+		Integer pageNumber = -1;
+		int pageSize = PageSize.EXERCISE_INFO_TABLE_PAGE_SIZE.getSize();
+		String keyword = "keyword";
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.findAllWithNameKeywordInPage(keyword, pageNumber, pageSize);
+		});
+	}
+	
+	@Test
+	@DisplayName("이름에 키워드를 포함하는 모든 운동 페이지로 가져오기-> pageSize < 1")
+	void findAllWithNameKeywordInPageNegativePageSize() {
+		//Given
+		Integer pageNumber = 1;
+		int pageSize = -1;
+		String keyword = "keyword";
+		
+		//When, Then
+		assertThrows(PreconditionViolationException.class, () -> {
+			exerciseService.findAllWithNameKeywordInPage(keyword, pageNumber, pageSize);
+		});
+	}
+	
 	
 	@Test
 	@Transactional
@@ -668,11 +722,10 @@ class ExerciseServiceTest {
 		//Given
 		Long nonExistId = ExerciseTest.getNonExistExerciseId(exerciseRepository);
 		
-		//When
-		ExerciseForInfoViewDTO result = exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistId);
-		
-		//Then
-		assertNull(result);
+		//When, Then 
+		assertThrows(ExerciseNotFoundedException.class, () -> {
+			exerciseService.getExerciseForInfoViewDTOByExerciseId(nonExistId);
+		});
 	}
 	
 	@Test

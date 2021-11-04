@@ -37,11 +37,15 @@ public class PrivacyPolicyController {
 	 */
 	@GetMapping(value = "/privacypolicy/{version}")
 	public ModelAndView privacyPolicyWithVersion(@PathVariable("version") int version, ModelAndView mav) {
-		if(version <= 0 || version > LATEST_POLICY_VERSION) {
+		if(isInValidVersion(version)) {
 			throw new PrivacyPolicyNotFoundedException(PrivacyPolicyErrorCode.PRIVACY_NOT_FOUNDED_ERROR.getDescription());
 		}
 		mav.setViewName("privacyPolicy_" +version);
 		
 		return mav;
+	}
+	
+	private boolean isInValidVersion(int version) {
+		return version <= 0 || version > LATEST_POLICY_VERSION;
 	}
 }

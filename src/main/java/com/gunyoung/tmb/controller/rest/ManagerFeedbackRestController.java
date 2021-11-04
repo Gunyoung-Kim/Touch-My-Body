@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gunyoung.tmb.domain.exercise.Feedback;
-import com.gunyoung.tmb.error.codes.FeedbackErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.FeedbackService;
 
@@ -31,11 +30,7 @@ public class ManagerFeedbackRestController {
 	@PatchMapping(value = "/manager/exercise/feedback/reflect/{feedbackId}")
 	public void reflectFeedback(@PathVariable("feedbackId") Long feedbackId) {
 		Feedback feedback = feedbackService.findById(feedbackId);
-		if(feedback == null) {
-			throw new FeedbackNotFoundedException(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getDescription());
-		}
 		feedback.setReflected(true);
-		
 		feedbackService.save(feedback);
 	}
 }

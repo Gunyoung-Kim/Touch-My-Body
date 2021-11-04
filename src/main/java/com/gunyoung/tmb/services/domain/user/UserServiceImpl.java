@@ -12,6 +12,9 @@ import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.reqeust.UserJoinDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.RoleType;
+import com.gunyoung.tmb.error.codes.UserErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
+import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.UserRepository;
 import com.gunyoung.tmb.services.domain.exercise.CommentService;
 import com.gunyoung.tmb.services.domain.exercise.ExercisePostService;
@@ -49,61 +52,63 @@ public class UserServiceImpl implements UserService{
 	@Transactional(readOnly=true)
 	public User findById(Long id) {
 		Optional<User> result = userRepository.findById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public User findByEmail(String email) {
 		Optional<User> result = userRepository.findByEmail(email);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithUserExerciseById(Long id) {
 		Optional<User> result = userRepository.findWithUserExercisesById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithFeedbacksById(Long id) {
 		Optional<User> result = userRepository.findWithFeedbacksById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithPostLikesById(Long id) {
 		Optional<User> result = userRepository.findWithPostLikesById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithCommentLikesById(Long id) {
 		Optional<User> result = userRepository.findWithCommentLikesById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithExercisePostsById(Long id) {
 		Optional<User> result = userRepository.findWithExercisePostsById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User findWithCommentsById(Long id) {
 		Optional<User> result = userRepository.findWithCommentsById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Page<User> findAllByNickNameOrNameInPage(String keyword, Integer pageNumber) {
+		Preconditions.notLessThan(pageNumber, 1, "pageNumber should be equal or greater than 1");
+		
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, PageSize.BY_NICKNAME_NAME_PAGE_SIZE.getSize());
 		return userRepository.findAllByNickNameOrName(keyword, pageRequest);
 	}
@@ -115,6 +120,8 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	public User saveByJoinDTOAndRoleType(UserJoinDTO dto, RoleType role) {
+		Preconditions.notNull(dto, "Given UserJoinDTO must be not null");
+		
 		User user = dto.createUserInstance();
 		user.setRole(role);
 		return userRepository.save(user);
@@ -122,12 +129,14 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public void delete(User user) {
-		Long userId = user.getId();
-		deleteAllWeakEntityById(userId);
-		userRepository.deleteByIdInQuery(userId);
+		Preconditions.notNull(user, "Given user must be not null");
+		
+		deleteAllWeakEntityById(user);
+		userRepository.deleteByIdInQuery(user.getId());
 	}
 	
-	private void deleteAllWeakEntityById(Long userId) {
+	private void deleteAllWeakEntityById(User user) {
+		Long userId = user.getId();
 		userExerciseService.deleteAllByUserId(userId);
 		commentLikeService.deleteAllByUserId(userId);
 		commentService.deleteAllByUserId(userId);
@@ -162,6 +171,9 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User addUserExercise(User user, UserExercise userExercise) {
+		Preconditions.notNull(user, "Given user must be not null");
+		Preconditions.notNull(userExercise, "Given userExercise must be not null");
+		
 		setRelationBetweenUserAndUserExercise(user, userExercise);
 		userExerciseService.save(userExercise);
 		return user;
@@ -174,6 +186,9 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public void deleteUserExercise(User user, UserExercise userExercise) {
+		Preconditions.notNull(user, "Given user must be not null");
+		Preconditions.notNull(userExercise, "Given userExercise must be not null");
+		
 		user.getUserExercises().remove(userExercise);
 		userExerciseService.delete(userExercise);
 	}

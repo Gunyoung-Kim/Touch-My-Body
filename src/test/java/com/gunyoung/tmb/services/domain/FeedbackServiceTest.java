@@ -2,7 +2,7 @@ package com.gunyoung.tmb.services.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -17,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.domain.exercise.Feedback;
 import com.gunyoung.tmb.domain.user.User;
+import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
 import com.gunyoung.tmb.enums.PageSize;
+import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.repos.ExerciseRepository;
 import com.gunyoung.tmb.repos.FeedbackRepository;
 import com.gunyoung.tmb.repos.UserRepository;
@@ -60,27 +62,26 @@ class FeedbackServiceTest {
 	@AfterEach
 	void tearDown() {
 		feedbackRepository.deleteAll();
+		userRepository.deleteAll();
+		exerciseRepository.deleteAll();
 	}
 	
 	/*
 	 *  Feedback findById(Long id)
 	 */
 	@Test
-	@Transactional
 	@DisplayName("id로 Feedback 찾기 -> 해당 id의 feedback 없음")
 	void findByIdNonExist() {
 		//Given
 		long nonExistFeedbackId = FeedbackTest.getNonExistFeedbackId(feedbackRepository);
 		
-		//When
-		Feedback result = feedbackService.findById(nonExistFeedbackId);
-		
-		//Then
-		assertNull(result);
+		//When, Then
+		assertThrows(FeedbackNotFoundedException.class, () -> {
+			feedbackService.findById(nonExistFeedbackId);
+		});
 	}
 	
 	@Test
-	@Transactional
 	@DisplayName("id로 Feedback 찾기 -> 정상")
 	void findByIdTest() {
 		//Given
@@ -91,7 +92,55 @@ class FeedbackServiceTest {
 		
 		//Then
 		assertNotNull(result);
+	}
+	
+	/*
+	 * public FeedbackViewDTO findForFeedbackViewDTOById(Long id);
+	 */
+	
+	@Test
+	@DisplayName("ID로 Feedback 찾고 FeedbackViewDTO 생성 후 반환 -> 해당 ID의 Feedback 없음")
+	void findForFeedbackViewDTOByIdTestNonExist() {
+		//Given
+		Long nonExistFeedbackId = FeedbackTest.getNonExistFeedbackId(feedbackRepository);
 		
+		//When, Then
+		assertThrows(FeedbackNotFoundedException.class, () -> {
+			feedbackService.findForFeedbackViewDTOById(nonExistFeedbackId);
+		});
+	}
+	
+	@Test
+	@DisplayName("ID로 Feedback 찾고 FeedbackViewDTO 생성 후 반환 -> 정상")
+	void findForFeedbackViewDTOByIdTest() {
+		//Given
+		User user = UserTest.getUserInstance();
+		Exercise exercise = ExerciseTest.getExerciseInstance();
+		setNewUserAndExerciseForFeedback(user, exercise);
+		Long existFeedbackId = feedback.getId();
+		
+		//When
+		FeedbackViewDTO result = feedbackService.findForFeedbackViewDTOById(existFeedbackId);
+		
+		//Then
+		verifyResultFor_findForFeedbackViewDTOByIdTest(feedback, user, exercise, result);
+	}
+
+	private void setNewUserAndExerciseForFeedback(User user, Exercise exercise) {
+		userRepository.save(user);
+		exerciseRepository.save(exercise);
+		
+		feedback.setUser(user);
+		feedback.setExercise(exercise);
+		feedbackRepository.save(feedback);
+	}
+	
+	private void verifyResultFor_findForFeedbackViewDTOByIdTest(Feedback feedback, User user, Exercise exercise,FeedbackViewDTO result) {
+		assertEquals(feedback.getId(), result.getId());
+		assertEquals(feedback.getTitle(), result.getTitle());
+		assertEquals(user.getNickName(), result.getUserNickName());
+		assertEquals(exercise.getName(), result.getExerciseName());
+		assertEquals(feedback.getCreatedAt(), result.getCreatedAt());
 	}
 	
 	/*

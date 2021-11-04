@@ -24,6 +24,7 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.reqeust.SaveExerciseDTO;
 import com.gunyoung.tmb.dto.response.MuscleInfoBySortDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.ExerciseNameDuplicationFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
@@ -97,7 +98,7 @@ class ManagerExerciseRestControllerUnitTest {
 		SaveExerciseDTO dto = ExerciseTest.getSaveExerciseDTOInstance(changedExerciseName);
 		
 		Long nonExistExerciseId = Long.valueOf(1);
-		given(exerciseService.findWithExerciseMusclesById(nonExistExerciseId)).willReturn(null);
+		given(exerciseService.findWithExerciseMusclesById(nonExistExerciseId)).willThrow(new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 		
 		//When, Then
 		assertThrows(ExerciseNotFoundedException.class, () -> {
@@ -211,9 +212,9 @@ class ManagerExerciseRestControllerUnitTest {
 	
 	private void assertMuscleInfoBySortDTOList(List<MuscleInfoBySortDTO> result) {
 		for(MuscleInfoBySortDTO dto: result) {
-			String target = dto.getTarget();
+			String category = dto.getCategory();
 			for(String exerciseName :dto.getMuscleNames()) {
-				assertEquals(exerciseName, TargetType.valueOf(target).getKoreanName());
+				assertEquals(exerciseName, TargetType.valueOf(category).getKoreanName());
 			}
 		}
 	}

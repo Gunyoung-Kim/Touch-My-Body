@@ -27,10 +27,7 @@ import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.PageSize;
 import com.gunyoung.tmb.enums.TargetType;
-import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
-import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
 import com.gunyoung.tmb.error.codes.TargetTypeErrorCode;
-import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.TargetTypeNotFoundedException;
@@ -70,9 +67,9 @@ public class ExercisePostController {
 	 * @param keyword ExercisePost 제목 및 내용의 검색 키워드
 	 * @author kimgun-yeong
 	 */
-	@GetMapping(value="/community")
-	public ModelAndView exercisePostView(@RequestParam(value="page", required = false,defaultValue="1") Integer page,
-			@RequestParam(value="keyword",required=false) String keyword, ModelAndPageView mav) {
+	@GetMapping(value = "/community")
+	public ModelAndView exercisePostView(@RequestParam(value = "page", required = false,defaultValue = "1") Integer page,
+			@RequestParam(value = "keyword",required = false) String keyword, ModelAndPageView mav) {
 		Page<PostForCommunityViewDTO> pageResult = getPageResultForExercisePostView(keyword, page);
 		long totalPageNum = getTotalPageNumForExercisePostView(keyword);
 		
@@ -99,7 +96,7 @@ public class ExercisePostController {
 		if(keyword == null) {
 			return exercisePostService.count()/COMMUNITY_VIEW_PAGE_SIZE + 1;
 		}
-		return exercisePostService.countWithTitleAndContentsKeyword(keyword)/COMMUNITY_VIEW_PAGE_SIZE +1;
+		return exercisePostService.countWithTitleAndContentsKeyword(keyword)/COMMUNITY_VIEW_PAGE_SIZE + 1;
 	}
 	
 	/**
@@ -109,15 +106,10 @@ public class ExercisePostController {
 	 * @throws TargetTypeNotFoundedException 요청 카테고리가 존재하지 않을 때
 	 * @author kimgun-yeong
 	 */
-	@GetMapping(value="/community/{target}")
-	public ModelAndView exercisePostViewWithTarget(@RequestParam(value="page", required = false,defaultValue="1") Integer page
-			, @RequestParam(value="keyword",required=false)String keyword, ModelAndPageView mav, @PathVariable("target") String targetName) {
-		TargetType type;
-		try {
-			type = TargetType.valueOf(targetName);
-		} catch(IllegalArgumentException e) {
-			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
-		}
+	@GetMapping(value = "/community/{target}")
+	public ModelAndView exercisePostViewWithTarget(@RequestParam(value = "page", required = false,defaultValue = "1") Integer page
+			, @RequestParam(value = "keyword",required = false)String keyword, ModelAndPageView mav, @PathVariable("target") String targetName) {
+		TargetType type = getTargetTypeFromName(targetName);
 		
 		Page<PostForCommunityViewDTO> pageResult = getPageResultForExercisePostViewWithTarget(keyword, type, page);
 		long totalPageNum = getTotalPageNumForExercisePostViewWithTarget(keyword, type);
@@ -132,6 +124,14 @@ public class ExercisePostController {
 		mav.setViewName("community");
 		
 		return mav;
+	}
+	
+	private TargetType getTargetTypeFromName(String targetName) {
+		try {
+			return TargetType.valueOf(targetName);
+		} catch(IllegalArgumentException e) {
+			throw new TargetTypeNotFoundedException(TargetTypeErrorCode.TARGET_TYPE_NOT_FOUNDED_ERROR.getDescription());
+		}
 	}
 	
 	private Page<PostForCommunityViewDTO> getPageResultForExercisePostViewWithTarget(String keyword, TargetType type, Integer page) {
@@ -154,13 +154,9 @@ public class ExercisePostController {
 	 * @throws ExercisePostNotFoundedException 해당 ID의 ExercisePost 없으면
 	 * @author kimgun-yeong
 	 */
-	@GetMapping(value="/community/post/{post_id}")
+	@GetMapping(value = "/community/post/{post_id}")
 	public ModelAndView exercisePostDetailView(@PathVariable("post_id") Long postId, ModelAndView mav) {
 		ExercisePostViewDTO postViewDTO = exercisePostService.getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(postId);
-		if(postViewDTO == null) {
-			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		List<CommentForPostViewDTO> commentsInPost = commentService.getCommentForPostViewDTOsByExercisePostId(postId);
 		
 		mav.addObject("exercisePost",postViewDTO);
@@ -175,7 +171,7 @@ public class ExercisePostController {
 	 * 게시글 작성하는 화면 반환하는 메소드
 	 * @author kimgun-yeong
 	 */
-	@GetMapping(value="/community/post/addpost")
+	@GetMapping(value = "/community/post/addpost")
 	public ModelAndView addExercisePostView(ModelAndView mav) {
 		mav.setViewName("addExercisePost");
 		
@@ -189,20 +185,12 @@ public class ExercisePostController {
 	 * @throws ExerciseNotFoundedException dto의 exerciseName에 해당하는 Exercise 없으면 
 	 * @author kimgun-yeong
 	 */
-	@PostMapping(value="/community/post/addpost")
+	@PostMapping(value = "/community/post/addpost")
 	@LoginIdSessionNotNull
 	public ModelAndView addExercisePost(@ModelAttribute SaveExercisePostDTO dto, ModelAndView mav) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findWithExercisePostsById(loginUserId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		Exercise exercise = exerciseService.findWithExercisePostsByName(dto.getExerciseName());
-		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		ExercisePost exercisePost = dto.createExercisePost();
 		
 		exercisePostService.saveWithUserAndExercise(exercisePost, user, exercise);
@@ -218,21 +206,14 @@ public class ExercisePostController {
 	 * @throws ExercisePostNotFoundedException 해당 ID의 ExercisePost 없으면 
 	 * @author kimgun-yeong
 	 */
-	@PostMapping(value="/community/post/{post_id}/addComment")
+	@PostMapping(value = "/community/post/{postId}/addComment")
 	@LoginIdSessionNotNull
-	public ModelAndView addCommentToExercisePost(@PathVariable("post_id") Long postId, @ModelAttribute SaveCommentDTO dto,
+	public ModelAndView addCommentToExercisePost(@PathVariable("postId") Long postId, @ModelAttribute SaveCommentDTO dto,
 			@RequestParam("isAnonymous") boolean isAnonymous, HttpServletRequest request) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findWithCommentsById(loginUserId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		ExercisePost exercisePost = exercisePostService.findWithCommentsById(postId);
-		if(exercisePost == null) {
-			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
-		}
-		 
+ 
 		String writerIp = HttpRequestUtil.getRemoteHost(request);
 		Comment newComment = SaveCommentDTO.toComment(dto, writerIp);
 		newComment.setAnonymous(isAnonymous);

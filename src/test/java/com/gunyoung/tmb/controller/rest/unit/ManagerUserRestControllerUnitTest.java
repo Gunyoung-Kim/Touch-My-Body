@@ -17,6 +17,7 @@ import com.gunyoung.tmb.controller.rest.ManagerUserRestController;
 import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.reqeust.UserProfileForManagerDTO;
 import com.gunyoung.tmb.enums.RoleType;
+import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.RoleNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.UserNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.request.AccessDeniedException;
@@ -61,7 +62,7 @@ class ManagerUserRestControllerUnitTest {
 	void manageUserProfileTestUserNonExist() {
 		//Given
 		Long nonExistUserId = Long.valueOf(52);
-		given(userService.findById(nonExistUserId)).willReturn(null);
+		given(userService.findById(nonExistUserId)).willThrow(new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription()));
 		
 		UserProfileForManagerDTO userProfileForManagerDTO = UserTest.getUserProfileForManagerDTOInstance(RoleType.USER.toString()); 
 		//When, Then

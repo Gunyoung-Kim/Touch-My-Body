@@ -1,7 +1,6 @@
 package com.gunyoung.tmb.services.domain.exercise;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -15,6 +14,9 @@ import com.gunyoung.tmb.domain.user.User;
 import com.gunyoung.tmb.dto.response.ExercisePostViewDTO;
 import com.gunyoung.tmb.dto.response.PostForCommunityViewDTO;
 import com.gunyoung.tmb.enums.TargetType;
+import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
+import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
+import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.ExercisePostRepository;
 import com.gunyoung.tmb.services.domain.like.PostLikeService;
 
@@ -40,26 +42,27 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public ExercisePost findById(Long id) {
 		Optional<ExercisePost> result = exercisePostRepository.findById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public ExercisePost findWithPostLikesById(Long id) {
 		Optional<ExercisePost> result = exercisePostRepository.findWithPostLikesById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public ExercisePost findWithCommentsById(Long id) {
 		Optional<ExercisePost> result = exercisePostRepository.findWithCommentsById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtAsc(Long userId, Integer pageNumber, int pageSize) {
+		checkParameterForPageRequest(pageNumber, pageSize);
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exercisePostRepository.findAllByUserIdOrderByCreatedAtAscInPage(userId,pageRequest);
 	}
@@ -67,6 +70,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Override
 	@Transactional(readOnly=true)
 	public Page<ExercisePost> findAllByUserIdOrderByCreatedAtDesc(Long userId, Integer pageNumber, int pageSize) {
+		checkParameterForPageRequest(pageNumber, pageSize);
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exercisePostRepository.findAllByUserIdOrderByCreatedAtDescInPage(userId,pageRequest);
 	}
@@ -74,6 +78,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Override
 	@Transactional(readOnly=true)
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOOderByCreatedAtDESCByPage(Integer pageNumber, int pageSize) {
+		checkParameterForPageRequest(pageNumber, pageSize);
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exercisePostRepository.findAllForPostForCommunityViewDTOOrderByCreatedAtDescInPage(pageRequest);
 	}
@@ -82,6 +87,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithKeywordByPage(String keyword,
 			Integer pageNumber, int pageSize) {
+		checkParameterForPageRequest(pageNumber, pageSize);
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exercisePostRepository.findAllForPostForCommunityViewDTOWithKeywordInPage(keyword, pageRequest);
 	}
@@ -90,6 +96,7 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetByPage(TargetType target,
 			Integer pageNumber, int pageSize) {
+		checkParameterForPageRequest(pageNumber, pageSize);
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
 		return exercisePostRepository.findAllForPostForCommunityViewDTOWithTargetInPage(target, pageRequest);
 	}
@@ -98,8 +105,14 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public Page<PostForCommunityViewDTO> findAllForPostForCommunityViewDTOWithTargetAndKeywordByPage(TargetType target,
 			String keyword, Integer pageNumber, int pageSize) {
-		PageRequest pageRuquest = PageRequest.of(pageNumber-1, pageSize);
-		return exercisePostRepository.findAllForPostForCommunityViewDTOWithTargetAndKeywordInPage(target, keyword, pageRuquest);
+		checkParameterForPageRequest(pageNumber, pageSize);
+		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
+		return exercisePostRepository.findAllForPostForCommunityViewDTOWithTargetAndKeywordInPage(target, keyword, pageRequest);
+	}
+	
+	private void checkParameterForPageRequest(Integer pageNumber, int pageSize) {
+		Preconditions.notLessThan(pageNumber, 1, "pageNumber should be equal or greater than 1");
+		Preconditions.notLessThanInt(pageSize, 1, "pageSize should be equal or greater than 1");
 	}
 
 	@Override
@@ -109,6 +122,10 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 
 	@Override
 	public ExercisePost saveWithUserAndExercise(ExercisePost exercisePost, User user, Exercise exercise) {
+		Preconditions.notNull(exercisePost, "exercisePost should be not null");
+		Preconditions.notNull(user, "user should be not null");
+		Preconditions.notNull(exercise, "exercise should be not null");
+		
 		setRelationBetweenPostAndUser(exercisePost, user);
 		setRelationBetweenPostAndExercise(exercisePost, exercise);
 		
@@ -127,9 +144,8 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	
 	@Override
 	public void deleteById(Long id) {
-		ExercisePost exercisePost = findById(id);
-		if(exercisePost != null)
-			delete(exercisePost);
+		Optional<ExercisePost> targetExercisePost = exercisePostRepository.findById(id);
+		targetExercisePost.ifPresent(this::delete);
 	}
 	
 	@Override
@@ -140,7 +156,8 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	
 	@Override
 	public void delete(ExercisePost exercisePost) {
-		Objects.requireNonNull(exercisePost, "Given exercisePost must not be null!");
+		Preconditions.notNull(exercisePost, "Given exercisePost should be not null");
+		
 		deleteAllWeakEntityForExercisePost(exercisePost);
 		exercisePostRepository.deleteByIdInQuery(exercisePost.getId());
 	}
@@ -203,15 +220,12 @@ public class ExercisePostServiceImpl implements ExercisePostService {
 	@Transactional(readOnly=true)
 	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostId(Long id) {
 		Optional<ExercisePostViewDTO> result = exercisePostRepository.findForExercisePostViewDTOById(id);
-		return result.orElse(null);
+		return result.orElseThrow(() -> new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription()));
 	}
 
 	@Override
 	public ExercisePostViewDTO getExercisePostViewDTOWithExercisePostIdAndIncreaseViewNum(Long id) {
 		ExercisePost exercisePost = findById(id);
-		if(exercisePost == null)
-			return null;
-		
 		exercisePost.increaseViewNum();
 		save(exercisePost);
 		

@@ -3,13 +3,13 @@ package com.gunyoung.tmb.services.domain.user;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gunyoung.tmb.domain.user.UserExercise;
 import com.gunyoung.tmb.dto.response.UserExerciseIsDoneDTO;
+import com.gunyoung.tmb.precondition.Preconditions;
 import com.gunyoung.tmb.repos.UserExerciseRepository;
 import com.gunyoung.tmb.utils.DateUtil;
 
@@ -29,13 +29,6 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 	
 	@Override
 	@Transactional(readOnly=true)
-	public UserExercise findById(Long id) {
-		Optional<UserExercise> result = userExerciseRepository.findById(id);
-		return result.orElse(null);
-	}
-	
-	@Override
-	@Transactional(readOnly=true)
 	public List<UserExercise> findByUserIdAndDate(Long userId, Calendar date) {
 		return userExerciseRepository.findUserExercisesByUserIdAndDate(userId, date);
 	}
@@ -43,6 +36,10 @@ public class UserExerciseServiceImpl implements UserExerciseService {
 	@Override
 	@Transactional(readOnly=true)
 	public List<UserExerciseIsDoneDTO> findIsDoneDTOByUserIdAndYearAndMonth(Long userId, int year, int month) {
+		Preconditions.notLessThanInt(year, 0, "Given year should be not less than zero");
+		Preconditions.notLessThanInt(month, Calendar.JANUARY, "Given month should be not less than Calendar.JANUARY");
+		Preconditions.notMoreThanInt(month, Calendar.DECEMBER, "Given month should be not less than Calendar.DECEMBER");
+		
 		Calendar[] firstAndLastDay = DateUtil.calendarForStartAndEndOfYearAndMonth(year, month);
 		boolean[] isDoneArr = getIsDoneArrayFromRepository(userId, firstAndLastDay);
 		

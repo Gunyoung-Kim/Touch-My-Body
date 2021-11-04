@@ -14,10 +14,7 @@ import com.gunyoung.tmb.domain.exercise.ExercisePost;
 import com.gunyoung.tmb.domain.like.CommentLike;
 import com.gunyoung.tmb.domain.like.PostLike;
 import com.gunyoung.tmb.domain.user.User;
-import com.gunyoung.tmb.error.codes.CommentErrorCode;
-import com.gunyoung.tmb.error.codes.ExercisePostErrorCode;
 import com.gunyoung.tmb.error.codes.LikeErrorCode;
-import com.gunyoung.tmb.error.codes.UserErrorCode;
 import com.gunyoung.tmb.error.exceptions.duplication.LikeAlreadyExistException;
 import com.gunyoung.tmb.error.exceptions.nonexist.CommentNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExercisePostNotFoundedException;
@@ -66,19 +63,11 @@ public class ExercisePostRestController {
 	public void addLikeToExercisePost(@PathVariable("postId") Long postId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findWithPostLikesById(loginUserId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		ExercisePost exercisePost = exercisePostService.findWithPostLikesById(postId);
-		if(exercisePost == null) { 
-			throw new ExercisePostNotFoundedException(ExercisePostErrorCode.EXERCISE_POST_NOT_FOUNDED_ERROR.getDescription());
-		}
 		
 		if(postLikeService.existsByUserIdAndExercisePostId(loginUserId, postId)) { 
 			throw new LikeAlreadyExistException(LikeErrorCode.LIKE_ALREADY_EXIST_ERROR.getDescription());
 		}
-		
 		postLikeService.createAndSaveWithUserAndExercisePost(user, exercisePost);
 	}
 	
@@ -93,10 +82,6 @@ public class ExercisePostRestController {
 	public void removeLikeToExercisePost(@PathVariable("postId") Long postId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		PostLike postLike = postLikeService.findByUserIdAndExercisePostId(loginUserId, postId);
-		if(postLike == null) {
-			throw new LikeNotFoundedException(LikeErrorCode.LIKE_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		postLikeService.delete(postLike);
 	}
 	
@@ -114,19 +99,11 @@ public class ExercisePostRestController {
 	public void addLikeToComment(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
 		User user = userService.findWithCommentLikesById(loginUserId);
-		if(user == null) {
-			throw new UserNotFoundedException(UserErrorCode.USER_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		Comment comment = commentService.findWithCommentLikesById(commentId);
-		if(comment == null) { 
-			throw new CommentNotFoundedException(CommentErrorCode.COMMENT_NOT_FOUNDED_ERROR.getDescription());
-		}
 		
 		if(commentLikeService.existsByUserIdAndCommentId(loginUserId, commentId)) { 
 			throw new LikeAlreadyExistException(LikeErrorCode.LIKE_ALREADY_EXIST_ERROR.getDescription());
 		}
-		
 		commentLikeService.createAndSaveWithUserAndComment(user, comment);
 	}
 	
@@ -142,10 +119,6 @@ public class ExercisePostRestController {
 	public void removeLikeToComment(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId) { 
 		Long loginUserId = SessionUtil.getLoginUserId(session);	
 		CommentLike commentLike = commentLikeService.findByUserIdAndCommentId(loginUserId, commentId);
-		if(commentLike == null) {
-			throw new LikeNotFoundedException(LikeErrorCode.LIKE_NOT_FOUNDED_ERROR.getDescription());
-		}
-		
 		commentLikeService.delete(commentLike);
 	}
 	
@@ -159,7 +132,6 @@ public class ExercisePostRestController {
 	@LoginIdSessionNotNull
 	public void removeCommentToExercisePost(@PathVariable("postId") Long postId, @RequestParam("commentId") Long commentId) {
 		Long loginUserId = SessionUtil.getLoginUserId(session);
-		
 		commentService.checkIsMineAndDelete(loginUserId, commentId);
 	}
 	

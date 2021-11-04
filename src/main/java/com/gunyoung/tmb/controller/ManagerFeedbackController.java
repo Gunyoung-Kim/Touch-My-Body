@@ -12,8 +12,6 @@ import com.gunyoung.tmb.domain.exercise.Exercise;
 import com.gunyoung.tmb.dto.response.FeedbackManageListDTO;
 import com.gunyoung.tmb.dto.response.FeedbackViewDTO;
 import com.gunyoung.tmb.enums.PageSize;
-import com.gunyoung.tmb.error.codes.ExerciseErrorCode;
-import com.gunyoung.tmb.error.codes.FeedbackErrorCode;
 import com.gunyoung.tmb.error.exceptions.nonexist.ExerciseNotFoundedException;
 import com.gunyoung.tmb.error.exceptions.nonexist.FeedbackNotFoundedException;
 import com.gunyoung.tmb.services.domain.exercise.ExerciseService;
@@ -42,16 +40,13 @@ public class ManagerFeedbackController {
 	 * @throws ExerciseNotFoundedException 해당 Id의 Exercise 없으면
 	 * @author kimgun-yeong
 	 */
-	@GetMapping(value="/manager/exercise/feedback/{exerciseId}") 
-	public ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId, @RequestParam(value="page", defaultValue="1") int page
+	@GetMapping(value = "/manager/exercise/feedback/{exerciseId}") 
+	public ModelAndView feedbackListView(@PathVariable("exerciseId") Long exerciseId, @RequestParam(value = "page", defaultValue = "1") int page
 			, ModelAndPageView mav) {
 		Exercise exercise = exerciseService.findById(exerciseId);
-		if(exercise == null) {
-			throw new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription());
-		}
 		
 		Page<FeedbackManageListDTO> pageResult = feedbackService.findAllForFeedbackManageListDTOByExerciseIdByPage(exerciseId, page, FEEDBACK_FOR_MANAGE_PAGE_SIZE);
-		long totalPageNum = feedbackService.countByExerciseId(exerciseId)/FEEDBACK_FOR_MANAGE_PAGE_SIZE +1;
+		long totalPageNum = feedbackService.countByExerciseId(exerciseId)/FEEDBACK_FOR_MANAGE_PAGE_SIZE + 1;
 		
 		mav.addObject("listObject", pageResult);
 		mav.addObject("exerciseName", exercise.getName());
@@ -69,12 +64,9 @@ public class ManagerFeedbackController {
 	 * @throws FeedbackNotFoundedException 해당 Id의 Feedback 없으면
 	 * @author kimgun-yeong
 	 */
-	@GetMapping(value="/manager/exercise/feedback/detail/{feedbackId}") 
+	@GetMapping(value = "/manager/exercise/feedback/detail/{feedbackId}") 
 	public ModelAndView feedbackView(@PathVariable("feedbackId") Long feedbackId, ModelAndView mav) {
 		FeedbackViewDTO feedbackViewDTO = feedbackService.findForFeedbackViewDTOById(feedbackId);
-		if(feedbackViewDTO == null) {
-			throw new FeedbackNotFoundedException(FeedbackErrorCode.FEEDBACK_NOT_FOUNDED_ERROR.getDescription());
-		}
 		
 		mav.addObject("feedbackInfo", feedbackViewDTO);
 		
