@@ -40,14 +40,14 @@ public class PostLikeServiceImpl implements PostLikeService {
 
 	@Override
 	@CacheEvict(cacheNames=POST_LIKE_NAME, 
-	key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#postLike.user.id).concat(':').concat(#postLike.exercisePost.id)")
+	key="{#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAULT_CACHE_KEY, #postLike.user.id, #postLike.exercisePost.id}")
 	public PostLike save(PostLike postLike) {
 		return postLikeRepository.save(postLike);
 	}
 	
 	@Override
 	@CacheEvict(cacheNames=POST_LIKE_NAME,
-	key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#user.id).concat(':').concat(#exercisePost.id)")
+	key="{#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAULT_CACHE_KEY, #user.id, #exercisePost.id}")
 	public PostLike createAndSaveWithUserAndExercisePost(User user, ExercisePost exercisePost) {
 		Preconditions.notNull(user, "Given user must be not null");
 		Preconditions.notNull(exercisePost, "Given exercisePost must be not null");
@@ -60,7 +60,7 @@ public class PostLikeServiceImpl implements PostLikeService {
 
 	@Override
 	@CacheEvict(cacheNames=POST_LIKE_NAME, 
-	key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#postLike.user.id).concat(':').concat(#postLike.exercisePost.id)")
+	key="{#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAULT_CACHE_KEY, #postLike.user.id, #postLike.exercisePost.id}")
 	public void delete(PostLike postLike) {
 		postLikeRepository.delete(postLike);
 	}
@@ -78,7 +78,7 @@ public class PostLikeServiceImpl implements PostLikeService {
 	@Override
 	@Transactional(readOnly=true)
 	@Cacheable(cacheNames=POST_LIKE_NAME,
-		key="#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#userId).concat(':').concat(#exercisePostId)",
+		key="{#root.target.EXIST_BY_USER_ID_AND_POST_ID_DEFAULT_CACHE_KEY, #userId, #exercisePostId}",
 		unless="#result != true")
 	public boolean existsByUserIdAndExercisePostId(Long userId, Long exercisePostId) {
 		return postLikeRepository.existsByUserIdAndExercisePostId(userId, exercisePostId);

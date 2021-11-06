@@ -6,7 +6,7 @@ import com.gunyoung.tmb.domain.user.User;
 
 public interface CommentLikeService {
 	
-	public static final String EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY = "exsitByUserIdAndCommentId";
+	public static final String EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAULT_CACHE_KEY = "existByUserIdAndCommentId";
 	
 	/**
 	 * User Id, Comment Id 로 CommentLike 찾기
