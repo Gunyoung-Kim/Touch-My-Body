@@ -56,50 +56,50 @@ public class ExerciseServiceImpl implements ExerciseService {
 	private final FeedbackService feedbackService;
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public Exercise findById(Long id) {
 		Optional<Exercise> result = exerciseRepository.findById(id);
 		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public Exercise findByName(String name) {
 		Optional<Exercise> result = exerciseRepository.findByName(name);
 		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public Exercise findWithFeedbacksById(Long id) {
 		Optional<Exercise> result = exerciseRepository.findWithFeedbacksById(id);
 		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public Exercise findWithExercisePostsByName(String name) {
 		Optional<Exercise> result = exerciseRepository.findWithExercisePostsByName(name);
 		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_NAME_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public Exercise findWithExerciseMusclesById(Long id) {
 		Optional<Exercise> result = exerciseRepository.findWithExerciseMusclesById(id);
 		return result.orElseThrow(() -> new ExerciseNotFoundedException(ExerciseErrorCode.EXERCISE_BY_ID_NOT_FOUNDED_ERROR.getDescription()));
 	}
 	
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public Page<Exercise> findAllInPage(Integer pageNumber, int pageSize) {
 		checkParameterForPageRequest(pageNumber, pageSize);
-		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
+		PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
 		return exerciseRepository.findAll(pageRequest);
 	}
 	
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public Page<Exercise> findAllWithNameKeywordInPage(String keyword, Integer pageNumber, int pageSize) {
 		checkParameterForPageRequest(pageNumber, pageSize);
 		PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
@@ -112,8 +112,8 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	@Override
-	@Transactional(readOnly=true)
-	@Cacheable(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@Transactional(readOnly = true)
+	@Cacheable(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULT_KEY")
 	public Map<String, List<String>> getAllExercisesNamewithSorting() {
 		Map<String, List<String>> sortingResult = new HashMap<>();
 		List<ExerciseNameAndTargetDTO> listOfDTOFromRepo = exerciseRepository.findAllWithNameAndTarget();
@@ -128,13 +128,13 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	@Override
-	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames = EXERCISE_SORT_NAME, key = "#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULT_KEY")
 	public Exercise save(Exercise exercise) {
 		return exerciseRepository.save(exercise);
 	}
 	
 	@Override
-	@CacheEvict(cacheNames = EXERCISE_SORT_NAME, key = "#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames = EXERCISE_SORT_NAME, key = "#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULT_KEY")
 	public Exercise saveWithSaveExerciseDTO(Exercise exercise, SaveExerciseDTO dto) {
 		Preconditions.notNull(exercise, "Given exercise must not be null!");
 		Preconditions.notNull(dto, "Given saveExerciseDTO must not be null");
@@ -183,14 +183,14 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 	
 	@Override
-	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames = EXERCISE_SORT_NAME, key = "#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULT_KEY")
 	public void deleteById(Long id) {
 		Optional<Exercise> exercise = exerciseRepository.findById(id);
 		exercise.ifPresent(this::delete);
 	}
 
 	@Override
-	@CacheEvict(cacheNames=EXERCISE_SORT_NAME, key="#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames = EXERCISE_SORT_NAME, key = "#root.target.EXERCISE_SORT_BY_CATEGORY_DEFAULT_KEY")
 	public void delete(Exercise exercise) {
 		Preconditions.notNull(exercise, "Given exercise must be not null");
 		
@@ -207,26 +207,26 @@ public class ExerciseServiceImpl implements ExerciseService {
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public long countAll() {
 		return exerciseRepository.count();
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public long countAllWithNameKeyword(String nameKeyword) {
 		return exerciseRepository.countAllWithNameKeyword(nameKeyword);
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public ExerciseForInfoViewDTO getExerciseForInfoViewDTOByExerciseId(Long exerciseId) {
 		Exercise exercise = findWithExerciseMusclesById(exerciseId);
 		return ExerciseForInfoViewDTO.of(exercise);
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public boolean existsByName(String name) {
 		return exerciseRepository.existsByName(name);
 	}

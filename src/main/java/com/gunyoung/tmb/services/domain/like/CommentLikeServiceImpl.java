@@ -40,14 +40,14 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 
 	@Override
 	@CacheEvict(cacheNames=COMMENT_LIKE_NAME, 
-	key="#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#commentLike.user.id).concat(':').concat(#commentLike.comment.id)")
+	key="{#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAULT_CACHE_KEY, #commentLike.user.id, #commentLike.comment.id}")
 	public CommentLike save(CommentLike commentLike) {
 		return commentLikeRepository.save(commentLike);
 	}
 
 	@Override
 	@CacheEvict(cacheNames=COMMENT_LIKE_NAME, 
-	key="#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#user.id).concat(':').concat(#comment.id)")
+	key="{#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAULT_CACHE_KEY, #user.id, #comment.id}")
 	public CommentLike createAndSaveWithUserAndComment(User user, Comment comment) {
 		Preconditions.notNull(user, "Given user must be not null");
 		Preconditions.notNull(comment, "Given comment must be not null");
@@ -60,7 +60,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	
 	@Override
 	@CacheEvict(cacheNames=COMMENT_LIKE_NAME, 
-	key="#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#commentLike.user.id).concat(':').concat(#commentLike.comment.id)")
+	key="{#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAULT_CACHE_KEY, #commentLike.user.id, #commentLike.comment.id}")
 	public void delete(CommentLike commentLike) {
 		commentLikeRepository.delete(commentLike);
 	}
@@ -78,7 +78,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
 	@Override
 	@Transactional(readOnly=true)
 	@Cacheable(cacheNames=COMMENT_LIKE_NAME,
-			key="#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAUALT_CACHE_KEY.concat(':').concat(#userId).concat(':').concat(#commentId)",
+			key="{#root.target.EXIST_BY_USER_ID_AND_COMMENT_ID_DEFAULT_CACHE_KEY, #userId, #commentId}",
 			unless="#result != true")
 	public boolean existsByUserIdAndCommentId(Long userId, Long commentId) {
 		return commentLikeRepository.existsByUserIdAndCommentId(userId, commentId);

@@ -70,7 +70,7 @@ public class MuscleServiceImpl implements MuscleService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	@Cacheable(cacheNames = MUSCLE_SORT_NAME, key = "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@Cacheable(cacheNames = MUSCLE_SORT_NAME, key = "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULT_KEY")
 	public Map<String, List<String>> getAllMusclesWithSortingByCategory() {
 		List<MuscleNameAndCategoryDTO> listOfDTOFromRepo = muscleRepository.findAllWithNamaAndCategory();
 		Map<String, List<String>> sortingResult = new HashMap<>();
@@ -91,13 +91,13 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 	
 	@Override
-	@CacheEvict(cacheNames = {MUSCLE_SORT_NAME}, key = "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames = {MUSCLE_SORT_NAME}, key = "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULT_KEY")
 	public Muscle save(Muscle muscle) {
 		return muscleRepository.save(muscle);
 	}
 
 	@Override
-	@CacheEvict(cacheNames = {MUSCLE_SORT_NAME}, key = "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames = {MUSCLE_SORT_NAME}, key = "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULT_KEY")
 	public void delete(Muscle muscle) {
 		Preconditions.notNull(muscle, "Given muscle must be not null");
 		
@@ -106,7 +106,7 @@ public class MuscleServiceImpl implements MuscleService {
 	}
 	
 	@Override
-	@CacheEvict(cacheNames = {MUSCLE_SORT_NAME}, key = "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY")
+	@CacheEvict(cacheNames = {MUSCLE_SORT_NAME}, key = "#root.target.MUSCLE_SORT_BY_CATEGORY_DEFAULT_KEY")
 	public void deleteById(Long id) {
 		Optional<Muscle> muscle = muscleRepository.findById(id);
 		muscle.ifPresent(this::delete);

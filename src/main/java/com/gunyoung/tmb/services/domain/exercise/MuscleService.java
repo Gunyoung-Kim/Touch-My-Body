@@ -9,7 +9,7 @@ import com.gunyoung.tmb.domain.exercise.Muscle;
 
 public interface MuscleService {
 	
-	public static final String MUSCLE_SORT_BY_CATEGORY_DEFAULY_KEY = "bycategory";
+	public static final String MUSCLE_SORT_BY_CATEGORY_DEFAULT_KEY = "bycategory";
 	
 	/**
 	 * ID로 Muscle 찾기
