@@ -1,6 +1,7 @@
 package com.gunyoung.tmb.aop.log;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,34 +36,40 @@ public class LogAspect {
 	@Around("within(com.gunyoung.tmb.controller..*)")
 	public Object loggingAroundController(ProceedingJoinPoint pjp) throws Throwable {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		Map<String, String[]> paramMap = request.getParameterMap();
-		String params = "";
-		if(!paramMap.isEmpty()) {
-			params = "[ " + paramMapToString(paramMap) + "]";
-		}
+		String params = getStringOfParameters(request);
 		
 		long timeBeforeProceed = System.currentTimeMillis();
 		try {
 			return pjp.proceed(pjp.getArgs());
 		} finally {
 			long timeAfterProceed = System.currentTimeMillis();
-			logger.info("Request: {} {}{} < {} ({}ms)",request.getMethod(), request.getRequestURI(), params, 
+			logger.info("Request: {} {}{} < {} ({}ms)", request.getMethod(), request.getRequestURI(), params, 
 					HttpRequestUtil.getRemoteHost(request), timeAfterProceed - timeBeforeProceed);
 		}
 	}
 	
+	private String getStringOfParameters(HttpServletRequest request) {
+		Map<String, String[]> paramMap = request.getParameterMap();
+		if(paramMap.isEmpty()) {
+			return "";
+		}
+		return "[ " + paramMapToString(paramMap) + "]";
+	}
+	
 	private String paramMapToString(Map<String, String[]> paramMap) {
 		StringBuilder sb = new StringBuilder();
-		paramMap.entrySet().stream().forEach(entry -> {
-			sb.append(entry.getKey() + " : ");
-			for(int i=0 ; i < entry.getValue().length ; i++) {
-				sb.append(entry.getValue()[i] +" ");
-			}
-			sb.append(", ");
-		});
-		String paramString = sb.toString();
-		paramString = paramString.substring(0, paramString.length()-2);
+		paramMap.entrySet().stream().forEach(entry -> appendKeyAndValueOfEntryToStringBuilder(entry, sb));
+		String stringOfParameters = sb.toString();
+		stringOfParameters = stringOfParameters.substring(0, stringOfParameters.length()-2);
 		
-		return paramString;
+		return stringOfParameters;
+	}
+	
+	private void appendKeyAndValueOfEntryToStringBuilder(Entry<String, String[]> entry, StringBuilder sb) {
+		sb.append(entry.getKey() + " : ");
+		for(int i=0 ; i < entry.getValue().length ; i++) {
+			sb.append(entry.getValue()[i] +" ");
+		}
+		sb.append(", ");
 	}
 }
