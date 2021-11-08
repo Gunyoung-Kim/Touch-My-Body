@@ -36,15 +36,16 @@ public class LogAspect {
 	@Around("within(com.gunyoung.tmb.controller..*)")
 	public Object loggingAroundController(ProceedingJoinPoint pjp) throws Throwable {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		String params = getStringOfParameters(request);
+		String stringOfParameters = getStringOfParameters(request);
+		String remoteHost = HttpRequestUtil.getRemoteHost(request);
 		
 		long timeBeforeProceed = System.currentTimeMillis();
 		try {
 			return pjp.proceed(pjp.getArgs());
 		} finally {
 			long timeAfterProceed = System.currentTimeMillis();
-			logger.info("Request: {} {}{} < {} ({}ms)", request.getMethod(), request.getRequestURI(), params, 
-					HttpRequestUtil.getRemoteHost(request), timeAfterProceed - timeBeforeProceed);
+			logger.info("Request: {} {}{} < {} ({}ms)", request.getMethod(), request.getRequestURI(), stringOfParameters, 
+					remoteHost, timeAfterProceed - timeBeforeProceed);
 		}
 	}
 	
